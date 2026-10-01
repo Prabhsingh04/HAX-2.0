@@ -66,12 +66,12 @@ export function fetchComponent(slug: string): ComponentDefinition | null {
   return fetchFromCore(slug);
 }
 
-export function instantiateComponent(
+export async function instantiateComponent(
   slug: string,
   initialState: Record<string, unknown> = {},
   agentId?: string,
   persistent: boolean = false,
-): ComponentInstanceInternal | null {
+): Promise<ComponentInstanceInternal | null> {
   const component = componentRegistry.get(slug);
   if (!component) return null;
 
@@ -93,29 +93,29 @@ export function instantiateComponent(
     persistent,
   };
 
-  saveInstance(instance);
+  await saveInstance(instance);
 
   return instance;
 }
 
-export function updateInstanceState(
+export async function updateInstanceState(
   instanceId: string,
   updates: Record<string, unknown>,
-): ComponentInstanceInternal | null {
-  const instance = loadInstance(instanceId);
+): Promise<ComponentInstanceInternal | null> {
+  const instance = await loadInstance(instanceId);
   if (!instance) return null;
 
   const now = new Date().toISOString();
   instance.state = { ...deepMerge(instance.state, updates), updatedAt: now };
   instance.lastModified = now;
-  saveInstance(instance);
+  await saveInstance(instance);
 
   return instance;
 }
 
-export function getInstanceState(
+export async function getInstanceState(
   instanceId: string,
-): ComponentInstanceInternal | null {
+): Promise<ComponentInstanceInternal | null> {
   return loadInstance(instanceId);
 }
 
@@ -125,9 +125,11 @@ export function getInstanceState(
  * exact agentId (the old Map version substring-matched, so "agent-1" also
  * matched "agent-10").
  */
-export function listInstallations(agentId?: string): Installation[] {
+export async function listInstallations(
+  agentId?: string,
+): Promise<Installation[]> {
   const grouped = new Map<string, Installation>();
-  for (const instance of listInstancesByAgent(agentId)) {
+  for (const instance of await listInstancesByAgent(agentId)) {
     if (!instance.agentId) continue;
     const key = `${instance.slug}::${instance.agentId}`;
     const existing = grouped.get(key);
@@ -147,13 +149,13 @@ export function listInstallations(agentId?: string): Installation[] {
   return Array.from(grouped.values());
 }
 
-export function brokerStateHandoff(
+export async function brokerStateHandoff(
   fromInstanceId: string,
   toComponentSlug: string,
   toAgentId: string,
   contextData?: Record<string, unknown>,
-): ComponentInstanceInternal | null {
-  const fromInstance = loadInstance(fromInstanceId);
+): Promise<ComponentInstanceInternal | null> {
+  const fromInstance = await loadInstance(fromInstanceId);
   if (!fromInstance) return null;
 
   const inheritedState = {
@@ -162,7 +164,7 @@ export function brokerStateHandoff(
     _handoffTimestamp: new Date().toISOString(),
   };
 
-  const toInstance = instantiateComponent(
+  const toInstance = await instantiateComponent(
     toComponentSlug,
     inheritedState,
     toAgentId,

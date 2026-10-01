@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const instance = instantiateComponent(
+      const instance = await instantiateComponent(
         slug,
         initial_state || {},
         agent_id,
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const instance = updateInstanceState(instance_id, updates);
+      const instance = await updateInstanceState(instance_id, updates);
 
       if (!instance) {
         return NextResponse.json(
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const instance = getInstanceState(instance_id);
+      const instance = await getInstanceState(instance_id);
 
       if (!instance) {
         return NextResponse.json(
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     if (action === "list") {
       const { agent_id } = body;
 
-      const list = listInstallations(agent_id);
+      const list = await listInstallations(agent_id);
 
       return NextResponse.json({
         action: "list",
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const newInstance = brokerStateHandoff(
+      const newInstance = await brokerStateHandoff(
         from_instance_id,
         to_component_slug,
         to_agent_id,

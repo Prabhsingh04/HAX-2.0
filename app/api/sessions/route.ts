@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           );
         }
-        saveChatSession({
+        await saveChatSession({
           sessionId,
           title: (body.title as string | undefined)?.trim() || "Untitled chat",
           messages,
@@ -44,7 +44,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true });
       }
       case "list":
-        return NextResponse.json({ success: true, sessions: listChatSessions() });
+        return NextResponse.json({
+          success: true,
+          sessions: await listChatSessions(),
+        });
       case "get": {
         const sessionId = body.session_id as string | undefined;
         if (!sessionId) {
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           );
         }
-        const session = loadChatSession(sessionId);
+        const session = await loadChatSession(sessionId);
         if (!session) {
           return NextResponse.json(
             { error: "Session not found" },

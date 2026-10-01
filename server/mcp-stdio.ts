@@ -113,7 +113,7 @@ function buildServer(registry: RegistryModule): McpServer {
       },
     },
     async ({ slug, initial_state, agent_id, persistent }) => {
-      const instance = instantiateComponent(
+      const instance = await instantiateComponent(
         slug,
         initial_state ?? {},
         agent_id,
@@ -135,7 +135,7 @@ function buildServer(registry: RegistryModule): McpServer {
       },
     },
     async ({ instance_id, updates }) => {
-      const instance = updateInstanceState(instance_id, updates);
+      const instance = await updateInstanceState(instance_id, updates);
       return instance
         ? json(instance)
         : toolError(`Instance not found: ${instance_id}`);
@@ -150,7 +150,7 @@ function buildServer(registry: RegistryModule): McpServer {
       inputSchema: { instance_id: z.string().min(1) },
     },
     async ({ instance_id }) => {
-      const instance = getInstanceState(instance_id);
+      const instance = await getInstanceState(instance_id);
       return instance
         ? json(instance)
         : toolError(`Instance not found: ${instance_id}`);
@@ -165,7 +165,7 @@ function buildServer(registry: RegistryModule): McpServer {
         "List pattern installations and their instance ids for one agent, or all agents when agent_id is omitted.",
       inputSchema: { agent_id: z.string().optional() },
     },
-    async ({ agent_id }) => json(listInstallations(agent_id)),
+    async ({ agent_id }) => json(await listInstallations(agent_id)),
   );
 
   server.registerTool(
@@ -187,7 +187,7 @@ function buildServer(registry: RegistryModule): McpServer {
       to_agent_id,
       context_data,
     }) => {
-      const instance = brokerStateHandoff(
+      const instance = await brokerStateHandoff(
         from_instance_id,
         to_component_slug,
         to_agent_id,
