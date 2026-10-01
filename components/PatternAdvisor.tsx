@@ -29,6 +29,7 @@ import {
   toChatRecommendation,
   updatePatternInstance,
 } from "@/lib/pattern-advisor";
+import { heuristicAnswerCheck } from "@/lib/patterns/answer-gate";
 import { emptyContextFromPresets } from "@/lib/context-field-config";
 import { getPattern } from "@/lib/patterns";
 import type { InstanceSidebarData } from "@/lib/instance-types";
@@ -90,9 +91,10 @@ function findPatternContext(
 }
 
 export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
-  const sessionId = useMemo(
+  // Stateful so restoring a past conversation adopts its original id (and
+  // keeps saving under it instead of forking a duplicate).
+  const [sessionId, setSessionId] = useState(
     () => `session-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-    [],
   );
   const agentId = useMemo(
     () => `advisor-${sessionId}`,
@@ -117,6 +119,11 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
     "success",
   );
   const [drawerGuidance, setDrawerGuidance] = useState<string[] | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historySessions, setHistorySessions] = useState<
+    Array<{ sessionId: string; title: string; updatedAt: string; messageCount: number }>
+  >([]);
+
   const sentInitialPrompt = useRef(false);
   const loadingRef = useRef(false);
   const previewPanelRef = useRef<HTMLElement>(null);
@@ -159,6 +166,67 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
     [],
   );
 
+  // Auto-save the conversation (debounced) once the user has said anything.
+  // Static/review builds have no API routes — the fetch just fails silently.
+  useEffect(() => {
+    const firstUserMessage = messages.find((m) => m.role === "user");
+    if (!firstUserMessage) return;
+
+    const timer = window.setTimeout(() => {
+      void fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save",
+          session_id: sessionId,
+          title: firstUserMessage.content.slice(0, 80),
+          messages,
+          active_instance: activeInstance,
+        }),
+      }).catch(() => {});
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, [messages, activeInstance, sessionId]);
+
+  const openHistory = useCallback(async () => {
+    setShowHistory(true);
+    try {
+      const res = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list" }),
+      });
+      const data = await res.json();
+      setHistorySessions(data.sessions ?? []);
+    } catch {
+      setHistorySessions([]);
+    }
+  }, []);
+
+  const restoreSession = useCallback(
+    async (id: string) => {
+      try {
+        const res = await fetch("/api/sessions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "get", session_id: id }),
+        });
+        const data = await res.json();
+        if (!data.session) throw new Error("not found");
+        setSessionId(data.session.sessionId);
+        setMessages(data.session.messages as ChatMessage[]);
+        const restored = data.session.activeInstance as ActiveInstance | null;
+        setActiveInstance(restored);
+        setShowDesignPreview(Boolean(restored));
+        setShowHistory(false);
+        showToast("Conversation restored");
+      } catch {
+        showToast("Could not restore that conversation", "error");
+      }
+    },
+    [showToast],
+  );
+
   const sendMessage = useCallback(async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || loadingRef.current) return;
@@ -169,16 +237,38 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
     setInput("");
 
     try {
-      const recommendations = (await recommendPatterns(trimmed)).map(
-        toChatRecommendation,
-      );
+      // Prefer the server route: it reasons over the candidates through the
+      // model gateway (lib/llm/gateway.ts) with its own server-side fallback.
+      // Static/review builds ship no API routes, so on any fetch failure we
+      // fall back to the in-browser keyword recommender.
+      let content: string;
+      let recommendations: ChatRecommendation[];
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: trimmed, sessionId: "advisor-ui" }),
+        });
+        if (!res.ok) throw new Error(`chat route returned ${res.status}`);
+        const data = (await res.json()) as {
+          aiResponse: string;
+          recommendations?: ChatRecommendation[];
+        };
+        content = data.aiResponse;
+        recommendations = data.recommendations ?? [];
+      } catch {
+        recommendations = (await recommendPatterns(trimmed))
+          .map(toChatRecommendation)
+          .slice(0, 3);
+        content = buildAiResponse(recommendations);
+      }
       const topRecommendation = recommendations[0] ?? null;
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: buildAiResponse(recommendations),
+          content,
           recommendations,
           topRecommendation,
           userInput: trimmed,
@@ -221,6 +311,46 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
         setLoading(true);
         setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
         setInput("");
+
+        // Gate the message before merging it into the workspace: the model
+        // (or, offline, a heuristic) decides whether this is actually an
+        // answer to the current question. Non-answers get a conversational
+        // reply and the interview stays on the same step.
+        let verdict: import("@/lib/patterns/answer-gate").AnswerVerdict = {
+          isAnswer: true,
+        };
+        try {
+          const res = await fetch("/api/extract", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              slug: activeInstance.slug,
+              field: currentStep.field,
+              question: currentStep.question,
+              text: trimmed,
+            }),
+          });
+          if (!res.ok) throw new Error(`extract route returned ${res.status}`);
+          verdict = await res.json();
+        } catch {
+          // Static/review builds have no API routes.
+          verdict = heuristicAnswerCheck(currentStep.question, trimmed);
+        }
+
+        if (!verdict.isAnswer) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content:
+                verdict.reply ??
+                `Let's stay on this one: ${currentStep.question}`,
+            },
+          ]);
+          loadingRef.current = false;
+          setLoading(false);
+          return;
+        }
 
         const { nextWorkspace } = mergeExtractionIntoWorkspace(
           activeInstance.slug,
@@ -334,7 +464,19 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
 
   const handleSwitchPattern = useCallback(
     async (slug: string) => {
-      const carryState = activeInstance?.state ?? null;
+      let carryState = activeInstance?.state ?? null;
+      // A default title (= the old pattern's name) must not follow the user
+      // into the new pattern — the edit drawer would read "Convergence Point"
+      // while editing Decision Ledger. Only user-authored titles carry over.
+      const sourcePatternName = activeInstance?.component.metadata.name;
+      if (
+        carryState &&
+        typeof carryState.title === "string" &&
+        carryState.title === sourcePatternName
+      ) {
+        const { title: _defaultTitle, ...rest } = carryState;
+        carryState = rest;
+      }
       await handleInstantiatePattern(slug, { carryState, quiet: true });
       const patternName = getPattern(slug)?.title ?? slug.replace(/-/g, " ");
       setMessages((prev) => [
@@ -348,6 +490,7 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
     },
     [
       activeInstance?.state,
+      activeInstance?.component.metadata.name,
       handleInstantiatePattern,
       showToast,
     ],
@@ -615,6 +758,43 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
         >
           {isLanding || useSessionChrome ? <HeroBackground /> : null}
 
+          <button
+            type="button"
+            onClick={() => (showHistory ? setShowHistory(false) : void openHistory())}
+            className="absolute right-3 top-3 z-30 rounded-full border border-line bg-bg px-3 py-1 text-xs font-medium text-muted transition-colors hover:text-ink"
+          >
+            History
+          </button>
+          {showHistory ? (
+            <div className="absolute right-3 top-11 z-30 max-h-96 w-80 overflow-y-auto rounded-xl border border-line bg-bg p-2 shadow-lg">
+              <p className="px-2 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wide text-muted">
+                Previous conversations
+              </p>
+              {historySessions.length === 0 ? (
+                <p className="px-2 pb-2 text-sm text-muted">
+                  No saved conversations yet.
+                </p>
+              ) : (
+                historySessions.map((session) => (
+                  <button
+                    key={session.sessionId}
+                    type="button"
+                    onClick={() => void restoreSession(session.sessionId)}
+                    className="block w-full rounded-lg px-2 py-2 text-left transition-colors hover:bg-line/40"
+                  >
+                    <span className="block truncate text-sm text-ink">
+                      {session.title}
+                    </span>
+                    <span className="block text-[11px] text-muted">
+                      {new Date(session.updatedAt).toLocaleString()} ·{" "}
+                      {session.messageCount} messages
+                    </span>
+                  </button>
+                ))
+              )}
+            </div>
+          ) : null}
+
           <div
             className={
               isLanding || useSessionChrome
@@ -747,7 +927,16 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
                 </ChatMessage>
               ) : null}
 
-              {activeInstance?.slug === "convergence-point" ? (
+              {/* Only mount the bubble when the alternatives will actually
+                  render (saving skeleton, processing, or revealed cards) —
+                  otherwise an empty avatar+bubble trails the chat. */}
+              {activeInstance?.slug === "convergence-point" &&
+              showAgentThresholdAlternatives &&
+              (isSavingInstance ||
+                convergenceSaveReveal.isProcessing ||
+                (convergenceSaveReveal.showAlternatives &&
+                  convergenceSaveReveal.savedAgentCount >=
+                    CONVERGENCE_AGENT_THRESHOLD)) ? (
                 <ChatMessage role="assistant" showAvatar={showChatAvatars}>
                   <AgentThresholdAlternatives
                     saveReveal={convergenceSaveReveal}

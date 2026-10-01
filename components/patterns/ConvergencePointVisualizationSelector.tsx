@@ -67,6 +67,7 @@ function VisualizationCard({
   sectionRef,
   fadeIn = false,
   selected = false,
+  footerLeftOverride,
   children,
 }: {
   view: ConflictVisibilityViewId;
@@ -75,6 +76,7 @@ function VisualizationCard({
   sectionRef?: RefObject<HTMLDivElement | null>;
   fadeIn?: boolean;
   selected?: boolean;
+  footerLeftOverride?: string;
   children: ReactNode;
 }) {
   const config = VIEW_CARDS[view];
@@ -97,7 +99,7 @@ function VisualizationCard({
         title={config.title}
         contextLabel={contextLabel}
         icon={config.renderIcon(compact)}
-        footerLeft={config.footerLeft}
+        footerLeft={footerLeftOverride ?? config.footerLeft}
         footerRight={config.footerRight}
         compact={compact}
       >
@@ -240,12 +242,27 @@ export function ConvergencePointVisualizationSelector({
     };
 
     switch (view) {
-      case "timeline":
+      case "timeline": {
+        // Caption reflects the actual roster; the static "Four streams" copy
+        // only fits the demo data.
+        const STREAM_WORDS = [
+          "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven",
+          "Eight", "Nine",
+        ];
+        const footerLeftOverride =
+          agentCount > 0
+            ? `${STREAM_WORDS[agentCount] ?? agentCount} stream${agentCount === 1 ? "" : "s"} · merge and pinch points`
+            : undefined;
         return (
-          <VisualizationCard {...cardProps} sectionRef={timelineRef}>
+          <VisualizationCard
+            {...cardProps}
+            sectionRef={timelineRef}
+            footerLeftOverride={footerLeftOverride}
+          >
             <ConvergenceTimeline compact={compact} workspace={workspace} />
           </VisualizationCard>
         );
+      }
       case "network":
         return (
           <VisualizationCard {...cardProps} sectionRef={networkRef}>

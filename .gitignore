@@ -43,3 +43,6 @@ CONTEXT-pattern-library.md
 # typescript
 next-env.d.ts
 *.tsbuildinfo
+
+# durable instance store (server/state-store.ts)
+.data/

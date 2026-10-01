@@ -2,7 +2,9 @@
  * IoC Pattern Library MCP Server (No Anthropic Dependency)
  *
  * Registry logic lives in lib/pattern-registry-core.ts (shared with static/Reviewa).
- * This module adds in-memory instance storage for dev and API routes.
+ * Instance state is durable (SQLite via server/state-store.ts): it survives
+ * restarts and hot-reloads, and is shared between the stdio MCP server and
+ * the Next.js API routes.
  */
 
 import "server-only";
@@ -17,6 +19,12 @@ import {
   type ComponentMetadata,
 } from "@/lib/pattern-registry-core";
 import { patterns } from "@/lib/patterns";
+import {
+  listInstancesByAgent,
+  loadInstance,
+  saveInstance,
+  type StoredInstance,
+} from "@/server/state-store";
 
 export type { ComponentDefinition, ComponentMetadata } from "@/lib/pattern-registry-core";
 
@@ -28,21 +36,11 @@ export type Installation = {
   version: string;
 };
 
-interface ComponentInstanceInternal {
-  instanceId: string;
-  slug: string;
-  state: Record<string, unknown>;
-  createdAt: string;
-  lastModified: string;
-  agentId?: string;
-  persistent: boolean;
-}
+type ComponentInstanceInternal = StoredInstance;
 
 export type { ComponentInstanceInternal as ComponentInstance };
 
 const componentRegistry = getPatternRegistry();
-const instances: Map<string, ComponentInstanceInternal> = new Map();
-const installations: Map<string, Installation[]> = new Map();
 
 function initializeRegistry() {
   console.log("📚 Importing patterns from lib/patterns.ts...\n");
@@ -95,29 +93,7 @@ export function instantiateComponent(
     persistent,
   };
 
-  instances.set(instanceId, instance);
-
-  if (agentId) {
-    const key = `${slug}-${agentId}`;
-    if (!installations.has(key)) {
-      installations.set(key, []);
-    }
-    const inst = installations.get(key)!;
-    const existing = inst.find(
-      (i) => i.componentSlug === slug && i.agentId === agentId,
-    );
-    if (!existing) {
-      inst.push({
-        componentSlug: slug,
-        agentId,
-        installedAt: now,
-        instanceIds: [instanceId],
-        version: component.metadata.version,
-      });
-    } else {
-      existing.instanceIds.push(instanceId);
-    }
-  }
+  saveInstance(instance);
 
   return instance;
 }
@@ -126,13 +102,13 @@ export function updateInstanceState(
   instanceId: string,
   updates: Record<string, unknown>,
 ): ComponentInstanceInternal | null {
-  const instance = instances.get(instanceId);
+  const instance = loadInstance(instanceId);
   if (!instance) return null;
 
   const now = new Date().toISOString();
   instance.state = { ...deepMerge(instance.state, updates), updatedAt: now };
   instance.lastModified = now;
-  instances.set(instanceId, instance);
+  saveInstance(instance);
 
   return instance;
 }
@@ -140,20 +116,35 @@ export function updateInstanceState(
 export function getInstanceState(
   instanceId: string,
 ): ComponentInstanceInternal | null {
-  return instances.get(instanceId) || null;
+  return loadInstance(instanceId);
 }
 
+/**
+ * Installations are derived from the durable instances: one installation per
+ * (pattern, agent) pair, carrying that pair's instance ids. Matching is by
+ * exact agentId (the old Map version substring-matched, so "agent-1" also
+ * matched "agent-10").
+ */
 export function listInstallations(agentId?: string): Installation[] {
-  if (agentId) {
-    const results: Installation[] = [];
-    for (const [key, inst] of installations.entries()) {
-      if (key.includes(agentId)) {
-        results.push(...inst);
-      }
+  const grouped = new Map<string, Installation>();
+  for (const instance of listInstancesByAgent(agentId)) {
+    if (!instance.agentId) continue;
+    const key = `${instance.slug}::${instance.agentId}`;
+    const existing = grouped.get(key);
+    if (existing) {
+      existing.instanceIds.push(instance.instanceId);
+    } else {
+      grouped.set(key, {
+        componentSlug: instance.slug,
+        agentId: instance.agentId,
+        installedAt: instance.createdAt,
+        instanceIds: [instance.instanceId],
+        version:
+          componentRegistry.get(instance.slug)?.metadata.version ?? "1.0.0",
+      });
     }
-    return results;
   }
-  return Array.from(installations.values()).flat();
+  return Array.from(grouped.values());
 }
 
 export function brokerStateHandoff(
@@ -162,7 +153,7 @@ export function brokerStateHandoff(
   toAgentId: string,
   contextData?: Record<string, unknown>,
 ): ComponentInstanceInternal | null {
-  const fromInstance = instances.get(fromInstanceId);
+  const fromInstance = loadInstance(fromInstanceId);
   if (!fromInstance) return null;
 
   const inheritedState = {
@@ -189,4 +180,4 @@ export function brokerStateHandoff(
 
 initializeRegistry();
 
-export { componentRegistry, instances, installations };
+export { componentRegistry };

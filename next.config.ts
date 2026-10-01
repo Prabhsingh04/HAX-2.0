@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     ? { output: "export" as const, trailingSlash: false }
     : {}),
   outputFileTracingRoot: path.join(__dirname),
+  // Native module used by the durable instance store (server/state-store.ts);
+  // must be required at runtime, not bundled.
+  serverExternalPackages: ["better-sqlite3"],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.md$/,

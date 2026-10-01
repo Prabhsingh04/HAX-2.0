@@ -15,6 +15,20 @@ export type ComponentMetadata = {
   evidence_count?: number;
 };
 
+/**
+ * Structural render spec consumed by client apps (e.g. cisco-my-agent-usecases'
+ * PatternView). MCP owns the pattern's structure — layout + label/action
+ * vocabulary — while the client owns the pixels, copy, and data.
+ */
+export type UiComponentSpec = {
+  layout: "ledger" | "itemcards" | "commitments";
+  stepKinds?: Record<string, string>;
+  statusKinds?: Record<string, string>;
+  actions?: string[];
+  /** Per-item-kind action lists; clients fall back to `actions`. */
+  actionsByKind?: Record<string, string[]>;
+};
+
 export type ComponentDefinition = {
   metadata: ComponentMetadata;
   behavior: {
@@ -29,7 +43,49 @@ export type ComponentDefinition = {
         type: "field" | "status";
       }>;
     };
+    component?: UiComponentSpec;
   };
+};
+
+const STATUS_KINDS = {
+  missed: "MISSED",
+  "at-risk": "AT RISK",
+  active: "ACTIVE",
+} as const;
+
+/**
+ * Per-pattern render specs. Vocabulary comes from the pattern's own
+ * semantics (e.g. Memory Commitment Review's keep / revert / forget).
+ * Patterns without an entry simply ship no ui.component.
+ */
+const UI_COMPONENT_SPECS: Record<string, UiComponentSpec> = {
+  "background-work-ledger": {
+    layout: "ledger",
+    statusKinds: STATUS_KINDS,
+    actions: ["Open"],
+    actionsByKind: {
+      urgent: ["Approve", "Snooze"],
+      blocked: ["Nudge", "Escalate"],
+      commitment: ["Mark done", "Reschedule"],
+      fyi: ["Dismiss"],
+    },
+  },
+  "deferred-detail": {
+    layout: "itemcards",
+    statusKinds: STATUS_KINDS,
+    stepKinds: {
+      queried: "Queried",
+      assumed: "Assumed",
+      opened: "Opened",
+      flagged: "Flagged",
+    },
+    actions: ["Review detail", "Approve"],
+  },
+  "memory-commitment-review": {
+    layout: "commitments",
+    statusKinds: STATUS_KINDS,
+    actions: ["Keep", "Revert", "Forget"],
+  },
 };
 
 export function buildComponentFromPattern(pattern: Pattern): ComponentDefinition {
@@ -105,6 +161,9 @@ export function buildComponentFromPattern(pattern: Pattern): ComponentDefinition
           },
         ],
       },
+      ...(UI_COMPONENT_SPECS[pattern.slug]
+        ? { component: UI_COMPONENT_SPECS[pattern.slug] }
+        : {}),
     },
   };
 }

@@ -143,18 +143,18 @@ export function rosterFromAgentCount(count: number): string[] {
 }
 
 export function extractAgents(text: string): string[] {
-  const declaredCount = parseAgentCount(text);
-  if (declaredCount !== null && declaredCount > 0) {
-    return rosterFromAgentCount(declaredCount);
-  }
-
+  // Named agents beat a declared count: "2 agents: finance and customer
+  // success" should yield the names, not a generic agent-1/agent-2 roster.
   const explicitRegex = /(?:agents?|roles?|teams?|involving)[:\s]+([^.;]+)/i;
   const explicitMatch = explicitRegex.exec(text);
   if (explicitMatch?.[1]) {
     const agents = explicitMatch[1]
-      .split(/[,;/]/)
+      .split(/,|;|\/|\band\b|&/i)
       .map((part) => part.trim())
-      .filter((part) => part.length > 2 && !part.includes("?"));
+      .filter(
+        (part) =>
+          part.length > 2 && !part.includes("?") && !/^\d+$/.test(part),
+      );
     const normalized = uniqueAgents(agents);
     if (normalized.length > 0) return normalized;
   }
@@ -180,8 +180,17 @@ export function extractAgents(text: string): string[] {
       if (!foundRoles.includes(label)) foundRoles.push(label);
     }
   }
+  const roleAgents = uniqueAgents(foundRoles);
+  if (roleAgents.length > 0) return roleAgents;
 
-  return uniqueAgents(foundRoles);
+  // Last resort: no names anywhere, fall back to a generic roster sized by
+  // the declared count ("5 agents" -> agent-1..agent-5).
+  const declaredCount = parseAgentCount(text);
+  if (declaredCount !== null && declaredCount > 0) {
+    return rosterFromAgentCount(declaredCount);
+  }
+
+  return [];
 }
 
 export function extractDisagreement(text: string): string | null {

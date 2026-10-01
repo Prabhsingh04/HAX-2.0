@@ -27,11 +27,10 @@ export function PatternRecommendationCard({
 }: PatternRecommendationCardProps) {
   const { pattern } = recommendation;
   const instructionCopy = getRecommendationCopy(pattern.slug);
-  const reasons =
-    instructionCopy?.defaultReasons ??
-    (pattern.slug === "convergence-point"
-      ? CONVERGENCE_RECOMMENDATION_COPY.defaultReasons
-      : buildRecommendationReasons(userInput, recommendation));
+  // Always use pattern-grounded bullets. Instruction-file defaultReasons make
+  // claims about the USER's scenario ("Multiple roles needed for one
+  // decision") that are stamped on regardless of what was actually described.
+  const reasons = buildRecommendationReasons(userInput, recommendation);
   const evidence =
     instructionCopy?.researchQuote ??
     (pattern.slug === "convergence-point"

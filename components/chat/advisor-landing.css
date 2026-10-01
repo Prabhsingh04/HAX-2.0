@@ -6,6 +6,15 @@
   padding: 1rem;
 }
 
+/* Session chat must scroll internally, like the landing shell does — without
+   this the message list grows unbounded and the auto-scroll-to-bottom pushes
+   the input bar thousands of px out of the viewport. */
+.advisor-chat-shell--session .advisor-chat-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .advisor-chat-shell--session .advisor-chat-input-bar {
   border-top: 1px solid rgba(41, 50, 71, 0.06);
   background: rgba(255, 255, 255, 0.72);

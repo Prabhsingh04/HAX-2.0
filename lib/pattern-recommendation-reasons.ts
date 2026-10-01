@@ -1,10 +1,5 @@
 import type { ChatRecommendation } from "@/lib/pattern-advisor";
-import { extractAgents } from "@/components/patterns/edit/convergence-point-extractor";
 import { getPattern } from "@/lib/patterns";
-
-function countAgentsInInput(userInput: string): number {
-  return extractAgents(userInput).length;
-}
 
 function sentenceBullets(text: string, max = 3): string[] {
   return text
@@ -16,47 +11,21 @@ function sentenceBullets(text: string, max = 3): string[] {
 
 /**
  * Build “Why this pattern?” bullets for the recommendation card.
+ *
+ * Grounded in the PATTERN's own content only. The old version derived bullets
+ * from keyword regexes on the user's input and stamped them on every card
+ * identically — so a single-agent scenario mentioning "resolved" gave all 12
+ * cards "Clear disagreement detected" / "N agents with different positions".
  */
 export function buildRecommendationReasons(
-  userInput: string,
+  _userInput: string,
   recommendation: ChatRecommendation,
 ): string[] {
   const reasons: string[] = [];
-  const agentCount = countAgentsInInput(userInput);
-  const input = userInput.toLowerCase();
 
-  if (agentCount >= 2) {
-    reasons.push(
-      `${agentCount} agents with different positions`,
-    );
-  }
-
-  if (/\b(disagree|conflict|vs\.?|versus|debate|split|tension)\b/i.test(input)) {
-    reasons.push("Clear disagreement detected");
-  }
-
-  if (
-    /\b(decided|resolved|approved|converged|adopted|outcome|resolution)\b/i.test(
-      input,
-    )
-  ) {
-    reasons.push("Shows how conflict was resolved");
-  }
-
-  if (/\b(decision|reasoning|rationale|why we chose)\b/i.test(input)) {
-    reasons.push("Captures decision reasoning for audit");
-  }
-
-  if (/\b(assumption|assume|believed|context missing)\b/i.test(input)) {
-    reasons.push("Surfaces hidden assumptions behind disagreement");
-  }
-
-  if (/\b(credential|permission|scope|boundary|access)\b/i.test(input)) {
-    reasons.push("Multi-agent setup implies capability boundaries");
-  }
-
-  if (recommendation.confidence === "high" && reasons.length < 3) {
-    reasons.push("Strong match for your described scenario");
+  const pattern = getPattern(recommendation.pattern.slug);
+  if (pattern?.oneliner) {
+    reasons.push(pattern.oneliner);
   }
 
   if (reasons.length < 2) {
@@ -75,7 +44,7 @@ export function buildRecommendationReasons(
     }
   }
 
-  return unique.slice(0, 4);
+  return unique.slice(0, 3);
 }
 
 /**
