@@ -21,6 +21,40 @@ import {
 } from "@/lib/pattern-live-preview";
 import type { ConvergenceSaveRevealState } from "@/lib/convergence-save-reveal";
 import { SaveProcessingOverlay } from "@/components/shared/SaveProcessingOverlay";
+import {
+  getGenericInterview,
+  type InterviewAnswer,
+} from "@/lib/patterns/generic-interview";
+
+/** "Your scenario" card for patterns filled via the generic interview. */
+function GenericScenarioCard({
+  patternName,
+  answers,
+}: {
+  patternName?: string;
+  answers: InterviewAnswer[];
+}) {
+  return (
+    <section className="mx-auto mb-4 w-full max-w-2xl overflow-hidden rounded-2xl border border-line bg-white">
+      <div className="border-b border-line bg-hover/40 px-4 py-2.5">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-subtle">
+          Your scenario
+        </h3>
+        <p className="mt-0.5 text-xs text-muted">
+          {patternName ?? "This pattern"}, from what you described
+        </p>
+      </div>
+      <dl className="divide-y divide-line">
+        {answers.map((a, i) => (
+          <div key={i} className="px-4 py-3">
+            <dt className="text-xs font-medium text-muted">{a.question}</dt>
+            <dd className="mt-1 text-sm leading-relaxed text-ink">{a.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
 
 type PatternDesignPreviewProps = {
   slug: string;
@@ -145,6 +179,9 @@ export function PatternDesignPreview({
   const Inbox = PATTERN_INBOX[slug];
   const hasStandalone = hasPatternStandalone(slug);
   const hasInbox = hasPatternInbox(slug);
+  const genericAnswers =
+    getGenericInterview(instanceState?.workspace as Record<string, unknown>)
+      ?.answers ?? [];
   const live = resolveLivePreview(slug, instanceState);
   const showLiveSummary =
     !hasUserScenario(slug, live.workspace) &&
@@ -239,6 +276,9 @@ export function PatternDesignPreview({
         {isSaving ? (
           <SaveProcessingOverlay label="Processing…" />
         ) : null}
+        {view !== "code" && genericAnswers.length > 0 ? (
+          <GenericScenarioCard patternName={patternName} answers={genericAnswers} />
+        ) : null}
         {view === "code" ? (
           <PreviewCodeView
             slug={slug}
@@ -286,7 +326,7 @@ export function PatternDesignPreview({
               />
             ) : null}
           </div>
-        ) : (
+        ) : genericAnswers.length > 0 ? null : (
           <div className="flex h-full min-h-[12rem] flex-col items-center justify-center rounded-2xl border border-dashed border-line-md bg-white p-8 text-center">
             {showLiveSummary ? (
               <DraftParameterSummary

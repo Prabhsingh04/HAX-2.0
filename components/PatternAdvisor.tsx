@@ -30,6 +30,13 @@ import {
   updatePatternInstance,
 } from "@/lib/pattern-advisor";
 import { heuristicAnswerCheck } from "@/lib/patterns/answer-gate";
+import {
+  INTERVIEW_WORKSPACE_KEY,
+  currentInterviewQuestion,
+  fetchInterviewQuestions,
+  getGenericInterview,
+  recordInterviewAnswer,
+} from "@/lib/patterns/generic-interview";
 import { emptyContextFromPresets } from "@/lib/context-field-config";
 import { getPattern } from "@/lib/patterns";
 import type { InstanceSidebarData } from "@/lib/instance-types";
@@ -391,6 +398,86 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
       }
     }
 
+    // Generic (model-driven) interview for patterns with no hand-scripted flow.
+    if (activeInstance && !hasExtractionFlow(activeInstance.slug)) {
+      const ws =
+        (activeInstance.state.workspace as Record<string, unknown>) ?? {};
+      const iv = getGenericInterview(ws);
+      const question = iv ? currentInterviewQuestion(iv) : null;
+      if (iv && question) {
+        loadingRef.current = true;
+        setLoading(true);
+        setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
+        setInput("");
+
+        // Same answer-gate as the scripted flow: reject junk/uncertainty.
+        let verdict: import("@/lib/patterns/answer-gate").AnswerVerdict = {
+          isAnswer: true,
+        };
+        try {
+          const res = await fetch("/api/extract", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              slug: activeInstance.slug,
+              field: "scenario",
+              question,
+              text: trimmed,
+            }),
+          });
+          if (!res.ok) throw new Error(`extract route returned ${res.status}`);
+          verdict = await res.json();
+        } catch {
+          verdict = heuristicAnswerCheck(question, trimmed);
+        }
+
+        if (!verdict.isAnswer) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: verdict.reply ?? `Let's stay on this one: ${question}`,
+            },
+          ]);
+          loadingRef.current = false;
+          setLoading(false);
+          return;
+        }
+
+        const nextIv = recordInterviewAnswer(iv, question, trimmed);
+        const nextWs = { ...ws, [INTERVIEW_WORKSPACE_KEY]: nextIv };
+        setActiveInstance((current) =>
+          current
+            ? {
+                ...current,
+                state: {
+                  ...current.state,
+                  workspace: nextWs,
+                  updatedAt: new Date().toISOString(),
+                },
+              }
+            : null,
+        );
+        void updatePatternInstance(activeInstance.instanceId, activeInstance.state, {
+          workspace: nextWs,
+        }).catch(() => {});
+
+        const nextQuestion = currentInterviewQuestion(nextIv);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: nextQuestion
+              ? `Got it.\n\n${nextQuestion}`
+              : "Got it — your scenario is captured. Review it in the preview, then Customise or Save when it looks right.",
+          },
+        ]);
+        loadingRef.current = false;
+        setLoading(false);
+        return;
+      }
+    }
+
     await sendMessage(trimmed);
   }, [activeInstance, input, sendMessage]);
 
@@ -411,6 +498,15 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
           ? (carried.workspace as Record<string, unknown>)
           : undefined;
 
+      // Non-scripted patterns get a model-generated interview. Fetch its
+      // questions up front and seed them into the workspace (unless a carried
+      // workspace already has an interview, e.g. on a pattern switch).
+      const scripted = hasExtractionFlow(slug);
+      let genericQuestions: string[] = [];
+      if (!scripted && !getGenericInterview(carriedWorkspace)) {
+        genericQuestions = await fetchInterviewQuestions(slug);
+      }
+
       try {
         const { instanceId, instance, component } = await instantiatePattern(
           slug,
@@ -421,6 +517,15 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
             workspace: {
               ...defaultWorkspaceForSlug(slug),
               ...(carriedWorkspace ?? {}),
+              ...(genericQuestions.length > 0
+                ? {
+                    [INTERVIEW_WORKSPACE_KEY]: {
+                      questions: genericQuestions,
+                      step: 0,
+                      answers: [],
+                    },
+                  }
+                : {}),
             },
             context:
               carried?.context &&
@@ -442,14 +547,14 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
         setShowDesignPreview(true);
         setInput("");
         if (!options?.quiet) {
+          const intro = scripted
+            ? buildExtractionIntroMessage(slug)
+            : genericQuestions.length > 0
+              ? `Let's capture your scenario for ${patternName}.\n\n${genericQuestions[0]}`
+              : `I've created an instance of ${patternName}. Review the preview, then click Customise when you're ready to fill in your scenario.`;
           setMessages((prev) => [
             ...prev,
-            {
-              role: "assistant",
-              content: hasExtractionFlow(slug)
-                ? buildExtractionIntroMessage(slug)
-                : `I've created an instance of ${patternName}. Review the preview, then click Customise when you're ready to fill in your scenario.`,
-            },
+            { role: "assistant", content: intro },
           ]);
           showToast(`${patternName} instantiated`);
         }
