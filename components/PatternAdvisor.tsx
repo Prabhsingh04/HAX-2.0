@@ -133,6 +133,9 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
 
   const sentInitialPrompt = useRef(false);
   const loadingRef = useRef(false);
+  // Latest messages, readable from callbacks that aren't in the deps array
+  // (sendMessage), so the advisor can send recent history for context.
+  const messagesRef = useRef<ChatMessage[]>([]);
   const previewPanelRef = useRef<HTMLElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -172,6 +175,10 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
     },
     [],
   );
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   // Auto-save the conversation (debounced) once the user has said anything.
   // Static/review builds have no API routes — the fetch just fails silently.
@@ -251,10 +258,19 @@ export function PatternAdvisor({ initialPrompt }: { initialPrompt?: string }) {
       let content: string;
       let recommendations: ChatRecommendation[];
       try {
+        // Recent conversation (text turns only) so follow-ups keep context.
+        const history = messagesRef.current
+          .filter((m) => typeof m.content === "string" && m.content.trim())
+          .slice(-6)
+          .map((m) => ({ role: m.role, content: m.content }));
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: trimmed, sessionId: "advisor-ui" }),
+          body: JSON.stringify({
+            message: trimmed,
+            sessionId: "advisor-ui",
+            history,
+          }),
         });
         if (!res.ok) throw new Error(`chat route returned ${res.status}`);
         const data = (await res.json()) as {

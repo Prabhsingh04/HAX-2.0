@@ -65,9 +65,14 @@ function getClient(): Anthropic {
   return client;
 }
 
+export type ChatTurn = { role: "user" | "assistant"; content: string };
+
 export type GenerateOptions = {
   system: string;
-  prompt: string;
+  /** Single-turn prompt. Ignored if `messages` is provided. */
+  prompt?: string;
+  /** Multi-turn conversation (for context-aware follow-ups). */
+  messages?: ChatTurn[];
   maxTokens?: number;
   temperature?: number;
   /** Per-call timeout override for latency-sensitive paths (e.g. judging). */
@@ -93,12 +98,23 @@ function extractText(response: Anthropic.Message): string {
 export async function generateText({
   system,
   prompt,
+  messages,
   maxTokens = 700,
   temperature = 0.3,
   timeoutMs,
   maxRetries,
   task = "default",
 }: GenerateOptions): Promise<string> {
+  const turns: ChatTurn[] =
+    messages && messages.length > 0
+      ? messages
+      : prompt !== undefined
+        ? [{ role: "user", content: prompt }]
+        : [];
+  if (turns.length === 0) {
+    throw new Error("generateText needs a prompt or messages");
+  }
+
   const models = modelsForTask(task);
   let lastError: unknown;
 
@@ -111,7 +127,7 @@ export async function generateText({
           max_tokens: maxTokens,
           temperature,
           system,
-          messages: [{ role: "user", content: prompt }],
+          messages: turns,
         },
         {
           ...(timeoutMs !== undefined ? { timeout: timeoutMs } : {}),

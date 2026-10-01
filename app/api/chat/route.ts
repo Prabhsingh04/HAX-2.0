@@ -6,7 +6,7 @@ import {
 } from "@/lib/pattern-advisor";
 import { fetchComponent } from "@/server/mcp-server";
 import { patterns } from "@/lib/patterns";
-import { generateText, isGatewayConfigured } from "@/lib/llm/gateway";
+import { generateText, isGatewayConfigured, type ChatTurn } from "@/lib/llm/gateway";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -68,6 +68,22 @@ export async function POST(request: NextRequest) {
   try {
     const message = body.message as string | undefined;
     const sessionId = (body.sessionId as string | undefined) ?? "anonymous";
+    // Recent conversation so follow-ups keep context ("what if the regulator
+    // asks later?" needs to know what was just recommended). Capped + sanitized.
+    const history: ChatTurn[] = Array.isArray(body.history)
+      ? (body.history as unknown[])
+          .filter(
+            (m): m is ChatTurn =>
+              !!m &&
+              typeof m === "object" &&
+              (((m as ChatTurn).role === "user") ||
+                (m as ChatTurn).role === "assistant") &&
+              typeof (m as ChatTurn).content === "string" &&
+              (m as ChatTurn).content.trim().length > 0,
+          )
+          .slice(-6)
+          .map((m) => ({ role: m.role, content: m.content.slice(0, 1500) }))
+      : [];
 
     if (!message?.trim()) {
       return NextResponse.json(
@@ -91,12 +107,21 @@ export async function POST(request: NextRequest) {
 
     if (isGatewayConfigured()) {
       try {
-        // The model sees the WHOLE library and decides both things: whether
-        // the message is a scenario at all, and which pattern fits best.
+        // The model sees the WHOLE library (in the system prompt) plus the
+        // recent conversation, and decides both things: whether the message is
+        // a scenario at all, and which pattern fits best.
+        // Conversation must start with a user turn (the welcome line is an
+        // assistant message) — drop any leading assistant turns.
+        const convo: ChatTurn[] = [
+          ...history,
+          { role: "user" as const, content: trimmed },
+        ];
+        while (convo.length > 1 && convo[0]!.role !== "user") convo.shift();
+
         aiResponse = await generateText({
           task: "advisor",
-          system: ADVISOR_SYSTEM,
-          prompt: `User's message:\n"${trimmed}"\n\nPattern library:\n${buildLibraryContext()}`,
+          system: `${ADVISOR_SYSTEM}\n\nPattern library:\n${buildLibraryContext()}`,
+          messages: convo,
           // Reasoning models spend "thinking" tokens from this budget before
           // emitting text; choosing among 17 patterns needs headroom or the
           // reply comes back empty.
