@@ -1,6 +1,6 @@
 # Agent UX Patterns
 
-Sixteen interaction patterns for designing trustworthy human–agent systems, grounded in practitioner research.
+Seventeen interaction patterns for designing trustworthy human–agent systems, grounded in practitioner research.
 
 | # | Pattern | Status |
 |---|---------|--------|
@@ -17,9 +17,10 @@ Sixteen interaction patterns for designing trustworthy human–agent systems, gr
 | 11 | [Credential Boundary](#11--credential-boundary) | Grounded |
 | 12 | [Disclosure Gradient](#12--disclosure-gradient) | Grounded |
 | 13 | [Decision Ledger](#13--decision-ledger) | Grounded |
-| 14 | [Deferred Detail](#14--deferred-detail) | Grounded |
-| 15 | [Convergence Point](#15--convergence-point) | Hypothesis |
-| 16 | [Certainty Boundary](#16--certainty-boundary) | Hypothesis |
+| 14 | [Proposed Commits](#14--proposed-commits) | None |
+| 15 | [Deferred Detail](#15--deferred-detail) | Grounded |
+| 16 | [Convergence Point](#16--convergence-point) | Hypothesis |
+| 17 | [Certainty Boundary](#17--certainty-boundary) | Hypothesis |
 
 ---
 
@@ -67,7 +68,7 @@ Async agent work feels like a black box when users return. A ledger reconstructs
 
 ### 04 · Assumption Surface
 
-**Status:** Planned · **Slug:** `assumption-surface` · **Pairs with:** [15 · Convergence Point](#15--convergence-point)
+**Status:** Planned · **Slug:** `assumption-surface` · **Pairs with:** [16 · Convergence Point](#16--convergence-point)
 
 Show why agents reached different conclusions: what each could see, what it filled in, what it concluded.
 
@@ -220,7 +221,21 @@ Regulators and internal risk teams ask “how did you get here?” The ledger ca
 
 ---
 
-### 14 · Deferred Detail
+### 14 · Proposed Commits
+
+**Status:** None · **Slug:** `proposed-commits` · **Pairs with:** [13 · Decision Ledger](#13--decision-ledger)
+
+The action waiting to commit: agent reason, optional operator context, and the controls to seal or decline.
+
+Before anything enters the ledger, the agent presents what it proposes to do and why. The operator can commit with the agent reason as written, add context the agent could not know, or decline with a reason. Each exit writes a sealed record into Decision Ledger. Nothing in this surface is read-only history.
+
+**Example:** Restart svc-payments, CHG-2231: agent reason cites memory at 91 percent of limit. Operator adds that the vendor engineer is on site today, then commits. The sealed record moves to Decision Ledger.
+
+**Note:** Split from Decision Ledger; not yet validated as a separate pattern name.
+
+---
+
+### 15 · Deferred Detail
 
 **Status:** Grounded · **Slug:** `deferred-detail` · **Pairs with:** [12 · Disclosure Gradient](#12--disclosure-gradient)
 
@@ -237,7 +252,7 @@ The same detail lands differently depending on when it appears. While the work i
 
 ---
 
-### 15 · Convergence Point
+### 16 · Convergence Point
 
 **Status:** Hypothesis · **Slug:** `convergence-point` · **Pairs with:** [02 · Signal-to-Intent Handshake](#02--signal-to-intent-handshake)
 
@@ -253,7 +268,7 @@ When sub-agents disagree, users need to see convergence mechanics: what was adop
 
 ---
 
-### 16 · Certainty Boundary
+### 17 · Certainty Boundary
 
 **Status:** Hypothesis · **Slug:** `certainty-boundary`
 

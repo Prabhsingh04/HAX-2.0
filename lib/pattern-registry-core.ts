@@ -17,6 +17,11 @@ export type ComponentMetadata = {
   backingStrength?: BackingStrength;
   participants?: string;
   evidence_count?: number;
+  // Relationship fields the deck advertises as "what a tool or agent reasons
+  // over" (slide 9). composes_with is derived from the pattern's pairsWith;
+  // conflicts_with is authored data — empty until the content team fills it.
+  composes_with: string[];
+  conflicts_with: string[];
 };
 
 /**
@@ -61,6 +66,8 @@ export function buildComponentFromPattern(pattern: Pattern): ComponentDefinition
         ? anonymizeParticipants(pattern.participants)
         : undefined,
       evidence_count: pattern.evidence?.length || 0,
+      composes_with: pattern.pairsWith ? [pattern.pairsWith] : [],
+      conflicts_with: [],
     },
     behavior: {
       stateSchema: {
