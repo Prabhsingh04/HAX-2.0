@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
     const example = section("Example") ?? "";
 
     const raw = await generateText({
+      task: "interview",
       system: SYSTEM,
       prompt: `Pattern: ${meta.name}\nWhat it solves: ${solves}\nExample: ${example}`,
       maxTokens: 1024,

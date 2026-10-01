@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
         // The model sees the WHOLE library and decides both things: whether
         // the message is a scenario at all, and which pattern fits best.
         aiResponse = await generateText({
+          task: "advisor",
           system: ADVISOR_SYSTEM,
           prompt: `User's message:\n"${trimmed}"\n\nPattern library:\n${buildLibraryContext()}`,
           // Reasoning models spend "thinking" tokens from this budget before

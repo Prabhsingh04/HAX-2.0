@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const raw = await generateText({
+      task: "judge",
       system: JUDGE_SYSTEM,
       prompt: `Interview question:\n"${question.trim()}"\n\nUser's message:\n"${text.trim()}"`,
       // Reasoning models spend thinking tokens from this budget; 250 caused
