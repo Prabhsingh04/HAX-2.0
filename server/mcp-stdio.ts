@@ -35,6 +35,14 @@ console.log = (...args: unknown[]) => console.error(...args);
 
 type RegistryModule = typeof import("@/server/mcp-server");
 
+/**
+ * A free-form JSON object param (open-ended keys). `z.looseObject({})` emits
+ * `{"type":"object","additionalProperties":{}}` — a real `type` keyword, unlike
+ * a bare `z.record(z.string(), z.unknown())` which emits `{}` and trips up some
+ * MCP clients.
+ */
+const jsonObject = z.looseObject({});
+
 /** Wrap any JSON-serializable payload as an MCP text-content result. */
 function json(payload: unknown) {
   return {
@@ -99,7 +107,7 @@ function buildServer(registry: RegistryModule): McpServer {
         "Create a live instance of a pattern with a unique id and timestamped state.",
       inputSchema: {
         slug: z.string().min(1),
-        initial_state: z.record(z.string(), z.unknown()).optional(),
+        initial_state: jsonObject.optional(),
         agent_id: z.string().optional(),
         persistent: z.boolean().optional(),
       },
@@ -123,7 +131,7 @@ function buildServer(registry: RegistryModule): McpServer {
         "Deep-merge new fields into an instance's state (nested objects like `workspace` merge key-by-key).",
       inputSchema: {
         instance_id: z.string().min(1),
-        updates: z.record(z.string(), z.unknown()),
+        updates: jsonObject,
       },
     },
     async ({ instance_id, updates }) => {
@@ -170,7 +178,7 @@ function buildServer(registry: RegistryModule): McpServer {
         from_instance_id: z.string().min(1),
         to_component_slug: z.string().min(1),
         to_agent_id: z.string().min(1),
-        context_data: z.record(z.string(), z.unknown()).optional(),
+        context_data: jsonObject.optional(),
       },
     },
     async ({

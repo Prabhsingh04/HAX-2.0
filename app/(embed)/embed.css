@@ -1,0 +1,12 @@
+/* /embed/* — center the pattern component, no page chrome */
+.embed-root {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  background: transparent;
+}
+
+.embed-frame {
+  width: 100%;
+  max-width: 640px;
+}
