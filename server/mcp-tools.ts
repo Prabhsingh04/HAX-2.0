@@ -36,7 +36,7 @@ function toolError(message: string) {
 export function buildServer(registry: RegistryModule): McpServer {
   const {
     brokerStateHandoff,
-    discoverComponents,
+    discoverComponentsSmart,
     fetchComponent,
     getInstanceState,
     instantiateComponent,
@@ -51,12 +51,12 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Discover patterns",
       description:
-        "Keyword / natural-language search over the pattern catalogue. Returns ranked pattern metadata (slug, name, description, backing strength, evidence count).",
+        "Semantic (embedding) search over the pattern catalogue, with keyword fallback. Returns pattern metadata ranked best-first (slug, name, description, backing strength, evidence count).",
       inputSchema: {
         query: z.string().min(1).describe("What you're trying to do"),
       },
     },
-    async ({ query }) => json(discoverComponents(query)),
+    async ({ query }) => json(await discoverComponentsSmart(query)),
   );
 
   server.registerTool(

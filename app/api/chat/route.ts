@@ -6,6 +6,7 @@ import {
 } from "@/lib/pattern-advisor";
 import { fetchComponent } from "@/server/mcp-server";
 import { patterns } from "@/lib/patterns";
+import { rankPatterns } from "@/lib/patterns/embedding-index";
 import { generateText, isGatewayConfigured, type ChatTurn } from "@/lib/llm/gateway";
 import { recordRequest } from "@/lib/request-log";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,24 +35,42 @@ background agent work). Do not name or force a pattern.
 
 Always be concise and concrete. No preamble like "Great question".`;
 
-/**
- * The whole library as compact grounded context. Seventeen patterns fit
- * comfortably in a prompt, so the model sees everything — keyword retrieval
- * exists only as the offline fallback ranking (it buried Decision Ledger at
- * #13 for a textbook audit-trail query).
- */
-function buildLibraryContext(): string {
-  return patterns
-    .map((p, i) =>
-      [
-        `${i + 1}. ${p.title} (slug: ${p.slug})`,
-        `   Backing strength: ${p.backingStrength ?? "Unrated"}`,
-        `   Solves: ${p.whatItSolves ?? p.explanation}`,
-        p.example ? `   Example: ${p.example}` : "",
+/** Build a card recommendation from a slug (retrieval candidate). */
+function recFromSlug(slug: string, userInput: string): ChatRecommendation | null {
+  const fullComponent = fetchComponent(slug);
+  if (!fullComponent) return null;
+  return {
+    pattern: {
+      name: fullComponent.metadata.name,
+      slug: fullComponent.metadata.slug,
+    },
+    reason: `Recommended for: "${userInput}"`,
+    confidence: "high",
+    explanation: "",
+    fullComponent,
+    uiSections: fullComponent.ui.text.sections,
+  };
+}
+
+/** Compact context for just the retrieved candidates (the LLM reranks these). */
+function buildCandidateContext(recs: ChatRecommendation[]): string {
+  return recs
+    .map((rec, i) => {
+      const m = rec.fullComponent.metadata;
+      const solves =
+        rec.uiSections.find((s) => s.title === "What it solves")?.content ??
+        m.description;
+      const example =
+        rec.uiSections.find((s) => s.title === "Example")?.content ?? "";
+      return [
+        `${i + 1}. ${m.name} (slug: ${m.slug})`,
+        `   Backing strength: ${m.backingStrength ?? "Unrated"}`,
+        `   Solves: ${solves}`,
+        example ? `   Example: ${example}` : "",
       ]
         .filter(Boolean)
-        .join("\n"),
-    )
+        .join("\n");
+    })
     .join("\n\n");
 }
 
@@ -96,10 +115,19 @@ export async function POST(request: NextRequest) {
 
     const trimmed = message.trim();
 
-    // Retrieval: rank candidate patterns (keyword scorer over the registry).
-    let recommendations = (await recommendPatterns(trimmed)).map(
-      toChatRecommendation,
-    );
+    // Retrieval: embedding similarity (deterministic, local) picks the top
+    // candidates; keyword scorer is the fallback. The LLM reranks these.
+    const ranked = await rankPatterns(trimmed, 5);
+    let recommendations: ChatRecommendation[];
+    if (ranked && ranked.length > 0) {
+      recommendations = ranked
+        .map((r) => recFromSlug(r.slug, trimmed))
+        .filter((r): r is ChatRecommendation => r !== null);
+    } else {
+      recommendations = (await recommendPatterns(trimmed))
+        .slice(0, 5)
+        .map(toChatRecommendation);
+    }
 
     // Generation: let the model reason over the candidates. Falls back to the
     // deterministic template if the gateway is unconfigured or unreachable, so
@@ -122,11 +150,12 @@ export async function POST(request: NextRequest) {
 
         aiResponse = await generateText({
           task: "advisor",
-          system: `${ADVISOR_SYSTEM}\n\nPattern library:\n${buildLibraryContext()}`,
+          system: `${ADVISOR_SYSTEM}\n\nCandidate patterns:\n${buildCandidateContext(
+            recommendations,
+          )}`,
           messages: convo,
-          // Reasoning models spend "thinking" tokens from this budget before
-          // emitting text; choosing among 17 patterns needs headroom or the
-          // reply comes back empty.
+          // Headroom for reasoning models that spend "thinking" tokens before
+          // emitting text.
           maxTokens: 2000,
         });
         source = "gateway";

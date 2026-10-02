@@ -19,6 +19,7 @@ import {
   type ComponentMetadata,
 } from "@/lib/pattern-registry-core";
 import { patterns } from "@/lib/patterns";
+import { rankPatterns } from "@/lib/patterns/embedding-index";
 import {
   listInstancesByAgent,
   loadInstance,
@@ -60,6 +61,28 @@ export function discoverComponents(
   _context?: Record<string, unknown>,
 ): ComponentMetadata[] {
   return discoverFromCore(query);
+}
+
+/**
+ * Retrieval with embedding similarity (deterministic, local) and a keyword
+ * fallback. Returns pattern metadata ranked best-first. This is the retrieval
+ * layer behind discover_patterns and the advisor's candidate list.
+ */
+export async function discoverComponentsSmart(
+  query: string,
+  limit = 10,
+): Promise<ComponentMetadata[]> {
+  const ranked = await rankPatterns(query, limit);
+  if (ranked && ranked.length > 0) {
+    const out: ComponentMetadata[] = [];
+    for (const { slug } of ranked) {
+      const meta = componentRegistry.get(slug)?.metadata;
+      if (meta) out.push(meta);
+    }
+    if (out.length > 0) return out;
+  }
+  // Embeddings unavailable → keyword scorer.
+  return discoverFromCore(query).slice(0, limit);
 }
 
 export function fetchComponent(slug: string): ComponentDefinition | null {

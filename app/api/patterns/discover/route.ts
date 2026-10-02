@@ -1,4 +1,4 @@
-import { discoverComponents } from "@/server/mcp-server";
+import { discoverComponentsSmart } from "@/server/mcp-server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const results = discoverComponents(query, context);
+    const results = await discoverComponentsSmart(query);
+    void context;
 
     return NextResponse.json({
       query,

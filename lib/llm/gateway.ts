@@ -24,7 +24,32 @@ import Anthropic from "@anthropic-ai/sdk";
 const baseURL = process.env.LLM_BASE_URL;
 const apiKey = process.env.LLM_API_KEY;
 const MODEL = process.env.LLM_MODEL ?? "gemma4";
+const EMBED_MODEL = process.env.LLM_EMBED_MODEL ?? "bge-m3";
 const TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS ?? 20_000);
+
+/**
+ * Embed text via the gateway's OpenAI-compatible /v1/embeddings (bge-m3,
+ * local). Used for deterministic semantic retrieval over the pattern library.
+ */
+export async function embed(text: string): Promise<number[]> {
+  if (!isGatewayConfigured()) {
+    throw new Error("Model gateway not configured");
+  }
+  const res = await fetch(`${baseURL}/v1/embeddings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({ model: EMBED_MODEL, input: text }),
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`embeddings ${res.status}`);
+  const data = (await res.json()) as { data?: Array<{ embedding?: number[] }> };
+  const vec = data.data?.[0]?.embedding;
+  if (!vec) throw new Error("embeddings: no vector in response");
+  return vec;
+}
 
 export type LlmTask = "advisor" | "judge" | "interview" | "default";
 
