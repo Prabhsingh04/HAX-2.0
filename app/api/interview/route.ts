@@ -1,5 +1,6 @@
 import { generateText, isGatewayConfigured } from "@/lib/llm/gateway";
 import { fetchComponent } from "@/server/mcp-server";
+import { recordRequest } from "@/lib/request-log";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +62,7 @@ const GENERIC_FALLBACK = [
 ];
 
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
   let body;
   try {
     body = await request.json();
@@ -79,10 +81,12 @@ export async function POST(request: NextRequest) {
   }
 
   if (cache.has(slug)) {
+    recordRequest({ route: "interview", summary: slug, source: "cache", status: "ok", ms: Date.now() - startedAt });
     return NextResponse.json({ questions: cache.get(slug), source: "cache" });
   }
 
   if (!isGatewayConfigured()) {
+    recordRequest({ route: "interview", summary: slug, source: "fallback", status: "fallback", ms: Date.now() - startedAt });
     return NextResponse.json({ questions: GENERIC_FALLBACK, source: "fallback" });
   }
 
@@ -107,9 +111,11 @@ export async function POST(request: NextRequest) {
     if (questions.length === 0) throw new Error(`no usable questions: ${raw.slice(0, 120)}`);
 
     cache.set(slug, questions);
+    recordRequest({ route: "interview", summary: slug, source: "gateway", status: "ok", ms: Date.now() - startedAt });
     return NextResponse.json({ questions, source: "gateway" });
   } catch (error) {
     console.error("Interview generation failed, using fallback:", error);
+    recordRequest({ route: "interview", summary: slug, source: "fallback", status: "fallback", ms: Date.now() - startedAt });
     return NextResponse.json({ questions: GENERIC_FALLBACK, source: "fallback" });
   }
 }

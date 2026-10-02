@@ -7,6 +7,7 @@ import {
 import { fetchComponent } from "@/server/mcp-server";
 import { patterns } from "@/lib/patterns";
 import { generateText, isGatewayConfigured, type ChatTurn } from "@/lib/llm/gateway";
+import { recordRequest } from "@/lib/request-log";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +56,7 @@ function buildLibraryContext(): string {
 }
 
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
   let body;
   try {
     body = await request.json();
@@ -198,6 +200,15 @@ export async function POST(request: NextRequest) {
 
     const topRecommendation = recommendations[0] ?? null;
 
+    recordRequest({
+      route: "chat",
+      sessionId,
+      summary: trimmed,
+      source,
+      status: source === "gateway" ? "ok" : "fallback",
+      ms: Date.now() - startedAt,
+    });
+
     return NextResponse.json({
       sessionId,
       userMessage: trimmed,
@@ -208,6 +219,12 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Chat error:", error);
+    recordRequest({
+      route: "chat",
+      summary: "(error before response)",
+      status: "error",
+      ms: Date.now() - startedAt,
+    });
     const message =
       error instanceof Error ? error.message : "Failed to process chat";
     return NextResponse.json({ error: message }, { status: 500 });

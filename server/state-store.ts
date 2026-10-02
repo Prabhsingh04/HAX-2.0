@@ -40,7 +40,20 @@ export type ChatSessionSummary = Omit<
   "messages" | "activeInstance"
 > & { messageCount: number };
 
+export interface RequestLogEntry {
+  id: string;
+  ts: string;
+  route: string;
+  sessionId: string | null;
+  summary: string;
+  source: string | null;
+  status: string;
+  ms: number;
+}
+
 interface StateBackend {
+  logRequest(entry: RequestLogEntry): Promise<void>;
+  listRequestLogs(limit: number): Promise<RequestLogEntry[]>;
   saveInstance(instance: StoredInstance): Promise<void>;
   loadInstance(instanceId: string): Promise<StoredInstance | null>;
   listInstancesByAgent(agentId?: string): Promise<StoredInstance[]>;
@@ -86,7 +99,43 @@ class SqliteBackend implements StateBackend {
         created_at      TEXT NOT NULL,
         updated_at      TEXT NOT NULL
       );
+      CREATE TABLE IF NOT EXISTS request_logs (
+        id         TEXT PRIMARY KEY,
+        ts         TEXT NOT NULL,
+        route      TEXT NOT NULL,
+        session_id TEXT,
+        summary    TEXT NOT NULL,
+        source     TEXT,
+        status     TEXT NOT NULL,
+        ms         INTEGER NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS idx_request_logs_ts ON request_logs (ts);
     `);
+  }
+
+  async logRequest(e: RequestLogEntry): Promise<void> {
+    this.db
+      .prepare(
+        `INSERT INTO request_logs (id, ts, route, session_id, summary, source, status, ms)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(e.id, e.ts, e.route, e.sessionId, e.summary, e.source, e.status, e.ms);
+  }
+
+  async listRequestLogs(limit: number): Promise<RequestLogEntry[]> {
+    const rows = this.db
+      .prepare(`SELECT * FROM request_logs ORDER BY ts DESC LIMIT ?`)
+      .all(limit) as Record<string, unknown>[];
+    return rows.map((r) => ({
+      id: r.id as string,
+      ts: r.ts as string,
+      route: r.route as string,
+      sessionId: (r.session_id as string | null) ?? null,
+      summary: r.summary as string,
+      source: (r.source as string | null) ?? null,
+      status: r.status as string,
+      ms: r.ms as number,
+    }));
   }
 
   async saveInstance(instance: StoredInstance): Promise<void> {
@@ -233,9 +282,47 @@ class PostgresBackend implements StateBackend {
            active_instance JSONB,
            created_at      TEXT NOT NULL,
            updated_at      TEXT NOT NULL
-         );`,
+         );
+         CREATE TABLE IF NOT EXISTS request_logs (
+           id         TEXT PRIMARY KEY,
+           ts         TEXT NOT NULL,
+           route      TEXT NOT NULL,
+           session_id TEXT,
+           summary    TEXT NOT NULL,
+           source     TEXT,
+           status     TEXT NOT NULL,
+           ms         INTEGER NOT NULL
+         );
+         CREATE INDEX IF NOT EXISTS idx_request_logs_ts ON request_logs (ts);`,
       )
       .then(() => undefined);
+  }
+
+  async logRequest(e: RequestLogEntry): Promise<void> {
+    await this.ready;
+    await this.pool.query(
+      `INSERT INTO request_logs (id, ts, route, session_id, summary, source, status, ms)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [e.id, e.ts, e.route, e.sessionId, e.summary, e.source, e.status, e.ms],
+    );
+  }
+
+  async listRequestLogs(limit: number): Promise<RequestLogEntry[]> {
+    await this.ready;
+    const { rows } = await this.pool.query(
+      `SELECT * FROM request_logs ORDER BY ts DESC LIMIT $1`,
+      [limit],
+    );
+    return rows.map((r) => ({
+      id: r.id,
+      ts: r.ts,
+      route: r.route,
+      sessionId: r.session_id ?? null,
+      summary: r.summary,
+      source: r.source ?? null,
+      status: r.status,
+      ms: Number(r.ms),
+    }));
   }
 
   async saveInstance(instance: StoredInstance): Promise<void> {
@@ -383,3 +470,7 @@ export const listChatSessions = (): Promise<ChatSessionSummary[]> =>
 export const loadChatSession = (
   sessionId: string,
 ): Promise<StoredChatSession | null> => store().loadChatSession(sessionId);
+export const logRequest = (entry: RequestLogEntry): Promise<void> =>
+  store().logRequest(entry);
+export const listRequestLogs = (limit = 100): Promise<RequestLogEntry[]> =>
+  store().listRequestLogs(limit);
