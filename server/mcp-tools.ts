@@ -1,0 +1,174 @@
+import "server-only";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+
+/**
+ * Shared registration of the 7 IoC pattern tools onto an McpServer.
+ * Used by both the stdio entrypoint (server/mcp-stdio.ts) and the remote
+ * Streamable-HTTP endpoint (app/api/mcp/route.ts), so the tool surface is
+ * defined once.
+ */
+export type RegistryModule = typeof import("@/server/mcp-server");
+
+/**
+ * A free-form JSON object param (open-ended keys). `z.looseObject({})` emits
+ * `{"type":"object","additionalProperties":{}}` — a real `type` keyword, unlike
+ * a bare `z.record(...)` which emits `{}` and trips up some MCP clients.
+ */
+const jsonObject = z.looseObject({});
+
+/** Wrap any JSON-serializable payload as an MCP text-content result. */
+function json(payload: unknown) {
+  return {
+    content: [
+      { type: "text" as const, text: JSON.stringify(payload, null, 2) },
+    ],
+  };
+}
+
+function toolError(message: string) {
+  return {
+    isError: true,
+    content: [{ type: "text" as const, text: message }],
+  };
+}
+
+export function buildServer(registry: RegistryModule): McpServer {
+  const {
+    brokerStateHandoff,
+    discoverComponents,
+    fetchComponent,
+    getInstanceState,
+    instantiateComponent,
+    listInstallations,
+    updateInstanceState,
+  } = registry;
+
+  const server = new McpServer({ name: "ioc-patterns", version: "1.0.0" });
+
+  server.registerTool(
+    "discover_patterns",
+    {
+      title: "Discover patterns",
+      description:
+        "Keyword / natural-language search over the pattern catalogue. Returns ranked pattern metadata (slug, name, description, backing strength, evidence count).",
+      inputSchema: {
+        query: z.string().min(1).describe("What you're trying to do"),
+      },
+    },
+    async ({ query }) => json(discoverComponents(query)),
+  );
+
+  server.registerTool(
+    "fetch_pattern",
+    {
+      title: "Fetch pattern",
+      description:
+        "Full definition for one pattern: metadata, state schema, handlers, and UI copy sections.",
+      inputSchema: { slug: z.string().min(1).describe("Pattern slug") },
+    },
+    async ({ slug }) => {
+      const component = fetchComponent(slug);
+      return component ? json(component) : toolError(`Pattern not found: ${slug}`);
+    },
+  );
+
+  server.registerTool(
+    "instantiate_pattern",
+    {
+      title: "Instantiate pattern",
+      description:
+        "Create a live instance of a pattern with a unique id and timestamped state.",
+      inputSchema: {
+        slug: z.string().min(1),
+        initial_state: jsonObject.optional(),
+        agent_id: z.string().optional(),
+        persistent: z.boolean().optional(),
+      },
+    },
+    async ({ slug, initial_state, agent_id, persistent }) => {
+      const instance = await instantiateComponent(
+        slug,
+        initial_state ?? {},
+        agent_id,
+        persistent ?? false,
+      );
+      return instance ? json(instance) : toolError(`Pattern not found: ${slug}`);
+    },
+  );
+
+  server.registerTool(
+    "update_instance",
+    {
+      title: "Update instance state",
+      description:
+        "Deep-merge new fields into an instance's state (nested objects like `workspace` merge key-by-key).",
+      inputSchema: {
+        instance_id: z.string().min(1),
+        updates: jsonObject,
+      },
+    },
+    async ({ instance_id, updates }) => {
+      const instance = await updateInstanceState(instance_id, updates);
+      return instance
+        ? json(instance)
+        : toolError(`Instance not found: ${instance_id}`);
+    },
+  );
+
+  server.registerTool(
+    "get_instance",
+    {
+      title: "Get instance state",
+      description: "Read the current snapshot for one instance.",
+      inputSchema: { instance_id: z.string().min(1) },
+    },
+    async ({ instance_id }) => {
+      const instance = await getInstanceState(instance_id);
+      return instance
+        ? json(instance)
+        : toolError(`Instance not found: ${instance_id}`);
+    },
+  );
+
+  server.registerTool(
+    "list_installations",
+    {
+      title: "List installations",
+      description:
+        "List pattern installations and their instance ids for one agent, or all agents when agent_id is omitted.",
+      inputSchema: { agent_id: z.string().optional() },
+    },
+    async ({ agent_id }) => json(await listInstallations(agent_id)),
+  );
+
+  server.registerTool(
+    "handoff",
+    {
+      title: "Broker state handoff",
+      description:
+        "Create a new instance on a different pattern, inheriting context from the source instance.",
+      inputSchema: {
+        from_instance_id: z.string().min(1),
+        to_component_slug: z.string().min(1),
+        to_agent_id: z.string().min(1),
+        context_data: jsonObject.optional(),
+      },
+    },
+    async ({ from_instance_id, to_component_slug, to_agent_id, context_data }) => {
+      const instance = await brokerStateHandoff(
+        from_instance_id,
+        to_component_slug,
+        to_agent_id,
+        context_data,
+      );
+      return instance
+        ? json(instance)
+        : toolError(
+            `Handoff failed: source instance or target pattern not found (${from_instance_id} → ${to_component_slug})`,
+          );
+    },
+  );
+
+  return server;
+}
