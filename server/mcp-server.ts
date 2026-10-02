@@ -89,6 +89,11 @@ export function fetchComponent(slug: string): ComponentDefinition | null {
   return fetchFromCore(slug);
 }
 
+/** The entire catalogue, unranked — for "load the whole library" (vs search). */
+export function listComponents(): ComponentMetadata[] {
+  return Array.from(componentRegistry.values()).map((c) => c.metadata);
+}
+
 export async function instantiateComponent(
   slug: string,
   initialState: Record<string, unknown> = {},

@@ -40,6 +40,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     fetchComponent,
     getInstanceState,
     instantiateComponent,
+    listComponents,
     listInstallations,
     updateInstanceState,
   } = registry;
@@ -57,6 +58,17 @@ export function buildServer(registry: RegistryModule): McpServer {
       },
     },
     async ({ query }) => json(await discoverComponentsSmart(query)),
+  );
+
+  server.registerTool(
+    "list_patterns",
+    {
+      title: "List all patterns",
+      description:
+        "Return metadata for the ENTIRE pattern catalogue (all patterns), unranked. Use this to browse or load the whole library; use discover_patterns to search for the best fit for a specific situation.",
+      inputSchema: {},
+    },
+    async () => json(listComponents()),
   );
 
   server.registerTool(
