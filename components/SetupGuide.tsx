@@ -21,10 +21,12 @@ const PATTERN_COUNT = patterns.length;
 
 const MCP_ENDPOINT = "https://ioc-patterns.intelligaia.com/api/mcp";
 const MCP_AUTH_HEADER = "Basic Y2lzY286SEFYMi1QYXR0ZXJucy0yMDI2";
+const MCP_BEARER_TOKEN = "ioc-mcp-df675e7b40fc08e4b340";
 
 const ENDPOINT_BLOCK = `Endpoint:   ${MCP_ENDPOINT}
 Transport:  MCP Streamable HTTP
-Auth:       Authorization: ${MCP_AUTH_HEADER}`;
+Auth:       Authorization: ${MCP_AUTH_HEADER}
+   or:      Authorization: Bearer ${MCP_BEARER_TOKEN}  (for Codex)`;
 
 const CURSOR_CONFIG = `{
   "mcpServers": {
@@ -37,6 +39,12 @@ const CURSOR_CONFIG = `{
 
 const CLAUDE_CODE_CMD = `claude mcp add --transport http ioc-patterns ${MCP_ENDPOINT} \\
   --header "Authorization: ${MCP_AUTH_HEADER}"`;
+
+const CODEX_CMD = `# Codex uses a Bearer token — set it as an env var, then add the server
+export IOC_MCP_TOKEN="${MCP_BEARER_TOKEN}"
+
+codex mcp add ioc-patterns --url ${MCP_ENDPOINT} \\
+  --bearer-token-env-var IOC_MCP_TOKEN`;
 
 const CLAUDE_DESKTOP_CONFIG = `{
   "mcpServers": {
@@ -73,6 +81,12 @@ const CONNECT_METHODS: ConnectMethod[] = [
     where: "Run this one command in your project.",
     codeTitle: "terminal",
     code: CLAUDE_CODE_CMD,
+  },
+  {
+    tool: "Codex (CLI)",
+    where: "Run these in your terminal. Codex connects to the streamable-HTTP server with a bearer token.",
+    codeTitle: "terminal",
+    code: CODEX_CMD,
   },
   {
     tool: "Claude Desktop",
