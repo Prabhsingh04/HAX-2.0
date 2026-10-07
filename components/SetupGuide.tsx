@@ -474,8 +474,23 @@ export function SetupGuide() {
 
         <Section eyebrow="Endpoint" title="The connection details">
           <CodeBlock code={ENDPOINT_BLOCK} title="ioc-patterns MCP" />
+          <div className="mt-4 rounded-xl border border-line bg-hover p-4">
+            <p className="text-sm font-semibold text-ink">
+              Want your own access token?
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">
+              Sign up with your email and we&apos;ll send you a personal token to
+              use in place of the shared one below — so your usage is yours.
+            </p>
+            <a
+              href="/access"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-h"
+            >
+              Get your token →
+            </a>
+          </div>
           <p className="mt-3 text-sm text-muted">
-            Auth is a shared token for now. GUI &ldquo;add connector&rdquo; flows that only
+            The shared token still works. GUI &ldquo;add connector&rdquo; flows that only
             take a URL (no header field) won&apos;t work — use one of the methods below,
             which all pass the header.
           </p>
