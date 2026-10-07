@@ -17,6 +17,20 @@ const BEARER = process.env.MCP_BEARER_TOKEN;
 export function middleware(request: NextRequest) {
   if (!USER || !PASS) return NextResponse.next();
 
+  const path = request.nextUrl.pathname;
+
+  // Public signup for a personal token — the /access page and its API are
+  // reachable without the shared secret, so a new user can be sent the link,
+  // sign up, and receive a token by email without ever needing the shared creds.
+  if (path === "/access" || path.startsWith("/api/access")) {
+    return NextResponse.next();
+  }
+
+  // The MCP endpoint does its own auth in the route handler (Node runtime),
+  // because per-user tokens need a DB lookup the Edge middleware can't perform.
+  // It still accepts the shared Basic/Bearer secret there, so this is not a hole.
+  if (path.startsWith("/api/mcp")) return NextResponse.next();
+
   const auth = request.headers.get("authorization");
 
   if (auth?.startsWith("Basic ")) {

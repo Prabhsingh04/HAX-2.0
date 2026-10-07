@@ -51,9 +51,22 @@ export interface RequestLogEntry {
   ms: number;
 }
 
+export interface AccessTokenRecord {
+  email: string;
+  tokenHash: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+  revoked: boolean;
+}
+
 interface StateBackend {
   logRequest(entry: RequestLogEntry): Promise<void>;
   listRequestLogs(limit: number): Promise<RequestLogEntry[]>;
+  saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void>;
+  findAccessToken(tokenHash: string): Promise<AccessTokenRecord | null>;
+  touchAccessToken(tokenHash: string): Promise<void>;
+  listAccessTokens(): Promise<AccessTokenRecord[]>;
+  revokeAccessTokensByEmail(email: string): Promise<number>;
   saveInstance(instance: StoredInstance): Promise<void>;
   loadInstance(instanceId: string): Promise<StoredInstance | null>;
   listInstancesByAgent(agentId?: string): Promise<StoredInstance[]>;
@@ -110,7 +123,50 @@ class SqliteBackend implements StateBackend {
         ms         INTEGER NOT NULL
       );
       CREATE INDEX IF NOT EXISTS idx_request_logs_ts ON request_logs (ts);
+      CREATE TABLE IF NOT EXISTS access_tokens (
+        token_hash   TEXT PRIMARY KEY,
+        email        TEXT NOT NULL,
+        created_at   TEXT NOT NULL,
+        last_used_at TEXT,
+        revoked      INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);
     `);
+  }
+
+  async saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void> {
+    this.db
+      .prepare(
+        `INSERT INTO access_tokens (token_hash, email, created_at) VALUES (?, ?, ?)`,
+      )
+      .run(rec.tokenHash, rec.email, new Date().toISOString());
+  }
+
+  async findAccessToken(tokenHash: string): Promise<AccessTokenRecord | null> {
+    const r = this.db
+      .prepare(`SELECT * FROM access_tokens WHERE token_hash = ?`)
+      .get(tokenHash) as Record<string, unknown> | undefined;
+    return r ? sqliteRowToAccessToken(r) : null;
+  }
+
+  async touchAccessToken(tokenHash: string): Promise<void> {
+    this.db
+      .prepare(`UPDATE access_tokens SET last_used_at = ? WHERE token_hash = ?`)
+      .run(new Date().toISOString(), tokenHash);
+  }
+
+  async listAccessTokens(): Promise<AccessTokenRecord[]> {
+    const rows = this.db
+      .prepare(`SELECT * FROM access_tokens ORDER BY created_at DESC LIMIT 500`)
+      .all() as Record<string, unknown>[];
+    return rows.map(sqliteRowToAccessToken);
+  }
+
+  async revokeAccessTokensByEmail(email: string): Promise<number> {
+    const info = this.db
+      .prepare(`UPDATE access_tokens SET revoked = 1 WHERE email = ? AND revoked = 0`)
+      .run(email);
+    return info.changes;
   }
 
   async logRequest(e: RequestLogEntry): Promise<void> {
@@ -254,6 +310,16 @@ function sqliteRowToInstance(row: Record<string, unknown>): StoredInstance {
   };
 }
 
+function sqliteRowToAccessToken(row: Record<string, unknown>): AccessTokenRecord {
+  return {
+    email: row.email as string,
+    tokenHash: row.token_hash as string,
+    createdAt: row.created_at as string,
+    lastUsedAt: (row.last_used_at as string | null) ?? null,
+    revoked: row.revoked === 1,
+  };
+}
+
 /* ---- Postgres backend ------------------------------------------------- */
 
 class PostgresBackend implements StateBackend {
@@ -293,9 +359,59 @@ class PostgresBackend implements StateBackend {
            status     TEXT NOT NULL,
            ms         INTEGER NOT NULL
          );
-         CREATE INDEX IF NOT EXISTS idx_request_logs_ts ON request_logs (ts);`,
+         CREATE INDEX IF NOT EXISTS idx_request_logs_ts ON request_logs (ts);
+         CREATE TABLE IF NOT EXISTS access_tokens (
+           token_hash   TEXT PRIMARY KEY,
+           email        TEXT NOT NULL,
+           created_at   TEXT NOT NULL,
+           last_used_at TEXT,
+           revoked      BOOLEAN NOT NULL DEFAULT FALSE
+         );
+         CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);`,
       )
       .then(() => undefined);
+  }
+
+  async saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void> {
+    await this.ready;
+    await this.pool.query(
+      `INSERT INTO access_tokens (token_hash, email, created_at) VALUES ($1, $2, $3)`,
+      [rec.tokenHash, rec.email, new Date().toISOString()],
+    );
+  }
+
+  async findAccessToken(tokenHash: string): Promise<AccessTokenRecord | null> {
+    await this.ready;
+    const { rows } = await this.pool.query(
+      `SELECT * FROM access_tokens WHERE token_hash = $1`,
+      [tokenHash],
+    );
+    return rows[0] ? pgRowToAccessToken(rows[0]) : null;
+  }
+
+  async touchAccessToken(tokenHash: string): Promise<void> {
+    await this.ready;
+    await this.pool.query(
+      `UPDATE access_tokens SET last_used_at = $1 WHERE token_hash = $2`,
+      [new Date().toISOString(), tokenHash],
+    );
+  }
+
+  async listAccessTokens(): Promise<AccessTokenRecord[]> {
+    await this.ready;
+    const { rows } = await this.pool.query(
+      `SELECT * FROM access_tokens ORDER BY created_at DESC LIMIT 500`,
+    );
+    return rows.map(pgRowToAccessToken);
+  }
+
+  async revokeAccessTokensByEmail(email: string): Promise<number> {
+    await this.ready;
+    const res = await this.pool.query(
+      `UPDATE access_tokens SET revoked = TRUE WHERE email = $1 AND revoked = FALSE`,
+      [email],
+    );
+    return res.rowCount ?? 0;
   }
 
   async logRequest(e: RequestLogEntry): Promise<void> {
@@ -440,6 +556,16 @@ function pgRowToInstance(row: Record<string, unknown>): StoredInstance {
   };
 }
 
+function pgRowToAccessToken(row: Record<string, unknown>): AccessTokenRecord {
+  return {
+    email: row.email as string,
+    tokenHash: row.token_hash as string,
+    createdAt: row.created_at as string,
+    lastUsedAt: (row.last_used_at as string | null) ?? null,
+    revoked: Boolean(row.revoked),
+  };
+}
+
 /* ---- backend selection + public API ----------------------------------- */
 
 let backend: StateBackend | null = null;
@@ -474,3 +600,16 @@ export const logRequest = (entry: RequestLogEntry): Promise<void> =>
   store().logRequest(entry);
 export const listRequestLogs = (limit = 100): Promise<RequestLogEntry[]> =>
   store().listRequestLogs(limit);
+export const saveAccessToken = (rec: {
+  email: string;
+  tokenHash: string;
+}): Promise<void> => store().saveAccessToken(rec);
+export const findAccessToken = (
+  tokenHash: string,
+): Promise<AccessTokenRecord | null> => store().findAccessToken(tokenHash);
+export const touchAccessToken = (tokenHash: string): Promise<void> =>
+  store().touchAccessToken(tokenHash);
+export const listAccessTokens = (): Promise<AccessTokenRecord[]> =>
+  store().listAccessTokens();
+export const revokeAccessTokensByEmail = (email: string): Promise<number> =>
+  store().revokeAccessTokensByEmail(email);
