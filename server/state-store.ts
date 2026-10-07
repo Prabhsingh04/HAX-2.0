@@ -67,6 +67,8 @@ interface StateBackend {
   touchAccessToken(tokenHash: string): Promise<void>;
   listAccessTokens(): Promise<AccessTokenRecord[]>;
   revokeAccessTokensByEmail(email: string): Promise<number>;
+  /** Record a magic token as used; returns false if it was already used. */
+  consumeMagicToken(tokenHash: string, expiresAtIso: string): Promise<boolean>;
   saveInstance(instance: StoredInstance): Promise<void>;
   loadInstance(instanceId: string): Promise<StoredInstance | null>;
   listInstancesByAgent(agentId?: string): Promise<StoredInstance[]>;
@@ -135,6 +137,10 @@ class SqliteBackend implements StateBackend {
         revoked      INTEGER NOT NULL DEFAULT 0
       );
       CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);
+      CREATE TABLE IF NOT EXISTS used_magic_tokens (
+        token_hash TEXT PRIMARY KEY,
+        expires_at TEXT NOT NULL
+      );
     `);
     // Migration: owner_email scopes a chat to a signed-in user (NULL = guest).
     if (!this.columnExists("chat_sessions", "owner_email")) {
@@ -185,6 +191,23 @@ class SqliteBackend implements StateBackend {
       .prepare(`UPDATE access_tokens SET revoked = 1 WHERE email = ? AND revoked = 0`)
       .run(email);
     return info.changes;
+  }
+
+  async consumeMagicToken(
+    tokenHash: string,
+    expiresAtIso: string,
+  ): Promise<boolean> {
+    // Opportunistic cleanup of expired rows; then atomic insert-if-absent.
+    this.db
+      .prepare(`DELETE FROM used_magic_tokens WHERE expires_at < ?`)
+      .run(new Date().toISOString());
+    const info = this.db
+      .prepare(
+        `INSERT INTO used_magic_tokens (token_hash, expires_at) VALUES (?, ?)
+         ON CONFLICT(token_hash) DO NOTHING`,
+      )
+      .run(tokenHash, expiresAtIso);
+    return info.changes === 1; // 1 = first use, 0 = already consumed
   }
 
   async logRequest(e: RequestLogEntry): Promise<void> {
@@ -399,9 +422,29 @@ class PostgresBackend implements StateBackend {
            last_used_at TEXT,
            revoked      BOOLEAN NOT NULL DEFAULT FALSE
          );
-         CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);`,
+         CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);
+         CREATE TABLE IF NOT EXISTS used_magic_tokens (
+           token_hash TEXT PRIMARY KEY,
+           expires_at TEXT NOT NULL
+         );`,
       )
       .then(() => undefined);
+  }
+
+  async consumeMagicToken(
+    tokenHash: string,
+    expiresAtIso: string,
+  ): Promise<boolean> {
+    await this.ready;
+    await this.pool.query(`DELETE FROM used_magic_tokens WHERE expires_at < $1`, [
+      new Date().toISOString(),
+    ]);
+    const res = await this.pool.query(
+      `INSERT INTO used_magic_tokens (token_hash, expires_at) VALUES ($1, $2)
+       ON CONFLICT (token_hash) DO NOTHING`,
+      [tokenHash, expiresAtIso],
+    );
+    return res.rowCount === 1; // 1 = first use, 0 = already consumed
   }
 
   async saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void> {
@@ -660,3 +703,7 @@ export const listAccessTokens = (): Promise<AccessTokenRecord[]> =>
   store().listAccessTokens();
 export const revokeAccessTokensByEmail = (email: string): Promise<number> =>
   store().revokeAccessTokensByEmail(email);
+export const consumeMagicToken = (
+  tokenHash: string,
+  expiresAtIso: string,
+): Promise<boolean> => store().consumeMagicToken(tokenHash, expiresAtIso);

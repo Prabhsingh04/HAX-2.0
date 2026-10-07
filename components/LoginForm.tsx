@@ -12,11 +12,11 @@ type State =
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
-  const [expired, setExpired] = useState(false);
+  const [linkError, setLinkError] = useState<"expired" | "used" | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error") === "expired") setExpired(true);
+    const err = new URLSearchParams(window.location.search).get("error");
+    if (err === "expired" || err === "used") setLinkError(err);
   }, []);
 
   async function submit(e: React.FormEvent) {
@@ -54,9 +54,11 @@ export function LoginForm() {
         </p>
       </header>
 
-      {expired && state.kind === "idle" && (
+      {linkError && state.kind === "idle" && (
         <p className="rounded-lg border border-amber-300 bg-amber-50 px-3.5 py-2.5 text-sm text-amber-800">
-          That sign-in link expired or was invalid. Request a new one below.
+          {linkError === "used"
+            ? "That sign-in link was already used. Request a fresh one below."
+            : "That sign-in link expired or was invalid. Request a new one below."}
         </p>
       )}
 

@@ -41,7 +41,7 @@ function makeToken(email: string, typ: TokenType, ttlSec: number, nowSec: number
   return `${payloadB64}.${sign(payloadB64)}`;
 }
 
-function verify(token: string, typ: TokenType, nowSec: number): string | null {
+function verify(token: string, typ: TokenType, nowSec: number): Payload | null {
   const parts = token.split(".");
   if (parts.length !== 2) return null;
   const [payloadB64, sig] = parts;
@@ -58,7 +58,7 @@ function verify(token: string, typ: TokenType, nowSec: number): string | null {
     if (payload.typ !== typ) return null;
     if (typeof payload.exp !== "number" || payload.exp < nowSec) return null;
     if (!payload.email) return null;
-    return payload.email;
+    return payload;
   } catch {
     return null;
   }
@@ -74,7 +74,16 @@ export function signMagicToken(email: string): string {
 
 export function verifyMagicToken(token: string | undefined | null): string | null {
   if (!token) return null;
-  return verify(token, "magic", nowSeconds());
+  return verify(token, "magic", nowSeconds())?.email ?? null;
+}
+
+/** Verify a magic token and also return its expiry (unix seconds). */
+export function verifyMagicTokenWithExp(
+  token: string | undefined | null,
+): { email: string; exp: number } | null {
+  if (!token) return null;
+  const payload = verify(token, "magic", nowSeconds());
+  return payload ? { email: payload.email, exp: payload.exp } : null;
 }
 
 export function signSessionToken(email: string): string {
@@ -83,7 +92,7 @@ export function signSessionToken(email: string): string {
 
 export function verifySessionToken(token: string | undefined | null): string | null {
   if (!token) return null;
-  return verify(token, "session", nowSeconds());
+  return verify(token, "session", nowSeconds())?.email ?? null;
 }
 
 export const SESSION_MAX_AGE = SESSION_TTL_SEC;
