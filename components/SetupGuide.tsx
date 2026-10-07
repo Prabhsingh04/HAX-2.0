@@ -9,127 +9,169 @@ import {
   ChevronDown,
   Copy,
   ExternalLink,
-  Mail,
   MessageCircle,
   Server,
   Terminal,
 } from "lucide-react";
 import { patterns } from "@/lib/patterns";
-import { PATTERN_READY_SLUGS } from "@/lib/pattern-ready";
 
 const PATTERN_COUNT = patterns.length;
-const PROJECT_PATH = "IoC-patterns-and-server";
+
+// ---- Hosted MCP endpoint ---------------------------------------------------
+
+const MCP_ENDPOINT = "https://ioc-patterns.intelligaia.com/api/mcp";
+const MCP_AUTH_HEADER = "Basic Y2lzY286SEFYMi1QYXR0ZXJucy0yMDI2";
+
+const ENDPOINT_BLOCK = `Endpoint:   ${MCP_ENDPOINT}
+Transport:  MCP Streamable HTTP
+Auth:       Authorization: ${MCP_AUTH_HEADER}`;
+
+const CURSOR_CONFIG = `{
+  "mcpServers": {
+    "ioc-patterns": {
+      "url": "${MCP_ENDPOINT}",
+      "headers": { "Authorization": "${MCP_AUTH_HEADER}" }
+    }
+  }
+}`;
+
+const CLAUDE_CODE_CMD = `claude mcp add --transport http ioc-patterns ${MCP_ENDPOINT} \\
+  --header "Authorization: ${MCP_AUTH_HEADER}"`;
+
+const CLAUDE_DESKTOP_CONFIG = `{
+  "mcpServers": {
+    "ioc-patterns": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "${MCP_ENDPOINT}",
+        "--header",
+        "Authorization:\${AUTH_HEADER}"
+      ],
+      "env": { "AUTH_HEADER": "${MCP_AUTH_HEADER}" }
+    }
+  }
+}`;
+
+type ConnectMethod = {
+  tool: string;
+  where: string;
+  note?: string;
+  codeTitle: string;
+  code: string;
+};
+
+const CONNECT_METHODS: ConnectMethod[] = [
+  {
+    tool: "Cursor",
+    where: "Create .cursor/mcp.json in your project (or ~/.cursor/mcp.json for all projects).",
+    codeTitle: ".cursor/mcp.json",
+    code: CURSOR_CONFIG,
+  },
+  {
+    tool: "Claude Code (CLI)",
+    where: "Run this one command in your project.",
+    codeTitle: "terminal",
+    code: CLAUDE_CODE_CMD,
+  },
+  {
+    tool: "Claude Desktop",
+    where: "Settings → Developer → Edit Config. Needs Node.js installed (for the mcp-remote bridge), then fully restart the app.",
+    note: "Claude Desktop can't connect to a remote MCP URL directly, so this runs a small local bridge that forwards to it.",
+    codeTitle: "claude_desktop_config.json",
+    code: CLAUDE_DESKTOP_CONFIG,
+  },
+];
+
+const MCP_TOOLS = [
+  { name: "discover_patterns", desc: "Semantic search — the best-fit patterns for a described situation." },
+  { name: "list_patterns", desc: "The entire catalogue (all patterns), unranked." },
+  { name: "fetch_pattern", desc: "Full definition for one pattern: metadata, structure, UI spec." },
+  { name: "instantiate_pattern", desc: "Create a live instance of a pattern with its own state." },
+  { name: "update_instance", desc: "Merge new fields into an instance's state." },
+  { name: "get_instance", desc: "Read the current snapshot of an instance." },
+  { name: "list_installations", desc: "List the instances an agent has created." },
+  { name: "handoff", desc: "Carry context from one pattern instance into another." },
+] as const;
+
+const TEST_PROMPT =
+  "Use the ioc-patterns tools to find the right pattern for when two of my agents disagree, and show me why it fits.";
+
+// ---- Advanced: run from source (optional) ----------------------------------
 
 const REQUIREMENTS = [
-  { label: "Node.js v18 or higher", required: true },
-  { label: "npm (included with Node.js)", required: true },
-  { label: "This repository cloned locally", required: true },
-  { label: "Terminal access", required: true },
-  { label: "Cursor or your preferred editor", required: false },
-  { label: "Basic familiarity with npm commands", required: false },
+  { label: "An MCP-capable tool (Cursor, Claude Code, or Claude Desktop)", required: true },
+  { label: "The endpoint URL + auth header (shown below)", required: true },
+  { label: "Node.js 18+ — only for Claude Desktop's mcp-remote bridge", required: false },
 ] as const;
 
-const INSTALL_STEPS = [
+const LOCAL_STEPS = [
   {
-    title: "Install dependencies",
-    command: "npm install",
-    body: "Installs all project packages, including the pattern registry and API tooling used by the MCP layer.",
+    title: "Clone and install",
+    command: "git clone <repo-url> && cd ioc-patterns && npm install",
+    body: "Pull the source and install dependencies, including the pattern registry and tooling.",
   },
   {
-    title: "Navigate to the project",
-    command: `cd "${PROJECT_PATH}"`,
-    body: "Run commands from the pattern-library folder — the same directory that contains package.json and server/mcp-server.ts.",
-  },
-  {
-    title: "Verify the MCP registry",
+    title: "Verify the registry",
     command: "npm run mcp",
-    body: "Loads server/mcp-server.ts, imports every pattern from lib/patterns.ts, and prints registration lines to confirm the registry initialized correctly.",
+    body: `Loads the registry and prints one line per pattern. Expect "Registry initialized with ${PATTERN_COUNT} patterns".`,
   },
   {
-    title: "Start the Next.js app",
-    command: "npm run dev",
-    body: "In a second terminal, start the web app on port 3000. API routes import the MCP registry in-process to discover patterns, create instances, and manage state.",
+    title: "Run the stdio MCP server",
+    command: "npm run mcp:stdio",
+    body: "Serves the same tools over stdio — point a local MCP client at this process instead of the hosted URL.",
   },
-] as const;
-
-const FULL_SETUP_SCRIPT = `# Navigate to project
-cd "${PROJECT_PATH}"
-
-# Install dependencies
-npm install
-
-# Verify MCP registry (expect ${PATTERN_COUNT} patterns)
-npm run mcp
-
-# Start the app (separate terminal)
-npm run dev`;
-
-const EXPECTED_OUTPUT = `📚 Importing patterns from lib/patterns.ts...
-
-✓ Registered: Presence Boundary (presence-boundary)
-✓ Registered: Signal-to-Intent Handshake (signal-to-intent-handshake)
-✓ Registered: Background Work Ledger (background-work-ledger)
-…
-✅ Registry initialized with ${PATTERN_COUNT} patterns`;
-
-const VERIFICATION_ITEMS = [
-  "MCP registry command completes without errors",
-  `All ${PATTERN_COUNT} patterns show as registered`,
-  "No module-not-found or syntax errors in the terminal",
-  "npm run dev serves the app at http://localhost:3000",
-  "/advisor and /gallery load in the browser",
+  {
+    title: "Or run the full web app",
+    command: "npm run dev",
+    body: "Starts the Next.js app (advisor chat, gallery, and the HTTP API) on http://localhost:3000.",
+  },
 ] as const;
 
 const TROUBLESHOOTING = [
   {
-    question: "Cannot find module or command failed",
+    question: "Connects but shows 401 / Unauthorized",
     answer:
-      "Run npm install from the pattern-library directory. If tsx is missing, npm run mcp will fetch it via npx automatically.",
+      "The Authorization header is missing or wrong. Make sure it's exactly \"Authorization: Basic …\" with the token above. GUI connectors that only accept a URL (no header field) will 401 — use Cursor, Claude Code, or the Claude Desktop bridge instead.",
   },
   {
-    question: "Registry loaded with 0 patterns",
+    question: "Claude Desktop won't connect",
     answer:
-      "Confirm lib/patterns.ts exists and exports the patterns array. Run npm run mcp from the project root, not a parent folder.",
+      "It needs Node.js installed (for npx mcp-remote) and a full quit-and-reopen after editing the config. If it still fails, clear the bridge cache with rm -rf ~/.mcp-auth and restart.",
   },
   {
-    question: "Port 3000 already in use",
+    question: "The tool list is empty",
     answer:
-      "Stop the other process or use a different port: npm run dev -- -p 3002. Update the URL in your browser accordingly.",
+      "Confirm the server shows Connected in your client, then re-list. In Claude Code: claude mcp list. In Cursor: Settings → MCP.",
   },
   {
-    question: "TypeError: fetch is not defined",
+    question: "\"all patterns\" only returns some",
     answer:
-      "Upgrade to Node.js v18 or newer. The app and API routes rely on modern Node fetch support.",
+      "discover_patterns is a ranked search (top results only). To load the whole catalogue, call list_patterns instead.",
   },
   {
-    question: "ENOENT: no such file or directory",
+    question: "Header value gets split (mcp-remote)",
     answer:
-      `Ensure your shell is inside the pattern-library folder. Use cd "${PROJECT_PATH}" before running npm commands.`,
-  },
-  {
-    question: "Advisor chat returns errors",
-    answer:
-      "The MCP registry must load successfully. Re-run npm run mcp, restart npm run dev, and check the terminal for API errors when you send a message.",
+      "Older mcp-remote splits the header on spaces. The config above passes the value via an env var (Authorization:${AUTH_HEADER}) to avoid that.",
   },
 ] as const;
 
 const NEXT_STEPS = [
   {
-    label: "Chat with Agent",
+    label: "Open the advisor",
     href: "/advisor",
-    description: "Describe your problem and get pattern recommendations.",
+    description: "Describe a situation in plain language and get a recommended pattern.",
+    icon: MessageCircle,
   },
   {
-    label: "Browse patterns",
+    label: "Browse the patterns",
     href: "/gallery",
-    description: `Explore all ${PATTERN_COUNT} patterns — ${PATTERN_READY_SLUGS.length} ready today.`,
-  },
-  {
-    label: "REST API",
-    href: "#api-reference",
-    description: "Connect agents via /api/patterns and /api/instances.",
+    description: `Explore all ${PATTERN_COUNT} research-backed patterns.`,
+    icon: BookOpen,
   },
 ] as const;
+
+// ---- UI helpers ------------------------------------------------------------
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -211,7 +253,24 @@ function Section({
   );
 }
 
-function StepCard({
+function ConnectCard({ method }: { method: ConnectMethod }) {
+  return (
+    <article className="rounded-2xl border border-line bg-white p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-ink">{method.tool}</h3>
+      <p className="mt-1 text-sm text-muted">{method.where}</p>
+      {method.note ? (
+        <p className="mt-3 rounded-lg bg-hover px-3 py-2 text-sm leading-relaxed text-muted">
+          {method.note}
+        </p>
+      ) : null}
+      <div className="mt-4">
+        <CodeBlock code={method.code} title={method.codeTitle} />
+      </div>
+    </article>
+  );
+}
+
+function LocalStepCard({
   step,
   title,
   command,
@@ -223,7 +282,7 @@ function StepCard({
   body: string;
 }) {
   return (
-    <article className="rounded-2xl border border-line bg-white p-6 shadow-sm transition hover:shadow-md hover:shadow-slate-200/60">
+    <article className="rounded-2xl border border-line bg-white p-6 shadow-sm">
       <div className="flex gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
           {step}
@@ -242,15 +301,15 @@ function StepCard({
 
 function Checklist({
   items,
-  optionalFlags,
+  requiredFlags,
 }: {
   items: readonly string[];
-  optionalFlags?: readonly boolean[];
+  requiredFlags?: readonly boolean[];
 }) {
   return (
     <ul className="space-y-3">
       {items.map((item, index) => {
-        const optional = optionalFlags?.[index] === false;
+        const optional = requiredFlags?.[index] === false;
         return (
           <li key={item} className="flex items-start gap-3 text-sm text-muted">
             <span
@@ -275,17 +334,8 @@ function Checklist({
   );
 }
 
-function AccordionItem({
-  question,
-  answer,
-  defaultOpen = false,
-}: {
-  question: string;
-  answer: string;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-
+function AccordionItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-line last:border-b-0">
       <button
@@ -314,10 +364,10 @@ function AccordionItem({
 
 function ArchitectureDiagram() {
   const layers = [
-    { label: "Your browser", sub: "localhost:3000", tone: "bg-white" },
-    { label: "Next.js app", sub: "/advisor · /gallery · /api/*", tone: "bg-[var(--color-tag-bg)]" },
-    { label: "MCP registry", sub: "server/mcp-server.ts", tone: "bg-[var(--color-tag-bg)]" },
-    { label: "Pattern library", sub: `${PATTERN_COUNT} patterns in lib/patterns.ts`, tone: "bg-hover" },
+    { label: "Your AI tool", sub: "Cursor · Claude Code · Claude Desktop", tone: "bg-white" },
+    { label: "IoC MCP endpoint", sub: "/api/mcp · Streamable HTTP + Basic auth", tone: "bg-[var(--color-tag-bg)]" },
+    { label: "Pattern engine", sub: "8 tools: discover · fetch · instantiate · …", tone: "bg-[var(--color-tag-bg)]" },
+    { label: "Pattern library", sub: `${PATTERN_COUNT} research-backed patterns`, tone: "bg-hover" },
   ];
 
   return (
@@ -325,9 +375,7 @@ function ArchitectureDiagram() {
       <div className="space-y-2">
         {layers.map((layer, index) => (
           <div key={layer.label}>
-            <div
-              className={`rounded-xl border border-line px-4 py-3 ${layer.tone}`}
-            >
+            <div className={`rounded-xl border border-line px-4 py-3 ${layer.tone}`}>
               <p className="font-semibold text-ink">{layer.label}</p>
               <p className="mt-0.5 text-sm text-muted">{layer.sub}</p>
             </div>
@@ -340,15 +388,15 @@ function ArchitectureDiagram() {
         ))}
       </div>
       <p className="mt-4 text-sm leading-relaxed text-muted">
-        The MCP registry ships as a TypeScript module imported by Next.js API routes.
-        Run <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs">npm run mcp</code>{" "}
-        to verify it loads standalone; run{" "}
-        <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs">npm run dev</code>{" "}
-        to use it through the web app and REST endpoints.
+        Your tool talks to one URL. The MCP server does the rest — it holds the
+        patterns and exposes them as tools. Your app or editor never needs the
+        pattern source; it just calls the endpoint.
       </p>
     </div>
   );
 }
+
+// ---- Page ------------------------------------------------------------------
 
 export function SetupGuide() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -363,14 +411,15 @@ export function SetupGuide() {
             </div>
             <div>
               <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-                Developer guide
+                Setup guide
               </p>
               <h1 className="mt-1 font-heading text-4xl font-bold tracking-tight text-ink sm:text-5xl">
-                Setup Guide
+                Connect to the IoC MCP server
               </h1>
               <p className="mt-3 max-w-2xl text-lg text-muted">
-                Install and configure the MCP server that powers Human Agent IoC
-                Patterns — pattern discovery, live instances, and agent coordination.
+                Point your AI tool at one hosted URL and get research-backed
+                interaction patterns — discover, fetch, and instantiate them,
+                right inside your editor. No install, no repo to clone.
               </p>
             </div>
           </div>
@@ -378,213 +427,172 @@ export function SetupGuide() {
       </div>
 
       <div className="mx-auto max-w-4xl space-y-20 px-6 py-16 sm:px-8 sm:py-20">
-        <Section eyebrow="Overview" title="What is the MCP server?">
+        <Section eyebrow="Overview" title="What this is">
           <div className="rounded-2xl border border-line bg-hover p-6">
             <div className="flex gap-4">
               <Server className="mt-0.5 h-6 w-6 shrink-0 text-accent" />
               <div className="space-y-4 text-sm leading-relaxed text-muted sm:text-base">
                 <p>
-                  The <strong className="font-semibold text-ink">Model Context Protocol (MCP) layer</strong> in
-                  this project is a pattern registry and tool runtime. It turns research-backed IoC patterns from{" "}
-                  <code className="rounded bg-white px-1.5 py-0.5 font-mono text-sm">lib/patterns.ts</code> into
-                  structured components agents can discover, instantiate, and update.
+                  The <strong className="font-semibold text-ink">IoC MCP server</strong> is a
+                  hosted library of {PATTERN_COUNT} research-backed human–agent interaction
+                  patterns, exposed over the Model Context Protocol. Any MCP-capable tool
+                  can connect by URL and ask it which pattern fits a situation, then fetch
+                  the pattern&apos;s structure and spin up live instances.
                 </p>
-                <p>It enables:</p>
-                <ul className="grid gap-2 sm:grid-cols-2">
-                  {[
-                    "Discovering patterns by keyword",
-                    "Instantiating live pattern instances",
-                    "Managing agent state over time",
-                    "Coordinating handoffs between patterns",
-                  ].map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <Check className="h-4 w-4 shrink-0 text-emerald-600" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-muted">
-                  Example: an agent searches for &ldquo;record decisions,&rdquo; receives Decision Ledger as a match,
-                  creates an instance with title and rationale, then hands off to Convergence Point when agents disagree.
+                <p>
+                  It has <strong className="font-semibold text-ink">no UI of its own</strong> — it
+                  returns structured data, so your app or editor renders it in your own
+                  design system.
                 </p>
               </div>
             </div>
           </div>
         </Section>
 
-        <Section eyebrow="Before you begin" title="Requirements">
+        <Section eyebrow="Before you begin" title="What you need">
           <div className="rounded-2xl border border-line bg-white p-6 shadow-sm">
             <Checklist
               items={REQUIREMENTS.map((item) => item.label)}
-              optionalFlags={REQUIREMENTS.map((item) => item.required)}
+              requiredFlags={REQUIREMENTS.map((item) => item.required)}
             />
           </div>
         </Section>
 
-        <Section eyebrow="Install" title="Installation steps">
+        <Section eyebrow="Endpoint" title="The connection details">
+          <CodeBlock code={ENDPOINT_BLOCK} title="ioc-patterns MCP" />
+          <p className="mt-3 text-sm text-muted">
+            Auth is a shared token for now. GUI &ldquo;add connector&rdquo; flows that only
+            take a URL (no header field) won&apos;t work — use one of the methods below,
+            which all pass the header.
+          </p>
+        </Section>
+
+        <Section eyebrow="Connect" title="Connect your AI tool">
+          <p className="-mt-2 mb-6 text-sm text-muted">
+            Pick the tool you use. Each takes under a minute.
+          </p>
           <div className="space-y-4">
-            {INSTALL_STEPS.map((step, index) => (
-              <StepCard
-                key={step.title}
-                step={index + 1}
-                title={step.title}
-                command={step.command}
-                body={step.body}
-              />
+            {CONNECT_METHODS.map((method) => (
+              <ConnectCard key={method.tool} method={method} />
             ))}
           </div>
         </Section>
 
-        <Section title="Copy-paste commands">
-          <CodeBlock code={FULL_SETUP_SCRIPT} title="Full setup script" />
-        </Section>
-
-        <Section title="What to expect">
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6">
-            <p className="mb-4 text-sm font-semibold text-emerald-800">
-              Successful output from npm run mcp
-            </p>
-            <pre className="overflow-x-auto font-mono text-xs leading-relaxed text-ink sm:text-sm">
-              {EXPECTED_OUTPUT}
-            </pre>
-          </div>
-        </Section>
-
-        <Section title="Verification checklist">
+        <Section eyebrow="Verify" title="Try it">
           <div className="rounded-2xl border border-line bg-white p-6 shadow-sm">
-            <Checklist items={VERIFICATION_ITEMS} />
-            <p className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-              If every item above checks out, you are ready to use Human Agent IoC Patterns.
+            <p className="text-sm leading-relaxed text-muted">
+              Once connected, ask your tool to use the pattern tools — for example:
+            </p>
+            <div className="mt-4">
+              <CodeBlock code={TEST_PROMPT} />
+            </div>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              It should call <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs">discover_patterns</code>,
+              return a match (e.g. Convergence Point), and explain why it fits.
             </p>
           </div>
         </Section>
 
-        <Section title="Architecture">
+        <Section eyebrow="Reference" title="The tools">
+          <div className="grid gap-3 sm:grid-cols-2">
+            {MCP_TOOLS.map((tool) => (
+              <div
+                key={tool.name}
+                className="rounded-xl border border-line bg-white p-4 shadow-sm"
+              >
+                <code className="font-mono text-sm font-semibold text-ink">
+                  {tool.name}
+                </code>
+                <p className="mt-1 text-sm leading-relaxed text-muted">{tool.desc}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section eyebrow="How it works" title="The flow">
           <ArchitectureDiagram />
         </Section>
 
-        <Section title="Troubleshooting">
-          <div className="rounded-2xl border border-line bg-white px-6 shadow-sm">
-            {TROUBLESHOOTING.map((item, index) => (
-              <AccordionItem
-                key={item.question}
-                question={item.question}
-                answer={item.answer}
-                defaultOpen={index === 0}
-              />
-            ))}
-          </div>
-        </Section>
-
-        <Section id="next-steps" title="Next steps">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {NEXT_STEPS.map((step) => (
-              <Link
-                key={step.href}
-                href={step.href}
-                className="group rounded-2xl border border-line bg-white p-5 shadow-sm transition hover:border-[var(--color-tag-border)] hover:shadow-md"
-              >
-                <h3 className="font-semibold text-ink group-hover:text-accent-h">
-                  {step.label}
-                </h3>
-                <p className="mt-2 text-sm text-muted">{step.description}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent">
-                  Open
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-                </span>
-              </Link>
-            ))}
-          </div>
-          <ul className="mt-8 space-y-2 text-sm text-muted">
-            {[
-              "Create pattern instances from the advisor chat",
-              "Try instantiating Decision Ledger or Convergence Point",
-              "Connect external agents via the REST API",
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-600" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section id="api-reference" eyebrow="For developers" title="REST API reference">
-          <div className="space-y-4">
-            <CodeBlock
-              title="Discover patterns"
-              code={`curl "http://localhost:3000/api/patterns/discover?q=decision"`}
-            />
-            <CodeBlock
-              title="Instantiate a pattern"
-              code={`curl -X POST http://localhost:3000/api/instances \\
-  -H "Content-Type: application/json" \\
-  -d '{"action":"instantiate","slug":"decision-ledger","initial_state":{"title":"Auth strategy"}}'`}
-            />
-          </div>
-        </Section>
-
-        <section>
+        <Section eyebrow="Advanced" title="Run it from source (optional)">
           <button
             type="button"
             onClick={() => setAdvancedOpen((value) => !value)}
             className="flex w-full items-center justify-between gap-4 rounded-2xl border border-line bg-white px-6 py-4 text-left shadow-sm transition hover:bg-hover"
             aria-expanded={advancedOpen}
           >
-            <span className="font-semibold text-ink">Advanced options</span>
+            <span className="text-sm text-muted">
+              Most people just connect to the hosted URL above. If you want to run the
+              server yourself (locally or on your own host), expand this.
+            </span>
             <ChevronDown
-              className={`h-5 w-5 text-slate-400 transition ${advancedOpen ? "rotate-180" : ""}`}
+              className={`h-5 w-5 shrink-0 text-slate-400 transition ${advancedOpen ? "rotate-180" : ""}`}
             />
           </button>
           {advancedOpen ? (
-            <div className="mt-4 rounded-2xl border border-line bg-hover p-6 text-sm leading-relaxed text-muted">
-              <ul className="space-y-3">
-                <li>
-                  <strong className="text-ink">Deploy separately:</strong> Import functions
-                  from server/mcp-server.ts in your own Express or stdio MCP wrapper.
-                </li>
-                <li>
-                  <strong className="text-ink">Add persistence:</strong> Replace in-memory Maps
-                  in mcp-server.ts with a database adapter for production instances.
-                </li>
-                <li>
-                  <strong className="text-ink">Connect real agents:</strong> Point agent
-                  clients at /api/instances and /api/patterns/discover.
-                </li>
-                <li>
-                  <strong className="text-ink">Custom patterns:</strong> Add entries to
-                  lib/patterns.ts and re-run npm run mcp to register them.
-                </li>
-              </ul>
+            <div className="mt-4 space-y-4">
+              {LOCAL_STEPS.map((step, index) => (
+                <LocalStepCard
+                  key={step.title}
+                  step={index + 1}
+                  title={step.title}
+                  command={step.command}
+                  body={step.body}
+                />
+              ))}
             </div>
           ) : null}
-        </section>
-      </div>
+        </Section>
 
-      <footer className="border-t border-line bg-hover">
-        <div className="mx-auto max-w-4xl px-6 py-12 sm:px-8">
-          <div className="flex flex-wrap gap-4">
-            {[
-              { label: "Documentation", href: "/setup", icon: BookOpen },
-              { label: "GitHub", href: "https://github.com", icon: ExternalLink },
-              { label: "Discord", href: "https://discord.com", icon: MessageCircle },
-              { label: "Email support", href: "mailto:support@example.com", icon: Mail },
-            ].map(({ label, href, icon: Icon }) => (
-              <a
-                key={label}
-                href={href}
-                className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-medium text-muted transition hover:border-[var(--color-tag-border)] hover:text-accent-h"
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </a>
+        <Section eyebrow="Help" title="Troubleshooting">
+          <div className="rounded-2xl border border-line bg-white px-6 shadow-sm">
+            {TROUBLESHOOTING.map((item) => (
+              <AccordionItem
+                key={item.question}
+                question={item.question}
+                answer={item.answer}
+              />
             ))}
           </div>
-          <p className="mt-8 text-sm text-subtle">
-            MCP registry v1.0.0 · {PATTERN_COUNT} patterns · {PATTERN_READY_SLUGS.length} ready
-          </p>
-        </div>
-      </footer>
+        </Section>
+
+        <Section eyebrow="Next" title="Where to go next">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {NEXT_STEPS.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="group flex items-start gap-4 rounded-2xl border border-line bg-white p-6 shadow-sm transition hover:shadow-md"
+              >
+                <item.icon className="mt-0.5 h-6 w-6 shrink-0 text-accent" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 font-semibold text-ink">
+                    {item.label}
+                    <ArrowRight className="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-accent" />
+                  </div>
+                  <p className="mt-1 text-sm text-muted">{item.description}</p>
+                </div>
+              </Link>
+            ))}
+            <a
+              href="https://github.com/intelligaia/ioc-mcp-demo"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-start gap-4 rounded-2xl border border-line bg-white p-6 shadow-sm transition hover:shadow-md sm:col-span-2"
+            >
+              <ExternalLink className="mt-0.5 h-6 w-6 shrink-0 text-accent" />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 font-semibold text-ink">
+                  Example: ioc-mcp-demo
+                </div>
+                <p className="mt-1 text-sm text-muted">
+                  A standalone app that connects to this endpoint and renders a pattern
+                  with a real design system — none of the IoC source inside it.
+                </p>
+              </div>
+            </a>
+          </div>
+        </Section>
+      </div>
     </div>
   );
 }
