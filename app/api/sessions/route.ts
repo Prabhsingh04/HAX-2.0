@@ -3,8 +3,10 @@ import {
   loadChatSession,
   saveChatSession,
 } from "@/server/state-store";
+import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
@@ -12,8 +14,15 @@ export const dynamic = "force-dynamic";
  *   { "action": "save", "session_id": "...", "title": "...", "messages": [...], "active_instance": {...} }
  *   { "action": "list" }
  *   { "action": "get", "session_id": "..." }
+ *
+ * Chats are scoped to the signed-in user (session cookie). A signed-in user
+ * sees and saves only their own; without a session, chats fall into the shared
+ * "guest" pool (owner_email NULL) — the pre-login behaviour, kept non-breaking.
  */
 export async function POST(request: NextRequest) {
+  const ownerEmail = verifySessionToken(
+    request.cookies.get(SESSION_COOKIE)?.value,
+  );
   let body;
   try {
     body = await request.json();
@@ -40,13 +49,14 @@ export async function POST(request: NextRequest) {
           title: (body.title as string | undefined)?.trim() || "Untitled chat",
           messages,
           activeInstance: body.active_instance ?? null,
+          ownerEmail,
         });
         return NextResponse.json({ success: true });
       }
       case "list":
         return NextResponse.json({
           success: true,
-          sessions: await listChatSessions(),
+          sessions: await listChatSessions(ownerEmail),
         });
       case "get": {
         const sessionId = body.session_id as string | undefined;
@@ -56,7 +66,7 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           );
         }
-        const session = await loadChatSession(sessionId);
+        const session = await loadChatSession(sessionId, ownerEmail);
         if (!session) {
           return NextResponse.json(
             { error: "Session not found" },

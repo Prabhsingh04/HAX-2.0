@@ -75,9 +75,13 @@ interface StateBackend {
     title: string;
     messages: unknown[];
     activeInstance: unknown | null;
+    ownerEmail: string | null;
   }): Promise<void>;
-  listChatSessions(): Promise<ChatSessionSummary[]>;
-  loadChatSession(sessionId: string): Promise<StoredChatSession | null>;
+  listChatSessions(ownerEmail: string | null): Promise<ChatSessionSummary[]>;
+  loadChatSession(
+    sessionId: string,
+    ownerEmail: string | null,
+  ): Promise<StoredChatSession | null>;
 }
 
 /* ---- SQLite backend --------------------------------------------------- */
@@ -132,6 +136,20 @@ class SqliteBackend implements StateBackend {
       );
       CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);
     `);
+    // Migration: owner_email scopes a chat to a signed-in user (NULL = guest).
+    if (!this.columnExists("chat_sessions", "owner_email")) {
+      this.db.exec(`ALTER TABLE chat_sessions ADD COLUMN owner_email TEXT;`);
+    }
+    this.db.exec(
+      `CREATE INDEX IF NOT EXISTS idx_chat_sessions_owner ON chat_sessions (owner_email);`,
+    );
+  }
+
+  private columnExists(table: string, column: string): boolean {
+    const rows = this.db
+      .prepare(`PRAGMA table_info(${table})`)
+      .all() as Array<{ name: string }>;
+    return rows.some((r) => r.name === column);
   }
 
   async saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void> {
@@ -243,16 +261,18 @@ class SqliteBackend implements StateBackend {
     title: string;
     messages: unknown[];
     activeInstance: unknown | null;
+    ownerEmail: string | null;
   }): Promise<void> {
     const now = new Date().toISOString();
     this.db
       .prepare(
         `INSERT INTO chat_sessions
-           (session_id, title, messages, active_instance, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?)
+           (session_id, title, messages, active_instance, created_at, updated_at, owner_email)
+         VALUES (?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(session_id) DO UPDATE SET
            title = excluded.title, messages = excluded.messages,
-           active_instance = excluded.active_instance, updated_at = excluded.updated_at`,
+           active_instance = excluded.active_instance, updated_at = excluded.updated_at
+         WHERE chat_sessions.owner_email IS excluded.owner_email`,
       )
       .run(
         session.sessionId,
@@ -261,16 +281,20 @@ class SqliteBackend implements StateBackend {
         session.activeInstance ? JSON.stringify(session.activeInstance) : null,
         now,
         now,
+        session.ownerEmail,
       );
   }
 
-  async listChatSessions(): Promise<ChatSessionSummary[]> {
+  async listChatSessions(
+    ownerEmail: string | null,
+  ): Promise<ChatSessionSummary[]> {
     const rows = this.db
       .prepare(
         `SELECT session_id, title, messages, created_at, updated_at
-         FROM chat_sessions ORDER BY updated_at DESC LIMIT 50`,
+         FROM chat_sessions WHERE owner_email IS ?
+         ORDER BY updated_at DESC LIMIT 50`,
       )
-      .all() as Record<string, string>[];
+      .all(ownerEmail) as Record<string, string>[];
     return rows.map((row) => ({
       sessionId: row.session_id,
       title: row.title,
@@ -280,10 +304,15 @@ class SqliteBackend implements StateBackend {
     }));
   }
 
-  async loadChatSession(sessionId: string): Promise<StoredChatSession | null> {
+  async loadChatSession(
+    sessionId: string,
+    ownerEmail: string | null,
+  ): Promise<StoredChatSession | null> {
     const row = this.db
-      .prepare(`SELECT * FROM chat_sessions WHERE session_id = ?`)
-      .get(sessionId) as Record<string, string | null> | undefined;
+      .prepare(
+        `SELECT * FROM chat_sessions WHERE session_id = ? AND owner_email IS ?`,
+      )
+      .get(sessionId, ownerEmail) as Record<string, string | null> | undefined;
     if (!row) return null;
     return {
       sessionId: row.session_id as string,
@@ -347,8 +376,11 @@ class PostgresBackend implements StateBackend {
            messages        JSONB NOT NULL,
            active_instance JSONB,
            created_at      TEXT NOT NULL,
-           updated_at      TEXT NOT NULL
+           updated_at      TEXT NOT NULL,
+           owner_email     TEXT
          );
+         ALTER TABLE chat_sessions ADD COLUMN IF NOT EXISTS owner_email TEXT;
+         CREATE INDEX IF NOT EXISTS idx_chat_sessions_owner ON chat_sessions (owner_email);
          CREATE TABLE IF NOT EXISTS request_logs (
            id         TEXT PRIMARY KEY,
            ts         TEXT NOT NULL,
@@ -488,16 +520,18 @@ class PostgresBackend implements StateBackend {
     title: string;
     messages: unknown[];
     activeInstance: unknown | null;
+    ownerEmail: string | null;
   }): Promise<void> {
     await this.ready;
     const now = new Date().toISOString();
     await this.pool.query(
       `INSERT INTO chat_sessions
-         (session_id, title, messages, active_instance, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6)
+         (session_id, title, messages, active_instance, created_at, updated_at, owner_email)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (session_id) DO UPDATE SET
          title = EXCLUDED.title, messages = EXCLUDED.messages,
-         active_instance = EXCLUDED.active_instance, updated_at = EXCLUDED.updated_at`,
+         active_instance = EXCLUDED.active_instance, updated_at = EXCLUDED.updated_at
+       WHERE chat_sessions.owner_email IS NOT DISTINCT FROM EXCLUDED.owner_email`,
       [
         session.sessionId,
         session.title,
@@ -505,15 +539,20 @@ class PostgresBackend implements StateBackend {
         session.activeInstance ? JSON.stringify(session.activeInstance) : null,
         now,
         now,
+        session.ownerEmail,
       ],
     );
   }
 
-  async listChatSessions(): Promise<ChatSessionSummary[]> {
+  async listChatSessions(
+    ownerEmail: string | null,
+  ): Promise<ChatSessionSummary[]> {
     await this.ready;
     const { rows } = await this.pool.query(
       `SELECT session_id, title, messages, created_at, updated_at
-       FROM chat_sessions ORDER BY updated_at DESC LIMIT 50`,
+       FROM chat_sessions WHERE owner_email IS NOT DISTINCT FROM $1
+       ORDER BY updated_at DESC LIMIT 50`,
+      [ownerEmail],
     );
     return rows.map((row) => ({
       sessionId: row.session_id,
@@ -524,11 +563,15 @@ class PostgresBackend implements StateBackend {
     }));
   }
 
-  async loadChatSession(sessionId: string): Promise<StoredChatSession | null> {
+  async loadChatSession(
+    sessionId: string,
+    ownerEmail: string | null,
+  ): Promise<StoredChatSession | null> {
     await this.ready;
     const { rows } = await this.pool.query(
-      `SELECT * FROM chat_sessions WHERE session_id = $1`,
-      [sessionId],
+      `SELECT * FROM chat_sessions
+       WHERE session_id = $1 AND owner_email IS NOT DISTINCT FROM $2`,
+      [sessionId, ownerEmail],
     );
     const row = rows[0];
     if (!row) return null;
@@ -590,12 +633,16 @@ export const saveChatSession = (session: {
   title: string;
   messages: unknown[];
   activeInstance: unknown | null;
+  ownerEmail: string | null;
 }): Promise<void> => store().saveChatSession(session);
-export const listChatSessions = (): Promise<ChatSessionSummary[]> =>
-  store().listChatSessions();
+export const listChatSessions = (
+  ownerEmail: string | null,
+): Promise<ChatSessionSummary[]> => store().listChatSessions(ownerEmail);
 export const loadChatSession = (
   sessionId: string,
-): Promise<StoredChatSession | null> => store().loadChatSession(sessionId);
+  ownerEmail: string | null,
+): Promise<StoredChatSession | null> =>
+  store().loadChatSession(sessionId, ownerEmail);
 export const logRequest = (entry: RequestLogEntry): Promise<void> =>
   store().logRequest(entry);
 export const listRequestLogs = (limit = 100): Promise<RequestLogEntry[]> =>

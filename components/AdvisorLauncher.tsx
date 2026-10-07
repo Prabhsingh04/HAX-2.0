@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PatternAdvisor } from "@/components/PatternAdvisor";
+import { AuthBadge } from "@/components/AuthBadge";
 
 export function AdvisorLauncher() {
   const [initialPrompt, setInitialPrompt] = useState<string | undefined>();
@@ -12,5 +13,10 @@ export function AdvisorLauncher() {
     if (prompt) setInitialPrompt(prompt);
   }, []);
 
-  return <PatternAdvisor initialPrompt={initialPrompt} />;
+  return (
+    <div className="relative flex h-full flex-col">
+      <AuthBadge />
+      <PatternAdvisor initialPrompt={initialPrompt} />
+    </div>
+  );
 }

@@ -26,6 +26,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Magic-link sign-in. These must be reachable without the shared secret: the
+  // verify link is clicked from an email (no cached Basic creds), and /login is
+  // where a new user starts. Security here is the signed magic/session token.
+  if (path === "/login" || path.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
+
   // The MCP endpoint does its own auth in the route handler (Node runtime),
   // because per-user tokens need a DB lookup the Edge middleware can't perform.
   // It still accepts the shared Basic/Bearer secret there, so this is not a hole.
