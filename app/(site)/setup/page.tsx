@@ -3,7 +3,7 @@ import { SetupGuide } from "@/components/SetupGuide";
 export const metadata = {
   title: "Setup Guide · Human Agent IoC Patterns",
   description:
-    "Install and configure the MCP pattern registry for Human Agent IoC Patterns.",
+    "Connect your AI tool to the hosted IoC pattern MCP server — no install required.",
 };
 
 export default function SetupPage() {
