@@ -19,6 +19,7 @@ import {
   type ComponentMetadata,
 } from "@/lib/pattern-registry-core";
 import { patterns } from "@/lib/patterns";
+import { resolvePatternSlug } from "@/lib/patterns/aliases";
 import { rankPatterns } from "@/lib/patterns/embedding-index";
 import {
   listInstancesByAgent,
@@ -95,11 +96,15 @@ export function listComponents(): ComponentMetadata[] {
 }
 
 export async function instantiateComponent(
-  slug: string,
+  rawSlug: string,
   initialState: Record<string, unknown> = {},
   agentId?: string,
   persistent: boolean = false,
 ): Promise<ComponentInstanceInternal | null> {
+  // Accept old slugs post-rename; instantiate (and store) under the canonical.
+  const slug = componentRegistry.has(rawSlug)
+    ? rawSlug
+    : resolvePatternSlug(rawSlug);
   const component = componentRegistry.get(slug);
   if (!component) return null;
 

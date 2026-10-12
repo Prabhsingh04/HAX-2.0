@@ -1,4 +1,5 @@
 import { patterns, type Pattern } from "@/lib/patterns";
+import { resolvePatternSlug } from "@/lib/patterns/aliases";
 import { anonymizeParticipants } from "@/lib/evidence-privacy";
 import {
   PATTERN_UI_COMPONENTS,
@@ -223,7 +224,13 @@ export function discoverComponents(query: string): ComponentMetadata[] {
 }
 
 export function fetchComponent(slug: string): ComponentDefinition | null {
-  return getPatternRegistry().get(slug) ?? null;
+  const registry = getPatternRegistry();
+  const direct = registry.get(slug);
+  if (direct) return direct;
+  // Fall back through the rename map so old slugs (from stored instances, deep
+  // links, cached client state) still resolve after the 17→23 catalog merge.
+  const resolved = resolvePatternSlug(slug);
+  return resolved !== slug ? (registry.get(resolved) ?? null) : null;
 }
 
 export function createLocalInstance(

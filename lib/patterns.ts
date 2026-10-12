@@ -1,3 +1,10 @@
+import type {
+  CommunicationMode,
+  PatternChannel,
+  PatternLevel,
+} from "@/lib/patterns/behavior";
+import { resolvePatternSlug } from "@/lib/patterns/aliases";
+
 export type PatternStatus = "Grounded" | "Unverified";
 
 // Backing strength from the Combined Research + Design Synthesis crosswalk.
@@ -33,6 +40,24 @@ export type Pattern = {
   backingStrength?: BackingStrength;
   participants?: string;
   researchNote?: string;
+  // Behavior-spec fields (HAX 2026-10 reframe). Optional while the 23-pattern
+  // catalog is authored on the design side; populated per-pattern from the data
+  // once finalized. See lib/patterns/behavior.ts for the taxonomy.
+  mode?: CommunicationMode; // primary communication mode
+  level?: PatternLevel; // primary participant level (L1–L4)
+  alsoReaches?: PatternLevel[]; // levels the behavior also shifts into
+  channel?: PatternChannel[]; // viewports this surfaces in
+  responses?: string[]; // what the receiver can do back
+  variants?: PatternVariant[]; // level/context-specific manifestations
+};
+
+/** A level- or context-specific manifestation of a pattern. Shape kept minimal
+ *  until the design side finalizes what a variant carries. */
+export type PatternVariant = {
+  id: string;
+  label: string;
+  level?: PatternLevel;
+  note?: string;
 };
 
 // A GTM / positioning finding from the synthesis that is not itself a UI
@@ -543,7 +568,13 @@ export const positioningFindings: PositioningFinding[] = [
 ];
 
 export function getPattern(slug: string): Pattern | undefined {
-  return patterns.find((p) => p.slug === slug);
+  const direct = patterns.find((p) => p.slug === slug);
+  if (direct) return direct;
+  // Fall back through the rename map (old slug → merged/renamed target).
+  const resolved = resolvePatternSlug(slug);
+  return resolved !== slug
+    ? patterns.find((p) => p.slug === resolved)
+    : undefined;
 }
 
 export function getPatternStatus(pattern: Pattern): PatternStatus {
