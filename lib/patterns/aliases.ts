@@ -13,8 +13,10 @@
  * finalizes the 23 names — a slug with no entry resolves to itself.
  */
 export const PATTERN_ALIASES: Record<string, string> = {
+  // Per the MCP server brief, section 7 — the full set of renames/merges.
   "background-work-ledger": "activity-record",
   "signal-to-intent-handshake": "pre-action-handshake",
+  "dependency-and-lineage-view": "lineage-view",
   // Decision Record merges two older patterns.
   "decision-ledger": "decision-record",
   "proposed-commits": "decision-record",
