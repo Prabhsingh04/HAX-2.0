@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "next lint",
     "verify:themes": "npx tsx scripts/verify-gallery-themes.ts",
+    "validate:catalog": "npx tsx scripts/validate-catalog.ts",
     "mcp": "node --conditions=react-server --import tsx server/mcp-server.ts",
     "mcp:stdio": "node --conditions=react-server --import tsx server/mcp-stdio.ts"
   },

@@ -68,6 +68,35 @@ export function isPresentingMode(mode: Mode): boolean {
   return MODE_FAMILY[mode] === "presenting";
 }
 
+/** Runtime value lists for the closed enums (TS types erase at runtime; the
+ *  catalog validators check incoming data against these). */
+export const LEVELS: readonly Level[] = ["L1", "L2", "L3", "L4"];
+export const MODES: readonly Mode[] = [...PRESENTING_MODES, ...ENGAGING_MODES];
+export const CHANNELS: readonly Channel[] = [
+  "chat_ui",
+  "settings_panel",
+  "shared_ui",
+  "agent_message",
+  "shared_record",
+  "state_signal",
+];
+export const AUDIENCES: readonly Audience[] = [
+  "self",
+  "peer_agent",
+  "orchestrator",
+  "operator",
+  "team",
+];
+export const EVIDENCE_VALUES: readonly Evidence[] = [
+  "strong",
+  "moderate",
+  "thin",
+  "none",
+  "not_rated",
+];
+export const SOURCES = ["sdk", "ioc", "sdk+ioc"] as const;
+export type PatternSource = (typeof SOURCES)[number];
+
 /** Where the opening travels. Human-facing channels render to a surface a
  *  person sees; agent-facing channels are headless (L2). The agent-facing three
  *  are pending confirmation (brief section 10) — keep or drop together. */
