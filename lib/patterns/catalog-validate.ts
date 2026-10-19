@@ -148,14 +148,14 @@ export function validateCatalog(
     if (!evidenceSet.has(p.evidence)) errors.push(`"${where}": bad evidence "${p.evidence}"`);
     if (!sourceSet.has(p.source)) errors.push(`"${where}": bad source "${p.source}"`);
 
-    // responses narrowing must be a subset of the primary mode's responses
-    if (p.responses && modeById.has(p.mode?.primary)) {
-      const allowed = new Set(modeById.get(p.mode.primary)!.responses);
-      for (const r of p.responses) {
-        if (!allowed.has(r)) {
-          errors.push(`"${where}": response "${r}" is not valid for mode "${p.mode.primary}"`);
-        }
-      }
+    // Per brief section 4: a pattern's `responses`, when present, ARE the
+    // authoritative valid responses (concrete per-pattern labels), not a subset
+    // of the mode's generic responses. So we only check they're non-empty — the
+    // interaction-time rule (response.value ∈ pattern.responses else mode) is
+    // enforced on write, not here.
+    if (p.responses) {
+      if (p.responses.length === 0) warnings.push(`"${where}": empty responses array (drop it to inherit the mode's)`);
+      if (p.responses.some((r) => !r?.trim())) errors.push(`"${where}": has a blank response value`);
     }
 
     // variants: exactly one default, kebab ids unique, valid source
@@ -201,16 +201,24 @@ export function validateCatalog(
   }
 
   // ---- Counts ------------------------------------------------------------
+  // The brief's section-6 counts are a baseline, but the design evolves (level/
+  // mode reassignments, dropping Details Dashboard). So a mismatch is a WARNING
+  // to review, not a hard error — it still surfaces an accidental mis-level.
   for (const level of LEVELS) {
     if (byLevel[level] !== EXPECTED_LEVEL_COUNTS[level]) {
-      errors.push(`Level ${level}: expected ${EXPECTED_LEVEL_COUNTS[level]} patterns, found ${byLevel[level]}`);
+      warnings.push(`Level ${level}: ${byLevel[level]} patterns (brief baseline was ${EXPECTED_LEVEL_COUNTS[level]})`);
     }
   }
   for (const mode of MODES) {
     if (byPrimaryMode[mode] !== EXPECTED_PRIMARY_MODE_COUNTS[mode]) {
-      errors.push(`Primary mode "${mode}": expected ${EXPECTED_PRIMARY_MODE_COUNTS[mode]}, found ${byPrimaryMode[mode]}`);
+      warnings.push(`Primary mode "${mode}": ${byPrimaryMode[mode]} (brief baseline was ${EXPECTED_PRIMARY_MODE_COUNTS[mode]})`);
     }
   }
+  // Internal consistency IS a hard error (a count that doesn't add up = data loss).
+  const levelSum = LEVELS.reduce((s, l) => s + byLevel[l], 0);
+  const modeSum = MODES.reduce((s, m) => s + byPrimaryMode[m], 0);
+  if (levelSum !== patterns.length) errors.push(`Level counts sum to ${levelSum}, but there are ${patterns.length} patterns`);
+  if (modeSum !== patterns.length) errors.push(`Primary-mode counts sum to ${modeSum}, but there are ${patterns.length} patterns`);
 
   // ---- Gaps / thin levels (informational) --------------------------------
   for (const mode of MODES) {
