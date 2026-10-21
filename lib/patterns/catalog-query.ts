@@ -75,25 +75,41 @@ function hit(catalog: Catalog, p: CatalogPattern): DiscoverHit {
   };
 }
 
-/** Lowercase tokens for a loose free-text match over a pattern's text fields. */
-function matchesQuery(p: CatalogPattern, query: string): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  const haystack = [
-    p.id,
-    p.name,
-    p.summary,
-    p.spec,
-    ...p.triggers,
-    ...p.merged_from,
-  ]
-    .join(" ")
-    .toLowerCase();
-  // All query tokens must appear (AND), so a specific query narrows.
-  return q
-    .split(/\s+/)
-    .filter((t) => t.length > 1)
-    .every((t) => haystack.includes(t));
+const QUERY_STOP = new Set([
+  "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "how", "in",
+  "is", "it", "its", "of", "on", "or", "that", "the", "their", "them", "they",
+  "this", "to", "want", "what", "when", "which", "with", "you", "your", "need",
+  "where", "who", "person", "agent", "agents",
+]);
+
+/**
+ * Relevance score of a pattern for a free-text query: how many distinct query
+ * tokens hit the pattern's text, weighted by where they land (name/id strongest,
+ * then triggers, then spec/summary). 0 means no match. Ranks results rather than
+ * requiring every token to appear — natural-language queries rarely match all.
+ */
+function queryScore(p: CatalogPattern, query: string): number {
+  const tokens = [
+    ...new Set(
+      query
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((t) => t.length > 1 && !QUERY_STOP.has(t)),
+    ),
+  ];
+  if (!tokens.length) return 1; // query was all stopwords — don't filter it out
+
+  const strong = `${p.id} ${p.name}`.toLowerCase();
+  const mid = (p.triggers ?? []).join(" ").toLowerCase();
+  const weak = `${p.summary} ${p.spec} ${(p.merged_from ?? []).join(" ")}`.toLowerCase();
+
+  let score = 0;
+  for (const t of tokens) {
+    if (strong.includes(t)) score += 4;
+    else if (mid.includes(t)) score += 2;
+    else if (weak.includes(t)) score += 1;
+  }
+  return score;
 }
 
 export function discover(
@@ -126,20 +142,28 @@ export function discover(
   const channel = filters.channel as Channel | undefined;
   const audience = filters.audience as Audience | undefined;
 
-  const results = catalog.patterns
-    .filter((p) => {
-      // Mode membership is by PRIMARY mode (the brief's counts are by-primary,
-      // and "delegate/request have zero patterns" only holds if secondary modes
-      // don't count as catalog membership). Secondary mode still rides along in
-      // each hit for agents that want it.
-      if (mode && p.mode.primary !== mode) return false;
-      if (level && p.level.primary !== level && !(level in p.level.notes)) return false;
-      if (channel && !p.channels.includes(channel)) return false;
-      if (audience && !p.audience.includes(audience)) return false;
-      if (filters.query && !matchesQuery(p, filters.query)) return false;
-      return true;
-    })
-    .map((p) => hit(catalog, p));
+  const filtered = catalog.patterns.filter((p) => {
+    // Mode membership is by PRIMARY mode (the brief's counts are by-primary,
+    // and "delegate/request have zero patterns" only holds if secondary modes
+    // don't count as catalog membership). Secondary mode still rides along in
+    // each hit for agents that want it.
+    if (mode && p.mode.primary !== mode) return false;
+    if (level && p.level.primary !== level && !(level in p.level.notes)) return false;
+    if (channel && !p.channels.includes(channel)) return false;
+    if (audience && !p.audience.includes(audience)) return false;
+    return true;
+  });
+
+  // Free-text query ranks (and prunes) the structurally-filtered set.
+  const ranked = filters.query?.trim()
+    ? filtered
+        .map((p) => ({ p, score: queryScore(p, filters.query!) }))
+        .filter((x) => x.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((x) => x.p)
+    : filtered;
+
+  const results = ranked.map((p) => hit(catalog, p));
 
   const version = catalogVersion(catalog);
 

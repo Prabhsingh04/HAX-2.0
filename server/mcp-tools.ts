@@ -40,11 +40,8 @@ function toolError(message: string) {
 export function buildServer(registry: RegistryModule): McpServer {
   const {
     brokerStateHandoff,
-    discoverComponentsSmart,
-    fetchComponent,
     getInstanceState,
     instantiateComponent,
-    listComponents,
     listInstallations,
     updateInstanceState,
   } = registry;
@@ -56,12 +53,12 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Discover patterns",
       description:
-        "Semantic (embedding) search over the pattern catalogue, with keyword fallback. Returns pattern metadata ranked best-first (slug, name, description, backing strength, evidence count).",
+        "Free-text search over the 23-pattern behavior catalog, ranked best-first. Each result carries the behavior to follow (spec sentence, mode, valid responses, level, channels). Alias of `discover` with just a query; use `discover` for structured mode/level/channel/audience filters.",
       inputSchema: {
         query: z.string().min(1).describe("What you're trying to do"),
       },
     },
-    async ({ query }) => json(await discoverComponentsSmart(query)),
+    async ({ query }) => json(discoverBehavior({ query })),
   );
 
   server.registerTool(
@@ -69,10 +66,10 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "List all patterns",
       description:
-        "Return metadata for the ENTIRE pattern catalogue (all patterns), unranked. Use this to browse or load the whole library; use discover_patterns to search for the best fit for a specific situation.",
+        "Return the ENTIRE behavior catalog (all 23 patterns) unranked. Use this to browse the whole library; use discover_patterns or discover to find the best fit for a situation.",
       inputSchema: {},
     },
-    async () => json(listComponents()),
+    async () => json(discoverBehavior({})),
   );
 
   server.registerTool(
@@ -80,12 +77,12 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Fetch pattern",
       description:
-        "Full definition for one pattern: metadata, state schema, handlers, and UI copy sections.",
-      inputSchema: { slug: z.string().min(1).describe("Pattern slug") },
+        "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes) and rendering (implementation, variants). Old/renamed ids resolve automatically. Alias of `fetch`.",
+      inputSchema: { slug: z.string().min(1).describe("Pattern id/slug") },
     },
     async ({ slug }) => {
-      const component = fetchComponent(slug);
-      return component ? json(component) : toolError(`Pattern not found: ${slug}`);
+      const result = fetchBehavior(slug);
+      return result.ok ? json(result) : toolError(result.error.message);
     },
   );
 
