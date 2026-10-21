@@ -20,6 +20,7 @@ import {
 } from "@/lib/pattern-registry-core";
 import { patterns } from "@/lib/patterns";
 import { resolvePatternSlug } from "@/lib/patterns/aliases";
+import { loadCatalog } from "@/lib/patterns/catalog";
 import { rankPatterns } from "@/lib/patterns/embedding-index";
 import {
   listInstancesByAgent,
@@ -105,8 +106,12 @@ export async function instantiateComponent(
   const slug = componentRegistry.has(rawSlug)
     ? rawSlug
     : resolvePatternSlug(rawSlug);
-  const component = componentRegistry.get(slug);
-  if (!component) return null;
+  // A pattern is instantiable if it's in the legacy registry OR the v2 behavior
+  // catalog. The instance itself only needs a valid id + state, so this is all
+  // that gates it — update/get/list then work off the stored instance id.
+  const known =
+    componentRegistry.has(slug) || Boolean(loadCatalog().getPattern(slug));
+  if (!known) return null;
 
   const instanceId = `${slug}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   const now = new Date().toISOString();
