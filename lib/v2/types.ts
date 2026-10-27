@@ -90,7 +90,7 @@ export interface Pattern {
   mode: { primary: Mode; secondary?: Mode };
   level: {
     primary: Level;
-    /** primary + every reached level; absent = doesn't apply */
+    /** primary + every participant dimension reached; absent = doesn't apply */
     notes: Partial<Record<Level, string>>;
   };
   /** the moments it shows up */

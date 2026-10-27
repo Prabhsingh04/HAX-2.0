@@ -9,18 +9,18 @@ import type { Level, Mode, Pattern } from "./types";
  *
  * What is grounded and what is synthesis:
  *
- *   grounded    name, source, merged_from, evidence, level notes, triggers and
+ *   grounded    name, source, merged_from, evidence, participant-dimension notes, triggers and
  *               channels for the IOC entries, which come from the published
  *               pattern pages. Summaries for IOC entries are their published
  *               one-liners, trimmed.
- *   synthesis   primary and secondary modes, primary level, the spec sentence,
+ *   synthesis   primary and secondary modes, primary participant dimension, the spec sentence,
  *               audiences, and channels for the SDK entries. Section 9 of the
  *               document lists the specific calls that need validating, and
  *               `judgment-calls.ts` carries that list into the UI.
  *
- * `composes_with` and `conflicts_with` are empty everywhere. The document
- * defines the fields but supplies no values, and a composition graph invented
- * here would read as a finding. TODO: author these.
+ * `composes_with` and `conflicts_with` are design relationships, not source
+ * evidence. Review as Dialogue names its three adjacent patterns explicitly;
+ * the distinction and sequence are explained in its embedding guidance.
  */
 export const patterns: Pattern[] = [
   {
@@ -369,26 +369,43 @@ export const patterns: Pattern[] = [
   },
   {
     id: "certainty-boundary",
+    contentReady: true,
     name: "Certainty Boundary",
     summary:
-      "Separates deterministic, API-driven work from dynamic generation, because practitioners tie the second to hallucination risk.",
-    mode: { primary: "declare" },
+      "Shows which workflow steps follow fixed rules and which rely on agent judgment or generated content.",
+    mode: { primary: "declare", secondary: "signal" },
     level: {
       primary: "L1",
-      notes: { L1: "Fixed steps and generative steps are marked apart." },
+      notes: {
+        L1: "The operator sees the execution type and review point for each step in one agent's workflow.",
+        L2: "Peer agents receive step types and review gates with the workflow they consume.",
+        L3: "The operator sees which steps belong to each agent and where a generated handoff needs review.",
+        L4: "The team sees the same step boundaries and who owns each review gate.",
+      },
     },
     triggers: [
-      "A workflow is configured",
-      "A generative step needs review",
+      "A workflow is configured or changed",
+      "A run reaches a judgment or generation step",
+      "A step's method or review requirement changes during a run",
     ],
-    audience: ["operator"],
-    channels: ["settings_panel"],
-    spec: "When a workflow is configured, the agent declares to the person operating it in a single-agent setup, through the settings panel, and expects them to calibrate their trust step by step and set its scope.",
+    audience: ["operator", "peer_agent", "team"],
+    channels: ["settings_panel", "state_signal"],
+    responses: ["inspect a step", "review generated work", "revise the workflow"],
+    spec: "When a workflow is configured or a step's method changes, the agent declares to the person operating it in a single-agent setup, through the settings panel, and expects them to inspect the step boundary or revise the workflow.",
     source: "ioc",
     merged_from: ["Certainty Boundary (IOC)"],
     evidence: "thin",
+    whatItSolves:
+      "An operator can see where a workflow follows a repeatable path and where an agent must interpret or generate. That makes review points explicit before a generated result is used downstream.",
+    interactionModel:
+      "The workflow labels each step by how it runs: a fixed API call, an agent-selected path, or generated content. It shows the input and output at each transition and identifies any review gate. As configuration or execution changes the path, the boundary updates. The operator inspects the affected step and reviews generated work at the gate before it continues.",
+    interactionSteps: [
+      { title: "Map the path", description: "Mark each step as fixed, agent-selected, or generated, in the order it runs." },
+      { title: "Show the transition", description: "Identify the input, output, and review gate where the workflow moves into generated work." },
+      { title: "Update the boundary", description: "When a step changes method or reaches review, show the new path before downstream work continues." },
+    ],
     implementation: { status: "none" },
-    composes_with: [],
+    composes_with: ["capability-manifest", "authority-gradient", "structured-finding"],
     conflicts_with: [],
     v1_slugs: ["certainty-boundary"],
   },
@@ -483,10 +500,10 @@ export const patterns: Pattern[] = [
       "Multi-agent value is strongest where no single agent can legally, technically or organizationally hold all the access a task needs.",
     mode: { primary: "coordinate", secondary: "declare" },
     level: {
-      primary: "L2",
+      primary: "L3",
       notes: {
         L2: "Peer agents reason within separate access scopes and exchange conclusions through a broker.",
-        L3: "The person grants access or resolves a gap the partitioned agents leave open.",
+        L3: "The operator sets scoped access before work, reviews the combined conclusions, and resolves any remaining gap without pooling restricted data.",
       },
     },
     triggers: [
@@ -495,24 +512,24 @@ export const patterns: Pattern[] = [
     ],
     audience: ["peer_agent", "operator"],
     channels: ["shared_ui", "chat_ui", "shared_record"],
-    spec: "When a task needs data no single agent may hold, the agent coordinates with its peer agents in a multi-agent system with no person in the loop, through a shared record, and expects them to act jointly without pooling access.",
+    spec: "When a task needs data no single agent may hold, the agent coordinates with its peer agents and the operator in a multi-agent system with one person in the loop, through a shared record, and expects the operator to set scoped access and resolve any gaps without pooling access.",
     source: "ioc",
     merged_from: ["Credential Boundary (IOC)"],
     evidence: "strong",
     whatItSolves:
       "Agents can complete work that spans restricted data while each stays within its own access. They coordinate on conclusions without pooling the underlying data or expanding any one agent's permissions.",
     interactionModel:
-      "Agents are partitioned by scope and reason in parallel, each on only the data it may hold. They coordinate through a policy broker that passes conclusions, never raw data, so no agent sees another's restricted inputs. A person steps in only to grant access or resolve what the partition leaves open.",
+      "The operator sets separate access scopes before work begins. Agents reason in parallel on only the data they may hold and coordinate through a policy broker that passes conclusions, never raw data. The operator reviews the combined conclusions and resolves any remaining gap without pooling restricted inputs.",
     interactionSteps: [
-      { title: "Partition", description: "Give each agent only the data and tools within its permitted scope." },
+      { title: "Set scopes", description: "The operator assigns each agent only the data and tools within its permitted scope." },
       { title: "Coordinate", description: "Pass conclusions through a policy broker without sharing restricted inputs." },
-      { title: "Resolve gaps", description: "Ask a person to grant access or settle what the partition leaves open." },
+      { title: "Review gaps", description: "The operator reviews the combined conclusions and resolves any open gap without pooling access." },
     ],
     whereItEmbeds:
-      "Runs between agents that must stay separated, a shared record or broker surface, surfaced to a person only to grant access or settle a gap. Pairs with Shared Cognitive State, which holds the common picture the partitioned agents still need.",
+      "Runs between agents that must stay separated, in a shared record or broker surface the operator uses to set scopes and review conclusions. Pairs with Shared Cognitive State, which holds the common picture the partitioned agents still need.",
     example:
-      "A fraud agent (AML scope) and a credit agent (lending scope) coordinate via a policy broker; neither holds the other's raw data.",
-    factChips: ["Agents only", "Partitioned by scope", "Coordinate via broker"],
+      "The operator gives a fraud agent an AML scope and a credit agent a lending scope. They coordinate through a policy broker; the operator reviews their combined conclusions without either agent receiving the other's raw data.",
+    factChips: ["Operator sets scopes", "Partitioned access", "Conclusions via broker"],
     implementation: { status: "none" },
     composes_with: ["shared-cognitive-state"],
     conflicts_with: [],
@@ -526,10 +543,10 @@ export const patterns: Pattern[] = [
       "Practitioners expect a clear account of how several agents converged on an adopted answer, not just what was decided.",
     mode: { primary: "resolve", secondary: "explain" },
     level: {
-      primary: "L2",
+      primary: "L3",
       notes: {
         L2: "Peer agents weigh conflicting answers and adopt one or flag an impasse.",
-        L3: "The person reviews how the answer was reached and can settle an impasse.",
+        L3: "The operator reviews how the agents weighed evidence, accepts or reopens the adopted answer, and settles an impasse.",
       },
     },
     triggers: [
@@ -539,24 +556,24 @@ export const patterns: Pattern[] = [
     ],
     audience: ["peer_agent", "operator"],
     channels: ["shared_ui", "chat_ui", "shared_record"],
-    spec: "When sub-agents reach conflicting answers, the agent resolves with its peer agents in a multi-agent system with no person in the loop, through a shared record, and expects an adopted answer or a flagged impasse.",
+    spec: "When sub-agents reach conflicting answers, the agent resolves with its peer agents and the operator in a multi-agent system with one person in the loop, through a shared record, and expects the operator to review the adopted answer or settle an impasse.",
     source: "ioc",
     merged_from: ["Convergence Point (IOC)"],
     evidence: "moderate",
     whatItSolves:
       "Agents and people can see how a shared answer was reached, including the evidence weighed and any unresolved conflict. That account makes the adopted answer possible to examine or overturn.",
     interactionModel:
-      "The conflicting agents are shown together, their sources scored, and one answer is adopted with its reasoning attached, or, when nothing can be adopted, the conflict is flagged as an impasse. A person reviewing it sees how convergence happened and can settle an impasse.",
+      "The conflicting agents are shown together and their sources are scored. The resolver adopts an answer with its reasoning attached, or flags an impasse when nothing can be adopted. The operator reviews the evidence and reasoning, accepts or reopens the adopted answer, or settles the impasse.",
     interactionSteps: [
       { title: "Surface conflict", description: "Show the agents' differing answers and the sources behind each." },
       { title: "Weigh", description: "Compare the evidence and attach reasoning to the candidate answer." },
-      { title: "Conclude", description: "Adopt an answer or flag an impasse for a person to settle." },
+      { title: "Review the result", description: "The operator accepts or reopens the adopted answer, or settles a flagged impasse." },
     ],
     whereItEmbeds:
-      "Runs where sub-agents disagree and an answer has to be chosen, a shared record between agents, surfaced to a person when the impasse needs settling. Sits downstream of Assumption Surface, which explains why they differ before anything is adopted.",
+      "Runs where sub-agents disagree and an answer has to be chosen, in a shared record the operator uses to review the evidence and decision. Sits downstream of Assumption Surface, which explains why they differ before anything is adopted.",
     example:
-      "A panel: agent A (logs) versus agent B (code). The conflict resolver scores the sources, \"Adopted: rollback\", or \"Impasse: root cause unsettled\".",
-    factChips: ["Agents only", "Adopt or flag impasse", "Reasoning attached"],
+      "A panel compares agent A's logs with agent B's code findings. The resolver scores the sources and recommends rollback; the operator reviews the reasoning and accepts it or reopens the conflict.",
+    factChips: ["Operator reviews", "Adopt or flag impasse", "Reasoning attached"],
     implementation: { status: "none" },
     composes_with: ["assumption-surface", "pre-action-handshake"],
     conflicts_with: [],
@@ -564,21 +581,44 @@ export const patterns: Pattern[] = [
   },
   {
     id: "pre-action-handshake",
+    contentReady: true,
     name: "Pre-Action Handshake",
     summary:
-      "Lets the agent explain what it noticed and what it thinks it means before it acts.",
+      "Before a consequential action, the agent states what it noticed, how it interprets it, and what it proposes so the operator can respond.",
     mode: { primary: "propose", secondary: "explain" },
     level: {
       primary: "L3",
-      notes: { L3: "Noticed, means, plan, stated before acting." },
+      notes: {
+        L1: "The operator reviews one agent's interpretation and proposed action before it proceeds.",
+        L3: "The operator reviews a proposal informed by several agents, with the noticing agent responsible for the handoff.",
+      },
     },
-    triggers: ["The agent detects a signal", "Before an irreversible step"],
+    triggers: [
+      "The agent detects a signal that may require consequential action",
+      "Immediately before an irreversible or externally visible step",
+      "New evidence materially changes the interpretation or proposed action while awaiting a response",
+    ],
     audience: ["operator"],
     channels: ["chat_ui"],
     spec: "When it detects a signal and before any irreversible step, the agent proposes to the operator in a multi-agent system with one person in the loop, through chat, and expects consent, a correction, a decline, or a deferral.",
+    responses: ["consent", "correct", "decline", "defer"],
     source: "ioc",
     merged_from: ["Signal-to-Intent Handshake (IOC), renamed"],
     evidence: "moderate",
+    whatItSolves:
+      "An operator can judge a consequential action while it is still pending. The agent makes its observation, interpretation, and proposed next step visible together, so the person can consent, correct its reading, decline, or defer the action.",
+    interactionModel:
+      "When a relevant signal appears or a consequential action is next, the agent pauses before acting and sends a concise handoff: what it noticed, what that may mean, what it proposes, and why the action matters. The operator can consent, correct the interpretation or plan, decline, or defer. The agent records the response and proceeds only within the resulting instruction; if new evidence changes the proposal while it is pending, it presents the revised handoff for a fresh decision.",
+    interactionSteps: [
+      { title: "Notice and interpret", description: "Name the signal and distinguish observed facts from what the agent thinks they mean." },
+      { title: "Propose before acting", description: "State the consequential next step and hold it pending the operator's response." },
+      { title: "Record the response", description: "Apply consent, incorporate a correction and ask again, decline the action, or defer it." },
+    ],
+    whereItEmbeds:
+      "In the agent's conversation at the point where it is ready to take a consequential step. The handoff stays attached to the signal and proposed action, and a changed proposal returns to the same decision point.",
+    example:
+      "The Reliability agent sees a sustained error-rate spike on checkout-api and interprets it as a bad release. Before rolling back, it shows the observed metrics, names its interpretation, and proposes rollback. The operator can consent, correct the diagnosis, decline, or defer while gathering more evidence.",
+    factChips: ["Observation before interpretation", "Action held pending response", "Consent · correct · decline · defer"],
     implementation: { status: "none" },
     composes_with: [],
     conflicts_with: [],
@@ -693,23 +733,45 @@ export const patterns: Pattern[] = [
   },
   {
     id: "review-as-dialogue",
+    contentReady: true,
     name: "Review as Dialogue",
     summary:
-      "Turns approval into a learning and steering moment, not just a yes/no gate.",
+      "Turns feedback on an agent’s draft into a focused exchange that guides its next revision.",
     mode: { primary: "propose" },
-    level: { primary: "L3", notes: { L3: "A rejection becomes steering." } },
+    level: {
+      primary: "L3",
+      notes: {
+        L3: "The operator judges whether the Research agent's proposal and the Marketing agent's draft fit the campaign, then steers the revision; Marketing carries that decision into the next draft.",
+      },
+    },
     triggers: [
-      "A person reviews a draft or an output",
-      "A person rejects or redirects",
+      "An agent presents a draft or output for review",
+      "The reviewer declines or redirects it and gives a reason",
+      "The agent returns with a revision or needs one clarification before revising",
     ],
     audience: ["operator"],
     channels: ["chat_ui"],
-    spec: "When a person reviews a draft or an output, the agent proposes to the operator in a multi-agent system with one person in the loop, through chat, and expects consent, a correction, a decline, or a deferral.",
+    responses: ["consent", "correct", "decline", "defer"],
+    spec: "When an agent presents a draft or output for review, the agent proposes to the operator in a multi-agent system with one person in the loop, through chat, and expects consent, a correction, a decline, or a deferral.",
     source: "ioc",
     merged_from: ["Review as Dialogue (IOC)"],
     evidence: "moderate",
     implementation: { status: "none" },
-    composes_with: [],
+    whatItSolves:
+      "A reviewer can apply context the agents may not know, such as which audience or priority matters for this work. A reasoned response lets the responsible agent clarify, revise, and return the draft for another decision.",
+    interactionModel:
+      "A contributing agent may propose a direction, and the responsible agent presents a draft with the decision it needs from the operator. The operator applies contextual judgment about audience, priorities, or fit, then can consent, correct the draft directly, decline with a reason, or defer. When feedback is incomplete, the responsible agent asks one focused clarification; it then revises the draft and makes the changes visible for another review. Each response applies to the current version, so a new revision returns to pending review rather than inheriting an earlier approval.",
+    interactionSteps: [
+      { title: "Present the proposal", description: "Show the contributing agent's recommendation, the current draft, and the contextual decision reserved for the operator." },
+      { title: "Steer with feedback", description: "Consent, correct, decline with a reason, or defer; ask one focused question when the feedback needs clarification." },
+      { title: "Return for review", description: "Show the revision and what changed, then wait for a fresh decision on that version." },
+    ],
+    whereItEmbeds:
+      "In the agent’s conversation beside the draft under review. Co-editing Surface owns direct edits and comments inside a shared artifact; Review as Dialogue handles a review turn and the agent’s response. If the draft becomes a consequential action, Pre-Action Handshake holds that action for a fresh decision; Decision Record can preserve the rationale when the action is committed.",
+    example:
+      "The Research agent recommends leading with a quick setup promise for new trial users, based on survey synthesis. The Marketing agent uses it in a launch email draft. Before scheduling or sending, the operator must judge whether the audience and lead promise fit the campaign. The operator says the draft still reads as aimed at existing customers. Marketing asks whether to emphasize setup time or product value; the operator chooses setup time. Marketing returns a revised draft, marks the audience and opening paragraph as changed, and waits for a fresh decision.",
+    factChips: ["Feedback carries a reason", "Clarify, then revise", "Each version needs review"],
+    composes_with: ["co-editing-surface", "pre-action-handshake", "decision-record"],
     conflicts_with: [],
     v1_slugs: ["review-as-dialogue"],
   },
@@ -805,16 +867,22 @@ export const patterns: Pattern[] = [
     contentReady: true,
     name: "Co-Editing Surface",
     summary:
-      "One artifact that a person and one or more agents both edit, with variants by content type rather than six separate patterns.",
+      "A person and multiple agents revise the same document in a shared workspace.",
     mode: { primary: "coordinate" },
-    level: { primary: "L3", notes: { L3: "The person and agents revise the same artifact in a shared surface." } },
+    level: { primary: "L3", notes: {
+      L3: "The operator and several agents work from the same document, with each change attributed to its author.",
+      L4: "Several people or teams and their agents revise the shared document, with changes attributed across the group.",
+    } },
     triggers: [
-      "An agent produces an editable artifact",
-      "A person revises agent output",
+      "An agent creates an editable document for the operator and other agents",
+      "The person changes the document in place",
+      "The person comments on a specific part of the document",
+      "Another agent revises the document after the person's contribution",
+      "A participant returns to the current document",
     ],
     audience: ["operator"],
-    channels: ["shared_ui"],
-    spec: "When it produces an editable artifact, the agent coordinates with the operator in a multi-agent system with one person in the loop, through a shared UI, and expects them to act jointly on it.",
+    channels: ["shared_ui", "chat_ui"],
+    spec: "When a shared document is created or revised, the agent coordinates with the operator in a multi-agent system with one person in the loop, through a shared UI, and expects them to edit or comment on its parts before another agent continues.",
     source: "sdk",
     merged_from: [
       "Co-Editing Interface (SDK)",
@@ -824,58 +892,22 @@ export const patterns: Pattern[] = [
       "Mindmap (SDK)",
       "Charts / Data Visualizer (SDK)",
     ],
-    variant_axis: "content type",
-    // Two of the six the merge map lists have no artifact upstream: there is
-    // no co-editing-interface and no rich-text-editor in hax/artifacts, so
-    // the generic and text variants do not exist and are not listed. The
-    // directory names below are the real ones, "form", not "form-builder".
-    variants: [
-      {
-        id: "code",
-        label: "Code",
-        original: "Code Editor",
-        source: "sdk",
-        sdk_component: "code-editor",
-      },
-      {
-        id: "form",
-        label: "Form",
-        original: "Form Builder",
-        source: "sdk",
-        sdk_component: "form",
-        default: true,
-      },
-      {
-        id: "mindmap",
-        label: "Mindmap",
-        original: "Mindmap",
-        source: "sdk",
-        sdk_component: "mindmap",
-      },
-      {
-        id: "chart",
-        label: "Chart",
-        original: "Data Visualizer",
-        source: "sdk",
-        sdk_component: "data-visualizer",
-      },
-    ],
     evidence: "not_rated",
     whatItSolves:
-      "A person and an agent can revise the same artifact in place. The work stays in one shared surface instead of passing copied versions back and forth.",
+      "Keep the work in one document so the operator can revise an agent's draft or comment on a specific part before another agent continues. Everyone sees the current text, its comments, and who contributed to each change.",
     interactionModel:
-      "One artifact that a person and one or more agents edit, the surface shaped to the content type: a code editor, a form, a mindmap, or a chart. The agent drafts, the person revises in place, and both act on the same object rather than trading versions.",
+      "An agent drafts a document in the shared workspace or attaches it to a conversation. The operator edits its text or attaches a comment to a named part. Another agent reads those contributions, adds a section to the same document, and preserves the operator's edits and comments. The current text, comments, and attribution remain visible as work continues.",
     interactionSteps: [
-      { title: "Draft", description: "The agent creates an editable artifact in the surface suited to its content." },
-      { title: "Revise", description: "The person changes the same code, form, mindmap, or chart in place." },
-      { title: "Continue", description: "Both work from the updated artifact rather than exchanging separate versions." },
+      { title: "Draft", description: "One agent writes the first version of a shared document." },
+      { title: "Revise or comment", description: "The operator edits text or comments on a specific document part." },
+      { title: "Continue", description: "Another agent adds to the document while keeping the operator's edits and comments attached." },
     ],
     whereItEmbeds:
-      "In a shared UI wherever an agent's output is meant to be worked on rather than just read, a code panel, a form to confirm, a mindmap to arrange, a chart to adjust.",
+      "In a shared document workspace or as an editable document attached to an agent reply.",
     example:
-      "After triage proposes a restart, a form opens to confirm it: pick the service (payments-svc), acknowledge the plan, and log a reason for the team, the agent drafted it, the person completes it in place.",
-    factChips: ["One artifact, both edit", "Shaped to the content", "Code · form · mindmap · chart"],
-    implementation: { sdk_component: "form", status: "shipping" },
+      "The Incident agent drafts a restart-plan document for payments-svc. The operator changes the proposed action and comments on what to watch. The Reliability agent adds an impact assessment to that same document while preserving the edit and comment.",
+    factChips: ["One shared document", "Comments on specific parts", "Agent continues from contributions"],
+    implementation: { status: "sketched" },
     composes_with: [],
     conflicts_with: [],
     v1_slugs: [],
@@ -954,13 +986,13 @@ export const patterns: Pattern[] = [
       primary: "L4",
       notes: {
         L2: "Peer agents can trace which outputs they cite before passing a dependent result onward.",
-        L3: "An operator can inspect dependencies across agents and hold a change that relies on a disputed output.",
-        L4: "The incident and service teams see the shared blast radius and can coordinate review of dependent decisions.",
+        L3: "A sales lead can inspect work across agents and hold a promotion that relies on a disputed count.",
+        L4: "Sales, fulfillment, and marketing teams see what relies on the same count and can coordinate review before the sale launches.",
       },
     },
     triggers: [
       "An upstream output is disputed or goes stale",
-      "Before signing off a dependent change",
+      "Before approving work that relies on the output",
     ],
     audience: ["team"],
     channels: ["shared_ui"],
@@ -969,15 +1001,15 @@ export const patterns: Pattern[] = [
     whatItSolves:
       "Teams can see which claims, artifacts, and decisions rely on a disputed or stale agent output, so they can check the source and coordinate review before dependent work proceeds.",
     interactionModel:
-      "The shared incident workspace places the questioned output at the root and draws dependent claims, artifacts, and decisions with their citation links. When the root is disputed or stale, its state and timestamp are shown; the view counts affected teams and decisions so reviewers can trace each dependency and reassess downstream work.",
+      "The shared incident workspace highlights the disputed or stale source with its claim, the evidence challenging it, its author, and last verification time. It lists all affected decisions and artifacts with their producing agents and whether they rely on the source directly or through another item. Selecting an item reveals its full dependency path and the review needed before that work proceeds. The summary counts affected items, decisions, and teams.",
     interactionSteps: [
-      { title: "Flag the source", description: "Mark the upstream output as disputed or stale and show when it was last verified." },
-      { title: "Trace reliance", description: "Follow citation links from the source to dependent plans, tickets, and team decisions." },
-      { title: "Assess the impact", description: "Count affected teams and decisions so they can verify the source and reassess dependent work." },
+      { title: "Explain the dispute", description: "Show the reported count, the conflicting recount, and when each was known." },
+      { title: "Review affected work", description: "List every dependent item with its agent and direct or indirect reliance." },
+      { title: "Trace a path", description: "Select an item to see how it depends on the source and what needs review." },
     ],
     example:
-      "In the INC-2231 incident workspace, the Triage agent's RCA summary for edge-router-7 is under dispute. The Remediation agent's rollback plan leads to a change ticket from the Change agent; a Comms agent's status page draft also cites the RCA. Three teams still rely on the summary.",
-    factChips: ["Citation graph", "Disputed source", "Cross-team blast radius"],
+      "In the SALE-104 workspace, the Inventory agent reports 120 Trail Bottles available for a weekend sale. A warehouse recount finds only 12 saleable units even though no stock moved, putting that count under dispute. The Sales agent's promotion decision and the Fulfillment agent's 100-unit allocation both use the count directly. The Marketing agent's launch email draft follows the promotion decision. Three teams need to review their work before the sale launches.",
+    factChips: ["Dependency paths", "Disputed source", "Cross-team impact"],
     source: "ioc",
     merged_from: ["Dependency and Lineage View (IOC), renamed"],
     evidence: "strong",
@@ -1047,11 +1079,7 @@ export const patterns: Pattern[] = [
   },
 ];
 
-/**
- * Content-type variants of Co-Editing Surface. The document is explicit that
- * these are one pattern with variants, each pointing at its SDK component,
- * rather than six peers.
- */
+/** SDK entries that originally informed the Co-Editing Surface synthesis. */
 export const CO_EDITING_VARIANTS: Array<{ label: string; component: string }> = [
   { label: "Generic", component: "Co-Editing Interface" },
   { label: "Text", component: "Rich Text Editor" },

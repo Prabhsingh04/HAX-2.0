@@ -1,35 +1,35 @@
 import type { Audience, Channel, Level } from "./types";
 
 /**
- * Levels, channels and audiences, from `context.md` sections 3 and 6.
+ * Participant dimensions, channels and audiences, from `context.md` sections 3 and 6.
  *
- * Levels are participant structure, not seniority. Each level inherits the
- * problems of the ones below it. In user-facing UI, show the label, never
- * "L1-L4". The codes stay internal and in the schema.
+ * Dimensions describe who is in the exchange, not seniority. Each dimension
+ * adds participants and their coordination needs. In user-facing UI, show the
+ * label, never "L1-L4". The codes stay internal and in the schema.
  */
 
 export const LEVEL_ORDER: Level[] = ["L1", "L2", "L3", "L4"];
 
 export const LEVEL_LABEL: Record<Level, string> = {
   L1: "One agent",
-  L2: "Agents only",
-  L3: "Agents + one person",
-  L4: "Agents + many people",
+  L2: "Many agents only",
+  L3: "Many agents + one person",
+  L4: "Many agents + many people",
 };
 
 /**
  * The long form, for use inside a behavior-spec sentence. The "in" is a
- * literal part of the template, not part of the level, so that an unfilled
- * level slot still reads "… to audience in [level], through …".
+ * literal part of the template, not part of the `level` field, so that an
+ * unfilled participant-dimension slot reads "… to audience in [dimension], through …".
  */
 export const LEVEL_LONG: Record<Level, string> = {
   L1: "a single-agent setup",
-  L2: "a multi-agent system with no person in the loop",
-  L3: "a multi-agent system with one person in the loop",
-  L4: "a multi-agent system shared by several people or teams",
+  L2: "a system with many agents and no person in the loop",
+  L3: "a system with many agents and one person in the loop",
+  L4: "a system with many agents shared by several people or teams",
 };
 
-/** What first appears at this level and not below it. */
+/** What first appears at this participant dimension and not before it. */
 export const LEVEL_NEW: Record<Level, string> = {
   L1: "Self-representation",
   L2: "Peer coordination, headless",
@@ -37,7 +37,7 @@ export const LEVEL_NEW: Record<Level, string> = {
   L4: "Mediating between people; attribution",
 };
 
-/** How many participants to draw in the small level diagram. */
+/** How many participants to draw in the small dimension diagram. */
 export const LEVEL_SHAPE: Record<Level, { agents: number; people: number }> = {
   L1: { agents: 1, people: 0 },
   L2: { agents: 3, people: 0 },
@@ -116,11 +116,11 @@ export const AUDIENCE_FACING: Record<Audience, "human" | "agent"> = {
 };
 
 /**
- * Picking a level narrows the channels and audiences that make sense.
+ * Picking a participant dimension narrows the channels and audiences that make sense.
  *
  * Only one constraint here is stated in `context.md`: an agents-only exchange
  * has no person in it, so it removes the human-facing channels (section 10,
- * point 1). The rest is the same rule read the other way round, a level with
+ * point 1). The rest is the same rule read the other way round, a dimension with
  * a person in it keeps every channel, because an agent at L3 still exchanges
  * messages with its peers.
  */
