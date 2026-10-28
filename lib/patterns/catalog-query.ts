@@ -112,10 +112,34 @@ function queryScore(p: CatalogPattern, query: string): number {
   return score;
 }
 
-export function discover(
+/**
+ * Order `pool` by semantic (embedding) similarity to the query, best first.
+ * Dynamically imports the embedding index so this module stays usable without a
+ * hard server-only dependency. Returns null if embeddings are unavailable, so
+ * the caller falls back to token-overlap ranking.
+ */
+async function rankBySemantic(
+  query: string,
+  pool: CatalogPattern[],
+): Promise<CatalogPattern[] | null> {
+  try {
+    const { rankCatalog } = await import("@/lib/patterns/catalog-embedding-index");
+    const ranked = await rankCatalog(query);
+    if (!ranked) return null;
+    const inPool = new Set(pool.map((p) => p.id));
+    const byId = new Map(pool.map((p) => [p.id, p]));
+    return ranked
+      .filter((r) => inPool.has(r.id))
+      .map((r) => byId.get(r.id)!);
+  } catch {
+    return null;
+  }
+}
+
+export async function discover(
   filters: DiscoverFilters = {},
   catalog: Catalog = loadCatalog(),
-): DiscoverResult {
+): Promise<DiscoverResult> {
   // Validate enums first — an unknown value is a request error, not empty.
   const checks: Array<[keyof DiscoverFilters, readonly string[]]> = [
     ["mode", MODES],
@@ -154,14 +178,24 @@ export function discover(
     return true;
   });
 
-  // Free-text query ranks (and prunes) the structurally-filtered set.
-  const ranked = filters.query?.trim()
-    ? filtered
-        .map((p) => ({ p, score: queryScore(p, filters.query!) }))
+  // Free-text query ranks (and prunes) the structurally-filtered set. Prefer
+  // semantic (embedding) ranking so natural-language queries land on the right
+  // pattern; fall back to literal token-overlap when embeddings are unavailable.
+  let ranked: CatalogPattern[];
+  const q = filters.query?.trim();
+  if (q && filtered.length > 0) {
+    const semantic = await rankBySemantic(q, filtered);
+    ranked = (
+      semantic ??
+      filtered
+        .map((p) => ({ p, score: queryScore(p, q) }))
         .filter((x) => x.score > 0)
         .sort((a, b) => b.score - a.score)
         .map((x) => x.p)
-    : filtered;
+    ).slice(0, 10); // like the prior discover_patterns: top matches, not all 23
+  } else {
+    ranked = filtered;
+  }
 
   const results = ranked.map((p) => hit(catalog, p));
 

@@ -58,7 +58,7 @@ export function buildServer(registry: RegistryModule): McpServer {
         query: z.string().min(1).describe("What you're trying to do"),
       },
     },
-    async ({ query }) => json(discoverBehavior({ query })),
+    async ({ query }) => json(await discoverBehavior({ query })),
   );
 
   server.registerTool(
@@ -69,7 +69,7 @@ export function buildServer(registry: RegistryModule): McpServer {
         "Return the ENTIRE behavior catalog (all 23 patterns) unranked. Use this to browse the whole library; use discover_patterns or discover to find the best fit for a situation.",
       inputSchema: {},
     },
-    async () => json(discoverBehavior({})),
+    async () => json(await discoverBehavior({})),
   );
 
   server.registerTool(
@@ -204,7 +204,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       },
     },
     async ({ mode, level, channel, audience, query }) =>
-      json(discoverBehavior({ mode, level, channel, audience, query })),
+      json(await discoverBehavior({ mode, level, channel, audience, query })),
   );
 
   server.registerTool(
