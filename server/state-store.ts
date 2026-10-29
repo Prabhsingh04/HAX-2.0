@@ -57,18 +57,44 @@ export interface AccessTokenRecord {
   createdAt: string;
   lastUsedAt: string | null;
   revoked: boolean;
+  /** Hash of the connect key that provisioned this token (null if minted via the email signup flow). */
+  connectKey: string | null;
+  /** The client the token was provisioned for, e.g. "cursor" (null if unknown). */
+  tool: string | null;
+}
+
+/** A connect key identifies a person; the connect prompt embeds it and the
+ *  agent exchanges it for a personal token. Only the hash is stored. */
+export interface ConnectKeyRecord {
+  keyHash: string;
+  email: string | null;
+  label: string | null;
+  createdAt: string;
+  revoked: boolean;
 }
 
 interface StateBackend {
   logRequest(entry: RequestLogEntry): Promise<void>;
   listRequestLogs(limit: number): Promise<RequestLogEntry[]>;
-  saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void>;
+  saveAccessToken(rec: {
+    email: string;
+    tokenHash: string;
+    connectKey?: string | null;
+    tool?: string | null;
+  }): Promise<void>;
   findAccessToken(tokenHash: string): Promise<AccessTokenRecord | null>;
   touchAccessToken(tokenHash: string): Promise<void>;
   listAccessTokens(): Promise<AccessTokenRecord[]>;
   revokeAccessTokensByEmail(email: string): Promise<number>;
   /** Record a magic token as used; returns false if it was already used. */
   consumeMagicToken(tokenHash: string, expiresAtIso: string): Promise<boolean>;
+  createConnectKey(rec: {
+    keyHash: string;
+    email?: string | null;
+    label?: string | null;
+  }): Promise<void>;
+  findConnectKey(keyHash: string): Promise<ConnectKeyRecord | null>;
+  listConnectKeys(): Promise<ConnectKeyRecord[]>;
   saveInstance(instance: StoredInstance): Promise<void>;
   loadInstance(instanceId: string): Promise<StoredInstance | null>;
   listInstancesByAgent(agentId?: string): Promise<StoredInstance[]>;
@@ -141,6 +167,13 @@ class SqliteBackend implements StateBackend {
         token_hash TEXT PRIMARY KEY,
         expires_at TEXT NOT NULL
       );
+      CREATE TABLE IF NOT EXISTS connect_keys (
+        key_hash   TEXT PRIMARY KEY,
+        email      TEXT,
+        label      TEXT,
+        created_at TEXT NOT NULL,
+        revoked    INTEGER NOT NULL DEFAULT 0
+      );
     `);
     // Migration: owner_email scopes a chat to a signed-in user (NULL = guest).
     if (!this.columnExists("chat_sessions", "owner_email")) {
@@ -149,6 +182,13 @@ class SqliteBackend implements StateBackend {
     this.db.exec(
       `CREATE INDEX IF NOT EXISTS idx_chat_sessions_owner ON chat_sessions (owner_email);`,
     );
+    // Migration: connect-key provisioning stamps tokens with their key + tool.
+    if (!this.columnExists("access_tokens", "connect_key")) {
+      this.db.exec(`ALTER TABLE access_tokens ADD COLUMN connect_key TEXT;`);
+    }
+    if (!this.columnExists("access_tokens", "tool")) {
+      this.db.exec(`ALTER TABLE access_tokens ADD COLUMN tool TEXT;`);
+    }
   }
 
   private columnExists(table: string, column: string): boolean {
@@ -158,12 +198,50 @@ class SqliteBackend implements StateBackend {
     return rows.some((r) => r.name === column);
   }
 
-  async saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void> {
+  async saveAccessToken(rec: {
+    email: string;
+    tokenHash: string;
+    connectKey?: string | null;
+    tool?: string | null;
+  }): Promise<void> {
     this.db
       .prepare(
-        `INSERT INTO access_tokens (token_hash, email, created_at) VALUES (?, ?, ?)`,
+        `INSERT INTO access_tokens (token_hash, email, created_at, connect_key, tool)
+         VALUES (?, ?, ?, ?, ?)`,
       )
-      .run(rec.tokenHash, rec.email, new Date().toISOString());
+      .run(
+        rec.tokenHash,
+        rec.email,
+        new Date().toISOString(),
+        rec.connectKey ?? null,
+        rec.tool ?? null,
+      );
+  }
+
+  async createConnectKey(rec: {
+    keyHash: string;
+    email?: string | null;
+    label?: string | null;
+  }): Promise<void> {
+    this.db
+      .prepare(
+        `INSERT INTO connect_keys (key_hash, email, label, created_at) VALUES (?, ?, ?, ?)`,
+      )
+      .run(rec.keyHash, rec.email ?? null, rec.label ?? null, new Date().toISOString());
+  }
+
+  async findConnectKey(keyHash: string): Promise<ConnectKeyRecord | null> {
+    const r = this.db
+      .prepare(`SELECT * FROM connect_keys WHERE key_hash = ?`)
+      .get(keyHash) as Record<string, unknown> | undefined;
+    return r ? sqliteRowToConnectKey(r) : null;
+  }
+
+  async listConnectKeys(): Promise<ConnectKeyRecord[]> {
+    const rows = this.db
+      .prepare(`SELECT * FROM connect_keys ORDER BY created_at DESC LIMIT 500`)
+      .all() as Record<string, unknown>[];
+    return rows.map(sqliteRowToConnectKey);
   }
 
   async findAccessToken(tokenHash: string): Promise<AccessTokenRecord | null> {
@@ -369,6 +447,18 @@ function sqliteRowToAccessToken(row: Record<string, unknown>): AccessTokenRecord
     createdAt: row.created_at as string,
     lastUsedAt: (row.last_used_at as string | null) ?? null,
     revoked: row.revoked === 1,
+    connectKey: (row.connect_key as string | null) ?? null,
+    tool: (row.tool as string | null) ?? null,
+  };
+}
+
+function sqliteRowToConnectKey(row: Record<string, unknown>): ConnectKeyRecord {
+  return {
+    keyHash: row.key_hash as string,
+    email: (row.email as string | null) ?? null,
+    label: (row.label as string | null) ?? null,
+    createdAt: row.created_at as string,
+    revoked: row.revoked === 1,
   };
 }
 
@@ -423,12 +513,50 @@ class PostgresBackend implements StateBackend {
            revoked      BOOLEAN NOT NULL DEFAULT FALSE
          );
          CREATE INDEX IF NOT EXISTS idx_access_tokens_email ON access_tokens (email);
+         ALTER TABLE access_tokens ADD COLUMN IF NOT EXISTS connect_key TEXT;
+         ALTER TABLE access_tokens ADD COLUMN IF NOT EXISTS tool TEXT;
          CREATE TABLE IF NOT EXISTS used_magic_tokens (
            token_hash TEXT PRIMARY KEY,
            expires_at TEXT NOT NULL
+         );
+         CREATE TABLE IF NOT EXISTS connect_keys (
+           key_hash   TEXT PRIMARY KEY,
+           email      TEXT,
+           label      TEXT,
+           created_at TEXT NOT NULL,
+           revoked    BOOLEAN NOT NULL DEFAULT FALSE
          );`,
       )
       .then(() => undefined);
+  }
+
+  async createConnectKey(rec: {
+    keyHash: string;
+    email?: string | null;
+    label?: string | null;
+  }): Promise<void> {
+    await this.ready;
+    await this.pool.query(
+      `INSERT INTO connect_keys (key_hash, email, label, created_at) VALUES ($1, $2, $3, $4)`,
+      [rec.keyHash, rec.email ?? null, rec.label ?? null, new Date().toISOString()],
+    );
+  }
+
+  async findConnectKey(keyHash: string): Promise<ConnectKeyRecord | null> {
+    await this.ready;
+    const { rows } = await this.pool.query(
+      `SELECT * FROM connect_keys WHERE key_hash = $1`,
+      [keyHash],
+    );
+    return rows[0] ? pgRowToConnectKey(rows[0]) : null;
+  }
+
+  async listConnectKeys(): Promise<ConnectKeyRecord[]> {
+    await this.ready;
+    const { rows } = await this.pool.query(
+      `SELECT * FROM connect_keys ORDER BY created_at DESC LIMIT 500`,
+    );
+    return rows.map(pgRowToConnectKey);
   }
 
   async consumeMagicToken(
@@ -447,11 +575,23 @@ class PostgresBackend implements StateBackend {
     return res.rowCount === 1; // 1 = first use, 0 = already consumed
   }
 
-  async saveAccessToken(rec: { email: string; tokenHash: string }): Promise<void> {
+  async saveAccessToken(rec: {
+    email: string;
+    tokenHash: string;
+    connectKey?: string | null;
+    tool?: string | null;
+  }): Promise<void> {
     await this.ready;
     await this.pool.query(
-      `INSERT INTO access_tokens (token_hash, email, created_at) VALUES ($1, $2, $3)`,
-      [rec.tokenHash, rec.email, new Date().toISOString()],
+      `INSERT INTO access_tokens (token_hash, email, created_at, connect_key, tool)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [
+        rec.tokenHash,
+        rec.email,
+        new Date().toISOString(),
+        rec.connectKey ?? null,
+        rec.tool ?? null,
+      ],
     );
   }
 
@@ -649,6 +789,18 @@ function pgRowToAccessToken(row: Record<string, unknown>): AccessTokenRecord {
     createdAt: row.created_at as string,
     lastUsedAt: (row.last_used_at as string | null) ?? null,
     revoked: Boolean(row.revoked),
+    connectKey: (row.connect_key as string | null) ?? null,
+    tool: (row.tool as string | null) ?? null,
+  };
+}
+
+function pgRowToConnectKey(row: Record<string, unknown>): ConnectKeyRecord {
+  return {
+    keyHash: row.key_hash as string,
+    email: (row.email as string | null) ?? null,
+    label: (row.label as string | null) ?? null,
+    createdAt: row.created_at as string,
+    revoked: Boolean(row.revoked),
   };
 }
 
@@ -693,6 +845,8 @@ export const listRequestLogs = (limit = 100): Promise<RequestLogEntry[]> =>
 export const saveAccessToken = (rec: {
   email: string;
   tokenHash: string;
+  connectKey?: string | null;
+  tool?: string | null;
 }): Promise<void> => store().saveAccessToken(rec);
 export const findAccessToken = (
   tokenHash: string,
@@ -707,3 +861,13 @@ export const consumeMagicToken = (
   tokenHash: string,
   expiresAtIso: string,
 ): Promise<boolean> => store().consumeMagicToken(tokenHash, expiresAtIso);
+export const createConnectKey = (rec: {
+  keyHash: string;
+  email?: string | null;
+  label?: string | null;
+}): Promise<void> => store().createConnectKey(rec);
+export const findConnectKey = (
+  keyHash: string,
+): Promise<ConnectKeyRecord | null> => store().findConnectKey(keyHash);
+export const listConnectKeys = (): Promise<ConnectKeyRecord[]> =>
+  store().listConnectKeys();

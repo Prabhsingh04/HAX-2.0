@@ -26,6 +26,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Prompt-based connect — the /connect page issues a connect prompt and the
+  // agent calls /api/connect/claim to provision its own token, all without the
+  // shared secret (the connect key is the credential).
+  if (path === "/connect" || path.startsWith("/api/connect")) {
+    return NextResponse.next();
+  }
+
   // Magic-link sign-in. These must be reachable without the shared secret: the
   // verify link is clicked from an email (no cached Basic creds), and /login is
   // where a new user starts. Security here is the signed magic/session token.
