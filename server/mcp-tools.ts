@@ -5,6 +5,21 @@ import {
   discover as discoverBehavior,
   fetch as fetchBehavior,
 } from "@/lib/patterns/catalog-query";
+import { loadCatalog } from "@/lib/patterns/catalog";
+import { buildRenderContract } from "@/lib/patterns/render-contract";
+
+/**
+ * The render contract for a pattern, or null if the slug isn't a catalog
+ * pattern. Attached to instantiate/fetch results so the agent reproduces the
+ * canonical UI (required elements + layout + explanation) instead of inventing
+ * one that drifts from the website and drops required layers.
+ */
+function renderContractFor(slug: string) {
+  const catalog = loadCatalog();
+  const pattern = catalog.getPattern(slug);
+  if (!pattern) return null;
+  return buildRenderContract(pattern, catalog.responsesFor(pattern));
+}
 
 /**
  * Shared registration of the 7 IoC pattern tools onto an McpServer.
@@ -77,12 +92,14 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Fetch pattern",
       description:
-        "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes) and rendering (implementation, variants). Old/renamed ids resolve automatically. Alias of `fetch`.",
+        "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically. Alias of `fetch`.",
       inputSchema: { slug: z.string().min(1).describe("Pattern id/slug") },
     },
     async ({ slug }) => {
       const result = fetchBehavior(slug);
-      return result.ok ? json(result) : toolError(result.error.message);
+      if (!result.ok) return toolError(result.error.message);
+      const render_contract = renderContractFor(result.pattern.id);
+      return json(render_contract ? { ...result, render_contract } : result);
     },
   );
 
@@ -91,7 +108,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Instantiate pattern",
       description:
-        "Create a live instance of a pattern with a unique id and timestamped state.",
+        "Create a live instance of a pattern, and get its render_contract. When you render a UI for this pattern, REPRODUCE the render_contract: include every element in `must_include`, follow `layout`, show `explanation.text` alongside the visual, and respect `do_not`. Adapt only the scenario content to the user and restyle to match their app — do not redesign or omit elements. This keeps the render faithful to the pattern and close to the canonical website UI; the user can then ask you to change it.",
       inputSchema: {
         slug: z.string().min(1),
         initial_state: jsonObject.optional(),
@@ -106,7 +123,9 @@ export function buildServer(registry: RegistryModule): McpServer {
         agent_id,
         persistent ?? false,
       );
-      return instance ? json(instance) : toolError(`Pattern not found: ${slug}`);
+      if (!instance) return toolError(`Pattern not found: ${slug}`);
+      const render_contract = renderContractFor(instance.slug);
+      return json(render_contract ? { ...instance, render_contract } : instance);
     },
   );
 
@@ -212,12 +231,14 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Fetch behavior pattern",
       description:
-        "Get one full pattern from the behavior catalog by id: the behavior (spec, mode, triggers, audience, channels, responses, level notes) and the rendering (implementation, variants), plus composes_with / conflicts_with. Old/renamed ids resolve automatically.",
+        "Get one full pattern from the behavior catalog by id: the behavior (spec, mode, triggers, audience, channels, responses, level notes), the rendering (implementation, variants), composes_with / conflicts_with, and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically.",
       inputSchema: { id: z.string().min(1).describe("Pattern id, e.g. co-editing-surface") },
     },
     async ({ id }) => {
       const result = fetchBehavior(id);
-      return result.ok ? json(result) : toolError(result.error.message);
+      if (!result.ok) return toolError(result.error.message);
+      const render_contract = renderContractFor(result.pattern.id);
+      return json(render_contract ? { ...result, render_contract } : result);
     },
   );
 
