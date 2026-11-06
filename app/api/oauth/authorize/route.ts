@@ -113,16 +113,16 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  if (!isValidEmail(email)) {
-    // Re-render consent with an error rather than redirecting — the user stays
-    // on our page to fix the email.
+  // Email is optional — it only attributes the token to a person. If someone
+  // typed one, it must be valid; blank is fine (fewer clicks: just Allow).
+  if (email && !isValidEmail(email)) {
     return htmlResponse(
       consentPage({
         params: p,
         email,
         clientName: check.clientName,
         resource: resourceIdentifier(publicOrigin(request)),
-        error: "Enter a valid email so this connection can be attributed to you.",
+        error: "That email doesn't look right — fix it, or leave it blank.",
       }),
     );
   }
@@ -276,9 +276,9 @@ function consentPage(opts: {
     </div>
     ${error ? `<p class="err">${esc(error)}</p>` : ""}
     <form method="post" action="/api/oauth/authorize">
-      <label for="email">Email (for attribution)</label>
+      <label for="email">Email <span class="muted">(optional — for attribution)</span></label>
       <input id="email" name="email" type="email" value="${esc(email)}"
-        placeholder="you@company.com" autocomplete="email" required />
+        placeholder="you@company.com" autocomplete="email" />
       ${hidden("client_id", p.clientId)}
       ${hidden("redirect_uri", p.redirectUri)}
       ${hidden("response_type", p.responseType)}
