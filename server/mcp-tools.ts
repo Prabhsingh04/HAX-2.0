@@ -61,7 +61,18 @@ export function buildServer(registry: RegistryModule): McpServer {
     updateInstanceState,
   } = registry;
 
-  const server = new McpServer({ name: "ioc-patterns", version: "1.0.0" });
+  // The HAX mark, so host apps that read serverInfo.icons show it in their
+  // connector lists. Absolute URL (stdio clients have no origin to resolve against).
+  const origin = process.env.MCP_PUBLIC_ORIGIN ?? "https://ioc-patterns.intelligaia.com";
+  const server = new McpServer({
+    name: "ioc-patterns",
+    title: "HAX IoC Patterns",
+    version: "1.0.0",
+    icons: [
+      { src: `${origin}/brand/hax-icon.svg`, mimeType: "image/svg+xml", sizes: ["any"] },
+      { src: `${origin}/brand/hax-icon-512.png`, mimeType: "image/png", sizes: ["512x512"] },
+    ],
+  });
 
   server.registerTool(
     "discover_patterns",

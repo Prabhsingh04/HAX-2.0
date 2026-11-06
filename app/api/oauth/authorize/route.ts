@@ -228,6 +228,8 @@ const SHELL = (title: string, body: string) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${esc(title)}</title>
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <style>
   :root { color-scheme: light dark; }
   body { margin:0; min-height:100vh; display:grid; place-items:center;
@@ -267,6 +269,7 @@ function consentPage(opts: {
   return SHELL(
     "Authorize connection · HAX IoC Patterns",
     `
+    <img src="/brand/hax-icon.svg" alt="HAX" width="44" height="44" style="display:block;margin:0 0 14px;border-radius:10px" />
     <h1>Connect to HAX IoC Patterns</h1>
     <p class="muted"><strong>${esc(clientName)}</strong> is requesting access to the
       HAX IoC Patterns MCP server.</p>

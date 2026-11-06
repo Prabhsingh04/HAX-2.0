@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>HAX</title>
+  <rect width="64" height="64" rx="14" fill="#293247"/>
+  <g fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linejoin="round">
+    <path d="M10.5 17V37M19.5 17V37M10.5 27H19.5"/>
+    <path d="M25 37L31.5 17L38 37M27.6 30H35.4"/>
+    <path d="M42 17L55 37M55 17L42 37"/>
+  </g>
+  <rect x="10" y="43" width="16" height="4" rx="2" fill="#00bceb"/>
+</svg>

@@ -48,6 +48,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Brand icons must be public: host apps (claude.ai's connector list, browser
+  // tabs) fetch the domain's favicon without credentials.
+  if (
+    path === "/favicon.ico" ||
+    path === "/icon.svg" ||
+    path === "/apple-icon.png" ||
+    path.startsWith("/brand/")
+  ) {
+    return NextResponse.next();
+  }
+
   // The MCP endpoint does its own auth in the route handler (Node runtime),
   // because per-user tokens need a DB lookup the Edge middleware can't perform.
   // It still accepts the shared Basic/Bearer secret there, so this is not a hole.
