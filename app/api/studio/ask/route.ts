@@ -29,9 +29,13 @@ levels, channels, or examples it does not contain. If the entry doesn't cover \
 the question, say so plainly and point to what it does cover.
 - The reader may be non-technical. Use plain language, no JSON field names.
 - Only if the message is a greeting, a single word, or a test ("testing", "hi", \
-"?") reply in 1-2 friendly sentences: what this pattern is for in one line, plus \
-2-3 concrete things they could ask. Any real question — even a broad one like \
-"how would I use this?" — gets a direct answer, never a deflection.
+"?"): keep it short and warm. Greet back if they greeted ("Hi!"), say in ONE \
+short sentence (under 25 words) what this pattern does, then offer 2 example \
+questions they could try, each in quotes. Example shape: Hi! This pattern \
+pauses the agent before a big action so you can approve, correct, decline or \
+defer it. Try asking "When does it appear?" or "What can I do in response?" \
+Any real question — even a broad one like "how would I use this?" — gets a \
+direct answer, never a deflection.
 - For "how would I use / apply this" questions, answer practically: the moment \
 in their product when it should appear (from the triggers), what the person \
 would see and be able to do (from the steps and responses), and a short \
