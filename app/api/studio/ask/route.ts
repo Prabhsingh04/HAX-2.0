@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     const answer = await generateText({
       system,
       messages,
-      maxTokens: 500,
+      maxTokens: 1200,
       temperature: 0.2,
       timeoutMs: 25_000,
       task: "advisor",
