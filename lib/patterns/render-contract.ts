@@ -66,6 +66,19 @@ export interface RenderContract {
   };
   /** Guardrails — the specific ways renders of this shape go wrong. */
   do_not: string[];
+  /**
+   * A supporting diagram that MUST render ALONGSIDE the explanation — a Mermaid
+   * spec the agent renders inline (Srishti's ask: every explanation ships with a
+   * diagram). Derived from the same interactionSteps/responses, so it mirrors the
+   * must_include layers and the explanation's step map.
+   */
+  diagram: {
+    format: "mermaid";
+    title: string;
+    code: string;
+    caption: string;
+    must_render: true;
+  };
   /** The one-line rule for how much the agent may change. */
   fidelity_note: string;
   /** Optional canonical anchors to match against. */
@@ -89,6 +102,60 @@ const CHANNEL_SURFACE: Record<Channel, string> = {
 function primarySurface(channels: Channel[]): string {
   const human = channels.find((c) => CHANNEL_SURFACE[c]);
   return human ? CHANNEL_SURFACE[human] : "inline in the conversation";
+}
+
+/** Sanitize a string for use inside a quoted Mermaid node label. */
+function mm(s: string, max = 44): string {
+  const clean = s
+    .replace(/\s+/g, " ")
+    .replace(/["[\]{}|<>#;]/g, "")
+    .trim();
+  return clean.length > max ? `${clean.slice(0, max - 1).trimEnd()}…` : clean;
+}
+
+/**
+ * A supporting Mermaid diagram derived from the same structure as must_include:
+ * the interaction steps as a flow, plus a response branch when the pattern asks
+ * the receiver to act. Mirrors the explanation's step map so the two reinforce
+ * each other. Always returns a renderable spec (falls back to spec summary).
+ */
+function buildDiagram(
+  pattern: CatalogPattern,
+  steps: { title: string; description: string }[],
+  responses: string[],
+  engaging: boolean,
+  modeLine: string,
+): RenderContract["diagram"] {
+  const title = mm(pattern.name, 48);
+  const lines = ["---", `title: ${title}`, "---", "flowchart TD"];
+
+  if (steps.length > 0) {
+    steps.forEach((s, i) => {
+      lines.push(`    S${i}["${i + 1} · ${mm(s.title, 40)}"]`);
+    });
+    for (let i = 0; i < steps.length - 1; i++) {
+      lines.push(`    S${i} --> S${i + 1}`);
+    }
+    if (engaging && responses.length > 0) {
+      lines.push(`    S${steps.length - 1} --> D{"Receiver responds"}`);
+      responses.forEach((r, i) => lines.push(`    D --> R${i}["${mm(r, 32)}"]`));
+    }
+  } else if (engaging && responses.length > 0) {
+    lines.push(`    T["${title}"] --> D{"Receiver responds"}`);
+    responses.forEach((r, i) => lines.push(`    D --> R${i}["${mm(r, 32)}"]`));
+  } else {
+    lines.push(`    T["${title}"] --> B["${mm(pattern.summary, 60)}"]`);
+  }
+
+  const stepMap =
+    steps.length > 0 ? steps.map((s) => s.title).join(" → ") : pattern.summary;
+  return {
+    format: "mermaid",
+    title,
+    code: lines.join("\n"),
+    caption: `How ${pattern.name} unfolds (${modeLine}): ${stepMap}. Render this diagram beside the explanation.`,
+    must_render: true,
+  };
 }
 
 export function buildRenderContract(
@@ -159,6 +226,11 @@ export function buildRenderContract(
     );
   }
 
+  const diagram = buildDiagram(pattern, steps, responses, engaging, modeLine);
+  doNot.push(
+    "Do not drop the supporting diagram — render render_contract.diagram (Mermaid) beside the explanation whenever you explain this pattern.",
+  );
+
   return {
     pattern: {
       id: pattern.id,
@@ -176,12 +248,14 @@ export function buildRenderContract(
         "which pattern this is (name + id)",
         "its level and mode",
         "how each required element maps to the user's request",
+        "the supporting diagram, rendered beside the explanation",
       ],
       text: explanationText,
     },
+    diagram,
     do_not: doNot,
     fidelity_note:
-      "Reproduce the required elements and layout above, adapting only the scenario content to the user's situation and restyling to match their app. Present the explanation alongside the visual. Do not redesign, reorder, or omit elements. The user can then ask you to change it to fit their needs.",
+      "Reproduce the required elements and layout above, adapting only the scenario content to the user's situation and restyling to match their app. Present the explanation AND its supporting diagram (render_contract.diagram) alongside the visual. Do not redesign, reorder, or omit elements. The user can then ask you to change it to fit their needs.",
     reference: {
       fact_chips: rich.factChips,
       example: rich.example,

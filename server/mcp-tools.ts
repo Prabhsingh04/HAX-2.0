@@ -95,7 +95,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Fetch pattern",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically. Alias of `fetch`.",
+        "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual AND render `diagram` (a Mermaid flow) beside it, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically. Alias of `fetch`.",
       inputSchema: { slug: z.string().min(1).describe("Pattern id/slug") },
     },
     async ({ slug }) => {
@@ -112,7 +112,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Instantiate pattern",
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
-        "Create a live instance of a pattern, and get its render_contract. When you render a UI for this pattern, REPRODUCE the render_contract: include every element in `must_include`, follow `layout`, show `explanation.text` alongside the visual, and respect `do_not`. Adapt only the scenario content to the user and restyle to match their app — do not redesign or omit elements. This keeps the render faithful to the pattern and close to the canonical website UI; the user can then ask you to change it.",
+        "Create a live instance of a pattern, and get its render_contract. When you render a UI for this pattern, REPRODUCE the render_contract: include every element in `must_include`, follow `layout`, show `explanation.text` alongside the visual together with the supporting `diagram` (render the Mermaid code inline), and respect `do_not`. Adapt only the scenario content to the user and restyle to match their app — do not redesign or omit elements. This keeps the render faithful to the pattern and close to the canonical website UI; the user can then ask you to change it.",
       inputSchema: {
         slug: z.string().min(1),
         initial_state: jsonObject.optional(),
@@ -241,7 +241,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Fetch behavior pattern",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Get one full pattern from the behavior catalog by id: the behavior (spec, mode, triggers, audience, channels, responses, level notes), the rendering (implementation, variants), composes_with / conflicts_with, and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically.",
+        "Get one full pattern from the behavior catalog by id: the behavior (spec, mode, triggers, audience, channels, responses, level notes), the rendering (implementation, variants), composes_with / conflicts_with, and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual AND render `diagram` (a Mermaid flow) beside it, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically.",
       inputSchema: { id: z.string().min(1).describe("Pattern id, e.g. co-editing-surface") },
     },
     async ({ id }) => {
