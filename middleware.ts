@@ -59,6 +59,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Public connector docs (the Claude Connectors Directory needs a public docs
+  // URL). Self-contained HTML, so it doesn't depend on the gated /_next assets.
+  if (path === "/docs") {
+    return NextResponse.next();
+  }
+
   // The MCP endpoint does its own auth in the route handler (Node runtime),
   // because per-user tokens need a DB lookup the Edge middleware can't perform.
   // It still accepts the shared Basic/Bearer secret there, so this is not a hole.
