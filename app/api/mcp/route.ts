@@ -1,6 +1,7 @@
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { buildServer, type RegistryModule } from "@/server/mcp-tools";
 import { hashToken } from "@/lib/access";
+import { publicOrigin } from "@/lib/oauth";
 import { findAccessToken, touchAccessToken } from "@/server/state-store";
 
 export const runtime = "nodejs";
@@ -84,9 +85,16 @@ function getRegistry(): Promise<RegistryModule> {
 
 async function handle(request: Request): Promise<Response> {
   if (!(await authorize(request))) {
+    // Point MCP host apps (claude.ai, ChatGPT) at our OAuth discovery document
+    // per RFC 9728, so they can run the Connectors OAuth flow. Coding agents
+    // that send a bearer/Basic token never see this — they're already authed —
+    // so advertising Bearer here is non-breaking.
+    const resourceMetadata = `${publicOrigin(request)}/.well-known/oauth-protected-resource`;
     return new Response("Authentication required", {
       status: 401,
-      headers: { "WWW-Authenticate": 'Basic realm="HAX 2.0 demo"' },
+      headers: {
+        "WWW-Authenticate": `Bearer resource_metadata="${resourceMetadata}"`,
+      },
     });
   }
   const registry = await getRegistry();

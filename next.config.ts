@@ -19,6 +19,25 @@ const nextConfig: NextConfig = {
     return [
       { source: "/studio", destination: "http://localhost:3011/studio" },
       { source: "/studio/:path*", destination: "http://localhost:3011/studio/:path*" },
+      // OAuth discovery (MCP Authorization). The well-known documents live at the
+      // domain root; map them to their route handlers. The `/:path*` variants
+      // cover RFC 9728's path-aware form, e.g. /.well-known/oauth-protected-resource/api/mcp.
+      {
+        source: "/.well-known/oauth-protected-resource",
+        destination: "/api/oauth/protected-resource",
+      },
+      {
+        source: "/.well-known/oauth-protected-resource/:path*",
+        destination: "/api/oauth/protected-resource",
+      },
+      {
+        source: "/.well-known/oauth-authorization-server",
+        destination: "/api/oauth/authorization-server",
+      },
+      {
+        source: "/.well-known/oauth-authorization-server/:path*",
+        destination: "/api/oauth/authorization-server",
+      },
     ];
   },
   webpack: (config) => {

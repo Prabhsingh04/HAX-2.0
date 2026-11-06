@@ -40,6 +40,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // OAuth for remote MCP connectors (claude.ai, ChatGPT). Discovery documents,
+  // dynamic client registration, the authorize/consent screen and the token
+  // endpoint must all be reachable without the shared secret — the OAuth flow
+  // (PKCE + per-user consent) is the security here, same as the /connect flow.
+  if (path.startsWith("/.well-known/") || path.startsWith("/api/oauth")) {
+    return NextResponse.next();
+  }
+
   // The MCP endpoint does its own auth in the route handler (Node runtime),
   // because per-user tokens need a DB lookup the Edge middleware can't perform.
   // It still accepts the shared Basic/Bearer secret there, so this is not a hole.

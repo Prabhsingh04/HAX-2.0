@@ -73,8 +73,39 @@ export interface ConnectKeyRecord {
   revoked: boolean;
 }
 
+/** A host app (claude.ai, ChatGPT) that registered itself via Dynamic Client
+ *  Registration. Public client, so no secret is stored — PKCE is the proof. */
+export interface OAuthClientRecord {
+  clientId: string;
+  redirectUris: string[];
+  clientName: string | null;
+  createdAt: string;
+}
+
+/** A one-time authorization code issued at /authorize and exchanged at /token.
+ *  Short-lived and single-use; carries the PKCE challenge and the attributed
+ *  email so /token can mint a personal access token for that person. */
+export interface AuthCodeRecord {
+  codeHash: string;
+  clientId: string;
+  redirectUri: string;
+  codeChallenge: string;
+  codeChallengeMethod: string;
+  email: string;
+  scope: string | null;
+  resource: string | null;
+  expiresAt: string;
+  createdAt: string;
+}
+
 interface StateBackend {
   logRequest(entry: RequestLogEntry): Promise<void>;
+  saveOAuthClient(rec: OAuthClientRecord): Promise<void>;
+  findOAuthClient(clientId: string): Promise<OAuthClientRecord | null>;
+  saveAuthCode(rec: AuthCodeRecord): Promise<void>;
+  /** Fetch + delete a code atomically (single-use). Returns null if missing or
+   *  expired; always removes the row so a code can never be replayed. */
+  consumeAuthCode(codeHash: string): Promise<AuthCodeRecord | null>;
   listRequestLogs(limit: number): Promise<RequestLogEntry[]>;
   saveAccessToken(rec: {
     email: string;
@@ -174,6 +205,24 @@ class SqliteBackend implements StateBackend {
         created_at TEXT NOT NULL,
         revoked    INTEGER NOT NULL DEFAULT 0
       );
+      CREATE TABLE IF NOT EXISTS oauth_clients (
+        client_id     TEXT PRIMARY KEY,
+        redirect_uris TEXT NOT NULL,
+        client_name   TEXT,
+        created_at    TEXT NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS oauth_codes (
+        code_hash             TEXT PRIMARY KEY,
+        client_id             TEXT NOT NULL,
+        redirect_uri          TEXT NOT NULL,
+        code_challenge        TEXT NOT NULL,
+        code_challenge_method TEXT NOT NULL,
+        email                 TEXT NOT NULL,
+        scope                 TEXT,
+        resource              TEXT,
+        expires_at            TEXT NOT NULL,
+        created_at            TEXT NOT NULL
+      );
     `);
     // Migration: owner_email scopes a chat to a signed-in user (NULL = guest).
     if (!this.columnExists("chat_sessions", "owner_email")) {
@@ -235,6 +284,64 @@ class SqliteBackend implements StateBackend {
       .prepare(`SELECT * FROM connect_keys WHERE key_hash = ?`)
       .get(keyHash) as Record<string, unknown> | undefined;
     return r ? sqliteRowToConnectKey(r) : null;
+  }
+
+  async saveOAuthClient(rec: OAuthClientRecord): Promise<void> {
+    this.db
+      .prepare(
+        `INSERT INTO oauth_clients (client_id, redirect_uris, client_name, created_at)
+         VALUES (?, ?, ?, ?)`,
+      )
+      .run(
+        rec.clientId,
+        JSON.stringify(rec.redirectUris),
+        rec.clientName,
+        rec.createdAt,
+      );
+  }
+
+  async findOAuthClient(clientId: string): Promise<OAuthClientRecord | null> {
+    const r = this.db
+      .prepare(`SELECT * FROM oauth_clients WHERE client_id = ?`)
+      .get(clientId) as Record<string, unknown> | undefined;
+    return r ? sqliteRowToOAuthClient(r) : null;
+  }
+
+  async saveAuthCode(rec: AuthCodeRecord): Promise<void> {
+    this.db
+      .prepare(
+        `INSERT INTO oauth_codes
+           (code_hash, client_id, redirect_uri, code_challenge, code_challenge_method,
+            email, scope, resource, expires_at, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(
+        rec.codeHash,
+        rec.clientId,
+        rec.redirectUri,
+        rec.codeChallenge,
+        rec.codeChallengeMethod,
+        rec.email,
+        rec.scope,
+        rec.resource,
+        rec.expiresAt,
+        rec.createdAt,
+      );
+  }
+
+  async consumeAuthCode(codeHash: string): Promise<AuthCodeRecord | null> {
+    // Opportunistic cleanup of expired codes, then fetch-and-delete this one so
+    // it can never be replayed (returned only if it had not yet expired).
+    this.db
+      .prepare(`DELETE FROM oauth_codes WHERE expires_at < ?`)
+      .run(new Date().toISOString());
+    const row = this.db
+      .prepare(`SELECT * FROM oauth_codes WHERE code_hash = ?`)
+      .get(codeHash) as Record<string, unknown> | undefined;
+    this.db.prepare(`DELETE FROM oauth_codes WHERE code_hash = ?`).run(codeHash);
+    if (!row) return null;
+    const rec = sqliteRowToAuthCode(row);
+    return rec.expiresAt < new Date().toISOString() ? null : rec;
   }
 
   async listConnectKeys(): Promise<ConnectKeyRecord[]> {
@@ -462,6 +569,44 @@ function sqliteRowToConnectKey(row: Record<string, unknown>): ConnectKeyRecord {
   };
 }
 
+function rowToOAuthClient(row: Record<string, unknown>): OAuthClientRecord {
+  const raw = row.redirect_uris as string;
+  let redirectUris: string[] = [];
+  try {
+    redirectUris = JSON.parse(raw) as string[];
+  } catch {
+    redirectUris = [];
+  }
+  return {
+    clientId: row.client_id as string,
+    redirectUris,
+    clientName: (row.client_name as string | null) ?? null,
+    createdAt: row.created_at as string,
+  };
+}
+
+function rowToAuthCode(row: Record<string, unknown>): AuthCodeRecord {
+  return {
+    codeHash: row.code_hash as string,
+    clientId: row.client_id as string,
+    redirectUri: row.redirect_uri as string,
+    codeChallenge: row.code_challenge as string,
+    codeChallengeMethod: row.code_challenge_method as string,
+    email: row.email as string,
+    scope: (row.scope as string | null) ?? null,
+    resource: (row.resource as string | null) ?? null,
+    expiresAt: row.expires_at as string,
+    createdAt: row.created_at as string,
+  };
+}
+
+// redirect_uris is stored as a JSON string in both backends, so the mappers are
+// shared.
+const sqliteRowToOAuthClient = rowToOAuthClient;
+const pgRowToOAuthClient = rowToOAuthClient;
+const sqliteRowToAuthCode = rowToAuthCode;
+const pgRowToAuthCode = rowToAuthCode;
+
 /* ---- Postgres backend ------------------------------------------------- */
 
 class PostgresBackend implements StateBackend {
@@ -525,9 +670,82 @@ class PostgresBackend implements StateBackend {
            label      TEXT,
            created_at TEXT NOT NULL,
            revoked    BOOLEAN NOT NULL DEFAULT FALSE
+         );
+         CREATE TABLE IF NOT EXISTS oauth_clients (
+           client_id     TEXT PRIMARY KEY,
+           redirect_uris TEXT NOT NULL,
+           client_name   TEXT,
+           created_at    TEXT NOT NULL
+         );
+         CREATE TABLE IF NOT EXISTS oauth_codes (
+           code_hash             TEXT PRIMARY KEY,
+           client_id             TEXT NOT NULL,
+           redirect_uri          TEXT NOT NULL,
+           code_challenge        TEXT NOT NULL,
+           code_challenge_method TEXT NOT NULL,
+           email                 TEXT NOT NULL,
+           scope                 TEXT,
+           resource              TEXT,
+           expires_at            TEXT NOT NULL,
+           created_at            TEXT NOT NULL
          );`,
       )
       .then(() => undefined);
+  }
+
+  async saveOAuthClient(rec: OAuthClientRecord): Promise<void> {
+    await this.ready;
+    await this.pool.query(
+      `INSERT INTO oauth_clients (client_id, redirect_uris, client_name, created_at)
+       VALUES ($1, $2, $3, $4)`,
+      [rec.clientId, JSON.stringify(rec.redirectUris), rec.clientName, rec.createdAt],
+    );
+  }
+
+  async findOAuthClient(clientId: string): Promise<OAuthClientRecord | null> {
+    await this.ready;
+    const { rows } = await this.pool.query(
+      `SELECT * FROM oauth_clients WHERE client_id = $1`,
+      [clientId],
+    );
+    return rows[0] ? pgRowToOAuthClient(rows[0]) : null;
+  }
+
+  async saveAuthCode(rec: AuthCodeRecord): Promise<void> {
+    await this.ready;
+    await this.pool.query(
+      `INSERT INTO oauth_codes
+         (code_hash, client_id, redirect_uri, code_challenge, code_challenge_method,
+          email, scope, resource, expires_at, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [
+        rec.codeHash,
+        rec.clientId,
+        rec.redirectUri,
+        rec.codeChallenge,
+        rec.codeChallengeMethod,
+        rec.email,
+        rec.scope,
+        rec.resource,
+        rec.expiresAt,
+        rec.createdAt,
+      ],
+    );
+  }
+
+  async consumeAuthCode(codeHash: string): Promise<AuthCodeRecord | null> {
+    await this.ready;
+    await this.pool.query(`DELETE FROM oauth_codes WHERE expires_at < $1`, [
+      new Date().toISOString(),
+    ]);
+    // Fetch-and-delete atomically so the code is single-use even under a race.
+    const { rows } = await this.pool.query(
+      `DELETE FROM oauth_codes WHERE code_hash = $1 RETURNING *`,
+      [codeHash],
+    );
+    if (!rows[0]) return null;
+    const rec = pgRowToAuthCode(rows[0]);
+    return rec.expiresAt < new Date().toISOString() ? null : rec;
   }
 
   async createConnectKey(rec: {
@@ -871,3 +1089,13 @@ export const findConnectKey = (
 ): Promise<ConnectKeyRecord | null> => store().findConnectKey(keyHash);
 export const listConnectKeys = (): Promise<ConnectKeyRecord[]> =>
   store().listConnectKeys();
+export const saveOAuthClient = (rec: OAuthClientRecord): Promise<void> =>
+  store().saveOAuthClient(rec);
+export const findOAuthClient = (
+  clientId: string,
+): Promise<OAuthClientRecord | null> => store().findOAuthClient(clientId);
+export const saveAuthCode = (rec: AuthCodeRecord): Promise<void> =>
+  store().saveAuthCode(rec);
+export const consumeAuthCode = (
+  codeHash: string,
+): Promise<AuthCodeRecord | null> => store().consumeAuthCode(codeHash);
