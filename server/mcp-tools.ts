@@ -80,7 +80,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Discover patterns",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Free-text search over the 23-pattern behavior catalog, ranked best-first. Each result carries the behavior to follow (spec sentence, mode, valid responses, level, channels). Alias of `discover` with just a query; use `discover` for structured mode/level/channel/audience filters.",
+        "Free-text search over the 23-pattern behavior catalog, ranked best-first. Each result includes the pattern's behavior spec, mode, valid responses, level and channels.",
       inputSchema: {
         query: z.string().min(1).describe("What you're trying to do"),
       },
@@ -94,7 +94,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "List all patterns",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Return the ENTIRE behavior catalog (all 23 patterns) unranked. Use this to browse the whole library; use discover_patterns or discover to find the best fit for a situation.",
+        "Returns the entire behavior catalog (all 23 patterns), unranked.",
       inputSchema: {},
     },
     async () => json(await discoverBehavior({})),
@@ -106,7 +106,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Fetch pattern",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual AND render `diagram` (a Mermaid flow) beside it, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically. Alias of `fetch`.",
+        "Full definition of one pattern by id or slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render contract describing the pattern's canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps. Old or renamed ids resolve automatically.",
       inputSchema: { slug: z.string().min(1).describe("Pattern id/slug") },
     },
     async ({ slug }) => {
@@ -123,7 +123,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Instantiate pattern",
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
-        "Create a live instance of a pattern, and get its render_contract. When you render a UI for this pattern, REPRODUCE the render_contract: include every element in `must_include`, follow `layout`, show `explanation.text` alongside the visual together with the supporting `diagram` (render the Mermaid code inline), and respect `do_not`. Adapt only the scenario content to the user and restyle to match their app — do not redesign or omit elements. This keeps the render faithful to the pattern and close to the canonical website UI; the user can then ask you to change it.",
+        "Creates a live instance of a pattern with optional initial state, and returns the instance together with the pattern's render contract (canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps).",
       inputSchema: {
         slug: z.string().min(1),
         initial_state: jsonObject.optional(),
@@ -150,7 +150,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Update instance state",
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
-        "Deep-merge new fields into an instance's state (nested objects like `workspace` merge key-by-key).",
+        "Deep-merges new fields into an instance's state (nested objects merge key by key).",
       inputSchema: {
         instance_id: z.string().min(1),
         updates: jsonObject,
@@ -169,7 +169,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     {
       title: "Get instance state",
       annotations: { readOnlyHint: true, openWorldHint: false },
-      description: "Read the current snapshot for one instance.",
+      description: "Returns the current state of one instance.",
       inputSchema: { instance_id: z.string().min(1) },
     },
     async ({ instance_id }) => {
@@ -186,7 +186,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "List installations",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "List pattern installations and their instance ids for one agent, or all agents when agent_id is omitted.",
+        "Lists pattern installations and their instance ids for one agent, or for all agents when agent_id is omitted.",
       inputSchema: { agent_id: z.string().optional() },
     },
     async ({ agent_id }) => json(await listInstallations(agent_id)),
@@ -198,7 +198,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Broker state handoff",
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
-        "Create a new instance on a different pattern, inheriting context from the source instance.",
+        "Creates a new instance on a different pattern, inheriting context from the source instance.",
       inputSchema: {
         from_instance_id: z.string().min(1),
         to_component_slug: z.string().min(1),
@@ -233,7 +233,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Discover behavior patterns",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Find the interaction pattern that fits a situation, from the 23-pattern behavior catalog. All filters optional and AND-combined: mode, level, channel, audience, plus free-text query. Each result carries the behavior to follow (spec sentence, mode, the valid responses to handle, level and channels). Intentionally-empty modes (request, delegate) return an empty list with a gap note; an unknown filter value returns an error naming the field.",
+        "Finds the interaction patterns that fit a situation, from the 23-pattern behavior catalog. All filters are optional and combined: mode, level, channel, audience, plus a free-text query. Each result includes the pattern's behavior spec, mode, valid responses, level and channels. Intentionally empty modes (request, delegate) return an empty list with a gap note; an unknown filter value returns an error naming the field.",
       inputSchema: {
         mode: z.string().optional().describe("declare/signal/explain/request/propose/delegate/coordinate/resolve/commit"),
         level: z.string().optional().describe("L1 (one agent), L2 (agents only), L3 (agents + one person), L4 (agents + many people)"),
@@ -252,7 +252,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Fetch behavior pattern",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Get one full pattern from the behavior catalog by id: the behavior (spec, mode, triggers, audience, channels, responses, level notes), the rendering (implementation, variants), composes_with / conflicts_with, and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual AND render `diagram` (a Mermaid flow) beside it, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically.",
+        "One full pattern from the behavior catalog by id: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), related patterns (composes_with, conflicts_with), and a render contract describing the canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps. Old or renamed ids resolve automatically.",
       inputSchema: { id: z.string().min(1).describe("Pattern id, e.g. co-editing-surface") },
     },
     async ({ id }) => {
