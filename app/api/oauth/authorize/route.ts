@@ -57,7 +57,11 @@ function sessionEmail(request: NextRequest): string {
   return verifySessionToken(cookie) ?? "";
 }
 
-/** Append query params to a redirect_uri, preserving any it already carries. */
+/** Append query params to a redirect_uri, preserving any it already carries.
+ *  Uses 303 See Other so the browser issues a GET to the client's callback — the
+ *  consent step is a POST, and a default 307 would preserve the method and POST
+ *  to the callback (which only accepts GET → "Method Not Allowed"). An OAuth
+ *  authorization response is always delivered as a GET. */
 function redirectBack(
   redirectUri: string,
   params: Record<string, string>,
@@ -66,7 +70,7 @@ function redirectBack(
   for (const [k, v] of Object.entries(params)) {
     if (v) url.searchParams.set(k, v);
   }
-  return NextResponse.redirect(url.toString());
+  return NextResponse.redirect(url.toString(), 303);
 }
 
 export async function GET(request: NextRequest) {
