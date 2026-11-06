@@ -67,6 +67,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "discover_patterns",
     {
       title: "Discover patterns",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description:
         "Free-text search over the 23-pattern behavior catalog, ranked best-first. Each result carries the behavior to follow (spec sentence, mode, valid responses, level, channels). Alias of `discover` with just a query; use `discover` for structured mode/level/channel/audience filters.",
       inputSchema: {
@@ -80,6 +81,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "list_patterns",
     {
       title: "List all patterns",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description:
         "Return the ENTIRE behavior catalog (all 23 patterns) unranked. Use this to browse the whole library; use discover_patterns or discover to find the best fit for a situation.",
       inputSchema: {},
@@ -91,6 +93,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "fetch_pattern",
     {
       title: "Fetch pattern",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description:
         "Full definition for one pattern from the behavior catalog by id/slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically. Alias of `fetch`.",
       inputSchema: { slug: z.string().min(1).describe("Pattern id/slug") },
@@ -107,6 +110,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "instantiate_pattern",
     {
       title: "Instantiate pattern",
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
         "Create a live instance of a pattern, and get its render_contract. When you render a UI for this pattern, REPRODUCE the render_contract: include every element in `must_include`, follow `layout`, show `explanation.text` alongside the visual, and respect `do_not`. Adapt only the scenario content to the user and restyle to match their app — do not redesign or omit elements. This keeps the render faithful to the pattern and close to the canonical website UI; the user can then ask you to change it.",
       inputSchema: {
@@ -133,6 +137,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "update_instance",
     {
       title: "Update instance state",
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
         "Deep-merge new fields into an instance's state (nested objects like `workspace` merge key-by-key).",
       inputSchema: {
@@ -152,6 +157,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "get_instance",
     {
       title: "Get instance state",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description: "Read the current snapshot for one instance.",
       inputSchema: { instance_id: z.string().min(1) },
     },
@@ -167,6 +173,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "list_installations",
     {
       title: "List installations",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description:
         "List pattern installations and their instance ids for one agent, or all agents when agent_id is omitted.",
       inputSchema: { agent_id: z.string().optional() },
@@ -178,6 +185,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "handoff",
     {
       title: "Broker state handoff",
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
       description:
         "Create a new instance on a different pattern, inheriting context from the source instance.",
       inputSchema: {
@@ -212,6 +220,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "discover",
     {
       title: "Discover behavior patterns",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description:
         "Find the interaction pattern that fits a situation, from the 23-pattern behavior catalog. All filters optional and AND-combined: mode, level, channel, audience, plus free-text query. Each result carries the behavior to follow (spec sentence, mode, the valid responses to handle, level and channels). Intentionally-empty modes (request, delegate) return an empty list with a gap note; an unknown filter value returns an error naming the field.",
       inputSchema: {
@@ -230,6 +239,7 @@ export function buildServer(registry: RegistryModule): McpServer {
     "fetch",
     {
       title: "Fetch behavior pattern",
+      annotations: { readOnlyHint: true, openWorldHint: false },
       description:
         "Get one full pattern from the behavior catalog by id: the behavior (spec, mode, triggers, audience, channels, responses, level notes), the rendering (implementation, variants), composes_with / conflicts_with, and a render_contract. If you render a UI, REPRODUCE the render_contract (include every `must_include` element, follow `layout`, show `explanation.text` with the visual, respect `do_not`) rather than designing your own. Old/renamed ids resolve automatically.",
       inputSchema: { id: z.string().min(1).describe("Pattern id, e.g. co-editing-surface") },
