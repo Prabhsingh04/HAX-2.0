@@ -12,8 +12,8 @@ export const dynamic = "force-dynamic";
  */
 
 /** Set once Cisco publishes them; the sections render only when present. */
-const PRIVACY_URL: string | null = null;
-const SUPPORT_EMAIL: string | null = null;
+const PRIVACY_URL: string | null = "/privacy";
+const SUPPORT_EMAIL: string | null = "rishikesh@intelligaia.com";
 
 const TOOLS: { name: string; title: string; access: "Read" | "Write"; what: string }[] = [
   { name: "discover", title: "Discover behavior patterns", access: "Read", what: "Find the pattern that fits a situation, with optional mode, level, channel and audience filters." },

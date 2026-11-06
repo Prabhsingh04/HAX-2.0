@@ -61,7 +61,7 @@ export function middleware(request: NextRequest) {
 
   // Public connector docs (the Claude Connectors Directory needs a public docs
   // URL). Self-contained HTML, so it doesn't depend on the gated /_next assets.
-  if (path === "/docs") {
+  if (path === "/docs" || path === "/privacy") {
     return NextResponse.next();
   }
 
