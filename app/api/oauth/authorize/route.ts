@@ -231,11 +231,20 @@ const SHELL = (title: string, body: string) => `<!doctype html>
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <style>
-  :root { color-scheme: light dark; }
+  :root { color-scheme: light dark;
+    --glow-peach:#ffe4d6; --glow-lilac:#e9e3fc; --glow-cyan:#dcf4f7; --glow-blue:#e2edfb; }
+  /* The HAX site's hero wash (v3.css .v3-hero). */
   body { margin:0; min-height:100vh; display:grid; place-items:center;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:#f4f4f5; color:#18181b; padding:24px; }
-  @media (prefers-color-scheme: dark) { body { background:#0b0b0d; color:#f4f4f5; } .card { background:#161618 !important; border-color:#27272a !important; } .muted{color:#a1a1aa !important;} input{background:#0b0b0d !important;color:#f4f4f5 !important;border-color:#3f3f46 !important;} }
+    background-color:#fff; color:#18181b; padding:24px; background-attachment:fixed;
+    background-image:
+      radial-gradient(ellipse 34% 57% at 13% 78%, var(--glow-peach), transparent 76%),
+      radial-gradient(ellipse 39% 61% at 47% 48%, var(--glow-lilac), transparent 78%),
+      radial-gradient(ellipse 43% 64% at 83% 32%, var(--glow-cyan), transparent 76%),
+      radial-gradient(ellipse 29% 38% at 78% 92%, var(--glow-blue), transparent 80%); }
+  @media (prefers-color-scheme: dark) { :root { --glow-peach:rgba(255,170,130,.10); --glow-lilac:rgba(160,140,240,.14);
+      --glow-cyan:rgba(80,200,225,.12); --glow-blue:rgba(90,140,230,.12); }
+    body { background-color:#0b0b0d; color:#f4f4f5; } .card { background:#161618 !important; border-color:#27272a !important; } .muted{color:#a1a1aa !important;} input{background:#0b0b0d !important;color:#f4f4f5 !important;border-color:#3f3f46 !important;} }
   .card { width:100%; max-width:420px; background:#fff; border:1px solid #e4e4e7;
     border-radius:16px; padding:28px; box-shadow:0 8px 30px rgba(0,0,0,.06); }
   h1 { font-size:19px; margin:0 0 6px; }

@@ -21,12 +21,21 @@ const HTML = `<!doctype html>
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <style>
-  :root { color-scheme: light dark; --bg:#f6f7f9; --card:#fff; --ink:#1d2433; --muted:#5b6475;
-    --line:#e3e6ec; --accent:#0a7ea4; --code:#f1f3f6; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --card:#151b24; --ink:#e8ecf2;
-    --muted:#9aa4b4; --line:#273041; --accent:#3cc4ef; --code:#0f141c; } }
+  :root { color-scheme: light dark; --bg:#fff; --card:rgba(255,255,255,.82); --ink:#1d2433; --muted:#5b6475;
+    --line:#e3e6ec; --accent:#0a7ea4; --code:#f1f3f6;
+    --glow-peach:#ffe4d6; --glow-lilac:#e9e3fc; --glow-cyan:#dcf4f7; --glow-blue:#e2edfb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --card:rgba(21,27,36,.85); --ink:#e8ecf2;
+    --muted:#9aa4b4; --line:#273041; --accent:#3cc4ef; --code:#0f141c;
+    --glow-peach:rgba(255,170,130,.10); --glow-lilac:rgba(160,140,240,.14);
+    --glow-cyan:rgba(80,200,225,.12); --glow-blue:rgba(90,140,230,.12); } }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink);
+  /* The HAX site's hero wash (v3.css .v3-hero), fixed behind the page. */
+  body { margin:0; color:var(--ink); background-color:var(--bg); background-attachment:fixed;
+    background-image:
+      radial-gradient(ellipse 34% 57% at 13% 78%, var(--glow-peach), transparent 76%),
+      radial-gradient(ellipse 39% 61% at 47% 48%, var(--glow-lilac), transparent 78%),
+      radial-gradient(ellipse 43% 64% at 83% 32%, var(--glow-cyan), transparent 76%),
+      radial-gradient(ellipse 29% 38% at 78% 92%, var(--glow-blue), transparent 80%);
     font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
   main { max-width:780px; margin:0 auto; padding:48px 16px 80px; }
   header { display:flex; gap:16px; align-items:center; margin-bottom:6px; }
