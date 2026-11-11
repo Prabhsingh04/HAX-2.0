@@ -80,7 +80,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Discover patterns",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Free-text search over the 23-pattern behavior catalog, ranked best-first. Each result includes the pattern's behavior spec, mode, valid responses, level and channels.",
+        "Free-text search over the HAX pattern library, ranked best-first. `results` are behavior patterns (30), each with its behavior spec, mode, valid responses, level and channels; `general` lists the closest general AI-UX patterns (82), each with a summary, stage and cluster.",
       inputSchema: {
         query: z.string().min(1).describe("What you're trying to do"),
       },
@@ -94,7 +94,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "List all patterns",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Returns the entire behavior catalog (all 23 patterns), unranked.",
+        "Returns the entire pattern library, unranked: all 30 behavior patterns in `results` and all 82 general AI-UX patterns in `general`.",
       inputSchema: {},
     },
     async () => json(await discoverBehavior({})),
@@ -106,7 +106,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Fetch pattern",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Full definition of one pattern by id or slug: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render contract describing the pattern's canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps. Old or renamed ids resolve automatically.",
+        "Full definition of one pattern by id or slug. A behavior pattern returns its behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), and a render contract describing its canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps. A general AI-UX pattern (category \"general\") returns what/why/when/how guidance, the components it is composed of, variants, related patterns and a markup sketch. Old or renamed ids resolve automatically.",
       inputSchema: { slug: z.string().min(1).describe("Pattern id/slug") },
     },
     async ({ slug }) => {
@@ -222,7 +222,7 @@ export function buildServer(registry: RegistryModule): McpServer {
   );
 
   // ---- Behavior catalog (HAX v2) ----------------------------------------
-  // The 23-pattern behavior catalog. `discover` returns the behavioral contract
+  // The behavior catalog (v2's 23 + v3's 7 agentic) plus v3's general patterns. `discover` returns the behavioral contract
   // (spec, mode, valid responses, level, channels) so an agent can act without a
   // second call; `fetch` returns one full pattern. These sit alongside the older
   // discover_patterns / fetch_pattern (rendering-oriented) tools.
@@ -233,7 +233,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Discover behavior patterns",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "Finds the interaction patterns that fit a situation, from the 23-pattern behavior catalog. All filters are optional and combined: mode, level, channel, audience, plus a free-text query. Each result includes the pattern's behavior spec, mode, valid responses, level and channels. Intentionally empty modes (request, delegate) return an empty list with a gap note; an unknown filter value returns an error naming the field.",
+        "Finds the interaction patterns that fit a situation. All filters are optional and combined: mode, level, channel, audience, plus a free-text query. `results` are behavior patterns (30), each with its behavior spec, mode, valid responses, level and channels. When no mode, level, channel or audience filter is set, `general` also lists general AI-UX patterns (82): the closest five for a query, or all of them without one. A filter with no patterns returns an empty list with a gap note; an unknown filter value returns an error naming the field.",
       inputSchema: {
         mode: z.string().optional().describe("declare/signal/explain/request/propose/delegate/coordinate/resolve/commit"),
         level: z.string().optional().describe("L1 (one agent), L2 (agents only), L3 (agents + one person), L4 (agents + many people)"),
@@ -252,7 +252,7 @@ export function buildServer(registry: RegistryModule): McpServer {
       title: "Fetch behavior pattern",
       annotations: { readOnlyHint: true, openWorldHint: false },
       description:
-        "One full pattern from the behavior catalog by id: behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), related patterns (composes_with, conflicts_with), and a render contract describing the canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps. Old or renamed ids resolve automatically.",
+        "One full pattern by id. A behavior pattern returns its behavior (spec, mode, triggers, audience, channels, responses, level notes), rendering (implementation, variants), related patterns (composes_with, conflicts_with), and a render contract describing the canonical UI elements, layout, explanation and a Mermaid flow diagram of its steps. A general AI-UX pattern (category \"general\") returns what/why/when/how guidance, the components it is composed of, variants, related patterns and a markup sketch. Old or renamed ids resolve automatically.",
       inputSchema: { id: z.string().min(1).describe("Pattern id, e.g. co-editing-surface") },
     },
     async ({ id }) => {

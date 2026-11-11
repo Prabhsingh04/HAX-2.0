@@ -47,8 +47,9 @@ export const EXPECTED_PRIMARY_MODE_COUNTS: Record<Mode, number> = {
   commit: 2,
 };
 
-/** Modes the brief declares intentionally empty (gaps, not errors). */
-const EMPTY_MODES: readonly Mode[] = ["request", "delegate"];
+/** Modes declared intentionally empty (gaps, not errors). The brief had
+ *  request + delegate; v3's Follow Up and Task Assignment now fill them. */
+const EMPTY_MODES: readonly Mode[] = [];
 
 export interface CatalogStats {
   total: number;

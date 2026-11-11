@@ -2,9 +2,10 @@ import "server-only";
 import { embed } from "@/lib/llm/gateway";
 import { loadCatalog } from "@/lib/patterns/catalog";
 import type { CatalogPattern } from "@/lib/patterns/behavior";
+import { generalPatterns, generalText } from "@/lib/patterns/general-catalog";
 
 /**
- * Semantic retrieval over the 23-pattern behavior catalog (bge-m3 embeddings,
+ * Semantic retrieval over the behavior catalog (bge-m3 embeddings,
  * local via the gateway). Mirrors lib/patterns/embedding-index.ts but over the
  * v2 CatalogPattern set. Vectors are embedded once and cached; a query is
  * embedded and cosine-ranked against them.
@@ -26,23 +27,32 @@ function patternText(p: CatalogPattern): string {
     .join(". ");
 }
 
-let indexPromise: Promise<Map<string, number[]>> | null = null;
+type Index = Map<string, number[]>;
 
-function buildIndex(): Promise<Map<string, number[]>> {
-  if (!indexPromise) {
-    indexPromise = (async () => {
-      const pats = loadCatalog().patterns;
-      const entries = await Promise.all(
-        pats.map(async (p) => [p.id, await embed(patternText(p))] as const),
-      );
-      return new Map(entries);
-    })().catch((err) => {
-      indexPromise = null; // allow retry on the next call
-      throw err;
-    });
-  }
-  return indexPromise;
+function lazyIndex(items: () => Array<{ id: string; text: string }>) {
+  let promise: Promise<Index> | null = null;
+  return (): Promise<Index> => {
+    if (!promise) {
+      promise = (async () => {
+        const entries = await Promise.all(
+          items().map(async ({ id, text }) => [id, await embed(text)] as const),
+        );
+        return new Map(entries);
+      })().catch((err) => {
+        promise = null; // allow retry on the next call
+        throw err;
+      });
+    }
+    return promise;
+  };
 }
+
+const buildIndex = lazyIndex(() =>
+  loadCatalog().patterns.map((p) => ({ id: p.id, text: patternText(p) })),
+);
+const buildGeneralIndex = lazyIndex(() =>
+  generalPatterns().map((p) => ({ id: p.id, text: generalText(p) })),
+);
 
 function cosine(a: number[], b: number[]): number {
   let dot = 0;
@@ -63,8 +73,22 @@ export type RankedCatalogEntry = { id: string; score: number };
 export async function rankCatalog(
   query: string,
 ): Promise<RankedCatalogEntry[] | null> {
+  return rank(query, buildIndex);
+}
+
+/** The v3 general (non-behavior) patterns ranked the same way, or null. */
+export async function rankGeneral(
+  query: string,
+): Promise<RankedCatalogEntry[] | null> {
+  return rank(query, buildGeneralIndex);
+}
+
+async function rank(
+  query: string,
+  getIndex: () => Promise<Index>,
+): Promise<RankedCatalogEntry[] | null> {
   try {
-    const index = await buildIndex();
+    const index = await getIndex();
     const qv = await embed(query);
     return [...index.entries()]
       .map(([id, v]) => ({ id, score: cosine(qv, v) }))

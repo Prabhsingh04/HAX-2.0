@@ -26,9 +26,17 @@ import {
   type Mode,
 } from "@/lib/patterns/behavior";
 import { loadCatalog, type Catalog } from "@/lib/patterns/catalog";
+import {
+  generalHit,
+  generalPatterns,
+  generalText,
+  getGeneralPattern,
+  type GeneralHit,
+  type GeneralPattern,
+} from "@/lib/patterns/general-catalog";
 
-/** Modes the brief documents as intentionally empty (gaps, not errors). */
-const EMPTY_MODES: readonly Mode[] = ["request", "delegate"];
+/** How many general (non-behavior) matches a free-text query returns. */
+const GENERAL_QUERY_LIMIT = 5;
 
 export interface DiscoverFilters {
   mode?: string;
@@ -58,7 +66,15 @@ export interface GapNote {
 }
 
 export type DiscoverResult =
-  | { ok: true; results: DiscoverHit[]; gap?: GapNote; version: string }
+  | {
+      ok: true;
+      results: DiscoverHit[];
+      /** v3 general AI-UX patterns: present only when no mode/level/channel/
+       *  audience filter is set (they have none of those dimensions). */
+      general?: GeneralHit[];
+      gap?: GapNote;
+      version: string;
+    }
   | { ok: false; error: { field: string; value: string; message: string } };
 
 function hit(catalog: Catalog, p: CatalogPattern): DiscoverHit {
@@ -88,8 +104,8 @@ const QUERY_STOP = new Set([
  * then triggers, then spec/summary). 0 means no match. Ranks results rather than
  * requiring every token to appear — natural-language queries rarely match all.
  */
-function queryScore(p: CatalogPattern, query: string): number {
-  const tokens = [
+function queryTokens(query: string): string[] {
+  return [
     ...new Set(
       query
         .toLowerCase()
@@ -97,6 +113,10 @@ function queryScore(p: CatalogPattern, query: string): number {
         .filter((t) => t.length > 1 && !QUERY_STOP.has(t)),
     ),
   ];
+}
+
+function queryScore(p: CatalogPattern, query: string): number {
+  const tokens = queryTokens(query);
   if (!tokens.length) return 1; // query was all stopwords — don't filter it out
 
   const strong = `${p.id} ${p.name}`.toLowerCase();
@@ -134,6 +154,36 @@ async function rankBySemantic(
   } catch {
     return null;
   }
+}
+
+/** General patterns for a free-text query: semantic first, token overlap as
+ *  the fallback (name hits weigh most). */
+async function rankGeneralPatterns(query: string): Promise<GeneralPattern[]> {
+  try {
+    const { rankGeneral } = await import("@/lib/patterns/catalog-embedding-index");
+    const ranked = await rankGeneral(query);
+    if (ranked) {
+      return ranked
+        .map((r) => getGeneralPattern(r.id))
+        .filter((p): p is GeneralPattern => Boolean(p));
+    }
+  } catch {
+    // fall through to token overlap
+  }
+  const tokens = queryTokens(query);
+  return generalPatterns()
+    .map((p) => {
+      const name = p.name.toLowerCase();
+      const text = generalText(p).toLowerCase();
+      const score = tokens.reduce(
+        (s, t) => s + (name.includes(t) ? 4 : text.includes(t) ? 1 : 0),
+        0,
+      );
+      return { p, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((x) => x.p);
 }
 
 export async function discover(
@@ -192,18 +242,29 @@ export async function discover(
         .filter((x) => x.score > 0)
         .sort((a, b) => b.score - a.score)
         .map((x) => x.p)
-    ).slice(0, 10); // like the prior discover_patterns: top matches, not all 23
+    ).slice(0, 10); // like the prior discover_patterns: top matches, not the whole catalog
   } else {
     ranked = filtered;
   }
 
   const results = ranked.map((p) => hit(catalog, p));
 
+  // General patterns have no mode/level/channel/audience, so any structural
+  // filter excludes them.
+  let general: GeneralHit[] | undefined;
+  if (!mode && !level && !channel && !audience) {
+    general = (
+      q
+        ? (await rankGeneralPatterns(q)).slice(0, GENERAL_QUERY_LIMIT)
+        : generalPatterns()
+    ).map(generalHit);
+  }
+
   const version = catalogVersion(catalog);
 
   // Empty-but-valid: attach a gap note when the emptiness is expected.
   if (results.length === 0) {
-    if (mode && EMPTY_MODES.includes(mode)) {
+    if (mode && !catalog.patterns.some((p) => p.mode.primary === mode)) {
       return {
         ok: true,
         results,
@@ -224,11 +285,12 @@ export async function discover(
     }
   }
 
-  return { ok: true, results, version };
+  return { ok: true, results, ...(general ? { general } : {}), version };
 }
 
 export type FetchResult =
   | { ok: true; pattern: CatalogPattern; version: string }
+  | { ok: true; category: "general"; pattern: GeneralPattern; version: string }
   | { ok: false; error: { field: "id"; value: string; message: string } };
 
 export function fetch(
@@ -237,6 +299,10 @@ export function fetch(
 ): FetchResult {
   const pattern = catalog.getPattern(id); // alias-aware
   if (!pattern) {
+    const general = getGeneralPattern(id);
+    if (general) {
+      return { ok: true, category: "general", pattern: general, version: catalogVersion(catalog) };
+    }
     return {
       ok: false,
       error: { field: "id", value: id, message: `No pattern with id "${id}".` },
@@ -249,5 +315,5 @@ export function fetch(
  *  from the catalog shape; replace with a real data-file version once the
  *  canonical files carry one. */
 export function catalogVersion(catalog: Catalog = loadCatalog()): string {
-  return `catalog-${catalog.patterns.length}p-${catalog.modes.length}m`;
+  return `catalog-${catalog.patterns.length}p-${generalPatterns().length}g-${catalog.modes.length}m`;
 }

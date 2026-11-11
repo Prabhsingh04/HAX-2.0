@@ -17,9 +17,9 @@ const SUPPORT_EMAIL: string | null = "rishikesh@intelligaia.com";
 
 const TOOLS: { name: string; title: string; access: "Read" | "Write"; what: string }[] = [
   { name: "discover", title: "Discover behavior patterns", access: "Read", what: "Find the pattern that fits a situation, with optional mode, level, channel and audience filters." },
-  { name: "discover_patterns", title: "Discover patterns", access: "Read", what: "Free-text search over the catalog, best match first." },
-  { name: "list_patterns", title: "List all patterns", access: "Read", what: "The whole 23-pattern catalog, unranked." },
-  { name: "fetch", title: "Fetch behavior pattern", access: "Read", what: "One full pattern: behavior, rendering, related patterns, and a render contract with a supporting diagram." },
+  { name: "discover_patterns", title: "Discover patterns", access: "Read", what: "Free-text search over the library, best match first." },
+  { name: "list_patterns", title: "List all patterns", access: "Read", what: "The whole library, unranked: 30 behavior patterns and 82 general AI-UX patterns." },
+  { name: "fetch", title: "Fetch behavior pattern", access: "Read", what: "One full pattern: behavior, rendering, related patterns and a render contract with a supporting diagram, or for a general pattern its guidance, variants and a markup sketch." },
   { name: "fetch_pattern", title: "Fetch pattern", access: "Read", what: "Alias of fetch, by id or slug." },
   { name: "instantiate_pattern", title: "Instantiate pattern", access: "Write", what: "Create a live instance of a pattern and get its render contract." },
   { name: "update_instance", title: "Update instance state", access: "Write", what: "Merge new fields into an instance's state." },
@@ -103,8 +103,9 @@ function page(origin: string): string {
     <img src="/brand/hax-icon.svg" alt="" width="52" height="52" />
     <h1>HAX IoC Patterns</h1>
   </header>
-  <p class="lede">An MCP connector for the HAX interaction-pattern library: 23 patterns for how AI agents
-    and people work together, such as asking before acting, handing off work, and settling disagreements.
+  <p class="lede">An MCP connector for the HAX interaction-pattern library: 30 behavior patterns for how AI
+    agents and people work together, such as asking before acting, handing off work, and settling
+    disagreements, plus 82 general AI-UX patterns.
     Connect it to your AI assistant and it can find the right pattern for a situation, explain it with a
     diagram, and build a version that stays faithful to the pattern's design.</p>
 

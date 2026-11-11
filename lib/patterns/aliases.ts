@@ -20,6 +20,9 @@ export const PATTERN_ALIASES: Record<string, string> = {
   // Decision Record merges two older patterns.
   "decision-ledger": "decision-record",
   "proposed-commits": "decision-record",
+  // v3: the reference catalog calls the Memory pattern "memory"; its v3 id is
+  // "agent-memory" (general patterns' related lists use the short id).
+  memory: "agent-memory",
 };
 
 /** Map an old slug to its new target, or return the slug unchanged. */
