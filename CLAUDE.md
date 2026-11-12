@@ -1,13 +1,13 @@
 # HAX — AI UX Pattern Library (local site)
 
-HAX by Outshift Design (Cisco). It is a rebrand of Nucleux. The live reference is https://nucleux.in/home; the site is password-protected.
+HAX by Outshift Design (Cisco): the AI UX pattern library. The live site is https://YOUR-HAX-DOMAIN/home; it is password-protected.
 
 ## Ground rules
 - All work happens in this folder. `index.html` is the working home page.
 - Run it locally with `python3 serve.py 8970`, then open http://localhost:8970/ (`/` serves `index.html`).
 - Pages are at the top level. Assets live in `css/`, `js/`, `img/`, `assets/` and `thumbs/`.
 - The shared brand and nav CSS is in `css/styles.css`. The type is InterVariable (rsms Inter, variable) with "calt" and "liga" on, matching outshift.design. It is set through `--font-display` and `--font-body` in `css/styles.css`. Most home-page CSS and JS is inline in `index.html`.
-- Copy is "HAX" and packages are `@hax/*`. The MCP command is `claude mcp add --transport http hax https://nucleux.in/mcp`.
+- Copy is "HAX" and packages are `@hax/*`. The MCP command is `claude mcp add --transport http hax https://YOUR-HAX-DOMAIN/mcp`.
 
 ## Home page sections, in order
 1. Nav, in Outshift Design style: the HAX and Outshift lockup on the left; every tab on the right, all identical (16px regular #293247, no hover animation; the split-flap in `js/nav-splitflap.js` is switched off). The tabs are Initiatives ▾, Research ▾, Blog, Components ▾, Docs and MCP, followed by search. All three dropdowns use the same `.ox-dd` click-to-open card (click handling at the end of `js/global.js`). The Components card groups its links under ShadCN and Material 3.0. The old Components mega flyout is no longer used. Scenarios was removed from the nav. On phones the menu groups links under small headings.
@@ -24,6 +24,6 @@ HAX by Outshift Design (Cisco). It is a rebrand of Nucleux. The live reference i
 The `pg-preview/` folder was deleted, so do not reference it. Sections that used its iframes were rebuilt natively.
 
 ## Known leftovers
-- `assets/hero.mp4` gives a 404; it is an optional video.
+- The hero has no video; the aurora renders on its own. To add one, put a `<video class="ag-hero-media__video">` inside `.ag-hero-media` in `index.html`.
 - Two thumbnails are missing (search-filter.webp) on the library and material-agentic pages.
 - The "Aria · Intelligaia agent" demo persona and the intelligaia.com/contact links were intentionally left as they are.

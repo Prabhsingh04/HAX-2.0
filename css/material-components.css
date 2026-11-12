@@ -21,7 +21,7 @@
    Every colour, radius, shadow and type style below resolves to
    a --md-sys-* token from material-tokens.css, which in turn came
    out of the Material 3 Design Kit. There are no literal hex
-   values and no Nucleux expressive tokens in this block: on a
+   values and no HAX expressive tokens in this block: on a
    Material page the palette is Material's.
 
    The pieces are the kit's own components rather than bespoke
@@ -271,7 +271,7 @@
 /* ── Consent & Caveat ─────────────────────────────────────
    Not yet rebuilt on Material components, but retoned onto the
    M3 roles so nothing off-palette appears beside a Material
-   component — the rose these used is a Nucleux expressive tone
+   component — the rose these used is a HAX expressive tone
    and read as pink on this page, including inside the demo.
    The shapes are still bespoke; that is the next move. */
 /* ── Consent ──────────────────────────────────────────── */

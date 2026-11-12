@@ -646,7 +646,7 @@ body.landing-dark:not(.landing-light) .gnav {
 }
 
 /* Fallbacks only. nav-mega.js measures each label and writes the real
-   --x-open inline, so a longer label (nucleux-dark.html says "Download
+   --x-open inline, so a longer label (the dark home page says "Download
    SDK") opens wide enough instead of being clipped. */
 .gnav .gnav__actions .gnav__sdk.gnav__iconx { --x-open: 118px; }
 .gnav .gnav__actions .gnav__x.gnav__iconx   { --x-open: 146px; }

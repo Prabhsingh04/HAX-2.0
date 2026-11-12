@@ -454,21 +454,21 @@
     }
 
     // Search modal
-    if (!$("#nx-search")) {
+    if (!$("#hax-search")) {
       const m = document.createElement("div");
-      m.id = "nx-search";
-      m.className = "nx-search";
+      m.id = "hax-search";
+      m.className = "hax-search";
       m.setAttribute("hidden", "");
       m.innerHTML = `
-        <div class="nx-search__backdrop" data-search-close></div>
-        <div class="nx-search__panel" role="dialog" aria-label="Search patterns">
-          <div class="nx-search__inputrow">
+        <div class="hax-search__backdrop" data-search-close></div>
+        <div class="hax-search__panel" role="dialog" aria-label="Search patterns">
+          <div class="hax-search__inputrow">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <input type="text" placeholder="Search 84 patterns by name, intent, surface…" class="nx-search__input" autocomplete="off" />
-            <span class="nx-search__esc" data-search-close role="button" aria-label="Close search">esc</span>
+            <input type="text" placeholder="Search 84 patterns by name, intent, surface…" class="hax-search__input" autocomplete="off" />
+            <span class="hax-search__esc" data-search-close role="button" aria-label="Close search">esc</span>
           </div>
-          <div class="nx-search__results" id="nx-search-results"></div>
-          <div class="nx-search__footer">
+          <div class="hax-search__results" id="hax-search-results"></div>
+          <div class="hax-search__footer">
             <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
             <span><kbd>↵</kbd> open</span>
             <span><kbd>esc</kbd> close</span>
@@ -479,95 +479,91 @@
     }
 
     // Assistant launcher (floating button)
-    if (!$("#nx-launcher")) {
+    if (!$("#hax-launcher")) {
       const l = document.createElement("button");
-      l.id = "nx-launcher";
-      l.className = "nx-launcher";
+      l.id = "hax-launcher";
+      l.className = "hax-launcher";
       l.type = "button";
       l.setAttribute("data-asst-open", "");
       l.setAttribute("aria-label", "Talk to Lumen, Outshift's discovery guide");
       l.innerHTML = `
-        <span class="nx-launcher__orb"></span>
-        <span class="nx-launcher__label">Ask Lumen</span>
+        <span class="hax-launcher__orb"></span>
+        <span class="hax-launcher__label">Ask Lumen</span>
       `;
       document.body.appendChild(l);
     }
 
     // Assistant panel
-    if (!$("#nx-asst")) {
+    if (!$("#hax-asst")) {
       const a = document.createElement("aside");
-      a.id = "nx-asst";
-      a.className = "nx-asst";
+      a.id = "hax-asst";
+      a.className = "hax-asst";
       a.setAttribute("hidden", "");
       a.innerHTML = `
-        <aside class="nx-asst__sidebar" aria-label="Conversation history">
-          <button class="nx-asst__sb-new" type="button" data-asst-restart>
+        <aside class="hax-asst__sidebar" aria-label="Conversation history">
+          <button class="hax-asst__sb-new" type="button" data-asst-restart>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             New conversation
           </button>
-          <div class="nx-asst__sb-section">
-            <div class="nx-asst__sb-eyebrow">Recent</div>
-            <button class="nx-asst__sb-recent" type="button" data-prompt="Compliance keeps blocking us — what patterns help?">
-              <span class="nx-asst__sb-recent-name">Compliance review</span>
-              <span class="nx-asst__sb-recent-meta">Enterprise CTO · today</span>
+          <div class="hax-asst__sb-section">
+            <div class="hax-asst__sb-eyebrow">Recent</div>
+            <button class="hax-asst__sb-recent" type="button" data-prompt="Compliance keeps blocking us — what patterns help?">
+              <span class="hax-asst__sb-recent-name">Compliance review</span>
+              <span class="hax-asst__sb-recent-meta">Enterprise CTO · today</span>
             </button>
-            <button class="nx-asst__sb-recent" type="button" data-prompt="I'm shipping in 6 weeks — what can't I miss?">
-              <span class="nx-asst__sb-recent-name">Ship-ready essentials</span>
-              <span class="nx-asst__sb-recent-meta">AI Platform Lead · yesterday</span>
+            <button class="hax-asst__sb-recent" type="button" data-prompt="I'm shipping in 6 weeks — what can't I miss?">
+              <span class="hax-asst__sb-recent-name">Ship-ready essentials</span>
+              <span class="hax-asst__sb-recent-meta">AI Platform Lead · yesterday</span>
             </button>
-            <button class="nx-asst__sb-recent" type="button" data-prompt="How do I build a consistent AI design system across products?">
-              <span class="nx-asst__sb-recent-name">Cross-surface system</span>
-              <span class="nx-asst__sb-recent-meta">AI Experience Lead · 2d ago</span>
+            <button class="hax-asst__sb-recent" type="button" data-prompt="How do I build a consistent AI design system across products?">
+              <span class="hax-asst__sb-recent-name">Cross-surface system</span>
+              <span class="hax-asst__sb-recent-meta">AI Experience Lead · 2d ago</span>
             </button>
           </div>
-          <div class="nx-asst__sb-section">
-            <div class="nx-asst__sb-eyebrow">Pinned</div>
-            <a class="nx-asst__sb-recent" href="library.html">
-              <span class="nx-asst__sb-recent-name">Browse library</span>
-              <span class="nx-asst__sb-recent-meta">84 patterns</span>
-            </a>
-            <a class="nx-asst__sb-recent" href="sandbox.html">
-              <span class="nx-asst__sb-recent-name">Open sandbox</span>
-              <span class="nx-asst__sb-recent-meta">6 agent demos</span>
+          <div class="hax-asst__sb-section">
+            <div class="hax-asst__sb-eyebrow">Pinned</div>
+            <a class="hax-asst__sb-recent" href="library.html">
+              <span class="hax-asst__sb-recent-name">Browse library</span>
+              <span class="hax-asst__sb-recent-meta">84 patterns</span>
             </a>
           </div>
-          <footer class="nx-asst__sb-foot">
-            <span class="nx-asst__avatar"></span>
+          <footer class="hax-asst__sb-foot">
+            <span class="hax-asst__avatar"></span>
             <div>
-              <div class="nx-asst__sb-foot-name">Lumen</div>
-              <div class="nx-asst__sb-foot-meta">Discovery agent · Outshift</div>
+              <div class="hax-asst__sb-foot-name">Lumen</div>
+              <div class="hax-asst__sb-foot-meta">Discovery agent · Outshift</div>
             </div>
           </footer>
         </aside>
-        <header class="nx-asst__head">
-          <div class="nx-asst__brand">
-            <span class="nx-asst__avatar"></span>
-            <div class="nx-asst__heads">
-              <div class="nx-asst__title">Lumen</div>
-              <div class="nx-asst__sub" data-asst-sub>Discovery guide · Outshift</div>
+        <header class="hax-asst__head">
+          <div class="hax-asst__brand">
+            <span class="hax-asst__avatar"></span>
+            <div class="hax-asst__heads">
+              <div class="hax-asst__title">Lumen</div>
+              <div class="hax-asst__sub" data-asst-sub>Discovery guide · Outshift</div>
             </div>
           </div>
-          <div class="nx-asst__head-actions">
-            <button class="nx-asst__btn nx-asst__btn--fs" type="button" data-asst-fullscreen aria-label="Fullscreen">
-              <svg class="nx-asst__icon-expand" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <svg class="nx-asst__icon-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="hax-asst__head-actions">
+            <button class="hax-asst__btn hax-asst__btn--fs" type="button" data-asst-fullscreen aria-label="Fullscreen">
+              <svg class="hax-asst__icon-expand" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg class="hax-asst__icon-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <button class="nx-asst__btn" type="button" data-asst-expand aria-label="Toggle immersive sandbox">
+            <button class="hax-asst__btn" type="button" data-asst-expand aria-label="Toggle immersive sandbox">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 14v6h6M20 10V4h-6M20 4L13 11M4 20l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <button class="nx-asst__btn" type="button" data-asst-restart aria-label="Restart">
+            <button class="hax-asst__btn" type="button" data-asst-restart aria-label="Restart">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <button class="nx-asst__btn" type="button" data-asst-close aria-label="Close">
+            <button class="hax-asst__btn" type="button" data-asst-close aria-label="Close">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             </button>
           </div>
         </header>
-        <div class="nx-asst__body" id="nx-asst-body"></div>
-        <div class="nx-asst__sandbox" id="nx-asst-sandbox" hidden></div>
-        <footer class="nx-asst__composer">
-          <input type="text" placeholder="Ask anything about the library…" id="nx-asst-input" autocomplete="off" />
-          <button type="button" id="nx-asst-send" aria-label="Send">
+        <div class="hax-asst__body" id="hax-asst-body"></div>
+        <div class="hax-asst__sandbox" id="hax-asst-sandbox" hidden></div>
+        <footer class="hax-asst__composer">
+          <input type="text" placeholder="Ask anything about the library…" id="hax-asst-input" autocomplete="off" />
+          <button type="button" id="hax-asst-send" aria-label="Send">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </footer>
@@ -592,25 +588,25 @@
   // ───────────────────────────────────────────────────────
   let searchActiveIdx = 0;
   function openSearch() {
-    const m = $("#nx-search");
+    const m = $("#hax-search");
     if (!m) return;
     m.removeAttribute("hidden");
-    document.body.classList.add("is-nx-search");
+    document.body.classList.add("is-hax-search");
     requestAnimationFrame(() => m.classList.add("is-open"));
-    const input = $(".nx-search__input");
+    const input = $(".hax-search__input");
     input.value = "";
     runSearch("");
     setTimeout(() => input.focus(), 60);
   }
   function closeSearch() {
-    const m = $("#nx-search");
+    const m = $("#hax-search");
     if (!m || m.hasAttribute("hidden")) return;
     m.classList.remove("is-open");
-    document.body.classList.remove("is-nx-search");
+    document.body.classList.remove("is-hax-search");
     setTimeout(() => m.setAttribute("hidden", ""), 180);
   }
   function runSearch(q) {
-    const results = $("#nx-search-results");
+    const results = $("#hax-search-results");
     if (!results) return;
     const items = flatPatterns();
     const ql = q.trim().toLowerCase();
@@ -620,15 +616,15 @@
     }) : items.slice(0, 12);
     searchActiveIdx = 0;
     results.innerHTML = filtered.length ? filtered.slice(0, 30).map(({ p, sub, stage }, i) => `
-      <a class="nx-search__row ${i === 0 ? 'is-active' : ''}" href="pattern.html?id=${encodeURIComponent(p.id)}" data-row="${i}">
-        <span class="nx-search__row-name">${esc(p.name)}</span>
-        <span class="nx-search__row-meta">${esc(stage.label)} · ${esc(sub.title)}</span>
-        <span class="nx-search__row-oneline">${esc(p.oneline)}</span>
+      <a class="hax-search__row ${i === 0 ? 'is-active' : ''}" href="pattern.html?id=${encodeURIComponent(p.id)}" data-row="${i}">
+        <span class="hax-search__row-name">${esc(p.name)}</span>
+        <span class="hax-search__row-meta">${esc(stage.label)} · ${esc(sub.title)}</span>
+        <span class="hax-search__row-oneline">${esc(p.oneline)}</span>
       </a>
-    `).join("") : `<div class="nx-search__empty">No matches. Try "disclosure", "streaming", or "consent".</div>`;
+    `).join("") : `<div class="hax-search__empty">No matches. Try "disclosure", "streaming", or "consent".</div>`;
   }
   function moveSearch(delta) {
-    const rows = $$(".nx-search__row");
+    const rows = $$(".hax-search__row");
     if (!rows.length) return;
     rows[searchActiveIdx]?.classList.remove("is-active");
     searchActiveIdx = (searchActiveIdx + delta + rows.length) % rows.length;
@@ -636,8 +632,8 @@
     rows[searchActiveIdx].scrollIntoView({ block: "nearest" });
   }
   function openActiveSearch() {
-    const row = $$(".nx-search__row")[searchActiveIdx];
-    if (row) location.href = (window.nxFileURL ? window.nxFileURL(row.getAttribute("href")) : null) || row.getAttribute("href");
+    const row = $$(".hax-search__row")[searchActiveIdx];
+    if (row) location.href = (window.haxFileURL ? window.haxFileURL(row.getAttribute("href")) : null) || row.getAttribute("href");
   }
 
   // ───────────────────────────────────────────────────────
@@ -646,18 +642,18 @@
   const asst = { persona: null, history: [], sandbox: null, expanded: false, fullscreen: false };
 
   function openAsst() {
-    const a = $("#nx-asst");
+    const a = $("#hax-asst");
     if (!a) return;
     a.removeAttribute("hidden");
-    document.body.classList.add("is-nx-asst");
+    document.body.classList.add("is-hax-asst");
     requestAnimationFrame(() => a.classList.add("is-open"));
     if (asst.history.length === 0 && !asst.persona) renderDiscoveryIntro();
   }
   function closeAsst() {
-    const a = $("#nx-asst");
+    const a = $("#hax-asst");
     if (!a || a.hasAttribute("hidden")) return;
     a.classList.remove("is-open", "is-expanded", "is-fullscreen");
-    document.body.classList.remove("is-nx-asst", "is-nx-asst-expanded", "is-nx-asst-fullscreen");
+    document.body.classList.remove("is-hax-asst", "is-hax-asst-expanded", "is-hax-asst-fullscreen");
     asst.expanded = false;
     asst.fullscreen = false;
     setTimeout(() => a.setAttribute("hidden", ""), 220);
@@ -667,36 +663,36 @@
     asst.history = [];
     asst.sandbox = null;
     asst.expanded = false;
-    $("#nx-asst")?.classList.remove("is-expanded", "has-sandbox");
-    document.body.classList.remove("is-nx-asst-expanded");
-    $("#nx-asst-sandbox").setAttribute("hidden", "");
+    $("#hax-asst")?.classList.remove("is-expanded", "has-sandbox");
+    document.body.classList.remove("is-hax-asst-expanded");
+    $("#hax-asst-sandbox").setAttribute("hidden", "");
     $("[data-asst-sub]").textContent = "Discovery guide · Outshift";
     renderDiscoveryIntro();
   }
   function toggleExpand() {
     if (!asst.sandbox) return; // nothing to expand into
     asst.expanded = !asst.expanded;
-    const a = $("#nx-asst");
+    const a = $("#hax-asst");
     if (!a) return;
     a.classList.toggle("is-expanded", asst.expanded);
-    document.body.classList.toggle("is-nx-asst-expanded", asst.expanded);
-    $("#nx-asst-sandbox").toggleAttribute("hidden", !asst.expanded);
+    document.body.classList.toggle("is-hax-asst-expanded", asst.expanded);
+    $("#hax-asst-sandbox").toggleAttribute("hidden", !asst.expanded);
     if (asst.expanded) renderSandbox();
   }
 
   // Bot → expanded → fullscreen. Three sizes with smooth transitions.
   function toggleFullscreen() {
     asst.fullscreen = !asst.fullscreen;
-    const a = $("#nx-asst");
+    const a = $("#hax-asst");
     if (!a) return;
     a.classList.toggle("is-fullscreen", asst.fullscreen);
-    document.body.classList.toggle("is-nx-asst-fullscreen", asst.fullscreen);
+    document.body.classList.toggle("is-hax-asst-fullscreen", asst.fullscreen);
     // Fullscreen also implies expanded view when there's a sandbox to show.
     if (asst.fullscreen && asst.sandbox && !asst.expanded) {
       asst.expanded = true;
       a.classList.add("is-expanded");
-      document.body.classList.add("is-nx-asst-expanded");
-      $("#nx-asst-sandbox").removeAttribute("hidden");
+      document.body.classList.add("is-hax-asst-expanded");
+      $("#hax-asst-sandbox").removeAttribute("hidden");
       renderSandbox();
     }
   }
@@ -706,25 +702,25 @@
   // question. The composer below is the only obvious affordance.
   // A few italic example asks sit underneath as soft hints.
   function renderDiscoveryIntro() {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     if (!body) return;
     body.innerHTML = `
-      <div class="nx-asst__msg nx-asst__msg--ai nx-asst__msg--first">
-        <div class="nx-asst__bubble">
-          <div class="nx-asst__greet-line">Hi, I'm <b>Lumen</b> — Outshift's discovery guide.</div>
-          <div class="nx-asst__greet-body">I can help you explore the agentic UX patterns we've built, share real case studies that match what you're working on, or set up a quick call with our team.</div>
-          <div class="nx-asst__greet-ask">So, what brings you here today?</div>
+      <div class="hax-asst__msg hax-asst__msg--ai hax-asst__msg--first">
+        <div class="hax-asst__bubble">
+          <div class="hax-asst__greet-line">Hi, I'm <b>Lumen</b> — Outshift's discovery guide.</div>
+          <div class="hax-asst__greet-body">I can help you explore the agentic UX patterns we've built, share real case studies that match what you're working on, or set up a quick call with our team.</div>
+          <div class="hax-asst__greet-ask">So, what brings you here today?</div>
         </div>
       </div>
-      <div class="nx-asst__hints">
-        <span class="nx-asst__hints-label">Or try…</span>
-        <button class="nx-asst__hint" type="button" data-prompt="I'm building an agentic product">"I'm building an agentic product"</button>
-        <button class="nx-asst__hint" type="button" data-prompt="Show me some case studies">"Show me your work"</button>
-        <button class="nx-asst__hint" type="button" data-prompt="Can I talk to your team?">"Can I talk to your team?"</button>
+      <div class="hax-asst__hints">
+        <span class="hax-asst__hints-label">Or try…</span>
+        <button class="hax-asst__hint" type="button" data-prompt="I'm building an agentic product">"I'm building an agentic product"</button>
+        <button class="hax-asst__hint" type="button" data-prompt="Show me some case studies">"Show me your work"</button>
+        <button class="hax-asst__hint" type="button" data-prompt="Can I talk to your team?">"Can I talk to your team?"</button>
       </div>
     `;
     // Focus the composer so the user can just start typing.
-    setTimeout(() => { $("#nx-asst-input")?.focus(); }, 80);
+    setTimeout(() => { $("#hax-asst-input")?.focus(); }, 80);
   }
 
   // Route the user's intent click into the right conversation.
@@ -764,14 +760,14 @@
   }
 
   function pushPersonaChips() {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const wrap = document.createElement("div");
-    wrap.className = "nx-asst__msg nx-asst__msg--ai";
+    wrap.className = "hax-asst__msg hax-asst__msg--ai";
     wrap.innerHTML = `
-      <div class="nx-asst__bubble nx-asst__bubble--plain">
-        <div class="nx-asst__chips">
+      <div class="hax-asst__bubble hax-asst__bubble--plain">
+        <div class="hax-asst__chips">
           ${PERSONAS.map(p => `
-            <button class="nx-asst__chip" type="button" data-persona="${p.id}">
+            <button class="hax-asst__chip" type="button" data-persona="${p.id}">
               <span>${p.icon}</span>${esc(p.label)}
             </button>
           `).join("")}
@@ -799,24 +795,24 @@
   // ── Path C: case studies ──────────────────────────────
   function showCaseStudies() {
     pushAgentBubble(`Here are a few representative pieces of our work. Each one links out to the full case study.`, {});
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const wrap = document.createElement("div");
-    wrap.className = "nx-asst__msg nx-asst__msg--ai";
+    wrap.className = "hax-asst__msg hax-asst__msg--ai";
     wrap.innerHTML = `
-      <div class="nx-asst__bubble nx-asst__bubble--plain">
-        <div class="nx-asst__cases">
+      <div class="hax-asst__bubble hax-asst__bubble--plain">
+        <div class="hax-asst__cases">
           ${CASE_STUDIES.map(c => `
-            <a class="nx-asst__case" href="${esc(c.href)}" target="_blank" rel="noopener">
-              <span class="nx-asst__case-tag">${esc(c.tag)}</span>
-              <span class="nx-asst__case-title">${esc(c.title)}</span>
-              <span class="nx-asst__case-desc">${esc(c.desc)}</span>
-              <span class="nx-asst__case-arrow">↗</span>
+            <a class="hax-asst__case" href="${esc(c.href)}" target="_blank" rel="noopener">
+              <span class="hax-asst__case-tag">${esc(c.tag)}</span>
+              <span class="hax-asst__case-title">${esc(c.title)}</span>
+              <span class="hax-asst__case-desc">${esc(c.desc)}</span>
+              <span class="hax-asst__case-arrow">↗</span>
             </a>
           `).join("")}
         </div>
-        <div class="nx-asst__starters nx-asst__starters--small" style="margin-top:10px">
-          <button class="nx-asst__starter nx-asst__starter--small" type="button" data-intent="contact-team">Talk to someone about a project</button>
-          <button class="nx-asst__starter nx-asst__starter--small" type="button" data-intent="tour-library">Show me the library</button>
+        <div class="hax-asst__starters hax-asst__starters--small" style="margin-top:10px">
+          <button class="hax-asst__starter hax-asst__starter--small" type="button" data-intent="contact-team">Talk to someone about a project</button>
+          <button class="hax-asst__starter hax-asst__starter--small" type="button" data-intent="tour-library">Show me the library</button>
         </div>
       </div>
     `;
@@ -827,30 +823,30 @@
   // ── Path D: contact the team ──────────────────────────
   function showContactForm() {
     pushAgentBubble(`Tell me a bit about your project and I'll route this to the right person. None of this leaves your browser — when you submit, it opens an email to the team with the details prefilled.`, {});
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const wrap = document.createElement("div");
-    wrap.className = "nx-asst__msg nx-asst__msg--ai";
+    wrap.className = "hax-asst__msg hax-asst__msg--ai";
     wrap.innerHTML = `
-      <div class="nx-asst__bubble nx-asst__bubble--plain">
-        <form class="nx-asst__form" data-form="contact">
-          <label class="nx-asst__field">
+      <div class="hax-asst__bubble hax-asst__bubble--plain">
+        <form class="hax-asst__form" data-form="contact">
+          <label class="hax-asst__field">
             <span>Your name</span>
             <input name="name" type="text" required autocomplete="name" />
           </label>
-          <label class="nx-asst__field">
+          <label class="hax-asst__field">
             <span>Email</span>
             <input name="email" type="email" required autocomplete="email" />
           </label>
-          <label class="nx-asst__field">
+          <label class="hax-asst__field">
             <span>Company / role <em>(optional)</em></span>
             <input name="company" type="text" autocomplete="organization" />
           </label>
-          <label class="nx-asst__field">
+          <label class="hax-asst__field">
             <span>What are you building?</span>
             <textarea name="project" rows="3" required placeholder="A line or two about your product, the surface, and where AI fits in…"></textarea>
           </label>
-          <button class="nx-asst__form-submit" type="submit">Send to the team</button>
-          <a class="nx-asst__form-alt" href="https://www.intelligaia.com/contact" target="_blank" rel="noopener">or contact us directly ↗</a>
+          <button class="hax-asst__form-submit" type="submit">Send to the team</button>
+          <a class="hax-asst__form-alt" href="https://www.intelligaia.com/contact" target="_blank" rel="noopener">or contact us directly ↗</a>
         </form>
       </div>
     `;
@@ -871,13 +867,13 @@
     );
     window.open(`mailto:hello@intelligaia.com?subject=${subject}&body=${body}`, "_blank");
     // Replace the form with a thank-you
-    const wrap = form.closest(".nx-asst__msg");
+    const wrap = form.closest(".hax-asst__msg");
     if (wrap) {
-      wrap.querySelector(".nx-asst__bubble").innerHTML = `
+      wrap.querySelector(".hax-asst__bubble").innerHTML = `
         <div>Thanks ${esc(name)} — your draft email is open in your mail client. Hit send and the team will reach out within one working day.</div>
-        <div class="nx-asst__starters nx-asst__starters--small">
-          <button class="nx-asst__starter nx-asst__starter--small" type="button" data-intent="tour-library">Browse the library while you wait</button>
-          <button class="nx-asst__starter nx-asst__starter--small" type="button" data-intent="case-studies">See more case studies</button>
+        <div class="hax-asst__starters hax-asst__starters--small">
+          <button class="hax-asst__starter hax-asst__starter--small" type="button" data-intent="tour-library">Browse the library while you wait</button>
+          <button class="hax-asst__starter hax-asst__starter--small" type="button" data-intent="case-studies">See more case studies</button>
         </div>
       `;
     }
@@ -885,30 +881,30 @@
 
   // ── Conversation primitives ───────────────────────────
   function pushUserBubble(text) {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const m = document.createElement("div");
-    m.className = "nx-asst__msg nx-asst__msg--user";
-    m.innerHTML = `<div class="nx-asst__bubble">${esc(text)}</div>`;
+    m.className = "hax-asst__msg hax-asst__msg--user";
+    m.innerHTML = `<div class="hax-asst__bubble">${esc(text)}</div>`;
     body.appendChild(m);
     body.scrollTop = body.scrollHeight;
   }
 
   function pushAgentBubble(html, opts = {}) {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const m = document.createElement("div");
-    m.className = "nx-asst__msg nx-asst__msg--ai";
+    m.className = "hax-asst__msg hax-asst__msg--ai";
     const patterns = (opts.patternBundle || []).map(id => {
       const x = lookup(id);
       if (!x) return "";
-      return `<a class="nx-asst__pcard" href="pattern.html?id=${encodeURIComponent(id)}">
-        <span class="nx-asst__pcard-name">${esc(x.p.name)}</span>
-        <span class="nx-asst__pcard-meta">${esc(x.stage.label)} · ${esc(x.sub.title)}</span>
+      return `<a class="hax-asst__pcard" href="pattern.html?id=${encodeURIComponent(id)}">
+        <span class="hax-asst__pcard-name">${esc(x.p.name)}</span>
+        <span class="hax-asst__pcard-meta">${esc(x.stage.label)} · ${esc(x.sub.title)}</span>
       </a>`;
     }).join("");
     m.innerHTML = `
-      <div class="nx-asst__bubble">
+      <div class="hax-asst__bubble">
         <div>${html}</div>
-        ${patterns ? `<div class="nx-asst__pcards">${patterns}</div>` : ""}
+        ${patterns ? `<div class="hax-asst__pcards">${patterns}</div>` : ""}
       </div>
     `;
     body.appendChild(m);
@@ -916,13 +912,13 @@
   }
 
   function pushQuickPicks(prompts) {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const m = document.createElement("div");
-    m.className = "nx-asst__msg nx-asst__msg--ai";
+    m.className = "hax-asst__msg hax-asst__msg--ai";
     m.innerHTML = `
-      <div class="nx-asst__bubble nx-asst__bubble--plain">
-        <div class="nx-asst__starters">
-          ${prompts.map(s => `<button class="nx-asst__starter" type="button" data-prompt="${esc(s)}">${esc(s)}</button>`).join("")}
+      <div class="hax-asst__bubble hax-asst__bubble--plain">
+        <div class="hax-asst__starters">
+          ${prompts.map(s => `<button class="hax-asst__starter" type="button" data-prompt="${esc(s)}">${esc(s)}</button>`).join("")}
         </div>
       </div>
     `;
@@ -932,11 +928,11 @@
 
   let _typingNode = null;
   function showTyping() {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     if (!body || _typingNode) return;
     const m = document.createElement("div");
-    m.className = "nx-asst__msg nx-asst__msg--ai";
-    m.innerHTML = `<div class="nx-asst__bubble nx-asst__bubble--typing"><span></span><span></span><span></span></div>`;
+    m.className = "hax-asst__msg hax-asst__msg--ai";
+    m.innerHTML = `<div class="hax-asst__bubble hax-asst__bubble--typing"><span></span><span></span><span></span></div>`;
     body.appendChild(m);
     _typingNode = m;
     body.scrollTop = body.scrollHeight;
@@ -1065,17 +1061,17 @@
   const ask = routeUserMessage;
 
   function renderResponse(resp) {
-    const body = $("#nx-asst-body");
+    const body = $("#hax-asst-body");
     const wrap = document.createElement("div");
-    wrap.className = "nx-asst__msg nx-asst__msg--ai";
+    wrap.className = "hax-asst__msg hax-asst__msg--ai";
 
     // Pattern cards
     const patternCards = (resp.patterns || []).map(id => {
       const m = lookup(id);
       if (!m) return "";
-      return `<a class="nx-asst__pcard" href="pattern.html?id=${encodeURIComponent(id)}">
-        <span class="nx-asst__pcard-name">${esc(m.p.name)}</span>
-        <span class="nx-asst__pcard-meta">${esc(m.stage.label)} · ${esc(m.sub.title)}</span>
+      return `<a class="hax-asst__pcard" href="pattern.html?id=${encodeURIComponent(id)}">
+        <span class="hax-asst__pcard-name">${esc(m.p.name)}</span>
+        <span class="hax-asst__pcard-meta">${esc(m.stage.label)} · ${esc(m.sub.title)}</span>
       </a>`;
     }).join("");
 
@@ -1091,37 +1087,29 @@
       const shellHTML = SHELLS[v.archetype] ? SHELLS[v.archetype](slot) : "";
       const vid = "vid-" + Math.random().toString(36).slice(2, 9);
       videoCard = `
-        <div class="nx-asst__video" data-video-id="${vid}" data-archetype="${esc(v.archetype||'')}" data-pattern="${esc(v.pattern||'')}">
-          <button class="nx-asst__video-thumb" type="button" data-video-play="${vid}">
-            <div class="nx-asst__video-shell">${shellHTML}</div>
-            <div class="nx-asst__video-overlay">
-              <span class="nx-asst__video-rec">● REC</span>
-              <span class="nx-asst__video-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-              <span class="nx-asst__video-duration">${esc(v.duration || '0:45')}</span>
+        <div class="hax-asst__video" data-video-id="${vid}" data-archetype="${esc(v.archetype||'')}" data-pattern="${esc(v.pattern||'')}">
+          <button class="hax-asst__video-thumb" type="button" data-video-play="${vid}">
+            <div class="hax-asst__video-shell">${shellHTML}</div>
+            <div class="hax-asst__video-overlay">
+              <span class="hax-asst__video-rec">● REC</span>
+              <span class="hax-asst__video-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="hax-asst__video-duration">${esc(v.duration || '0:45')}</span>
             </div>
           </button>
-          <div class="nx-asst__video-meta">
-            <div class="nx-asst__video-eyebrow">Video POC</div>
-            <div class="nx-asst__video-title">${esc(v.title)}</div>
-            <div class="nx-asst__video-desc">${esc(v.desc)}</div>
+          <div class="hax-asst__video-meta">
+            <div class="hax-asst__video-eyebrow">Video POC</div>
+            <div class="hax-asst__video-title">${esc(v.title)}</div>
+            <div class="hax-asst__video-desc">${esc(v.desc)}</div>
           </div>
         </div>
       `;
     }
 
-    // Sandbox CTA — launches the standalone sandbox in a new tab with prefill.
+    // Sandbox CTA — expands the assistant to show the demo in place.
     let sandboxBtn = "";
     if (resp.sandbox) {
-      const usecase = resp.sandbox.usecase || "code-agent";
-      const patternId = resp.sandbox.patterns?.[0] || "";
-      const tpl = resp.sandbox.templates?.[0] || "chat";
-      const url = `sandbox.html?usecase=${encodeURIComponent(usecase)}&pattern=${encodeURIComponent(patternId)}&tpl=${encodeURIComponent(tpl)}`;
       sandboxBtn = `
-        <a class="nx-asst__cta" href="${url}" target="_blank" rel="noopener" data-launch-sandbox>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M10 21H3v-7M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Launch interactive sandbox
-        </a>
-        <button class="nx-asst__cta nx-asst__cta--ghost" type="button" data-open-sandbox>
+        <button class="hax-asst__cta hax-asst__cta--ghost" type="button" data-open-sandbox>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 14v6h6M20 10V4h-6M20 4L13 11M4 20l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           See it here
         </button>
@@ -1130,28 +1118,28 @@
 
     // Schedule-a-call CTA — only when the scenario is qualified.
     const contactBtn = resp.contact ? `
-      <button class="nx-asst__cta nx-asst__cta--accent" type="button" data-intent="contact-team">
+      <button class="hax-asst__cta hax-asst__cta--accent" type="button" data-intent="contact-team">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 5l9 7 9-7M3 5v14h18V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Schedule a call with the team
       </button>
     ` : "";
 
-    const followups = (resp.followups || []).map(f => `<button class="nx-asst__starter nx-asst__starter--small" type="button" data-prompt="${esc(f)}">${esc(f)}</button>`).join("");
+    const followups = (resp.followups || []).map(f => `<button class="hax-asst__starter hax-asst__starter--small" type="button" data-prompt="${esc(f)}">${esc(f)}</button>`).join("");
 
     wrap.innerHTML = `
-      <div class="nx-asst__bubble">
-        <div class="nx-asst__body-text">${resp.body}</div>
-        ${patternCards ? `<div class="nx-asst__pcards">${patternCards}</div>` : ""}
+      <div class="hax-asst__bubble">
+        <div class="hax-asst__body-text">${resp.body}</div>
+        ${patternCards ? `<div class="hax-asst__pcards">${patternCards}</div>` : ""}
         ${videoCard}
-        ${(sandboxBtn || contactBtn) ? `<div class="nx-asst__ctas">${sandboxBtn}${contactBtn}</div>` : ""}
-        ${followups ? `<div class="nx-asst__starters nx-asst__starters--small">${followups}</div>` : ""}
+        ${(sandboxBtn || contactBtn) ? `<div class="hax-asst__ctas">${sandboxBtn}${contactBtn}</div>` : ""}
+        ${followups ? `<div class="hax-asst__starters hax-asst__starters--small">${followups}</div>` : ""}
       </div>
     `;
     body.appendChild(wrap);
 
     if (resp.sandbox) {
       asst.sandbox = resp.sandbox;
-      $("#nx-asst")?.classList.add("has-sandbox");
+      $("#hax-asst")?.classList.add("has-sandbox");
     }
   }
 
@@ -1163,11 +1151,11 @@
     card.classList.add("is-playing");
     // Add a progress bar that animates across once.
     const progress = document.createElement("div");
-    progress.className = "nx-asst__video-progress";
-    progress.innerHTML = `<div class="nx-asst__video-progress-bar"></div>`;
+    progress.className = "hax-asst__video-progress";
+    progress.innerHTML = `<div class="hax-asst__video-progress-bar"></div>`;
     card.appendChild(progress);
     // Remove the play overlay
-    const overlay = card.querySelector(".nx-asst__video-overlay");
+    const overlay = card.querySelector(".hax-asst__video-overlay");
     if (overlay) overlay.classList.add("is-hidden");
   }
 
@@ -1176,7 +1164,7 @@
   // across multiple tool archetypes the prospect can flip between.
   // ───────────────────────────────────────────────────────
   function renderSandbox() {
-    const root = $("#nx-asst-sandbox");
+    const root = $("#hax-asst-sandbox");
     if (!root || !asst.sandbox) return;
     const { templates, patterns, title } = asst.sandbox;
     const tplList = templates.filter(t => SHELLS[t]);
@@ -1184,41 +1172,41 @@
     const initialPatternId = patterns[0];
 
     root.innerHTML = `
-      <div class="nx-sbx">
-        <header class="nx-sbx__head">
+      <div class="hax-sbx">
+        <header class="hax-sbx__head">
           <div>
-            <div class="nx-sbx__eyebrow">Immersive sandbox</div>
-            <div class="nx-sbx__title">${esc(title || "Walkthrough")}</div>
+            <div class="hax-sbx__eyebrow">Immersive sandbox</div>
+            <div class="hax-sbx__title">${esc(title || "Walkthrough")}</div>
           </div>
-          <div class="nx-sbx__pickers">
-            <select class="nx-sbx__select" id="nx-sbx-tpl">
+          <div class="hax-sbx__pickers">
+            <select class="hax-sbx__select" id="hax-sbx-tpl">
               ${tplList.map(t => `<option value="${t}">${SHELL_META[t].label}</option>`).join("")}
             </select>
-            <select class="nx-sbx__select" id="nx-sbx-pat">
+            <select class="hax-sbx__select" id="hax-sbx-pat">
               ${patterns.map(id => { const m = lookup(id); return m ? `<option value="${id}">${esc(m.p.name)}</option>` : ""; }).join("")}
             </select>
           </div>
         </header>
-        <div class="nx-sbx__stage" id="nx-sbx-stage"></div>
-        <div class="nx-sbx__variants" id="nx-sbx-variants"></div>
-        <footer class="nx-sbx__foot">
-          <span class="nx-sbx__hint">Switch tool archetypes and pattern variants to see how the recommendation fits each surface.</span>
+        <div class="hax-sbx__stage" id="hax-sbx-stage"></div>
+        <div class="hax-sbx__variants" id="hax-sbx-variants"></div>
+        <footer class="hax-sbx__foot">
+          <span class="hax-sbx__hint">Switch tool archetypes and pattern variants to see how the recommendation fits each surface.</span>
         </footer>
       </div>
     `;
     updateSandboxStage(initialTpl, initialPatternId);
 
-    $("#nx-sbx-tpl").addEventListener("change", e => {
-      updateSandboxStage(e.target.value, $("#nx-sbx-pat").value);
+    $("#hax-sbx-tpl").addEventListener("change", e => {
+      updateSandboxStage(e.target.value, $("#hax-sbx-pat").value);
     });
-    $("#nx-sbx-pat").addEventListener("change", e => {
-      updateSandboxStage($("#nx-sbx-tpl").value, e.target.value);
+    $("#hax-sbx-pat").addEventListener("change", e => {
+      updateSandboxStage($("#hax-sbx-tpl").value, e.target.value);
     });
   }
 
   function updateSandboxStage(tplId, patternId, variantId) {
-    const stage = $("#nx-sbx-stage");
-    const variantsEl = $("#nx-sbx-variants");
+    const stage = $("#hax-sbx-stage");
+    const variantsEl = $("#hax-sbx-variants");
     const m = lookup(patternId);
     if (!m || !stage) return;
     const variants = Array.isArray(m.p.variants) ? m.p.variants : [];
@@ -1227,7 +1215,7 @@
     stage.innerHTML = SHELLS[tplId](slot);
     if (variantsEl) {
       variantsEl.innerHTML = variants.map(vr => `
-        <button class="nx-sbx__variant ${v && vr.id === v.id ? 'is-active' : ''}" type="button" data-vid="${vr.id}">${esc(vr.name)}</button>
+        <button class="hax-sbx__variant ${v && vr.id === v.id ? 'is-active' : ''}" type="button" data-vid="${vr.id}">${esc(vr.name)}</button>
       `).join("");
       variantsEl.querySelectorAll("[data-vid]").forEach(btn => {
         btn.addEventListener("click", () => updateSandboxStage(tplId, patternId, btn.getAttribute("data-vid")));
@@ -1280,15 +1268,15 @@
       }
       // ESC → unwind whichever is open in priority order
       if (e.key === "Escape") {
-        if (!$("#nx-search")?.hasAttribute("hidden")) closeSearch();
-        else if (!$("#nx-asst")?.hasAttribute("hidden")) {
+        if (!$("#hax-search")?.hasAttribute("hidden")) closeSearch();
+        else if (!$("#hax-asst")?.hasAttribute("hidden")) {
           if (asst.fullscreen) toggleFullscreen();
           else if (asst.expanded) toggleExpand();
           else closeAsst();
         }
       }
       // Search nav
-      const searchOpen = !$("#nx-search")?.hasAttribute("hidden");
+      const searchOpen = !$("#hax-search")?.hasAttribute("hidden");
       if (searchOpen) {
         if (e.key === "ArrowDown") { e.preventDefault(); moveSearch(+1); }
         if (e.key === "ArrowUp")   { e.preventDefault(); moveSearch(-1); }
@@ -1296,16 +1284,16 @@
       }
     });
 
-    const input = $(".nx-search__input");
+    const input = $(".hax-search__input");
     if (input) input.addEventListener("input", e => runSearch(e.target.value));
 
-    const composer = $("#nx-asst-input");
+    const composer = $("#hax-asst-input");
     if (composer) {
       composer.addEventListener("keydown", e => {
         if (e.key === "Enter") { e.preventDefault(); const v = composer.value.trim(); if (v) { ask(v); composer.value = ""; } }
       });
     }
-    const send = $("#nx-asst-send");
+    const send = $("#hax-asst-send");
     if (send) send.addEventListener("click", () => {
       const v = composer.value.trim();
       if (v) { ask(v); composer.value = ""; }
@@ -1442,9 +1430,9 @@
     var btns = document.querySelectorAll(".dc-code > .dc-code__copy, .mcp-code > .mcp-code__copy");
     Array.prototype.forEach.call(btns, function (btn) {
       var code = btn.parentNode;
-      if (code.parentNode && code.parentNode.classList.contains("nx-codewrap")) return;
+      if (code.parentNode && code.parentNode.classList.contains("hax-codewrap")) return;
       var wrap = document.createElement("div");
-      wrap.className = "nx-codewrap";
+      wrap.className = "hax-codewrap";
       /* the block's own bottom margin moves to the wrapper, so blocks
          keep the spacing they had between them */
       var mb = getComputedStyle(code).marginBottom;
@@ -1461,7 +1449,7 @@
 
 
 /* ── Clean URLs when the site is opened as files ───────────────
-   Links are written the way nucleux.in serves them: /library,
+   Links are written the way the live site serves them: /library,
    /material-pattern?id=…, / for home. A web server (or serve.py)
    maps those to the .html files; a page opened straight from the
    folder (file://) cannot, so every internal link would point at a
@@ -1489,7 +1477,7 @@
     var out = "file://" + path + u.search + u.hash;
     return out === u.href ? null : out;
   }
-  window.nxFileURL = fix;
+  window.haxFileURL = fix;
   function link(e) { var a = e.target && e.target.closest && e.target.closest("a[href]"); return a && !a.hasAttribute("download") ? a : null; }
   /* Plain clicks: after the page's own routers have had their turn. */
   window.addEventListener("click", function (e) {
@@ -1531,7 +1519,7 @@
    Nothing changes for anyone who never opens the concept page. */
 (function () {
   return;   /* HAX: the concept IS the home page now (index.html), so this redirect is retired */
-  var KEY = "nx-home", CONCEPT = "index-new-concept";
+  var KEY = "hax-home", CONCEPT = "index-new-concept";
   var ss; try { ss = window.sessionStorage; ss.getItem(KEY); } catch (e) { ss = null; }
   if (!ss) return;
   function page(p) { return (p || "").replace(/\/+$/, "/").replace(/^.*\//, "").replace(/\.html$/, ""); }
@@ -1561,9 +1549,9 @@
   var me = document.currentScript && document.currentScript.src;
   function fixAll(root) {
     (root || document).querySelectorAll("a[href]").forEach(function (a) {
-      if (a.hasAttribute("data-nx-home")) return;
+      if (a.hasAttribute("data-hax-home")) return;
       var h = a.getAttribute("href");
-      if (isHome(h)) { a.setAttribute("data-nx-home", h); a.setAttribute("href", to(h)); }
+      if (isHome(h)) { a.setAttribute("data-hax-home", h); a.setAttribute("href", to(h)); }
     });
   }
   function start() {
@@ -1584,26 +1572,26 @@
 
 
 /* ── Copy buttons ─────────────────────────────────────────────
-   Every copy control is the same .nx-copy icon button (css/styles.css).
-   nxCopied(btn) shows the check for a moment; nxCopy(btn, text) puts
+   Every copy control is the same .hax-copy icon button (css/styles.css).
+   haxCopied(btn) shows the check for a moment; haxCopy(btn, text) puts
    the text on the clipboard first, with a fallback for the plain-http
    review server, where navigator.clipboard is missing.
    ============================================================ */
-window.nxCopied = function (btn) {
+window.haxCopied = function (btn) {
   btn.classList.add("is-done");
   btn.setAttribute("aria-label", "Copied");
   clearTimeout(btn._nxCopyT);
   btn._nxCopyT = setTimeout(function () { btn.classList.remove("is-done"); btn.setAttribute("aria-label", "Copy"); }, 1600);
 };
-window.nxCopy = function (btn, text) {
+window.haxCopy = function (btn, text) {
   function legacy() {
     var ta = document.createElement("textarea");
     ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
     document.body.appendChild(ta); ta.select();
     try { document.execCommand("copy"); } catch (e) {}
-    document.body.removeChild(ta); window.nxCopied(btn);
+    document.body.removeChild(ta); window.haxCopied(btn);
   }
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { window.nxCopied(btn); }, legacy);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { window.haxCopied(btn); }, legacy);
   else legacy();
 };
 
@@ -1691,8 +1679,8 @@ window.nxCopy = function (btn, text) {
    overflow:hidden on <html> — that reset the home page to the top. */
 (function () {
   function block(e) {
-    if (!document.body.classList.contains("is-nx-search")) return;
-    var list = e.target.closest && e.target.closest(".nx-search__results");
+    if (!document.body.classList.contains("is-hax-search")) return;
+    var list = e.target.closest && e.target.closest(".hax-search__results");
     if (!list) { e.preventDefault(); return; }
     if (e.type === "wheel") {
       var dy = e.deltaY, atTop = list.scrollTop <= 0, atEnd = list.scrollTop + list.clientHeight >= list.scrollHeight - 1;
@@ -1702,7 +1690,7 @@ window.nxCopy = function (btn, text) {
   addEventListener("wheel", block, { passive: false, capture: true });
   addEventListener("touchmove", block, { passive: false, capture: true });
   addEventListener("keydown", function (e) {
-    if (!document.body.classList.contains("is-nx-search")) return;
+    if (!document.body.classList.contains("is-hax-search")) return;
     if (["PageUp", "PageDown", "Home", "End", " "].indexOf(e.key) > -1 && !(e.target.matches && e.target.matches("input, textarea"))) e.preventDefault();
   }, true);
 })();

@@ -14,20 +14,20 @@
        banner rather than a small thumbnail. The image URL must be absolute
        and publicly reachable: the crawler fetches it from its own servers,
        so a relative path or a localhost address renders no card at all. -->
-  <link rel="canonical" href="https://nucleux.in/docs.html" />
+  <link rel="canonical" href="https://YOUR-HAX-DOMAIN/docs.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="HAX" />
-  <meta property="og:url" content="https://nucleux.in/docs.html" />
+  <meta property="og:url" content="https://YOUR-HAX-DOMAIN/docs.html" />
   <meta property="og:title" content="Docs — HAX" />
   <meta property="og:description" content="HAX documentation — installation, design tokens, components, code examples, API reference." />
-  <meta property="og:image" content="https://nucleux.in/share-on-x.png" />
+  <meta property="og:image" content="https://YOUR-HAX-DOMAIN/share-on-x.png" />
   <meta property="og:image:width" content="515" />
   <meta property="og:image:height" content="272" />
   <meta property="og:image:alt" content="HAX — UI components for AI agents" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Docs — HAX" />
   <meta name="twitter:description" content="HAX documentation — installation, design tokens, components, code examples, API reference." />
-  <meta name="twitter:image" content="https://nucleux.in/share-on-x.png" />
+  <meta name="twitter:image" content="https://YOUR-HAX-DOMAIN/share-on-x.png" />
   <meta name="twitter:image:alt" content="HAX — UI components for AI agents" />
 
   <link rel="preconnect" href="https://rsms.me/" />
@@ -248,7 +248,7 @@
       letter-spacing: 0.04em;
       margin-bottom: var(--s-3);
     }
-    .dc-code__copy { position: absolute; top: 12px; right: 12px; }   /* the button is .nx-copy (css/styles.css) */
+    .dc-code__copy { position: absolute; top: 12px; right: 12px; }   /* the button is .hax-copy (css/styles.css) */
 
     /* Packages tile section */
     .dc-pkg-intro {
@@ -307,7 +307,7 @@
 
   <header class="gnav">
     <div class="container gnav__inner">
-      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-nx-home="/">
+      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-hax-home="/">
         <svg class="brand__mark brand__mark--inline" aria-hidden="true" width="84" height="28" viewBox="0 0 101 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M16.9856 0L17.3137 0.73802V8.06348L16.9856 8.52816L16.3451 8.58415L9.93358 4.83807L9.6875 4.26402L16.9856 0Z" fill="#C5E3EB"/>
 <path d="M2.39062 8.52976L2.5546 9.04907L8.91443 12.6934L9.68872 12.7118L9.98942 12.2197V4.73031L9.68872 4.26562L2.39062 8.52976Z" fill="#C5E3EB"/>
@@ -360,7 +360,6 @@
           <ul class="ox-dd__menu" role="list">
             <li class="ox-dd__group"><span class="ox-dd__label">ShadCN</span>
               <ul class="ox-dd__sub" role="list">
-                <li><a href="basic-components">Basic Components</a></li>
                 <li><a href="library">Agentic Components</a></li>
               </ul>
             </li>
@@ -399,13 +398,13 @@
           <p class="dc-body">The umbrella package re-exports every component; you can also install any sub-package on its own.</p>
           <div class="dc-code dc-code--install-rows">
 <div class="dc-irow"><span class="c"># everything (recommended)</span></div>
-<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">@hax/react</span></span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, 'npm install @hax/react')"></button></div>
+<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">@hax/react</span></span><button class="hax-copy" type="button" aria-label="Copy" onclick="haxCopy(this, 'npm install @hax/react')"></button></div>
 <div class="dc-irow dc-irow--gap"> </div>
 <div class="dc-irow"><span class="c"># or just what you need</span></div>
-<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">@hax/message</span> <span class="v">@hax/agent-composer</span> <span class="v">@hax/button</span></span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, 'npm install @hax/message @hax/agent-composer @hax/button')"></button></div>
+<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">@hax/message</span> <span class="v">@hax/agent-composer</span> <span class="v">@hax/button</span></span><button class="hax-copy" type="button" aria-label="Copy" onclick="haxCopy(this, 'npm install @hax/message @hax/agent-composer @hax/button')"></button></div>
 <div class="dc-irow dc-irow--gap"> </div>
 <div class="dc-irow"><span class="c"># peer deps</span></div>
-<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">react</span> <span class="v">react-dom</span></span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, 'npm install react react-dom')"></button></div>
+<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">react</span> <span class="v">react-dom</span></span><button class="hax-copy" type="button" aria-label="Copy" onclick="haxCopy(this, 'npm install react react-dom')"></button></div>
           </div>
         </div>
       </div>
@@ -419,8 +418,8 @@
           <p class="dc-body">Components are styled with Tailwind utilities bound to design tokens in <code>@hax/tokens</code>. Add the preset, scan the compiled components, and import the token stylesheet.</p>
           <div class="dc-code dc-code--install">
 <div class="dc-install-row dc-install-row--block">
-  <div class="dc-install-block-head"><span class="c">// tailwind.config.js</span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, `import nucleux from '@hax/tokens/preset'\n\nexport default {\n  presets: [nucleux],\n  content: [\n    './src/**/*.{js,jsx,ts,tsx}',\n    './node_modules/@hax/**/dist/*.js',\n  ],\n}`)"></button></div>
-  <div class="dc-install-block-body"><span class="k">import</span> nucleux <span class="k">from</span> <span class="s">'@hax/tokens/preset'</span>
+  <div class="dc-install-block-head"><span class="c">// tailwind.config.js</span><button class="hax-copy" type="button" aria-label="Copy" onclick="haxCopy(this, `import hax from '@hax/tokens/preset'\n\nexport default {\n  presets: [hax],\n  content: [\n    './src/**/*.{js,jsx,ts,tsx}',\n    './node_modules/@hax/**/dist/*.js',\n  ],\n}`)"></button></div>
+  <div class="dc-install-block-body"><span class="k">import</span> hax <span class="k">from</span> <span class="s">'@hax/tokens/preset'</span>
 <span class="k">export default</span> {
   <span class="p">presets</span>: [hax],
   <span class="p">content</span>: [
@@ -432,13 +431,13 @@
           </div>
           <div class="dc-code dc-code--install" style="margin-top:var(--s-4)">
 <div class="dc-install-row dc-install-row--block">
-  <div class="dc-install-block-head"><span class="c">/* index.css */</span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, `@import '@hax/tokens/styles.css';\n@tailwind components;\n@tailwind utilities;`)"></button></div>
-  <div class="dc-install-block-body"><span class="k">@import</span> <span class="s">'@hax/tokens/styles.css'</span>; <span class="c">/* --nx-* tokens, light + .dark */</span>
+  <div class="dc-install-block-head"><span class="c">/* index.css */</span><button class="hax-copy" type="button" aria-label="Copy" onclick="haxCopy(this, `@import '@hax/tokens/styles.css';\n@tailwind components;\n@tailwind utilities;`)"></button></div>
+  <div class="dc-install-block-body"><span class="k">@import</span> <span class="s">'@hax/tokens/styles.css'</span>; <span class="c">/* --hax-* tokens, light + .dark */</span>
 <span class="k">@tailwind</span> components;
 <span class="k">@tailwind</span> utilities;</div>
 </div>
           </div>
-          <p class="dc-note">Toggle dark mode with a <code>.dark</code> class on a parent element. Tokens cover colour, radius, and the <code>nx-*</code> keyframes (caret blink, typing dots, fade-in).</p>
+          <p class="dc-note">Toggle dark mode with a <code>.dark</code> class on a parent element. Tokens cover colour, radius, and the <code>hax-*</code> keyframes (caret blink, typing dots, fade-in).</p>
         </div>
       </div>
     </section>
@@ -449,7 +448,7 @@
         <div class="dc-section">
           <h2 class="dc-h2">Quick start — an agent chat</h2>
           <p class="dc-body">A scrolling transcript with auto-pin, streamed assistant messages, and a composer that submits on Enter.</p>
-          <div class="dc-code"><button class="dc-code__copy nx-copy" type="button" aria-label="Copy" style="top:12px;right:12px" onclick="nxCopy(this, `import { Thread, Message, AgentComposer, Badge } from '@hax/react'\n\nfunction Chat({ messages, input, setInput, onSend, busy }) {\n  return (\n    <Thread autoScrollKey={messages.length}>\n      {messages.map((m) => (\n        <Message key={m.id} role={m.role} content={m.text} streaming={m.streaming} />\n      ))}\n      <AgentComposer\n        value={input}\n        onValueChange={setInput}\n        onSubmit={onSend}\n        loading={busy}\n        placeholder='Ask anything…'\n      />\n    </Thread>\n  )\n}`)"></button><span class="k">import</span> { <span class="v">Thread</span>, <span class="v">Message</span>, <span class="v">AgentComposer</span>, <span class="v">Badge</span> } <span class="k">from</span> <span class="s">'@hax/react'</span>
+          <div class="dc-code"><button class="dc-code__copy hax-copy" type="button" aria-label="Copy" style="top:12px;right:12px" onclick="haxCopy(this, `import { Thread, Message, AgentComposer, Badge } from '@hax/react'\n\nfunction Chat({ messages, input, setInput, onSend, busy }) {\n  return (\n    <Thread autoScrollKey={messages.length}>\n      {messages.map((m) => (\n        <Message key={m.id} role={m.role} content={m.text} streaming={m.streaming} />\n      ))}\n      <AgentComposer\n        value={input}\n        onValueChange={setInput}\n        onSubmit={onSend}\n        loading={busy}\n        placeholder='Ask anything…'\n      />\n    </Thread>\n  )\n}`)"></button><span class="k">import</span> { <span class="v">Thread</span>, <span class="v">Message</span>, <span class="v">AgentComposer</span>, <span class="v">Badge</span> } <span class="k">from</span> <span class="s">'@hax/react'</span>
 <span class="fn">function</span> <span class="v">Chat</span>({ messages, input, setInput, onSend, busy }) {
   <span class="k">return</span> (
     &lt;<span class="v">Thread</span> autoScrollKey={messages.length}&gt;
@@ -587,10 +586,8 @@
         <span class="foot__meta">© 2026 HAX · AI UX Pattern Library</span>
         <nav class="foot__links" aria-label="Footer">
           <a href="library.html">Pattern Library</a>
-          <a href="practices.html">Scenarios</a>
           <a href="docs.html">Docs</a>
           <a href="mcp.html">MCP</a>
-          <a href="contact.html">Contact ↗</a>
         </nav>
       </div>
     </div>

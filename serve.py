@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local preview that serves clean URLs the way nucleux.in does.
+"""Local preview that serves clean URLs the way the live site does.
 
 The site links to /library, /material-pattern?id=... and so on, without
 ".html". `python3 -m http.server` can't map those, so use this instead:

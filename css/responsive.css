@@ -1,5 +1,5 @@
 /* ============================================================
-   NUCLEUX — RESPONSIVE LAYER (pages)
+   HAX — RESPONSIVE LAYER (pages)
 
    Loaded LAST on every non-Components page, after each page's own
    <style> blocks, so it wins on order at matching specificity.
@@ -165,10 +165,10 @@
   body.landing-dark .framework .framework__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
-    counter-reset: nx-stage;
+    counter-reset: hax-stage;
   }
   body.landing-light .framework .fw-stage {
-    counter-increment: nx-stage;
+    counter-increment: hax-stage;
     min-height: 0;
     padding: 16px 56px 16px 64px;
     gap: 4px;
@@ -176,7 +176,7 @@
   }
   .fw-stage__name { font-size: 19px; line-height: 1.25; }
   .fw-stage__name::before {
-    content: counter(nx-stage, decimal-leading-zero);
+    content: counter(hax-stage, decimal-leading-zero);
     position: absolute;
     left: -48px; top: -3px;
     width: 34px; height: 34px;
@@ -518,7 +518,7 @@
    with a real touch target, and the first line is pushed below it
    instead of running underneath.
    ============================================================ */
-.nx-codewrap { position: relative; }
+.hax-codewrap { position: relative; }
 @media (max-width: 720px) {
   .dc-code, .mcp-code {
     font-size: 12.5px;
@@ -527,21 +527,21 @@
     overscroll-behavior-x: contain;
     border-radius: 14px;
   }
-  .nx-codewrap > .dc-code { padding-top: 48px; }
+  .hax-codewrap > .dc-code { padding-top: 48px; }
   /* MCP blocks start with the newline the button used to sit on */
-  .nx-codewrap > .mcp-code { padding-top: 28px; }
-  .nx-codewrap > .mcp-code--tabbed { padding-top: 48px; }
-  .nx-codewrap > .mcp-code__copy {
+  .hax-codewrap > .mcp-code { padding-top: 28px; }
+  .hax-codewrap > .mcp-code--tabbed { padding-top: 48px; }
+  .hax-codewrap > .mcp-code__copy {
     min-height: 32px;
     padding: 0 12px;
     font-size: 12px;
     border-radius: 10px;
   }
-  .nx-codewrap > .dc-code__copy,
-  .nx-codewrap > .mcp-code__copy { top: 8px !important; right: 8px !important; }
+  .hax-codewrap > .dc-code__copy,
+  .hax-codewrap > .mcp-code__copy { top: 8px !important; right: 8px !important; }
   /* the target is 44px even though the chip is 30–32px */
-  .nx-codewrap > .mcp-code__copy::after,
-  .nx-copy::after { content: ""; position: absolute; inset: -7px; }
+  .hax-codewrap > .mcp-code__copy::after,
+  .hax-copy::after { content: ""; position: absolute; inset: -7px; }
 
   /* one-line commands: wrap at the spaces instead of pushing their
      Copy button out of reach */
@@ -872,24 +872,12 @@
 /* the sandbox has its own Ask Lumen in the app bar; on a phone the
    floating one would sit on top of the composer and the prompts */
 @media (max-width: 720px) {
-  body:has(.sbx-toolbar) .nx-launcher { display: none; }
+  body:has(.sbx-toolbar) .hax-launcher { display: none; }
 }
 
 
 /* ============================================================
-   10 · SIGN IN / SIGN UP / RESET (auth.css pages)
-   Already a single column. A phone needs only the field size that
-   keeps iOS from zooming on focus and fields that clear the
-   keyboard.
-   ============================================================ */
-@media (max-width: 720px) {
-  .auth-input, .auth-input input { font-size: 16px; }
-  .auth-input, .auth-input input { scroll-margin-bottom: 120px; }
-}
-
-
-/* ============================================================
-   11 · CONTAINMENT — decorative glows stay inside their section
+   10 · CONTAINMENT — decorative glows stay inside their section
    A few sections let their content overflow on purpose (the Labs
    rail's hover lift, the MCP hero glow). `clip` on the x-axis keeps
    their blurred pseudo-element glows from widening the page while
@@ -902,25 +890,20 @@
 
 
 /* ============================================================
-   12 · TOUCH TARGETS — any touch screen, any width
+   11 · TOUCH TARGETS — any touch screen, any width
    A landscape phone is 874px wide but still driven by a thumb, so
    these key off the pointer, not the width. Visible sizes stay as
    designed where an invisible hit area can carry the 44px.
    ============================================================ */
 @media (pointer: coarse) {
-  .gnav .brand, .auth-brand, .nx-msheet__brand { min-height: 44px; display: inline-flex; align-items: center; }
+  .gnav .brand, .hax-msheet__brand { min-height: 44px; display: inline-flex; align-items: center; }
   .scn-detail__bread a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; }
   /* (the corner Copy buttons are already absolutely placed — their
      ::after hit area hangs off that; the inline ones need an anchor) */
   .mcp-pkg-tab { position: relative; }
-  .nx-codewrap > .mcp-code__copy::after, .mcp-pkg-tab::after { content: ""; position: absolute; inset: -8px -4px; }
+  .hax-codewrap > .mcp-code__copy::after, .mcp-pkg-tab::after { content: ""; position: absolute; inset: -8px -4px; }
   .mcp-pkg-tab { min-height: 36px; }
   .shape__dot { position: relative; }
   .shape__dot::after { content: ""; position: absolute; inset: -18px -8px; }
   .foot__links a { display: inline-flex; align-items: center; min-height: 44px; }
-  /* auth: the small text links and the Show toggle */
-  .auth-footer a, .auth-mini { display: inline-flex; align-items: center; min-height: 44px; }
-  .auth-label-row .auth-mini { margin-block: -12px; }
-  .auth-reveal::after { content: ""; position: absolute; inset: -8px -6px; }
-  .auth-nav a { display: inline-flex; align-items: center; min-height: 44px; }
 }

@@ -274,7 +274,7 @@ html.gnav-pending .gnav__actions { visibility: hidden; }
   display: block;
   max-width: none;
 }
-/* Nucleux wordmark — the logo IS the brand, no text accompanies it */
+/* HAX wordmark — the logo IS the brand, no text accompanies it */
 .brand__mark {
   height: 28px;
   width: auto;
@@ -2810,10 +2810,10 @@ body.landing-dark .pcard {
 }
 /* Copy, everywhere the site offers it: one icon button (the MCP page's),
    the copy glyph drawn here so the markup is just
-   <button class="nx-copy" aria-label="Copy">; .is-done swaps it for a check
-   for a moment (global.js nxCopy / nxCopied). Pages only place it. */
-.nx-copy {
-  --nx-copy-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'%3E%3Crect x='9' y='9' width='12' height='12' rx='2'/%3E%3Cpath d='M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1'/%3E%3C/svg%3E");
+   <button class="hax-copy" aria-label="Copy">; .is-done swaps it for a check
+   for a moment (global.js haxCopy / haxCopied). Pages only place it. */
+.hax-copy {
+  --hax-copy-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'%3E%3Crect x='9' y='9' width='12' height='12' rx='2'/%3E%3Cpath d='M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1'/%3E%3C/svg%3E");
   position: relative;   /* pages that pin it in a corner set absolute */
   display: inline-grid; place-items: center; flex: none;
   width: 30px; height: 30px; padding: 0;
@@ -2821,15 +2821,15 @@ body.landing-dark .pcard {
   border: 1px solid var(--ink-700); border-radius: var(--r-2);
   cursor: pointer; transition: color 150ms ease, background 150ms ease;
 }
-.nx-copy::before {
+.hax-copy::before {
   content: ""; width: 14px; height: 14px; background: currentColor;
-  -webkit-mask: var(--nx-copy-glyph) center / contain no-repeat;
-          mask: var(--nx-copy-glyph) center / contain no-repeat;
+  -webkit-mask: var(--hax-copy-glyph) center / contain no-repeat;
+          mask: var(--hax-copy-glyph) center / contain no-repeat;
 }
-.nx-copy:hover { color: var(--ink-0); background: var(--ink-800); }
-.nx-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.nx-copy.is-done {
-  --nx-copy-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5L20 7'/%3E%3C/svg%3E");
+.hax-copy:hover { color: var(--ink-0); background: var(--ink-800); }
+.hax-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hax-copy.is-done {
+  --hax-copy-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5L20 7'/%3E%3C/svg%3E");
   color: #86efac;
 }
 
@@ -3898,7 +3898,7 @@ body.nav-open { overflow: hidden; }
 }
 
 /* ============================================================
-   NUCLEUX GLOBAL — search, launcher, assistant, sandbox
+   HAX GLOBAL — search, launcher, assistant, sandbox
    Loaded by global.js on every page. Self-contained namespace.
    ============================================================ */
 
@@ -3936,7 +3936,7 @@ body.nav-open { overflow: hidden; }
 
 /* — Search modal —————————————————————— */
 /* page scroll while search is open is blocked in global.js (overflow:hidden here reset the home page to the top) */
-.nx-search {
+.hax-search {
   position: fixed; inset: 0;
   z-index: 220;
   display: grid;
@@ -3945,15 +3945,15 @@ body.nav-open { overflow: hidden; }
   opacity: 0;
   transition: opacity var(--dur-2) var(--ease);
 }
-.nx-search.is-open { opacity: 1; }
-.nx-search[hidden] { display: none !important; }
-.nx-search__backdrop {
+.hax-search.is-open { opacity: 1; }
+.hax-search[hidden] { display: none !important; }
+.hax-search__backdrop {
   position: absolute; inset: 0;
   background: rgba(12, 12, 10, 0.62);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
-.nx-search__panel {
+.hax-search__panel {
   position: relative;
   width: 100%;
   max-width: 680px;
@@ -3965,8 +3965,8 @@ body.nav-open { overflow: hidden; }
   transform: translateY(8px) scale(0.99);
   transition: transform var(--dur-2) var(--ease);
 }
-.nx-search.is-open .nx-search__panel { transform: translateY(0) scale(1); }
-.nx-search__inputrow {
+.hax-search.is-open .hax-search__panel { transform: translateY(0) scale(1); }
+.hax-search__inputrow {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -3974,7 +3974,7 @@ body.nav-open { overflow: hidden; }
   border-bottom: 1px solid var(--border);
   color: var(--fg-mid);
 }
-.nx-search__input {
+.hax-search__input {
   flex: 1;
   font: inherit;
   font-size: 15px;
@@ -3984,8 +3984,8 @@ body.nav-open { overflow: hidden; }
   outline: 0;
   padding: 2px 0;
 }
-.nx-search__input::placeholder { color: var(--fg-muted); }
-.nx-search__esc {
+.hax-search__input::placeholder { color: var(--fg-muted); }
+.hax-search__esc {
   padding: 3px 9px;
   border-radius: 5px;
   background: var(--ink-100);
@@ -3993,12 +3993,12 @@ body.nav-open { overflow: hidden; }
   font-size: 11px;
   color: var(--fg-mid);
 }
-.nx-search__results {
+.hax-search__results {
   max-height: 60vh;
   overflow: auto;
   padding: 6px;
 }
-.nx-search__row {
+.hax-search__row {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
@@ -4007,22 +4007,22 @@ body.nav-open { overflow: hidden; }
   border-radius: 8px;
   cursor: pointer;
 }
-.nx-search__row:hover, .nx-search__row.is-active {
+.hax-search__row:hover, .hax-search__row.is-active {
   background: var(--ink-25);
 }
-.nx-search__row-name {
+.hax-search__row-name {
   font-size: 14px;
   font-weight: 600;
   color: var(--fg);
   letter-spacing: -0.01em;
 }
-.nx-search__row-meta {
+.hax-search__row-meta {
   font-size: 11px;
   color: var(--fg-muted);
   white-space: nowrap;
   font-weight: 500;
 }
-.nx-search__row-oneline {
+.hax-search__row-oneline {
   grid-column: 1 / -1;
   font-size: 12px;
   color: var(--fg-mid);
@@ -4031,13 +4031,13 @@ body.nav-open { overflow: hidden; }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.nx-search__empty {
+.hax-search__empty {
   padding: 28px;
   text-align: center;
   color: var(--fg-muted);
   font-size: 13px;
 }
-.nx-search__footer {
+.hax-search__footer {
   display: flex;
   gap: 18px;
   padding: 10px 18px;
@@ -4046,7 +4046,7 @@ body.nav-open { overflow: hidden; }
   font-size: 11px;
   color: var(--fg-muted);
 }
-.nx-search__footer kbd {
+.hax-search__footer kbd {
   display: inline-block;
   padding: 1px 6px;
   border-radius: 3px;
@@ -4058,7 +4058,7 @@ body.nav-open { overflow: hidden; }
 }
 
 /* — Floating launcher ——————————————— */
-.nx-launcher {
+.hax-launcher {
   position: fixed;
   bottom: 24px;
   right: 24px;
@@ -4076,8 +4076,8 @@ body.nav-open { overflow: hidden; }
   box-shadow: 0 10px 30px rgba(12,12,10,0.18), 0 4px 10px rgba(12,12,10,0.10);
   transition: all var(--dur-2) var(--ease);
 }
-.nx-launcher:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(12,12,10,0.22), 0 6px 14px rgba(12,12,10,0.12); }
-.nx-launcher__orb {
+.hax-launcher:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(12,12,10,0.22), 0 6px 14px rgba(12,12,10,0.12); }
+.hax-launcher__orb {
   width: 22px; height: 22px;
   border-radius: 50%;
   background: linear-gradient(135deg, #21A4D7, #8B57C7);
@@ -4089,10 +4089,10 @@ body.nav-open { overflow: hidden; }
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(0.9); opacity: 0.85; }
 }
-body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-events: none; }
+body.is-hax-asst .hax-launcher { transform: translateY(8px); opacity: 0; pointer-events: none; }
 
 /* — Assistant panel ———————————————— */
-.nx-asst {
+.hax-asst {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -4112,8 +4112,8 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   opacity: 0;
   transition: transform var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease), width var(--dur-3) var(--ease), height var(--dur-3) var(--ease);
 }
-.nx-asst.is-open { transform: translateY(0) scale(1); opacity: 1; }
-.nx-asst.is-expanded {
+.hax-asst.is-open { transform: translateY(0) scale(1); opacity: 1; }
+.hax-asst.is-expanded {
   width: calc(100vw - 40px);
   max-width: 1320px;
   height: calc(100vh - 40px);
@@ -4122,9 +4122,9 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   bottom: 20px;
   transform: translateX(-50%);
 }
-.nx-asst[hidden] { display: none !important; }
+.hax-asst[hidden] { display: none !important; }
 
-.nx-asst__head {
+.hax-asst__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4133,33 +4133,33 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
-.nx-asst__brand {
+.hax-asst__brand {
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
 }
-.nx-asst__avatar {
+.hax-asst__avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, #21A4D7, #8B57C7);
   box-shadow: 0 0 0 2px rgba(255,255,255,0.10) inset;
   flex-shrink: 0;
 }
-.nx-asst__heads { min-width: 0; }
-.nx-asst__title { font-size: 13.5px; font-weight: 600; color: var(--fg); letter-spacing: -0.005em; }
-.nx-asst__sub { font-size: 11.5px; color: var(--fg-muted); margin-top: 1px; }
-.nx-asst__head-actions { display: flex; align-items: center; gap: 4px; }
-.nx-asst__btn {
+.hax-asst__heads { min-width: 0; }
+.hax-asst__title { font-size: 13.5px; font-weight: 600; color: var(--fg); letter-spacing: -0.005em; }
+.hax-asst__sub { font-size: 11.5px; color: var(--fg-muted); margin-top: 1px; }
+.hax-asst__head-actions { display: flex; align-items: center; gap: 4px; }
+.hax-asst__btn {
   width: 28px; height: 28px;
   border-radius: 6px;
   color: var(--fg-mid);
   display: grid; place-items: center;
   transition: all var(--dur-1) var(--ease);
 }
-.nx-asst__btn:hover { background: var(--ink-100); color: var(--fg); }
+.hax-asst__btn:hover { background: var(--ink-100); color: var(--fg); }
 
-.nx-asst__body {
+.hax-asst__body {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
@@ -4168,14 +4168,14 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   gap: 14px;
   background: var(--ink-25);
 }
-.nx-asst.is-expanded .nx-asst__body { max-width: 440px; flex-shrink: 0; border-right: 1px solid var(--border); }
-.nx-asst.is-expanded { flex-direction: row; }
-.nx-asst.is-expanded .nx-asst__head { display: none; }
+.hax-asst.is-expanded .hax-asst__body { max-width: 440px; flex-shrink: 0; border-right: 1px solid var(--border); }
+.hax-asst.is-expanded { flex-direction: row; }
+.hax-asst.is-expanded .hax-asst__head { display: none; }
 
-.nx-asst__intro {
+.hax-asst__intro {
   padding: 4px 4px 8px;
 }
-.nx-asst__intro-eyebrow {
+.hax-asst__intro-eyebrow {
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -4183,13 +4183,13 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   text-transform: uppercase;
   margin-bottom: 6px;
 }
-.nx-asst__intro-title {
+.hax-asst__intro-title {
   font-size: 19px;
   font-weight: 600;
   color: var(--fg);
   letter-spacing: -0.015em;
 }
-.nx-asst__intro-body {
+.hax-asst__intro-body {
   margin-top: 6px;
   font-size: 13px;
   line-height: 1.55;
@@ -4197,21 +4197,21 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
 }
 
 /* Lumen's first message — slightly more breathing than a normal bubble */
-.nx-asst__msg--first .nx-asst__bubble { padding: 14px 16px; }
-.nx-asst__greet-line {
+.hax-asst__msg--first .hax-asst__bubble { padding: 14px 16px; }
+.hax-asst__greet-line {
   font-size: 14.5px;
   font-weight: 500;
   color: var(--fg);
   letter-spacing: -0.005em;
 }
-.nx-asst__greet-line b { font-weight: 600; }
-.nx-asst__greet-body {
+.hax-asst__greet-line b { font-weight: 600; }
+.hax-asst__greet-body {
   margin-top: 8px;
   font-size: 13.5px;
   line-height: 1.55;
   color: var(--fg-mid);
 }
-.nx-asst__greet-ask {
+.hax-asst__greet-ask {
   margin-top: 10px;
   font-size: 13.5px;
   font-weight: 500;
@@ -4222,7 +4222,7 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
 }
 
 /* Soft hint chips under the greeting — italic, low-emphasis, not a menu */
-.nx-asst__hints {
+.hax-asst__hints {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -4230,13 +4230,13 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   margin-top: 6px;
   padding: 0 4px;
 }
-.nx-asst__hints-label {
+.hax-asst__hints-label {
   font-size: 11px;
   color: var(--fg-muted);
   font-style: italic;
   margin-right: 2px;
 }
-.nx-asst__hint {
+.hax-asst__hint {
   padding: 5px 10px;
   border-radius: var(--r-full);
   background: transparent;
@@ -4246,7 +4246,7 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   font-style: italic;
   transition: all var(--dur-1) var(--ease);
 }
-.nx-asst__hint:hover {
+.hax-asst__hint:hover {
   background: var(--surface);
   border-style: solid;
   color: var(--fg);
@@ -4254,12 +4254,12 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
 }
 
 /* Persona chips — appear only after the user signals they're building something */
-.nx-asst__chips {
+.hax-asst__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.nx-asst__chip {
+.hax-asst__chip {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -4272,11 +4272,11 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   color: var(--fg);
   transition: all var(--dur-1) var(--ease);
 }
-.nx-asst__chip:hover { border-color: var(--fg); transform: translateY(-1px); }
-.nx-asst__chip span { font-size: 13px; line-height: 1; }
+.hax-asst__chip:hover { border-color: var(--fg); transform: translateY(-1px); }
+.hax-asst__chip span { font-size: 13px; line-height: 1; }
 
 /* Plain bubble — no chrome, used when the bubble is just a container for other UI */
-.nx-asst__bubble--plain {
+.hax-asst__bubble--plain {
   background: transparent !important;
   border: 0 !important;
   padding: 0 !important;
@@ -4284,12 +4284,12 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
 }
 
 /* Case studies grid */
-.nx-asst__cases {
+.hax-asst__cases {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-.nx-asst__case {
+.hax-asst__case {
   display: grid;
   grid-template-columns: 1fr 16px;
   grid-template-rows: auto auto auto;
@@ -4300,37 +4300,37 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   background: var(--surface);
   transition: all var(--dur-1) var(--ease);
 }
-.nx-asst__case:hover { border-color: var(--fg); transform: translateY(-1px); box-shadow: var(--shadow-2); }
-.nx-asst__case-tag {
+.hax-asst__case:hover { border-color: var(--fg); transform: translateY(-1px); box-shadow: var(--shadow-2); }
+.hax-asst__case-tag {
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--accent);
   text-transform: uppercase;
 }
-.nx-asst__case-title {
+.hax-asst__case-title {
   font-size: 13.5px;
   font-weight: 600;
   color: var(--fg);
   letter-spacing: -0.008em;
 }
-.nx-asst__case-desc {
+.hax-asst__case-desc {
   grid-column: 1 / -1;
   font-size: 11.5px;
   color: var(--fg-mid);
   line-height: 1.5;
 }
-.nx-asst__case-arrow {
+.hax-asst__case-arrow {
   grid-row: 2;
   grid-column: 2;
   align-self: center;
   color: var(--fg-muted);
   font-size: 14px;
 }
-.nx-asst__case:hover .nx-asst__case-arrow { color: var(--fg); }
+.hax-asst__case:hover .hax-asst__case-arrow { color: var(--fg); }
 
 /* Contact form */
-.nx-asst__form {
+.hax-asst__form {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -4339,24 +4339,24 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   border: 1px solid var(--border);
   border-radius: var(--r-3);
 }
-.nx-asst__field {
+.hax-asst__field {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-.nx-asst__field > span {
+.hax-asst__field > span {
   font-size: 11.5px;
   font-weight: 600;
   color: var(--fg-mid);
   letter-spacing: -0.003em;
 }
-.nx-asst__field > span em {
+.hax-asst__field > span em {
   font-style: normal;
   font-weight: 400;
   color: var(--fg-muted);
 }
-.nx-asst__field input,
-.nx-asst__field textarea {
+.hax-asst__field input,
+.hax-asst__field textarea {
   font: inherit;
   font-size: 13px;
   padding: 8px 12px;
@@ -4368,9 +4368,9 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   transition: border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
   resize: vertical;
 }
-.nx-asst__field input:focus,
-.nx-asst__field textarea:focus { border-color: var(--fg); background: var(--surface); }
-.nx-asst__form-submit {
+.hax-asst__field input:focus,
+.hax-asst__field textarea:focus { border-color: var(--fg); background: var(--surface); }
+.hax-asst__form-submit {
   margin-top: 4px;
   padding: 9px 16px;
   border-radius: var(--r-full);
@@ -4381,8 +4381,8 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   cursor: pointer;
   transition: background var(--dur-1) var(--ease);
 }
-.nx-asst__form-submit:hover { background: var(--ink-700); }
-.nx-asst__form-alt {
+.hax-asst__form-submit:hover { background: var(--ink-700); }
+.hax-asst__form-alt {
   display: inline-block;
   margin-top: 2px;
   text-align: center;
@@ -4390,56 +4390,56 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   color: var(--fg-muted);
   text-decoration: none;
 }
-.nx-asst__form-alt:hover { color: var(--fg); }
+.hax-asst__form-alt:hover { color: var(--fg); }
 
-.nx-asst__msg { display: flex; }
-.nx-asst__msg--user { justify-content: flex-end; }
-.nx-asst__msg--ai   { justify-content: flex-start; }
-.nx-asst__bubble {
+.hax-asst__msg { display: flex; }
+.hax-asst__msg--user { justify-content: flex-end; }
+.hax-asst__msg--ai   { justify-content: flex-start; }
+.hax-asst__bubble {
   max-width: 88%;
   padding: 12px 14px;
   border-radius: 12px;
   font-size: 13.5px;
   line-height: 1.55;
 }
-.nx-asst__msg--user .nx-asst__bubble {
+.hax-asst__msg--user .hax-asst__bubble {
   background: var(--ink-950);
   color: var(--ink-0);
   border-bottom-right-radius: 4px;
 }
-.nx-asst__msg--ai .nx-asst__bubble {
+.hax-asst__msg--ai .hax-asst__bubble {
   background: var(--surface);
   color: var(--fg);
   border: 1px solid var(--border);
   border-bottom-left-radius: 4px;
 }
-.nx-asst__bubble b { font-weight: 600; color: var(--fg); }
-.nx-asst__bubble a {
+.hax-asst__bubble b { font-weight: 600; color: var(--fg); }
+.hax-asst__bubble a {
   color: var(--accent);
   border-bottom: 1px solid var(--accent);
 }
-.nx-asst__bubble--typing {
+.hax-asst__bubble--typing {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 12px 14px;
 }
-.nx-asst__bubble--typing span {
+.hax-asst__bubble--typing span {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--fg-mid);
   animation: pulse 1.4s infinite;
 }
-.nx-asst__bubble--typing span:nth-child(2) { animation-delay: 0.2s; }
-.nx-asst__bubble--typing span:nth-child(3) { animation-delay: 0.4s; }
+.hax-asst__bubble--typing span:nth-child(2) { animation-delay: 0.2s; }
+.hax-asst__bubble--typing span:nth-child(3) { animation-delay: 0.4s; }
 
-.nx-asst__starters {
+.hax-asst__starters {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 10px;
 }
-.nx-asst__starter {
+.hax-asst__starter {
   padding: 6px 11px;
   border-radius: var(--r-full);
   background: var(--ink-25);
@@ -4449,17 +4449,17 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   text-align: left;
   transition: all var(--dur-1) var(--ease);
 }
-.nx-asst__starter:hover { border-color: var(--fg); background: var(--surface); }
-.nx-asst__starter--small { font-size: 11px; padding: 5px 10px; }
-.nx-asst__starters--small { margin-top: 8px; }
+.hax-asst__starter:hover { border-color: var(--fg); background: var(--surface); }
+.hax-asst__starter--small { font-size: 11px; padding: 5px 10px; }
+.hax-asst__starters--small { margin-top: 8px; }
 
-.nx-asst__pcards {
+.hax-asst__pcards {
   display: grid;
   grid-template-columns: 1fr;
   gap: 5px;
   margin-top: 10px;
 }
-.nx-asst__pcard {
+.hax-asst__pcard {
   display: block;
   padding: 8px 11px;
   border: 1px solid var(--border-strong);
@@ -4467,11 +4467,11 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   background: var(--surface);
   transition: all var(--dur-1) var(--ease);
 }
-.nx-asst__pcard:hover { border-color: var(--fg); transform: translateX(2px); }
-.nx-asst__pcard-name { display: block; font-size: 12.5px; font-weight: 600; color: var(--fg); }
-.nx-asst__pcard-meta { display: block; font-size: 10.5px; color: var(--fg-muted); margin-top: 1px; }
+.hax-asst__pcard:hover { border-color: var(--fg); transform: translateX(2px); }
+.hax-asst__pcard-name { display: block; font-size: 12.5px; font-weight: 600; color: var(--fg); }
+.hax-asst__pcard-meta { display: block; font-size: 10.5px; color: var(--fg-muted); margin-top: 1px; }
 
-.nx-asst__cta {
+.hax-asst__cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -4484,9 +4484,9 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   font-weight: 500;
   transition: transform var(--dur-1) var(--ease);
 }
-.nx-asst__cta:hover { transform: translateY(-1px); }
+.hax-asst__cta:hover { transform: translateY(-1px); }
 
-.nx-asst__composer {
+.hax-asst__composer {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -4494,8 +4494,8 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   border-top: 1px solid var(--border);
   background: var(--surface);
 }
-.nx-asst.is-expanded .nx-asst__composer { max-width: 440px; }
-.nx-asst__composer input {
+.hax-asst.is-expanded .hax-asst__composer { max-width: 440px; }
+.hax-asst__composer input {
   flex: 1;
   font: inherit;
   font-size: 13px;
@@ -4506,32 +4506,32 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   outline: 0;
   color: var(--fg);
 }
-.nx-asst__composer input:focus { border-color: var(--fg); background: var(--surface); }
-#nx-asst-send {
+.hax-asst__composer input:focus { border-color: var(--fg); background: var(--surface); }
+#hax-asst-send {
   width: 32px; height: 32px;
   border-radius: 50%;
   background: var(--ink-950);
   color: var(--ink-0);
   display: grid; place-items: center;
 }
-#nx-asst-send:hover { background: var(--ink-700); }
+#hax-asst-send:hover { background: var(--ink-700); }
 
 /* — Immersive sandbox (inside expanded assistant) ————— */
-.nx-asst__sandbox {
+.hax-asst__sandbox {
   flex: 1;
   background: var(--bg);
   overflow: auto;
   padding: 24px;
 }
-.nx-asst__sandbox[hidden] { display: none !important; }
+.hax-asst__sandbox[hidden] { display: none !important; }
 
-.nx-sbx {
+.hax-sbx {
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-.nx-sbx__head {
+.hax-sbx__head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -4539,22 +4539,22 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
 }
-.nx-sbx__eyebrow {
+.hax-sbx__eyebrow {
   font-size: 11px;
   font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.nx-sbx__title {
+.hax-sbx__title {
   font-size: 22px;
   font-weight: 600;
   color: var(--fg);
   letter-spacing: -0.018em;
   margin-top: 4px;
 }
-.nx-sbx__pickers { display: flex; gap: 8px; }
-.nx-sbx__select {
+.hax-sbx__pickers { display: flex; gap: 8px; }
+.hax-sbx__select {
   font: inherit;
   font-size: 12.5px;
   padding: 7px 10px;
@@ -4564,7 +4564,7 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   color: var(--fg);
   cursor: pointer;
 }
-.nx-sbx__stage {
+.hax-sbx__stage {
   flex: 1;
   display: grid;
   place-items: center;
@@ -4573,14 +4573,14 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   border-radius: var(--r-4);
   min-height: 360px;
 }
-.nx-sbx__stage .tshell { width: 100%; max-width: 720px; }
-.nx-sbx__variants {
+.hax-sbx__stage .tshell { width: 100%; max-width: 720px; }
+.hax-sbx__variants {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   justify-content: center;
 }
-.nx-sbx__variant {
+.hax-sbx__variant {
   padding: 6px 12px;
   border-radius: var(--r-full);
   border: 1px solid var(--border-strong);
@@ -4589,39 +4589,39 @@ body.is-nx-asst .nx-launcher { transform: translateY(8px); opacity: 0; pointer-e
   color: var(--fg-mid);
   transition: all var(--dur-1) var(--ease);
 }
-.nx-sbx__variant:hover { border-color: var(--fg); color: var(--fg); }
-.nx-sbx__variant.is-active {
+.hax-sbx__variant:hover { border-color: var(--fg); color: var(--fg); }
+.hax-sbx__variant.is-active {
   background: var(--ink-950);
   color: var(--ink-0);
   border-color: var(--ink-950);
 }
-.nx-sbx__foot {
+.hax-sbx__foot {
   display: flex;
   justify-content: center;
 }
-.nx-sbx__hint {
+.hax-sbx__hint {
   font-size: 11.5px;
   color: var(--fg-muted);
 }
 
 /* Hide launcher when assistant is expanded fullscreen */
-body.is-nx-asst-expanded .nx-launcher { display: none; }
+body.is-hax-asst-expanded .hax-launcher { display: none; }
 
 /* ============================================================
    FULLSCREEN MODE — Lumen as a Claude/ChatGPT-style interface
    Sits BELOW the global header — gnav remains visible.
    Sidebar (left) + centered conversation column + composer.
    ============================================================ */
-body.is-nx-asst-fullscreen { overflow: hidden; }
+body.is-hax-asst-fullscreen { overflow: hidden; }
 /* When Lumen is fullscreen, the gnav stays — but quiet its selection
    highlight so the user knows they're in the agent surface. */
-body.is-nx-asst-fullscreen .gnav__link.is-current::after { display: none; }
-body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var(--fg-mid); }
+body.is-hax-asst-fullscreen .gnav__link.is-current::after { display: none; }
+body.is-hax-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var(--fg-mid); }
 
 /* Sidebar lives inside the panel but only displays in fullscreen */
-.nx-asst__sidebar { display: none; }
+.hax-asst__sidebar { display: none; }
 
-.nx-asst.is-fullscreen {
+.hax-asst.is-fullscreen {
   width: 100vw !important;
   height: calc(100vh - var(--nav-h)) !important;
   max-width: 100vw !important;
@@ -4640,7 +4640,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
 }
 
 /* — Sidebar — */
-.nx-asst.is-fullscreen .nx-asst__sidebar {
+.hax-asst.is-fullscreen .hax-asst__sidebar {
   display: flex;
   flex-direction: column;
   background: var(--ink-25);
@@ -4650,7 +4650,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   grid-row: 1;
   grid-column: 1;
 }
-.nx-asst__sb-new {
+.hax-asst__sb-new {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -4664,14 +4664,14 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   margin-bottom: var(--s-4);
   transition: background var(--dur-1) var(--ease);
 }
-.nx-asst__sb-new:hover { background: var(--ink-700); }
-.nx-asst__sb-section {
+.hax-asst__sb-new:hover { background: var(--ink-700); }
+.hax-asst__sb-section {
   display: flex;
   flex-direction: column;
   gap: 2px;
   margin-bottom: var(--s-4);
 }
-.nx-asst__sb-eyebrow {
+.hax-asst__sb-eyebrow {
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -4679,7 +4679,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   text-transform: uppercase;
   padding: 6px 10px 4px;
 }
-.nx-asst__sb-recent {
+.hax-asst__sb-recent {
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -4691,8 +4691,8 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   transition: background var(--dur-1) var(--ease);
   text-decoration: none;
 }
-.nx-asst__sb-recent:hover { background: var(--surface); }
-.nx-asst__sb-recent-name {
+.hax-asst__sb-recent:hover { background: var(--surface); }
+.hax-asst__sb-recent-name {
   font-size: 12px;
   font-weight: 500;
   color: var(--fg);
@@ -4701,11 +4701,11 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.nx-asst__sb-recent-meta {
+.hax-asst__sb-recent-meta {
   font-size: 10.5px;
   color: var(--fg-muted);
 }
-.nx-asst__sb-foot {
+.hax-asst__sb-foot {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -4713,11 +4713,11 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   padding: 10px;
   border-top: 1px solid var(--border);
 }
-.nx-asst__sb-foot-name { font-size: 12px; font-weight: 600; color: var(--fg); }
-.nx-asst__sb-foot-meta { font-size: 10.5px; color: var(--fg-muted); }
+.hax-asst__sb-foot-name { font-size: 12px; font-weight: 600; color: var(--fg); }
+.hax-asst__sb-foot-meta { font-size: 10.5px; color: var(--fg-muted); }
 
 /* — Main column — */
-.nx-asst.is-fullscreen .nx-asst__head {
+.hax-asst.is-fullscreen .hax-asst__head {
   grid-column: 2;
   padding: 14px 28px;
   border-bottom: 1px solid var(--border);
@@ -4729,10 +4729,10 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
 }
 /* In fullscreen, the head action buttons are visible chips with labels
    so the user has obvious ways out / back. */
-.nx-asst.is-fullscreen .nx-asst__head-actions {
+.hax-asst.is-fullscreen .hax-asst__head-actions {
   gap: 6px;
 }
-.nx-asst.is-fullscreen .nx-asst__btn {
+.hax-asst.is-fullscreen .hax-asst__btn {
   width: auto;
   height: 32px;
   padding: 0 12px;
@@ -4746,33 +4746,33 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   font-size: 12.5px;
   font-weight: 500;
 }
-.nx-asst.is-fullscreen .nx-asst__btn:hover {
+.hax-asst.is-fullscreen .hax-asst__btn:hover {
   border-color: var(--fg);
   background: var(--ink-25);
 }
-.nx-asst.is-fullscreen .nx-asst__btn::after {
+.hax-asst.is-fullscreen .hax-asst__btn::after {
   font-size: 12px;
   letter-spacing: -0.005em;
 }
-.nx-asst.is-fullscreen .nx-asst__btn--fs::after { content: "Collapse to bot"; }
-.nx-asst.is-fullscreen [data-asst-restart]::after { content: "New chat"; }
-.nx-asst.is-fullscreen [data-asst-close]::after { content: "Close"; }
+.hax-asst.is-fullscreen .hax-asst__btn--fs::after { content: "Collapse to bot"; }
+.hax-asst.is-fullscreen [data-asst-restart]::after { content: "New chat"; }
+.hax-asst.is-fullscreen [data-asst-close]::after { content: "Close"; }
 /* The expand-to-sandbox button is contextual — only show when a sandbox exists */
-.nx-asst.is-fullscreen [data-asst-expand] { display: none; }
-.nx-asst.is-fullscreen.has-sandbox [data-asst-expand] { display: inline-flex; }
-.nx-asst.is-fullscreen.has-sandbox [data-asst-expand]::after { content: "Sandbox"; }
-.nx-asst.is-fullscreen [data-asst-close] {
+.hax-asst.is-fullscreen [data-asst-expand] { display: none; }
+.hax-asst.is-fullscreen.has-sandbox [data-asst-expand] { display: inline-flex; }
+.hax-asst.is-fullscreen.has-sandbox [data-asst-expand]::after { content: "Sandbox"; }
+.hax-asst.is-fullscreen [data-asst-close] {
   background: var(--ink-950);
   color: var(--ink-0);
   border-color: var(--ink-950);
 }
-.nx-asst.is-fullscreen [data-asst-close]:hover { background: var(--ink-700); }
+.hax-asst.is-fullscreen [data-asst-close]:hover { background: var(--ink-700); }
 /* Restart already lives in the sidebar — hide the duplicate in the header */
-.nx-asst.is-fullscreen [data-asst-restart] { display: none; }
+.hax-asst.is-fullscreen [data-asst-restart] { display: none; }
 /* Make the title more prominent so users know where they are */
-.nx-asst.is-fullscreen .nx-asst__title { font-size: 15px; }
-.nx-asst.is-fullscreen .nx-asst__sub { font-size: 12px; }
-.nx-asst.is-fullscreen .nx-asst__body {
+.hax-asst.is-fullscreen .hax-asst__title { font-size: 15px; }
+.hax-asst.is-fullscreen .hax-asst__sub { font-size: 12px; }
+.hax-asst.is-fullscreen .hax-asst__body {
   grid-column: 2;
   max-width: 760px !important;
   margin: 0 auto;
@@ -4782,7 +4782,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   flex-shrink: unset !important;
   border-right: 0 !important;
 }
-.nx-asst.is-fullscreen .nx-asst__composer {
+.hax-asst.is-fullscreen .hax-asst__composer {
   grid-column: 2;
   max-width: 760px !important;
   margin: 0 auto;
@@ -4791,7 +4791,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   background: transparent;
   border-top: 0;
 }
-.nx-asst.is-fullscreen .nx-asst__composer input {
+.hax-asst.is-fullscreen .hax-asst__composer input {
   padding: 14px 22px;
   font-size: 14.5px;
   border-radius: var(--r-5);
@@ -4799,13 +4799,13 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-2);
 }
-.nx-asst.is-fullscreen .nx-asst__composer input:focus { border-color: var(--fg); }
-.nx-asst.is-fullscreen #nx-asst-send {
+.hax-asst.is-fullscreen .hax-asst__composer input:focus { border-color: var(--fg); }
+.hax-asst.is-fullscreen #hax-asst-send {
   width: 36px; height: 36px;
 }
 
 /* Assistant messages in fullscreen — Claude-style flat prose, no bubble */
-.nx-asst.is-fullscreen .nx-asst__msg--ai .nx-asst__bubble {
+.hax-asst.is-fullscreen .hax-asst__msg--ai .hax-asst__bubble {
   background: transparent;
   border: 0;
   padding: 0;
@@ -4815,14 +4815,14 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   max-width: 100%;
   color: var(--fg);
 }
-.nx-asst.is-fullscreen .nx-asst__msg--ai .nx-asst__bubble--plain {
+.hax-asst.is-fullscreen .hax-asst__msg--ai .hax-asst__bubble--plain {
   background: transparent !important;
 }
-.nx-asst.is-fullscreen .nx-asst__msg--ai {
+.hax-asst.is-fullscreen .hax-asst__msg--ai {
   position: relative;
   padding-left: 44px;
 }
-.nx-asst.is-fullscreen .nx-asst__msg--ai::before {
+.hax-asst.is-fullscreen .hax-asst__msg--ai::before {
   content: "";
   position: absolute;
   left: 0; top: 2px;
@@ -4833,7 +4833,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
 }
 
 /* User messages in fullscreen — subtle right-aligned bubble */
-.nx-asst.is-fullscreen .nx-asst__msg--user .nx-asst__bubble {
+.hax-asst.is-fullscreen .hax-asst__msg--user .hax-asst__bubble {
   background: var(--ink-100);
   color: var(--fg);
   padding: 12px 16px;
@@ -4845,75 +4845,75 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
 }
 
 /* Pattern cards / video POCs in fullscreen — full width, more breathing */
-.nx-asst.is-fullscreen .nx-asst__pcard {
+.hax-asst.is-fullscreen .hax-asst__pcard {
   padding: 12px 16px;
 }
-.nx-asst.is-fullscreen .nx-asst__pcard-name { font-size: 14px; }
-.nx-asst.is-fullscreen .nx-asst__pcard-meta { font-size: 11.5px; }
-.nx-asst.is-fullscreen .nx-asst__video {
+.hax-asst.is-fullscreen .hax-asst__pcard-name { font-size: 14px; }
+.hax-asst.is-fullscreen .hax-asst__pcard-meta { font-size: 11.5px; }
+.hax-asst.is-fullscreen .hax-asst__video {
   margin-top: 16px;
 }
-.nx-asst.is-fullscreen .nx-asst__video-thumb { height: 220px; }
-.nx-asst.is-fullscreen .nx-asst__video-shell .tshell { max-width: 480px; transform: scale(1); }
-.nx-asst.is-fullscreen .nx-asst__video-title { font-size: 15px; }
-.nx-asst.is-fullscreen .nx-asst__video-desc { font-size: 12.5px; }
+.hax-asst.is-fullscreen .hax-asst__video-thumb { height: 220px; }
+.hax-asst.is-fullscreen .hax-asst__video-shell .tshell { max-width: 480px; transform: scale(1); }
+.hax-asst.is-fullscreen .hax-asst__video-title { font-size: 15px; }
+.hax-asst.is-fullscreen .hax-asst__video-desc { font-size: 12.5px; }
 
 /* Bigger CTAs in fullscreen */
-.nx-asst.is-fullscreen .nx-asst__cta {
+.hax-asst.is-fullscreen .hax-asst__cta {
   padding: 10px 18px;
   font-size: 13px;
 }
 
 /* Suggested starters chips — softer in fullscreen */
-.nx-asst.is-fullscreen .nx-asst__starter {
+.hax-asst.is-fullscreen .hax-asst__starter {
   padding: 8px 14px;
   font-size: 12.5px;
 }
 
 /* Sandbox split inside fullscreen — when sandbox is opened */
-.nx-asst.is-fullscreen.is-expanded {
+.hax-asst.is-fullscreen.is-expanded {
   grid-template-columns: 260px 460px 1fr;
 }
-.nx-asst.is-fullscreen.is-expanded .nx-asst__head { grid-column: 2; }
-.nx-asst.is-fullscreen.is-expanded .nx-asst__body {
+.hax-asst.is-fullscreen.is-expanded .hax-asst__head { grid-column: 2; }
+.hax-asst.is-fullscreen.is-expanded .hax-asst__body {
   grid-column: 2;
   max-width: 100% !important;
   padding: 24px 24px !important;
   background: var(--ink-25);
 }
-.nx-asst.is-fullscreen.is-expanded .nx-asst__composer {
+.hax-asst.is-fullscreen.is-expanded .hax-asst__composer {
   grid-column: 2;
   max-width: 100% !important;
   padding: 12px 24px 20px !important;
   background: var(--ink-25);
   border-top: 1px solid var(--border);
 }
-.nx-asst.is-fullscreen.is-expanded .nx-asst__sandbox {
+.hax-asst.is-fullscreen.is-expanded .hax-asst__sandbox {
   grid-column: 3;
   grid-row: 1 / -1;
   height: 100vh;
   padding: 28px 36px;
   border-left: 1px solid var(--border);
 }
-.nx-asst.is-fullscreen.is-expanded .nx-sbx__stage .tshell { max-width: 880px; }
+.hax-asst.is-fullscreen.is-expanded .hax-sbx__stage .tshell { max-width: 880px; }
 
 /* Fullscreen button — icon swap */
-.nx-asst__icon-collapse { display: none; }
-.nx-asst.is-fullscreen .nx-asst__icon-expand { display: none; }
-.nx-asst.is-fullscreen .nx-asst__icon-collapse { display: block; }
+.hax-asst__icon-collapse { display: none; }
+.hax-asst.is-fullscreen .hax-asst__icon-expand { display: none; }
+.hax-asst.is-fullscreen .hax-asst__icon-collapse { display: block; }
 
 /* Hide initial greeting hints in fullscreen — they look like menu items */
-.nx-asst.is-fullscreen .nx-asst__hints {
+.hax-asst.is-fullscreen .hax-asst__hints {
   margin-top: 12px;
   justify-content: flex-start;
   padding-left: 44px;
 }
 
 /* Persona chips look nicer in fullscreen */
-.nx-asst.is-fullscreen .nx-asst__chips {
+.hax-asst.is-fullscreen .hax-asst__chips {
   margin-left: 0;
 }
-.nx-asst.is-fullscreen .nx-asst__chip { font-size: 12.5px; padding: 8px 14px; }
+.hax-asst.is-fullscreen .hax-asst__chip { font-size: 12.5px; padding: 8px 14px; }
 
 /* ============================================================
    SCENARIOS — CTA row added by inline script on practices.html
@@ -6296,7 +6296,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   left: 0; top: 0; height: 100%;
   width: 0;
   background: linear-gradient(90deg, #21A4D7, #8B57C7);
-  animation: nx-vid-progress 12s linear forwards;
+  animation: hax-vid-progress 12s linear forwards;
 }
 
 /* Stats row */
@@ -6432,7 +6432,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
 /* ============================================================
    VIDEO POC CARDS — recorded scenario walkthroughs
    ============================================================ */
-.nx-asst__video {
+.hax-asst__video {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
@@ -6443,8 +6443,8 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   overflow: hidden;
   transition: all var(--dur-2) var(--ease);
 }
-.nx-asst__video:hover { border-color: var(--fg); transform: translateY(-1px); box-shadow: var(--shadow-3); }
-.nx-asst__video-thumb {
+.hax-asst__video:hover { border-color: var(--fg); transform: translateY(-1px); box-shadow: var(--shadow-3); }
+.hax-asst__video-thumb {
   position: relative;
   display: block;
   width: 100%;
@@ -6456,20 +6456,20 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   cursor: pointer;
   text-align: left;
 }
-.nx-asst__video-shell {
+.hax-asst__video-shell {
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
   pointer-events: none;
 }
-.nx-asst__video-shell .tshell {
+.hax-asst__video-shell .tshell {
   width: 100%;
   max-width: 320px;
   transform: scale(0.78);
   transform-origin: center;
 }
-.nx-asst__video-overlay {
+.hax-asst__video-overlay {
   position: absolute;
   inset: 0;
   display: flex;
@@ -6478,8 +6478,8 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.32));
   transition: opacity var(--dur-2) var(--ease);
 }
-.nx-asst__video-overlay.is-hidden { opacity: 0; pointer-events: none; }
-.nx-asst__video-rec {
+.hax-asst__video-overlay.is-hidden { opacity: 0; pointer-events: none; }
+.hax-asst__video-rec {
   position: absolute;
   top: 10px;
   left: 12px;
@@ -6492,7 +6492,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   letter-spacing: 0.08em;
   font-family: var(--font-mono);
 }
-.nx-asst__video-duration {
+.hax-asst__video-duration {
   position: absolute;
   bottom: 10px;
   right: 12px;
@@ -6504,7 +6504,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   font-family: var(--font-mono);
   font-weight: 500;
 }
-.nx-asst__video-play {
+.hax-asst__video-play {
   width: 54px; height: 54px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.95);
@@ -6514,13 +6514,13 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   transition: transform var(--dur-1) var(--ease);
 }
-.nx-asst__video-thumb:hover .nx-asst__video-play { transform: scale(1.08); }
-.nx-asst__video-meta {
+.hax-asst__video-thumb:hover .hax-asst__video-play { transform: scale(1.08); }
+.hax-asst__video-meta {
   padding: 12px 14px;
   border-top: 1px solid var(--border);
   background: var(--surface);
 }
-.nx-asst__video-eyebrow {
+.hax-asst__video-eyebrow {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -6528,58 +6528,58 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
   text-transform: uppercase;
   margin-bottom: 4px;
 }
-.nx-asst__video-title {
+.hax-asst__video-title {
   font-size: 13.5px;
   font-weight: 600;
   color: var(--fg);
   letter-spacing: -0.005em;
 }
-.nx-asst__video-desc {
+.hax-asst__video-desc {
   margin-top: 3px;
   font-size: 11.5px;
   color: var(--fg-mid);
   line-height: 1.45;
 }
 /* Playing state — progress bar animates across once */
-.nx-asst__video.is-playing { box-shadow: var(--shadow-3); }
-.nx-asst__video-progress {
+.hax-asst__video.is-playing { box-shadow: var(--shadow-3); }
+.hax-asst__video-progress {
   position: relative;
   height: 3px;
   background: var(--ink-100);
   margin: 0;
 }
-.nx-asst__video-progress-bar {
+.hax-asst__video-progress-bar {
   position: absolute;
   left: 0; top: 0;
   height: 100%;
   width: 0;
   background: linear-gradient(90deg, #21A4D7, #8B57C7);
-  animation: nx-vid-progress 8s linear forwards;
+  animation: hax-vid-progress 8s linear forwards;
 }
-@keyframes nx-vid-progress {
+@keyframes hax-vid-progress {
   0% { width: 0; }
   100% { width: 100%; }
 }
 
 /* CTA group — sandbox + contact stacked nicely */
-.nx-asst__ctas {
+.hax-asst__ctas {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 10px;
 }
-.nx-asst__cta--ghost {
+.hax-asst__cta--ghost {
   background: var(--surface) !important;
   color: var(--fg) !important;
   border: 1px solid var(--border-strong);
 }
-.nx-asst__cta--ghost:hover { border-color: var(--fg); }
-.nx-asst__cta--accent {
+.hax-asst__cta--ghost:hover { border-color: var(--fg); }
+.hax-asst__cta--accent {
   background: var(--surface) !important;
   color: var(--fg) !important;
   border: 1px solid var(--accent);
 }
-.nx-asst__cta--accent:hover {
+.hax-asst__cta--accent:hover {
   background: var(--accent-ghost) !important;
 }
 
@@ -7101,7 +7101,7 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
 }
 
 @media (max-width: 580px) {
-  .nx-asst {
+  .hax-asst {
     width: 100%;
     height: calc(100vh - 12px);
     bottom: 6px;
@@ -7109,12 +7109,12 @@ body.is-nx-asst-fullscreen .gnav__link.is-current { font-weight: 500; color: var
     left: 6px;
     border-radius: var(--r-4);
   }
-  .nx-asst.is-expanded {
+  .hax-asst.is-expanded {
     width: calc(100vw - 12px);
     height: calc(100vh - 12px);
   }
-  .nx-launcher { padding: 10px; }
-  .nx-launcher__label { display: none; }
+  .hax-launcher { padding: 10px; }
+  .hax-launcher__label { display: none; }
 }
 
 /* ============================================================
@@ -7397,7 +7397,7 @@ html.nav-over-hero .gnav__search {
     #050409;
 }
 
-/* Nucleux mark — starts hugely zoomed, pulls back to normal, then
+/* HAX mark — starts hugely zoomed, pulls back to normal, then
    recedes to the vanishing point as the components warp out (JS-driven). */
 .warp__x {
   position: absolute;
@@ -8193,7 +8193,7 @@ body.landing-dark .cats__intro h2 {
 /* ══════════════════════════════════════════════════════════
    WORDMARK — one treatment, every page
 
-   The mark used to be an <img> pointing at nucleux-logo.svg, and that
+   The mark used to be an <img> pointing at hax-logo.svg, and that
    file carries its own mid-grey fill. An <img> gives no way to reach
    inside it, so every page that used one rendered a grey wordmark while
    the landing page — which had always inlined the SVG — rendered black.
@@ -8224,7 +8224,7 @@ body.landing-dark:not(.landing-light) .brand__mark--inline { --brand-word: #EEF0
 .main:empty { min-height: 70vh; }
 
 
-/* ── HAX by Outshift Design — brand lockup (matches nucleux.in/home) ── */
+/* ── HAX by Outshift Design — brand lockup (matches the live home page) ── */
 .gnav .brand { gap: 12px; }
 .brand__divider { width: 1px; height: 24px; background: rgba(12,12,10,.16); flex: 0 0 auto; }
 .os-lockup { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; --os-h: 32px; }
@@ -8244,7 +8244,7 @@ body.landing-dark:not(.landing-light) .brand__mark--inline { --brand-word: #EEF0
 }
 @media (max-width: 560px) { .gnav .os-lockup { --os-h: 26px; } .brand__divider { height: 20px; } .gnav .brand { gap: 9px; } }
 @media (max-width: 400px) { .gnav .brand__mark--inline { height: 22px; } .gnav .os-lockup { --os-h: 22px; } .gnav .brand { gap: 7px; } .brand__divider { height: 16px; } }
-@media (pointer: coarse) { .gnav .brand, .auth-brand, .nx-msheet__brand { min-height: 44px; display: inline-flex; align-items: center; } }
+@media (pointer: coarse) { .gnav .brand, .hax-msheet__brand { min-height: 44px; display: inline-flex; align-items: center; } }
 .rot-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
 /* compact phones: the lockup needs the room — secondary icon actions live in the menu sheet */
 @media (max-width: 560px) {
@@ -8364,20 +8364,20 @@ html body .gnav .gnav__search--x:hover .gnav__search-btn,
 html body .gnav .gnav__search--x:focus-within .gnav__search-btn { color: #293247; }
 
 /* the dialog */
-.nx-search { place-items: start center; padding: 12vh 16px 24px; transition: opacity .2s ease; }
-.nx-search__backdrop { background: rgba(1, 5, 7, .25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-.nx-search__panel { max-width: 672px; border-radius: 14px; border: 1px solid rgb(41 50 71 / .1); background: #fff;
+.hax-search { place-items: start center; padding: 12vh 16px 24px; transition: opacity .2s ease; }
+.hax-search__backdrop { background: rgba(1, 5, 7, .25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.hax-search__panel { max-width: 672px; border-radius: 14px; border: 1px solid rgb(41 50 71 / .1); background: #fff;
   box-shadow: 0 24px 64px -16px rgb(1 5 7 / .28), 0 2px 6px rgb(1 5 7 / .06);
   transform: translateY(-6px) scale(.98); transition: transform .24s cubic-bezier(.22,1,.36,1); }
-.nx-search.is-open .nx-search__panel { transform: none; }
-.nx-search__inputrow { padding: 16px 18px; gap: 12px; color: #67707f; }
-.nx-search__input { font-size: 15px; color: #293247; }
-.nx-search__esc { background: #f3f4f6; color: #67707f; border: 1px solid rgb(41 50 71 / .1); cursor: pointer; }
-.nx-search__row:hover, .nx-search__row.is-active { background: rgb(41 50 71 / .05); }
-.nx-search__footer { background: #fafafa; }
-@media (prefers-reduced-motion: reduce) { .nx-search, .nx-search__panel { transition: none; } }
+.hax-search.is-open .hax-search__panel { transform: none; }
+.hax-search__inputrow { padding: 16px 18px; gap: 12px; color: #67707f; }
+.hax-search__input { font-size: 15px; color: #293247; }
+.hax-search__esc { background: #f3f4f6; color: #67707f; border: 1px solid rgb(41 50 71 / .1); cursor: pointer; }
+.hax-search__row:hover, .hax-search__row.is-active { background: rgb(41 50 71 / .05); }
+.hax-search__footer { background: #fafafa; }
+@media (prefers-reduced-motion: reduce) { .hax-search, .hax-search__panel { transition: none; } }
 
 /* search dialog open: lock the page behind it; the result list scrolls on
    its own and never hands the scroll on to the page at its ends */
-.nx-search { overscroll-behavior: contain; touch-action: none; }
-.nx-search__results { overscroll-behavior: contain; touch-action: pan-y; }
+.hax-search { overscroll-behavior: contain; touch-action: none; }
+.hax-search__results { overscroll-behavior: contain; touch-action: pan-y; }

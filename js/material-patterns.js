@@ -120,7 +120,7 @@
 '</div>'
         }
       ],
-      pkg: "nucleux-m3-disclosure",
+      pkg: "hax-m3-disclosure",
       usage: "<!-- 1 \u00b7 the token layer and the component sheet -->\n<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/disclosure.css\" />\n\n<!-- 2 \u00b7 the marker, beside the agent name -->\n<div class=\"md-list-item\">\n  <span class=\"md-avatar md-title-medium\">A</span>\n  <div class=\"md-list-item__content\">\n    <div class=\"md-list-item__line\">\n      <p class=\"md-list-item__headline md-body-large\">Aria</p>\n      <span class=\"md-assist-chip md-assist-chip--tonal\">AI generated</span>\n    </div>\n    <p class=\"md-list-item__supporting md-body-medium\">\u2026</p>\n  </div>\n</div>",
       examples: [
         {
@@ -236,7 +236,7 @@
       expressive: 'This is the one place rose belongs on an onboarding surface: rose is where a human must act, and consent is the definition of that. The primary control is a capsule at full size because it is the largest decision on the screen; declining is a real button beside it, never a link in the corner.',
       composed: ['Dialog', 'Switch', 'Checkbox', 'Button'],
       related: [['disclosure', 'Disclosure'], ['caveat', 'Caveat']],
-      pkg: "nucleux-m3-consent",
+      pkg: "hax-m3-consent",
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/consent.css\" />\n\n<section class=\"m3-consent\" role=\"dialog\" aria-labelledby=\"c-title\">\n  <span class=\"m3-consent__k\">Permission</span>\n  <h3 class=\"m3-consent__title\" id=\"c-title\">\u2026</h3>\n  <ul class=\"m3-scopes\">\n    <li class=\"m3-scope\">\u2026<button class=\"m3-toggle is-on\" role=\"switch\"></button></li>\n  </ul>\n  <div class=\"m3-consent__foot\">\n    <button class=\"m3-btn m3-btn--human\">Allow selected</button>\n    <button class=\"m3-btn m3-btn--ghost\">Not now</button>\n  </div>\n</section>",
       examples: [
         {
@@ -344,7 +344,7 @@
       expressive: 'Deliberately the quietest pattern in the set: body-small on on-surface-variant, no container of its own next to the input, and a surface-container strip only where it sits under output. It does not animate and it does not use the error role — this is a standing condition of the medium, not a fault, and colouring it as one would make people ignore the real errors.',
       composed: ['Label', 'Tooltip', 'Badge', 'Alert'],
       related: [['disclosure', 'Disclosure'], ['disclaimer', 'Disclaimer'], ['consent', 'Consent']],
-      pkg: 'nucleux-m3-caveat',
+      pkg: 'hax-m3-caveat',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/caveat.css\" />\n\n<!-- under the composer, every session -->\n<p class=\"md-caveat\" role=\"note\">\n  <svg class=\"md-caveat__ico\"><!-- info --></svg>\n  Aria can make mistakes. Check anything important.\n</p>\n\n<!-- again, under output that is about to be acted on -->\n<div class=\"md-caveat md-caveat--boxed\" role=\"note\">…</div>",
       examples: [
         {
@@ -473,7 +473,7 @@
 '</div>'
         }
       ],
-      pkg: "nucleux-m3-avatar",
+      pkg: "hax-m3-avatar",
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/avatar.css\" />\n\n<!-- the agent -->\n<span class=\"md-agentav\" aria-label=\"Aria, AI assistant\">\n  <svg viewBox=\"0 0 24 24\"><path d=\"M12 3.2 13.9 8.6 19.3 10.5 …Z\"/></svg>\n</span>\n\n<!-- working: the ring lives on the mark, not elsewhere -->\n<span class=\"md-agentav md-agentav--thinking\">…</span>\n\n<!-- a person, deliberately a different role -->\n<span class=\"md-agentav md-agentav--human\">DK</span>",
       examples: [
         {
@@ -580,7 +580,7 @@
       expressive: 'The name is title-medium on-surface with the role directly under it in body-medium on-surface-variant: a two-line list item, which is the M3 shape for exactly this — a thing and what it is. The assist chip beside it carries the disclosure so the name is never asked to imply it. Nothing about the treatment is decorative; the hierarchy is doing the work.',
       composed: ['List item', 'Avatar', 'Badge', 'Dialog'],
       related: [['avatar', 'Avatar'], ['personality', 'Personality'], ['disclosure', 'Disclosure']],
-      pkg: "nucleux-m3-name",
+      pkg: "hax-m3-name",
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/name.css\" />\n\n<div class=\"md-idcard\">\n  <div class=\"md-idcard__head\">\n    <span class=\"md-agentav md-agentav--lg\">…</span>\n    <div>\n      <p class=\"md-idcard__name md-title-medium\">Aria</p>\n      <p class=\"md-idcard__role md-body-medium\">Assistant in Helpdesk · not a person</p>\n    </div>\n  </div>\n</div>",
       examples: [
         {
@@ -680,7 +680,7 @@
       expressive: 'Voice is where the expressive system stops being visual: the same tokens hold, but what is being tuned is register. The rules card is surface-container-lowest with a primary tick for what the voice does and an outline tick for what it will not — one list, two weights, no red. The sample sits behind a primary rule because a voice defined only in adjectives is a voice nobody can implement.',
       composed: ['Card', 'List', 'Chip', 'Segmented button'],
       related: [['name', 'Name'], ['avatar', 'Avatar'], ['disclosure', 'Disclosure']],
-      pkg: "nucleux-m3-personality",
+      pkg: "hax-m3-personality",
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/personality.css\" />\n\n<section class=\"md-voice\">\n  <span class=\"md-voice__k md-label-medium\">Voice</span>\n  <h3 class=\"md-voice__title md-title-medium\">How Aria speaks</h3>\n  <ul class=\"md-voice__list md-body-medium\">\n    <li><svg class=\"md-voice__tick\"><!-- check --></svg>…</li>\n    <li><svg class=\"md-voice__tick md-voice__tick--no\"><!-- cross --></svg>…</li>\n  </ul>\n  <p class=\"md-voice__sample md-body-medium\">…</p>\n</section>",
       examples: [
         {
@@ -781,7 +781,7 @@
       expressive: 'The glyph is the same path used by the disclosure chip and the agent mark, which is what makes the vocabulary a vocabulary rather than three drawings. Three containers, all tokens: surface-container with the glyph in primary for quiet placements, secondary-container for tonal, primary with on-primary for a filled action. Nothing is animated — an icon that twinkles is decoration, and this glyph is a claim.',
       composed: ['Icon', 'Icon button', 'Menu', 'Chip'],
       related: [['color', 'Color'], ['avatar', 'Avatar'], ['disclosure', 'Disclosure']],
-      pkg: "nucleux-m3-iconography",
+      pkg: "hax-m3-iconography",
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/iconography.css\" />\n\n<!-- one glyph, three containers -->\n<span class=\"md-icontile__box\"><svg viewBox=\"0 0 24 24\">…</svg></span>\n<span class=\"md-icontile__box md-icontile__box--tonal\">…</span>\n<span class=\"md-icontile__box md-icontile__box--filled\">…</span>",
       examples: [
         {
@@ -893,7 +893,7 @@
       expressive: 'This is the load-bearing idea of the neural expressive language, stated in four roles: primary-container for the agent’s ground, on-primary-container for its text, primary for presence and working state, and the neutral surface tiers for anything a person authored. Shape reinforces it — the agent’s bubble takes the sharp corner on the left, the person’s on the right, so the pair still separates in greyscale. Colour is never the only signal, because roughly one reader in twelve cannot use it.',
       composed: ['Color roles', 'Surface', 'Badge', 'Divider'],
       related: [['iconography', 'Iconography'], ['avatar', 'Avatar'], ['disclosure', 'Disclosure']],
-      pkg: "nucleux-m3-color",
+      pkg: "hax-m3-color",
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/color.css\" />\n\n<!-- the agent speaks on primary-container -->\n<div class=\"md-bubble md-bubble--agent md-body-medium\">…</div>\n\n<!-- the person stays on a neutral surface tier -->\n<div class=\"md-bubble md-bubble--human md-body-medium\">…</div>",
       examples: [
         {
@@ -975,7 +975,7 @@
       expressive: 'Cards are surface-container-lowest on the large corner, lifting to elevation 2 on hover so the whole tile reads as pressable rather than only its link. The filters are M3 filter chips — selected state carries a leading tick as well as the tonal ground, because a filter that is only distinguishable by colour is a filter some readers cannot see.',
       composed: ['Card', 'Filter chip', 'Dialog', 'Button'],
       related: [['templates', 'Templates'], ['nudges', 'Nudges'], ['disclaimer', 'Disclaimer']],
-      pkg: 'nucleux-m3-example-gallery',
+      pkg: 'hax-m3-example-gallery',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/example-gallery.css\" />\n\n<div class=\"md-gallery\">\n  <div class=\"md-gallery__filters\">\n    <button class=\"md-filter is-on\">All</button>\n    <button class=\"md-filter\">Analysis</button>\n  </div>\n  <div class=\"md-grid\">\n    <button class=\"md-ex\">\n      <span class=\"md-ex__k\">Analysis</span>\n      <p class=\"md-ex__ask\">…the ask…</p>\n      <p class=\"md-ex__out\">…what came back…</p>\n    </button>\n  </div>\n</div>",
       examples: [
         {
@@ -1069,7 +1069,7 @@
       expressive: 'An empty slot is dashed outline on transparent; a filled one is a solid secondary-container chip. The difference is shape and weight before it is colour, so a half-finished template reads as half-finished in greyscale. Slots settle rather than pop — filling one is a small change to a sentence, not an event.',
       composed: ['Card', 'Menu', 'Input chip', 'Button'],
       related: [['example-gallery', 'Example Gallery'], ['nudges', 'Nudges'], ['disclaimer', 'Disclaimer']],
-      pkg: 'nucleux-m3-templates',
+      pkg: 'hax-m3-templates',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/templates.css\" />\n\n<section class=\"md-tpl\">\n  <h3 class=\"md-tpl__name\">Weekly update</h3>\n  <p class=\"md-tpl__line\">\n    Summarise <button class=\"md-slot\">source</button> for\n    <button class=\"md-slot\">audience</button>…\n  </p>\n  <div class=\"md-tpl__foot\">\n    <button class=\"md-button md-button--filled md-button--sm\">Run it</button>\n  </div>\n</section>",
       examples: [
         {
@@ -1157,7 +1157,7 @@
       expressive: 'Primary-container with a tail pointing at its anchor: the tail is what makes it a nudge rather than a notification, because it says which control is being talked about. It rises 6px with a small settle on entry — enough to be noticed once, not enough to interrupt — and leaves immediately on dismiss with no confirmation.',
       composed: ['Tooltip', 'Card', 'Button', 'Icon'],
       related: [['example-gallery', 'Example Gallery'], ['templates', 'Templates'], ['disclaimer', 'Disclaimer']],
-      pkg: 'nucleux-m3-nudges',
+      pkg: 'hax-m3-nudges',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/nudges.css\" />\n\n<div class=\"md-nudge\" role=\"status\">\n  <div class=\"md-nudge__head\">\n    <svg class=\"md-nudge__ico\"><!-- glyph --></svg>\n    <div>\n      <p class=\"md-nudge__t\">…one line…</p>\n      <p class=\"md-nudge__d\">…why now…</p>\n    </div>\n    <button class=\"md-nudge__x\" aria-label=\"Dismiss\">&times;</button>\n  </div>\n  <div class=\"md-nudge__foot\">\n    <button class=\"md-button md-button--filled md-button--sm\">Try it</button>\n  </div>\n</div>",
       examples: [
         {
@@ -1215,7 +1215,7 @@
       expressive: 'The full form is the M3 basic dialog — centred icon, headline-small, supporting text — on surface-container-high at elevation 3, because this is a moment the product is asking for a beat of attention. The compact form is a corner-full line at body-small, containing a real button rather than a link: reopening the statement is an action, and it must survive the reader forgetting where it was.',
       composed: ['Dialog', 'List', 'Button', 'Icon'],
       related: [['disclosure', 'Disclosure'], ['caveat', 'Caveat'], ['example-gallery', 'Example Gallery']],
-      pkg: 'nucleux-m3-disclaimer',
+      pkg: 'hax-m3-disclaimer',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/disclaimer.css\" />\n\n<!-- once, at first run -->\n<section class=\"md-disclaim\" role=\"dialog\" aria-labelledby=\"dc-t\">\n  <h2 class=\"md-disclaim__t\" id=\"dc-t\">What Aria can and cannot do</h2>\n  <ul class=\"md-disclaim__list\">\n    <li><span class=\"md-disclaim__k\">Can</span><span>…</span></li>\n    <li><span class=\"md-disclaim__k\">Will not</span><span>…</span></li>\n    <li><span class=\"md-disclaim__k\">Cannot see</span><span>…</span></li>\n  </ul>\n</section>\n\n<!-- afterwards, BENEATH the composer: a footnote to what you are\n     about to send, and the line itself is the way back -->\n<button class=\"md-disclaim-line\" aria-label=\"What Aria can and cannot do\">\n  Aria can be wrong. Check anything before you send it.\n</button>",
       examples: [
         {
@@ -1310,7 +1310,7 @@
       expressive: 'Capsule, because it is the human&rsquo;s action and nothing the agent produces is capsule-shaped &mdash; that one rule lets a reader tell what is theirs to press without reading anything. Primary at tone 60 with the reserved glyph, on a neutral ground: this is the single saturated element in an otherwise empty view, which is what makes an empty state read as an invitation rather than a failure. The press springs on <code>cubic-bezier(.34, 1.56, .64, 1)</code> because the user caused it; the answer that follows arrives on emphasized easing from below, because the agent did. Idle carries a very slow ambient breath on the glyph only &mdash; 18s, stopped entirely under reduced motion &mdash; so the surface reads as awake without asking for attention.',
       composed: ['Button', 'Text Field', 'Icon', 'Card'],
       related: [['open-input', 'Open Input'], ['suggested-prompts', 'Suggested Prompts'], ['example-gallery', 'Example Gallery']],
-      pkg: 'nucleux-m3-initial-cta',
+      pkg: 'hax-m3-initial-cta',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<section class=\"md-cta\" aria-labelledby=\"cta-t\">\n  <svg class=\"md-cta__ico\"><!-- reserved glyph --></svg>\n  <h2 class=\"md-cta__t\" id=\"cta-t\">Summarise this thread</h2>\n  <p class=\"md-cta__d\">Aria reads the ticket and gives you the disagreement in two lines.</p>\n  <div class=\"md-cta__foot\">\n    <button class=\"md-button md-button--filled\">Summarise it</button>\n    <button class=\"md-button md-button--text\">Ask something else</button>\n  </div>\n</section>",
       examples: [
         {
@@ -1354,7 +1354,7 @@
       expressive: 'The field is a capsule with a 1px outline-variant edge that takes primary at tone 60 on focus &mdash; one property, one state, no glow. Send is the only filled element in the row, so the primary action is unmistakable when the field has content and absent when it does not. While a reply is in flight the send control becomes stop and the field stays live: the busy state belongs to the action, never to the reader&rsquo;s text. Focus and colour move on standard easing at 180ms; the reply that comes back rises from below on emphasized easing, so what the user did and what the system did never share a curve.',
       composed: ['Text Field', 'Button', 'Icon', 'Progress'],
       related: [['initial-cta', 'Initial CTA'], ['autocomplete', 'Autocomplete'], ['suggested-prompts', 'Suggested Prompts']],
-      pkg: 'nucleux-m3-open-input',
+      pkg: 'hax-m3-open-input',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<form class=\"md-entry\">\n  <svg class=\"md-entry__glyph\"><!-- reserved glyph --></svg>\n  <input class=\"md-entry__input\" placeholder=\"Ask Aria about #4821\" />\n  <!-- send is present only when there is something to send;\n       while a reply is in flight it becomes stop -->\n  <button class=\"md-entry__send\" aria-label=\"Send\"><!-- ▶ --></button>\n</form>",
       examples: [
         {
@@ -1392,7 +1392,7 @@
       expressive: 'Outlined capsules on the neutral ground, deliberately NOT filled: they are offers, and the filled weight in this row belongs to send. They stagger in on emphasized easing at 40ms intervals when the system raises them, and the one that is pressed springs, because that transition is the reader&rsquo;s. Choosing a chip moves its text into the composer rather than replacing the view &mdash; one surface becoming another, which is the whole reason the set is anchored to the field it fills.',
       composed: ['Chip', 'Button', 'Icon'],
       related: [['open-input', 'Open Input'], ['templates', 'Templates'], ['example-gallery', 'Example Gallery']],
-      pkg: 'nucleux-m3-suggested-prompts',
+      pkg: 'hax-m3-suggested-prompts',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<div class=\"md-suggests\" role=\"group\" aria-label=\"Suggested questions\">\n  <button class=\"md-suggest\">What is this ticket about?</button>\n  <button class=\"md-suggest\">Where did Q2 renewals land?</button>\n  <button class=\"md-suggest\">Draft a reply to Dana</button>\n</div>\n<!-- pressing one fills the composer; it does not send -->",
       examples: [
         {
@@ -1428,7 +1428,7 @@
       expressive: 'The glyph is the one shape the product reserves, and it carries primary at tone 60 wherever it is genuinely the agent &mdash; which makes an audit trivial: anything violet that is not the agent is a bug. It never spins. A hover lifts the state layer only; a press springs the container by 4%; while the agent is working the glyph rotates its hue toward tertiary rather than rotating in space, because a spinner says &ldquo;wait&rdquo; and a hue shift says &ldquo;thinking&rdquo;. In an icon-only row the label is carried by a tooltip, never by the glyph doing extra work.',
       composed: ['Icon', 'Icon Button', 'Tooltip', 'Menu'],
       related: [['iconography', 'Iconography'], ['color', 'Color'], ['proactive', 'Proactive Suggestions']],
-      pkg: 'nucleux-m3-ai-icons',
+      pkg: 'hax-m3-ai-icons',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<!-- in a toolbar, with its word -->\n<button class=\"md-button md-button--filled md-button--sm\">\n  <svg class=\"md-glyph\"><!-- reserved glyph --></svg>\n  Draft with Aria\n</button>\n\n<!-- at the end of a field, where the agent can fill it -->\n<button class=\"md-field-glyph\" aria-label=\"Draft this with Aria\">\n  <svg class=\"md-glyph\"><!-- reserved glyph --></svg>\n</button>",
       examples: [
         {
@@ -1470,7 +1470,7 @@
       expressive: 'The query field is a capsule; the chips it produces are 8px &mdash; sharp, because they are data the reader can verify, and the shape rule says data is not capsule-shaped. Nothing else on the surface is 8px, which is what makes the shape do the work: in this palette Material&rsquo;s tertiary is already spent on Caveat&rsquo;s caution tone, and a second meaning on the same hue is precisely the failure the Iconography page argues against &mdash; so evidence is carried by edge and corner rather than by colour. They arrive on emphasized easing, staggered, since the system produced them; removing one springs, since the reader did. The result count updates in place rather than the list flashing, so a correction reads as a refinement rather than a new search.',
       composed: ['Text Field', 'Chip', 'List', 'Badge'],
       related: [['open-input', 'Open Input'], ['autocomplete', 'Autocomplete'], ['proactive', 'Proactive Suggestions']],
-      pkg: 'nucleux-m3-search-filter',
+      pkg: 'hax-m3-search-filter',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<form class=\"md-nlsearch\">\n  <input class=\"md-nlsearch__input\"\n         placeholder=\"Open enterprise tickets from this week\" />\n</form>\n\n<!-- what it was understood as, as controls -->\n<div class=\"md-applied\" role=\"group\" aria-label=\"Filters applied\">\n  <span class=\"md-applied__k\">Understood as</span>\n  <span class=\"md-fchip\">status: open<button aria-label=\"Remove\">&times;</button></span>\n  <span class=\"md-fchip\">tier: enterprise<button aria-label=\"Remove\">&times;</button></span>\n  <span class=\"md-fchip\">opened: last 7 days<button aria-label=\"Remove\">&times;</button></span>\n</div>",
       examples: [
         {
@@ -1514,7 +1514,7 @@
       expressive: 'The ghost is the same face and size as the typed text at on-surface-variant, so it aligns to the pixel and separates purely by weight of colour &mdash; a different size would shift the caret, which is worse than no suggestion at all. It does not fade in; it is either there or not, because a fading completion invites a press mid-fade. Accepting it is the one moment with motion: the ghost hardens to on-surface in 180ms on standard easing, the visual form of the fluidity rule &mdash; the boundary of certainty resolving as the text stops being the agent&rsquo;s and starts being the reader&rsquo;s.',
       composed: ['Text Field', 'Keyboard Hint', 'Icon'],
       related: [['open-input', 'Open Input'], ['suggested-prompts', 'Suggested Prompts'], ['caveat', 'Caveat']],
-      pkg: 'nucleux-m3-autocomplete',
+      pkg: 'hax-m3-autocomplete',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<div class=\"md-ghostfield\">\n  <p class=\"md-ghostfield__line\">\n    <span class=\"md-ghostfield__typed\">Thanks Dana — Q2 closed at</span>\n    <span class=\"md-ghostfield__caret\"></span>\n    <span class=\"md-ghostfield__ghost\">£4.1m, 6% ahead of plan.</span>\n  </p>\n  <p class=\"md-ghostfield__hint\">Tab to accept</p>\n</div>",
       examples: [
         {
@@ -1555,7 +1555,7 @@
       expressive: 'It arrives on emphasized easing from below, never with a spring: the reader did not cause this, and a spring on a system-initiated event is what makes proactivity feel like an interruption. The container is a low-tone primary surface at 18px &mdash; rounded, not capsule, because it is the agent speaking rather than an action of the reader&rsquo;s. The observation carries tertiary as evidence; the action beside it is the only capsule in the card. It holds still once it has landed: no pulse, no repeat entrance, nothing that asks twice.',
       composed: ['Card', 'Chip', 'Button', 'Icon'],
       related: [['nudges', 'Nudges'], ['ai-icons', 'Icons'], ['suggested-prompts', 'Suggested Prompts']],
-      pkg: 'nucleux-m3-proactive',
+      pkg: 'hax-m3-proactive',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<aside class=\"md-proactive\" role=\"status\">\n  <p class=\"md-proactive__obs\">Two renewals closed since you last looked.</p>\n  <p class=\"md-proactive__offer\">The figure in your draft to Dana is now out of date.</p>\n  <div class=\"md-proactive__foot\">\n    <button class=\"md-button md-button--filled md-button--sm\">Update the figure</button>\n    <button class=\"md-button md-button--text md-button--sm\">Dismiss</button>\n  </div>\n</aside>",
       examples: [
         {
@@ -1605,7 +1605,7 @@
       expressive: 'The dice is the one place in the system where motion is allowed to be playful, and the restraint rule is what keeps that from spreading: it springs and rotates once on press, 180ms, and nothing else on the screen moves. The result arrives on emphasized easing as the agent&rsquo;s output. While it is settling it sits on a tinted ground with a soft, undefined edge, and the container resolves to a defined 18px boundary as it lands &mdash; the fluidity rule made literal: a roll is uncertain until it is a result.',
       composed: ['Button', 'Icon', 'Card', 'Text Field'],
       related: [['suggested-prompts', 'Suggested Prompts'], ['example-gallery', 'Example Gallery'], ['initial-cta', 'Initial CTA']],
-      pkg: 'nucleux-m3-randomize',
+      pkg: 'hax-m3-randomize',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/entry.css\" />\n\n<button class=\"md-dice\" type=\"button\" aria-label=\"Surprise me\">\n  <svg class=\"md-dice__ico\"><!-- dice --></svg>\n  Surprise me\n</button>\n\n<!-- the roll lands editable, and can be rolled again -->\n<div class=\"md-roll\">\n  <p class=\"md-roll__v\">Which renewals are at risk this quarter, and why?</p>\n  <div class=\"md-roll__foot\">\n    <button class=\"md-button md-button--filled md-button--sm\">Use this</button>\n    <button class=\"md-button md-button--text md-button--sm\">Roll again</button>\n  </div>\n</div>",
       examples: [
         {
@@ -1780,7 +1780,7 @@
 
       composed: ['Menu', 'Chip', 'Button', 'Badge', 'Tooltip'],
       related: [['modes', 'Modes'], ['caveat', 'Caveat'], ['voice-input', 'Voice Input']],
-      pkg: 'nucleux-m3-model-selection',
+      pkg: 'hax-m3-model-selection',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/composer.css\" />\n\n<!-- The composer's OWN mode slot. There is no second control:\n     a choice that only matters at the moment of asking belongs\n     where the asking happens. Two values, set separately. -->\n<button class=\"ax__mode ax__mode--model\" data-act=\"ax:mode\"\n        aria-haspopup=\"menu\" aria-expanded=\"true\"\n        aria-label=\"Model: Balanced, effort: Standard. Choose a different one.\">\n  <span class=\"ax__mode__m\">Balanced</span>\n  <span class=\"ax__mode__e\"> &middot; Standard</span>\n</button>\n\n<div class=\"ax__menu ax__menu--model md-ml\" role=\"menu\" aria-label=\"Choose a model\">\n  <p class=\"md-ml__h\">Model</p>\n\n  <!-- Every row says what it is FOR, then what it costs.\n       Names are neutral on purpose: real line-ups turn over every\n       few months, and a component with names baked in is wrong\n       by Christmas. -->\n  <button class=\"md-ml__opt\" role=\"menuitemradio\" aria-checked=\"true\"\n          data-act=\"model:pick:balanced\">\n    <span class=\"md-ml__tick\" aria-hidden=\"true\"><!-- tick --></span>\n    <span class=\"md-ml__t\">\n      <span class=\"md-ml__n\">Balanced<span class=\"md-ml__tag\">Recommended</span></span>\n      <span class=\"md-ml__f\">Most everyday work</span>\n      <span class=\"md-ml__w\">The best trade of quality against speed.</span>\n    </span>\n  </button>\n\n  <!-- At a cap: the row STAYS and says what answers instead -->\n  <button class=\"md-ml__opt\" role=\"menuitemradio\" aria-checked=\"false\"\n          data-act=\"model:pick:deep\" disabled>\n    <span class=\"md-ml__tick\" aria-hidden=\"true\"></span>\n    <span class=\"md-ml__t\">\n      <span class=\"md-ml__n\">Deep</span>\n      <span class=\"md-ml__f\">Long analysis and hard reasoning</span>\n      <span class=\"md-ml__w\">You have used this week\\u2019s allowance.\n        Swift is answering instead until Monday.</span>\n    </span>\n  </button>\n\n  <!-- A router that names its objective -->\n  <div class=\"md-ml__sub\">\n    <p class=\"md-ml__h\">Automatic picks for</p>\n    <button class=\"md-ml__row\" role=\"menuitemradio\" aria-checked=\"true\"\n            data-act=\"model:aim:even\">\n      <span class=\"md-ml__tick\" aria-hidden=\"true\"><!-- tick --></span>\n      <span><b>Balance</b><span class=\"md-ml__dash\"> &mdash; </span>Weighs quality against cost</span>\n    </button>\n  </div>\n\n  <!-- The question exactly one shipping product answers -->\n  <p class=\"md-ml__note md-ml__note--when\">\n    Takes effect from your next message. Nothing already said is changed.\n  </p>\n</div>\n\n<!-- On an answer: which model produced it, and whether it was the\n     one you asked for. Ahead of practice \\u2014 but silent\n     substitution is not. -->\n<span class=\"md-ml__credit is-sub\">Swift &mdash; substituted</span>"
     },
 
@@ -1904,7 +1904,7 @@
 
       composed: ['Card', 'List', 'Checkbox', 'Chip', 'Button', 'Progress'],
       related: [['attachments', 'Attachments'], ['connectors', 'Connectors'], ['citation', 'Citation']],
-      pkg: 'nucleux-m3-knowledge-base',
+      pkg: 'hax-m3-knowledge-base',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/knowledge.css\" />\n\n<!-- The panel. State is per SOURCE, never per base. -->\n<div class=\"md-kb\" data-state=\"trouble\">\n  <div class=\"md-kb__head\">\n    <span class=\"md-kb__mark\" aria-hidden=\"true\">P</span>\n    <span class=\"md-kb__id\">\n      <span class=\"md-kb__name\">Product research</span>\n      <span class=\"md-kb__meta\">\n        <span class=\"md-kb__state\">Some sources need attention</span>\n        <span class=\"md-kb__dash\"> &middot; </span>3 of 4 in use\n        <span class=\"md-kb__dash\"> &middot; </span>updated today\n      </span>\n    </span>\n  </div>\n\n  <ul class=\"md-kb__srcs\">\n    <!-- The checkbox IS the pattern: include or exclude for\n         answering, without deleting. -->\n    <li class=\"md-kb__src\" data-state=\"ready\" data-on=\"true\">\n      <button class=\"md-kb__box is-on\" role=\"checkbox\" aria-checked=\"true\"\n              aria-label=\"Onboarding interviews, Aug. Used when answering.\n                          Turn off to leave it out.\"><!-- tick --></button>\n      <span class=\"md-kb__sico\" aria-hidden=\"true\"><!-- doc --></span>\n      <span class=\"md-kb__st\">\n        <span class=\"md-kb__sn\">Onboarding interviews, Aug</span>\n        <span class=\"md-kb__sm\">\n          <span class=\"md-kb__ss\">Ready</span>\n          <span class=\"md-kb__dash\"> &middot; </span>Document\n        </span>\n      </span>\n    </li>\n\n    <!-- Excluded: still listed, at reduced emphasis, reversible -->\n    <li class=\"md-kb__src\" data-state=\"ready\" data-on=\"false\">\n      <button class=\"md-kb__box\" role=\"checkbox\" aria-checked=\"false\"\n              aria-label=\"Support tickets Q3. Left out of answers.\n                          Turn on to include it.\"><!-- tick --></button>\n      <span class=\"md-kb__sico\" aria-hidden=\"true\"><!-- sheet --></span>\n      <span class=\"md-kb__st\">\n        <span class=\"md-kb__sn\">Support tickets Q3</span>\n        <span class=\"md-kb__sm\"><span class=\"md-kb__ss\">Ready</span></span>\n      </span>\n    </li>\n\n    <!-- No checkbox at all: the choice is not this person's -->\n    <li class=\"md-kb__src\" data-state=\"denied\" data-on=\"true\">\n      <span class=\"md-kb__box md-kb__box--void\" aria-hidden=\"true\"></span>\n      <span class=\"md-kb__sico\" aria-hidden=\"true\"><!-- doc --></span>\n      <span class=\"md-kb__st\">\n        <span class=\"md-kb__sn\">Pricing research</span>\n        <span class=\"md-kb__sm\">\n          <span class=\"md-kb__ss\">You no longer have access</span>\n          <span class=\"md-kb__dash\"> &middot; </span>added by Dana\n        </span>\n      </span>\n    </li>\n  </ul>\n\n  <p class=\"md-kb__note\">\n    Turning a source off leaves it out of answers. It stays in the\n    knowledge base and can be turned back on at any time &mdash; nothing\n    is deleted.\n  </p>\n</div>\n\n<!-- Provenance, under an answer. Both halves. -->\n<div class=\"md-kb__cite\">\n  <p class=\"md-kb__ct\">Read from 2 sources</p>\n  <ul class=\"md-kb__clist\">\n    <li><button class=\"md-kb__cbtn\">Onboarding interviews, Aug</button></li>\n    <li><button class=\"md-kb__cbtn\">First-run funnel</button></li>\n  </ul>\n  <p class=\"md-kb__cleft\">Left out: Support tickets Q3, Pricing research</p>\n</div>"
     },
 
@@ -2034,7 +2034,7 @@
 
       composed: ['Card', 'Switch', 'List', 'Chip', 'Dialog', 'Tooltip'],
       related: [['connectors', 'Connectors'], ['action-plan', 'Action Plan'], ['consent', 'Consent']],
-      pkg: 'nucleux-m3-mcp',
+      pkg: 'hax-m3-mcp',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/mcp.css\" />\n\n<!-- Summary first. The surface is progressive disclosure: this is\n     what a non-technical person needs, and the audit is one press\n     away for whoever needs that instead. -->\n<div class=\"md-mcp\" data-state=\"partial\">\n  <div class=\"md-mcp__head\">\n    <span class=\"md-mcp__mark\" aria-hidden=\"true\">MCP</span>\n    <span class=\"md-mcp__id\">\n      <span class=\"md-mcp__name\">Forge</span>\n      <span class=\"md-mcp__meta\">\n        <span class=\"md-mcp__state\">Some capabilities off</span>\n        <span class=\"md-mcp__dash\"> &middot; </span>2 turned off\n      </span>\n    </span>\n    <span class=\"md-mcp__dot\" aria-hidden=\"true\"></span>\n  </div>\n\n  <div class=\"md-mcp__counts\">\n    <span class=\"md-mcp__count\"><b>9</b>Tools</span>\n    <span class=\"md-mcp__count\"><b>4</b>Resources</span>\n    <span class=\"md-mcp__count\"><b>2</b>Prompts</span>\n  </div>\n\n  <div class=\"md-mcp__disc\">\n    <!-- Grouped least dangerous first: reading DOWN the list is\n         reading UP a risk ladder. -->\n    <div class=\"md-mcp__band\" data-risk=\"destroy\">\n      <p class=\"md-mcp__bt\">Destructive\n        <span class=\"md-mcp__bn\">Removes or overwrites &mdash; asks every time</span></p>\n      <ul class=\"md-mcp__tools\">\n        <li class=\"md-mcp__tool\" data-risk=\"destroy\" data-on=\"false\">\n          <button class=\"pvc-switch\" role=\"switch\" aria-checked=\"false\"\n                  aria-label=\"cut_release \\u2014 Destructive. Disabled.\">\n            <span class=\"pvc-switch__track\"><span class=\"pvc-switch__knob\"></span></span>\n          </button>\n          <span class=\"md-mcp__tt\">\n            <span class=\"md-mcp__tn\">\n              <code>cut_release</code>\n              <span class=\"md-mcp__gate\">Asks every time</span>\n            </span>\n            <span class=\"md-mcp__td\">Tag a release and start the pipeline</span>\n          </span>\n        </li>\n      </ul>\n    </div>\n\n    <!-- The sentence that keeps the list honest -->\n    <p class=\"md-mcp__trust\">\n      Capability names and risk labels are written by the server, not\n      verified by this product. Enable only what you recognise.\n    </p>\n  </div>\n</div>\n\n<!-- The gate: at CALL time, with the arguments, and no \"always allow\" -->\n<div class=\"md-mcp__ask\" role=\"group\" aria-label=\"Approve this call\">\n  <p class=\"md-mcp__askt\">Forge wants to run <code>cut_release</code></p>\n  <p class=\"md-mcp__askd\">Tags the release and starts the deploy pipeline.</p>\n  <dl class=\"md-mcp__args\">\n    <dt>tag</dt><dd>v4.12.0</dd>\n    <dt>branch</dt><dd>release/4.12</dd>\n  </dl>\n  <div class=\"md-mcp__askf\">\n    <button class=\"md-button md-button--filled md-button--sm\">Run it</button>\n    <button class=\"md-button md-button--text md-button--sm\">Don\\u2019t</button>\n    <span class=\"md-mcp__askn\">This one asks every time.</span>\n  </div>\n</div>"
     },
 
@@ -2158,7 +2158,7 @@
 
       composed: ['Card', 'Button', 'List', 'Chip', 'Badge'],
       related: [['mcp', 'MCP Connectors'], ['knowledge-base', 'Knowledge Bases'], ['consent', 'Consent']],
-      pkg: 'nucleux-m3-connectors',
+      pkg: 'hax-m3-connectors',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/connectors.css\" />\n\n<!-- The SAME card in both places. `md-conn--inline` is the version\n     that appears inside a conversation, where the agent has just\n     found a wall; without it, this is a settings row. -->\n<div class=\"md-conn md-conn--inline\" data-state=\"authorise\">\n\n  <!-- why the card is on screen at all -->\n  <p class=\"md-conn__because\">\n    Your design backlog lives in Beacon, and I have never been given it.\n    Here is what connecting would let me do.\n  </p>\n\n  <div class=\"md-conn__head\">\n    <span class=\"md-conn__mark\" aria-hidden=\"true\">Bn</span>\n    <span class=\"md-conn__id\">\n      <span class=\"md-conn__name\">Beacon</span>\n      <!-- status is a WORD, and it comes before the account -->\n      <span class=\"md-conn__meta\">\n        <span class=\"md-conn__state\">Needs your approval</span>\n      </span>\n    </span>\n  </div>\n\n  <!-- The product's own sentences, BEFORE the handoff. A tick is\n       already granted; a chevron is being asked for. -->\n  <ul class=\"md-conn__scope\">\n    <li class=\"md-conn__s\" data-has=\"false\">\n      <span class=\"md-conn__sic\" aria-hidden=\"true\"><!-- chevron --></span>\n      <span><b>Read</b> &mdash; See items you can already see</span>\n    </li>\n    <li class=\"md-conn__s\" data-has=\"false\">\n      <span class=\"md-conn__sic\" aria-hidden=\"true\"><!-- chevron --></span>\n      <span><b>Search</b> &mdash; Find items across the workspace</span>\n    </li>\n  </ul>\n\n  <div class=\"md-conn__foot\">\n    <button class=\"md-button md-button--filled md-button--sm\"\n            data-act=\"conn:allow\">Allow</button>\n    <button class=\"md-button md-button--text md-button--sm\"\n            data-act=\"conn:cancel\">Not now</button>\n    <span class=\"md-conn__fine\">\n      You sign in with Beacon. Access can be withdrawn at any time.\n    </span>\n  </div>\n</div>\n\n<!-- Once live, it becomes standing context in the shared composer:\n     TONAL with a chevron, deliberately unlike an attachment's\n     OUTLINED card with a cross. -->\n<span class=\"ax__scopes\" role=\"group\" aria-label=\"Available to the agent\">\n  <button class=\"md-scope\" data-kind=\"connector\"\n          aria-label=\"Beacon, read and search. Manage what the agent can reach.\">\n    <span class=\"md-scope__mark\" aria-hidden=\"true\">Bn</span>\n    <span class=\"md-scope__t\">Beacon</span>\n    <span class=\"md-scope__d\"> &middot; read &middot; search</span>\n  </button>\n</span>"
     },
 
@@ -2281,7 +2281,7 @@
 
       composed: ['Icon Button', 'Menu', 'Progress', 'Card', 'Chip'],
       related: [['knowledge-base', 'Knowledge Bases'], ['connectors', 'Connectors'], ['visual-input', 'Visual Input']],
-      pkg: 'nucleux-m3-attachments',
+      pkg: 'hax-m3-attachments',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/composer.css\" />\n\n<!-- Attachments are a ROW INSIDE the shared composer, not a\n     second component beside it. There is no AttachmentComposer. -->\n<form class=\"ax__composer\" data-mode=\"text\">\n\n  <span class=\"ax__atts\" role=\"group\" aria-label=\"Attached to this message\">\n\n    <!-- ready -->\n    <span class=\"md-att\" data-state=\"ready\">\n      <span class=\"md-att__ico\" aria-hidden=\"true\"><!-- doc --></span>\n      <span class=\"md-att__txt\">\n        <span class=\"md-att__name\">Northwind-proposal.pdf</span>\n        <span class=\"md-att__meta\">\n          <!-- the state is TEXT, first -->\n          <span class=\"md-att__state\">Ready</span>\n          <span class=\"md-att__sep\"> &middot; </span>PDF &middot; 34 pages\n        </span>\n      </span>\n      <button class=\"md-att__btn md-att__btn--x\"\n              aria-label=\"Remove Northwind-proposal.pdf\"><!-- x --></button>\n    </span>\n\n    <!-- reading: uploaded is not readable, so the bar stops\n         claiming a percentage it no longer has -->\n    <span class=\"md-att\" data-state=\"processing\">\n      <span class=\"md-att__ico\" aria-hidden=\"true\"><!-- doc --></span>\n      <span class=\"md-att__txt\">\n        <span class=\"md-att__name\">security-review.docx</span>\n        <span class=\"md-att__meta\"><span class=\"md-att__state\">Reading</span></span>\n      </span>\n      <span class=\"md-att__bar\" role=\"progressbar\" aria-label=\"Reading\">\n        <i class=\"md-att__bar--wait\"></i>\n      </span>\n      <button class=\"md-att__btn md-att__btn--x\"\n              aria-label=\"Remove security-review.docx\"><!-- x --></button>\n    </span>\n\n    <!-- uploads finish on their own schedule -->\n    <span class=\"md-att__live\" role=\"status\" aria-live=\"polite\">\n      2 files attached, 1 still being read\n    </span>\n  </span>\n\n  <button class=\"ax__cbtn\" data-act=\"ax:plus\" aria-label=\"Add context\"><!-- + --></button>\n  <input class=\"ax__field\" placeholder=\"Ask about the proposal\\u2026\" />\n  <button class=\"ax__cbtn ax__cbtn--send\" type=\"submit\" aria-label=\"Send\"></button>\n</form>\n\n<!-- The sentence the remove control owes the person -->\n<p class=\"ax__cnote\">\n  Attached files stay with this conversation. Removing one takes it out\n  of what comes next; it cannot unwrite an answer it has already shaped.\n</p>"
     },
 
@@ -2400,7 +2400,7 @@
 
       composed: ['Icon Button', 'Text Field', 'Chip', 'Menu', 'Tooltip'],
       related: [['open-input', 'Open Input'], ['handwriting', 'Handwriting Input'], ['caveat', 'Caveat']],
-      pkg: 'nucleux-m3-voice-input',
+      pkg: 'hax-m3-voice-input',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/composer.css\" />\n\n<!-- ONE component. mode switches it; voiceState says what it is doing.\n     There is no VoiceComposer, and adding one is the bug. -->\n\n<!-- text -->\n<form class=\"ax__composer\" data-mode=\"text\">\n  <button class=\"ax__cbtn\" aria-label=\"Add context\"><!-- + --></button>\n  <input class=\"ax__field\" placeholder=\"Ask Aria about the feedback\u2026\" />\n  <button class=\"ax__cbtn ax__cbtn--mic\" aria-label=\"Speak instead of typing\">\n    <!-- mic -->\n  </button>\n  <button class=\"ax__cbtn ax__cbtn--send\" type=\"submit\" aria-label=\"Send\"></button>\n</form>\n\n<!-- voice: the SAME bar. Same width, same place, one line taller. -->\n<form class=\"ax__composer\" data-mode=\"voice\" data-voice=\"speaking\">\n  <button class=\"ax__cbtn ax__cbtn--mic is-on\" aria-pressed=\"true\"\n          aria-label=\"Stop voice input\"><!-- mic --></button>\n\n  <span class=\"ax__voice\">\n    <!-- five capsules; --amp is written per frame, --w is each\n         stroke\u2019s share of it. Nothing else animates. -->\n    <span class=\"md-va\" data-state=\"speaking\" data-vx-live=\"user\" aria-hidden=\"true\">\n      <i style=\"--w:.52\"><b></b></i><i style=\"--w:.86\"><b></b></i>\n      <i style=\"--w:1\"><b></b></i><i style=\"--w:.80\"><b></b></i>\n      <i style=\"--w:.48\"><b></b></i>\n    </span>\n    <span class=\"ax__vtext\">\n      <span class=\"ax__vstatus\" role=\"status\" aria-live=\"polite\">Listening\u2026</span>\n      <span class=\"ax__vline\">\u201cCompare the onboarding feedback\u2026</span>\n    </span>\n  </span>\n\n  <button class=\"ax__cbtn\" aria-pressed=\"false\" aria-label=\"Mute the microphone\"></button>\n  <button class=\"ax__cbtn\" aria-label=\"Cancel voice input\"></button>\n</form>",
 
       examples: [
@@ -2539,7 +2539,7 @@
 
       composed: ['Card', 'Chip', 'Button', 'Progress', 'Text Field'],
       related: [['attachments', 'Attachments'], ['gesture', 'Gesture Input'], ['caveat', 'Caveat']],
-      pkg: 'nucleux-m3-visual-input',
+      pkg: 'hax-m3-visual-input',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/expressive-input.css\" />\n\n<!-- Attached, and deliberately NOT working yet: nothing is being\n     asked until the instruction beneath it says what to ask. -->\n<figure class=\"md-vis\">\n  <div class=\"md-vis__frame\">\n    <img src=\"trace.png\" alt=\"Screenshot of a stack trace\" />\n    <!-- the region the reading came from, once there is one -->\n    <span class=\"md-vis__region\" style=\"--x:8%;--y:34%;--w:84%;--h:30%\"></span>\n  </div>\n  <p class=\"md-vis__meta\">Screenshot &middot; 1440 &times; 900 &middot; kept with this ticket</p>\n\n  <figcaption class=\"md-vis__read\">\n    <p class=\"md-vis__t\">In the highlighted lines: a null map key in\n      <code>ScheduleResolver</code>.</p>\n    <p class=\"md-vis__gap\">The first three frames are above the crop &mdash;\n      scroll up three lines and screenshot again if you need the origin.</p>\n  </figcaption>\n</figure>",
 
       examples: [
@@ -2682,7 +2682,7 @@
 
       composed: ['Text Field', 'Card', 'Chip', 'Icon Button', 'Menu'],
       related: [['voice-input', 'Voice Input'], ['gesture', 'Gesture Input'], ['visual-input', 'Visual Input']],
-      pkg: 'nucleux-m3-handwriting',
+      pkg: 'hax-m3-handwriting',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/expressive-input.css\" />\n\n<!-- There is no handwriting button. This is an ordinary field that\n     the platform already lets a pen write into; the bounds around it\n     are why a stroke starting slightly outside still lands in it. -->\n<label class=\"md-ink__field\">\n  <span class=\"md-ink__bounds\" aria-hidden=\"true\"></span>\n  <input type=\"text\" value=\"is this working right?\" />\n</label>\n\n<!-- Ink as the record: the strokes stay, the reading sits beneath -->\n<div class=\"md-ink\">\n  <svg class=\"md-ink__strokes\" viewBox=\"0 0 420 64\" aria-label=\"Handwritten working\">\n    <!-- exactly as drawn: no smoothing, no beautification -->\n  </svg>\n  <p class=\"md-ink__read\">\n    x\n    <button class=\"md-ink__doubt\" aria-label=\"Low confidence, tap to correct: squared\">\n      squared\n    </button>\n    + 3x &minus; 4\n  </p>\n</div>",
 
       examples: [
@@ -2816,7 +2816,7 @@
 
       composed: ['Icon Button', 'Chip', 'Text Field', 'Scrim', 'Snackbar'],
       related: [['visual-input', 'Visual Input'], ['search-filter', 'Searching &amp; Filtering'], ['open-input', 'Open Input']],
-      pkg: 'nucleux-m3-selection',
+      pkg: 'hax-m3-selection',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/expressive-input.css\" />\n\n<div class=\"md-sel\" data-state=\"confirmed\">\n  <div class=\"md-sel__stage\">\n  <!-- whatever was already on screen, frozen -->\n  <div class=\"md-sel__screen\"><!-- the dashboard --></div>\n\n  <div class=\"md-sel__layer\" role=\"dialog\" aria-label=\"Select something to ask about\">\n    <!-- the resolved region, snapped and adjustable -->\n    <div class=\"md-sel__region\" style=\"--x:46%;--y:18%;--w:26%;--h:52%\">\n      <span class=\"md-sel__label\">Revenue &middot; 12&ndash;19 Sept</span>\n      <span class=\"md-sel__h md-sel__h--nw\"></span>\n      <span class=\"md-sel__h md-sel__h--se\"></span>\n    </div>\n    <p class=\"md-sel__teach\">Circle, highlight, scribble or tap anything.</p>\n  </div>\n  </div>\n\n  <!-- the region, arrived on the composer as a term in the request -->\n  <div class=\"md-sel__bar\">\n    <button class=\"md-sel__chip\" aria-label=\"Remove Revenue, 12 to 19 September\">\n      Revenue &middot; 12&ndash;19 Sept\n    </button>\n    <input class=\"md-sel__q\" placeholder=\"Ask about this\" />\n  </div>\n</div>",
 
       examples: [
@@ -2954,7 +2954,7 @@
 
       composed: ['Text Field', 'Chip', 'Menu', 'Badge', 'Button'],
       related: [['templates', 'Templates'], ['search-filter', 'Searching &amp; Filtering'], ['open-input', 'Open Input']],
-      pkg: 'nucleux-m3-structured-input',
+      pkg: 'hax-m3-structured-input',
       usage: "<link rel=\"stylesheet\" href=\"@hax/material/tokens.css\" />\n<link rel=\"stylesheet\" href=\"@hax/material/expressive-input.css\" />\n\n<!-- The request stays prose. The structure is asked for AFTER it,\n     and only for the things that change the answer. -->\n<p class=\"md-struct__req\">Create a customer research report on mid-market churn.</p>\n\n<div class=\"md-struct__ask\" role=\"group\" aria-label=\"Three things I need\">\n  <div class=\"md-struct__q\">\n    <p class=\"md-struct__qt\" id=\"q-aud\">Who is it for?</p>\n    <p class=\"md-struct__qw\">Changes how much background I include.</p>\n    <button class=\"md-echip\" aria-describedby=\"q-aud\">The exec team</button>\n    <button class=\"md-echip md-echip--unresolved\">Skip &mdash; I&rsquo;ll assume the product team</button>\n  </div>\n</div>\n\n<!-- Settled, and editable afterwards without retyping the sentence -->\n<div class=\"md-struct__set\">\n  <button class=\"md-echip\"><span class=\"md-echip__k\">audience</span>exec team</button>\n  <button class=\"md-echip md-echip--default\">\n    <span class=\"md-echip__k\">range</span>last 12 months &middot; default\n  </button>\n</div>",
 
       examples: [

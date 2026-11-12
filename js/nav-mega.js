@@ -53,9 +53,6 @@
       id: 'shadcn',
       label: 'ShadCN',
       rows: [
-        { icon: 'basic',   title: 'Basic Components',
-          desc: 'Core UI building blocks for forms, navigation, content, and layout.',
-          href: 'basic-components' },
         { icon: 'agentic', title: 'Agentic Components',
           desc: 'Components for agent tasks, reasoning, status, and AI-native interactions.',
           href: 'library' }
@@ -156,7 +153,7 @@
     return shell;
   }
 
-  /* The open width has to be measured, not guessed: nucleux-dark.html's
+  /* The open width has to be measured, not guessed: the dark home page's
      GitHub slot is labelled "Download SDK", half again as wide as
      "GitHub", and a hardcoded --x-open clipped it.
 
@@ -265,7 +262,7 @@
         e.preventDefault();
         /* MUST stop here. global.js has a document-level keydown that runs
            openActiveSearch() — "open the highlighted result" — whenever the
-           body carries `is-nx-search`. Opening the modal below sets that
+           body carries `is-hax-search`. Opening the modal below sets that
            class, and this very same Enter then bubbled up to that handler,
            which navigated straight to the first pattern page. The user
            pressed Enter once and landed two screens away. */
@@ -284,7 +281,7 @@
           var trigger = host.querySelector('[data-search-open]');
           if (trigger) trigger.click();
           setTimeout(function () {
-            var modal = document.querySelector('.nx-search__input');
+            var modal = document.querySelector('.hax-search__input');
             if (!modal) return;
             modal.value = q;
             modal.dispatchEvent(new Event('input', { bubbles: true }));
@@ -301,7 +298,7 @@
     if (sdk && !sdk.classList.contains('gnav__sdk--icon')) {
       /* The word carried the meaning; without it the control needs one.
          Derive it from the destination rather than hard-coding "GitHub":
-         nucleux-dark.html points this same slot at library.html with a
+         the dark home page points this same slot at library.html with a
          download glyph, and labelling that "GitHub" would be a lie to a
          screen reader. */
       var sdkLabel = /github\.com/i.test(sdk.href || '') ? 'GitHub' :
@@ -350,7 +347,7 @@
 
       /* the X button always points at the Library landing page, not
          whichever page the visitor happens to be reading */
-      var xUrl = (xShare && xShare.content) || 'https://nucleux.in/index-v2.html';
+      var xUrl = (xShare && xShare.content) || 'https://YOUR-HAX-DOMAIN/index-v2.html';
 
       xa.href = 'https://x.com/intent/post?url=' + encodeURIComponent(xUrl) +
                 '&text=' + encodeURIComponent(shareText);

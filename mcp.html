@@ -14,20 +14,20 @@
        banner rather than a small thumbnail. The image URL must be absolute
        and publicly reachable: the crawler fetches it from its own servers,
        so a relative path or a localhost address renders no card at all. -->
-  <link rel="canonical" href="https://nucleux.in/mcp.html" />
+  <link rel="canonical" href="https://YOUR-HAX-DOMAIN/mcp.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="HAX" />
-  <meta property="og:url" content="https://nucleux.in/mcp.html" />
+  <meta property="og:url" content="https://YOUR-HAX-DOMAIN/mcp.html" />
   <meta property="og:title" content="MCP — HAX" />
   <meta property="og:description" content="Connect your design system to AI using the Model Context Protocol. Real-time access to components, tokens, and docs." />
-  <meta property="og:image" content="https://nucleux.in/share-on-x.png" />
+  <meta property="og:image" content="https://YOUR-HAX-DOMAIN/share-on-x.png" />
   <meta property="og:image:width" content="515" />
   <meta property="og:image:height" content="272" />
   <meta property="og:image:alt" content="HAX — UI components for AI agents" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="MCP — HAX" />
   <meta name="twitter:description" content="Connect your design system to AI using the Model Context Protocol. Real-time access to components, tokens, and docs." />
-  <meta name="twitter:image" content="https://nucleux.in/share-on-x.png" />
+  <meta name="twitter:image" content="https://YOUR-HAX-DOMAIN/share-on-x.png" />
   <meta name="twitter:image:alt" content="HAX — UI components for AI agents" />
 
   <link rel="preconnect" href="https://rsms.me/" />
@@ -77,7 +77,7 @@
     .mx-code pre .ln::before { counter-increment: ln; content: counter(ln); display: inline-block; width: 2ch; margin-right: 16px; text-align: right; color: var(--ink-500); user-select: none; }
     .mx-code__note { padding: 0 16px 14px; margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-400); }
     .mx-code__note code { font: 12px var(--font-mono) !important; color: var(--ink-100) !important; background: var(--ink-800) !important; border: 1px solid var(--ink-700) !important; }
-    .mx-copy { position: absolute; top: 10px; right: 10px; }   /* the button is .nx-copy (css/styles.css) */
+    .mx-copy { position: absolute; top: 10px; right: 10px; }   /* the button is .hax-copy (css/styles.css) */
     .t-k { color: #c4b5fd; } .t-s { color: #fde68a; } .t-p { color: var(--ink-400); }
 
     /* Quick connect */
@@ -125,7 +125,7 @@
 
   <header class="gnav">
     <div class="container gnav__inner">
-      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-nx-home="/">
+      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-hax-home="/">
         <svg class="brand__mark brand__mark--inline" aria-hidden="true" width="84" height="28" viewBox="0 0 101 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M16.9856 0L17.3137 0.73802V8.06348L16.9856 8.52816L16.3451 8.58415L9.93358 4.83807L9.6875 4.26402L16.9856 0Z" fill="#C5E3EB"/>
 <path d="M2.39062 8.52976L2.5546 9.04907L8.91443 12.6934L9.68872 12.7118L9.98942 12.2197V4.73031L9.68872 4.26562L2.39062 8.52976Z" fill="#C5E3EB"/>
@@ -178,7 +178,6 @@
           <ul class="ox-dd__menu" role="list">
             <li class="ox-dd__group"><span class="ox-dd__label">ShadCN</span>
               <ul class="ox-dd__sub" role="list">
-                <li><a href="basic-components">Basic Components</a></li>
                 <li><a href="library">Agentic Components</a></li>
               </ul>
             </li>
@@ -212,12 +211,10 @@
 
         <div class="mx-connect">
           <a class="mx-connect__btn" id="connect-claude" href="#" target="_blank" rel="noopener">
-            <img src="./assets/logos/claude-mark.svg" alt="" aria-hidden="true">
             <span><span class="mx-connect__name">Connect to Claude</span><span class="mx-connect__hint">Opens Claude with setup steps in the prompt</span></span>
             <svg class="mx-connect__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <a class="mx-connect__btn" id="connect-codex" href="#" target="_blank" rel="noopener">
-            <img src="./assets/logos/openai.svg" alt="" aria-hidden="true">
             <span><span class="mx-connect__name">Connect to Codex</span><span class="mx-connect__hint">Opens Codex with setup steps in the prompt</span></span>
             <svg class="mx-connect__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -241,10 +238,8 @@
         <span class="foot__meta">© 2026 HAX · AI UX Pattern Library</span>
         <nav class="foot__links" aria-label="Footer">
           <a href="library.html">Pattern Library</a>
-          <a href="practices.html">Scenarios</a>
           <a href="docs.html">Docs</a>
           <a href="mcp.html">MCP</a>
-          <a href="contact.html">Contact ↗</a>
         </nav>
       </div>
     </div>
@@ -257,7 +252,7 @@
   <script>
     // ── MCP docs page ──
     (function () {
-      var URL_MCP = 'https://nucleux.in/mcp';
+      var URL_MCP = 'https://YOUR-HAX-DOMAIN/mcp';
 
 
       // Each platform: logo + ordered steps. A step may carry a code block (code/lang/note).
@@ -269,21 +264,21 @@
         { id: 'claude-code', name: 'Claude Code', logo: 'claude-mark.svg', steps: [
           { title: 'Add the server', text: 'Run this in your terminal:', code: 'claude mcp add --transport http hax ' + URL_MCP, lang: 'sh',
             note: 'Add <code>--scope project</code> to share it with your team through <code>.mcp.json</code>.' },
-          { title: 'Sign in', text: 'Restart Claude Code, run <code>/mcp</code>, pick <b>nucleux</b> and choose <b>Authenticate</b>. If it doesn\'t show up, <code>/mcp</code> also shows why.' } ] },
+          { title: 'Sign in', text: 'Restart Claude Code, run <code>/mcp</code>, pick <b>hax</b> and choose <b>Authenticate</b>. If it doesn\'t show up, <code>/mcp</code> also shows why.' } ] },
         { id: 'codex', name: 'Codex', logo: 'openai.svg', steps: [
-          { title: 'Add the server', text: 'Add this to <code>~/.codex/config.toml</code>:', code: '[mcp_servers.nucleux]\nurl = "' + URL_MCP + '"', lang: 'toml' },
-          { title: 'Sign in', text: 'Run <code>codex mcp login nucleux</code>, finish sign-in in the browser, then restart Codex.' } ] },
+          { title: 'Add the server', text: 'Add this to <code>~/.codex/config.toml</code>:', code: '[mcp_servers.hax]\nurl = "' + URL_MCP + '"', lang: 'toml' },
+          { title: 'Sign in', text: 'Run <code>codex mcp login hax</code>, finish sign-in in the browser, then restart Codex.' } ] },
         { id: 'cursor', name: 'Cursor', logo: 'cursor.svg', steps: [
           { title: 'Add the server', text: 'Add this to <code>~/.cursor/mcp.json</code> (or <code>.cursor/mcp.json</code> in your project):',
-            code: '{\n  "mcpServers": {\n    "nucleux": {\n      "url": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
-          { title: 'Enable it', text: 'Open <b>Cursor Settings → MCP</b>, turn on <b>nucleux</b> and click <b>Needs login</b> to sign in.' } ] },
+            code: '{\n  "mcpServers": {\n    "hax": {\n      "url": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
+          { title: 'Enable it', text: 'Open <b>Cursor Settings → MCP</b>, turn on <b>hax</b> and click <b>Needs login</b> to sign in.' } ] },
         { id: 'vscode', name: 'VS Code', logo: 'vscode.svg', steps: [
           { title: 'Add the server', text: 'Add this to <code>.vscode/mcp.json</code> in your project:',
-            code: '{\n  "servers": {\n    "nucleux": {\n      "type": "http",\n      "url": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
-          { title: 'Start it', text: 'Click <b>Start</b> above the nucleux entry in <code>mcp.json</code> and sign in when asked. Use it from Copilot Chat in <b>Agent</b> mode.' } ] },
+            code: '{\n  "servers": {\n    "hax": {\n      "type": "http",\n      "url": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
+          { title: 'Start it', text: 'Click <b>Start</b> above the hax entry in <code>mcp.json</code> and sign in when asked. Use it from Copilot Chat in <b>Agent</b> mode.' } ] },
         { id: 'windsurf', name: 'Windsurf', logo: 'windsurf.svg', steps: [
           { title: 'Add the server', text: 'Add this to <code>~/.codeium/windsurf/mcp_config.json</code>:',
-            code: '{\n  "mcpServers": {\n    "nucleux": {\n      "serverUrl": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
+            code: '{\n  "mcpServers": {\n    "hax": {\n      "serverUrl": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
           { title: 'Refresh', text: 'Open the <b>Cascade</b> MCP panel, click <b>Refresh</b> and sign in when asked.' } ] }
       ];
 
@@ -299,7 +294,7 @@
       }
       function codeBlock(st) {
         var lines = st.code.split('\n').map(function (l) { return '<span class="ln">' + tint(l, st.lang) + '</span>'; }).join('');
-        return '<div class="mx-code"><button class="mx-copy nx-copy" type="button" aria-label="Copy" data-copy="' + esc(st.code).replace(/"/g, '&quot;') + '"></button>' +
+        return '<div class="mx-code"><button class="mx-copy hax-copy" type="button" aria-label="Copy" data-copy="' + esc(st.code).replace(/"/g, '&quot;') + '"></button>' +
           '<pre><code>' + lines + '</code></pre>' + (st.note ? '<p class="mx-code__note">' + st.note + '</p>' : '') + '</div>';
       }
 
@@ -307,7 +302,7 @@
       var panel = document.getElementById('platform-panel');
       tabsEl.innerHTML = PLATFORMS.map(function (pl) {
         return '<button class="mx-tab" role="tab" type="button" id="tab-' + pl.id + '" aria-controls="platform-panel" aria-selected="false" tabindex="-1">' +
-          '<img src="./assets/logos/' + pl.logo + '" alt="" aria-hidden="true">' + pl.name + '</button>';
+          pl.name + '</button>';
       }).join('');
       var tabs = Array.prototype.slice.call(tabsEl.children);
 
@@ -320,7 +315,7 @@
             '<p class="mx__p">' + st.text + '</p>' + (st.code ? codeBlock(st) : '') +
             '</li>';
         }).join('') + '</ol>';
-        try { localStorage.setItem('nx-mcp-platform', pl.id); } catch (e) {}
+        try { localStorage.setItem('hax-mcp-platform', pl.id); } catch (e) {}
       }
       tabs.forEach(function (t, i) {
         t.addEventListener('click', function () { show(t.id.slice(4)); });
@@ -331,19 +326,19 @@
           show(next.id.slice(4)); next.focus();
         });
       });
-      var saved; try { saved = localStorage.getItem('nx-mcp-platform'); } catch (e) {}
+      var saved; try { saved = localStorage.getItem('hax-mcp-platform'); } catch (e) {}
       show(saved || 'claude');
 
       document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-copy]');
         if (!b) return;
-        nxCopy(b, b.dataset.copy);
+        haxCopy(b, b.dataset.copy);
       });
 
       // ── Connect buttons: the whole guide as a prompt ──
       function setupMd() {
         var md = ['Read the HAX documentation below, then help me apply it. Ask which platform I use, then walk me through its setup.', '',
-          '# MCP Server', '', '> Source: https://nucleux.in/mcp.html', '',
+          '# MCP Server', '', '> Source: https://YOUR-HAX-DOMAIN/mcp.html', '',
           'Let your AI assistant search HAX patterns, components and tokens for you, straight from a prompt.', '',
           'It works through the HAX MCP server at `' + URL_MCP + '`. [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants connect to tools and data.', '',
           '## Setup', ''];

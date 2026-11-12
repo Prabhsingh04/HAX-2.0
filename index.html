@@ -14,20 +14,20 @@
        banner rather than a small thumbnail. The image URL must be absolute
        and publicly reachable: the crawler fetches it from its own servers,
        so a relative path or a localhost address renders no card at all. -->
-  <link rel="canonical" href="https://nucleux.in/" />
+  <link rel="canonical" href="https://YOUR-HAX-DOMAIN/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="HAX" />
-  <meta property="og:url" content="https://nucleux.in/" />
+  <meta property="og:url" content="https://YOUR-HAX-DOMAIN/" />
   <meta property="og:title" content="HAX - AI UX Pattern Library" />
   <meta property="og:description" content="A pattern language for agentic products. By Outshift." />
-  <meta property="og:image" content="https://nucleux.in/share-on-x.png?v=3" />
+  <meta property="og:image" content="https://YOUR-HAX-DOMAIN/share-on-x.png?v=3" />
   <meta property="og:image:width" content="2400" />
   <meta property="og:image:height" content="1260" />
   <meta property="og:image:alt" content="HAX — Agentic UX patterns. Ready to build." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="HAX - AI UX Pattern Library" />
   <meta name="twitter:description" content="A pattern language for agentic products. By Outshift." />
-  <meta name="twitter:image" content="https://nucleux.in/share-on-x.png?v=3" />
+  <meta name="twitter:image" content="https://YOUR-HAX-DOMAIN/share-on-x.png?v=3" />
   <meta name="twitter:image:alt" content="HAX — Agentic UX patterns. Ready to build." />
 
 
@@ -40,8 +40,8 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /></noscript>
   <script>(function(d){d.documentElement.classList.add("gnav-pending");setTimeout(function(){d.documentElement.classList.remove("gnav-pending");},2000);})(document);</script>
   <link rel="stylesheet" href="css/styles.css?v=5" />
-  <!-- the HAX Button (@hax/button), scoped to .nx-scope: _build/playground-preview/build-button.mjs -->
-  <link rel="stylesheet" href="css/nx-button.css?v=2" />
+  <!-- the HAX Button (@hax/button), scoped to .hax-scope: _build/playground-preview/build-button.mjs -->
+  <link rel="stylesheet" href="css/hax-button.css?v=2" />
   <link rel="stylesheet" href="css/nav-mega.css" />
 
   <!-- Material 3.0 agentic components — scoped to the "Connect a
@@ -723,8 +723,8 @@
     .ag-reveal.is-in { opacity: 1; transform: none; }
 
     /* ── 2. MEDIA HERO ──────────────────────────────────────
-       An aurora field always renders; if assets/hero.mp4 exists
-       it fades in over the top. No file, no broken hero. ── */
+       An aurora field always renders; an optional .ag-hero-media__video
+       fades in over the top once it can play. ── */
     /* The particle cluster is drawn by landing.js in rgba(12,12,10,…) — a
        near-black that simply disappears on the dark surface. Inverting the
        canvas flips those dots and link lines to a soft off-white while keeping
@@ -1916,15 +1916,15 @@
     .ln-who__col p { margin: 0 0 8px; font-size: 16px; color: var(--fg-mid); }
     .ln-who__meta { font: 11.5px/1.4 var(--font-mono); color: var(--fg-mid); letter-spacing: .02em; }
     /* The page's outlined buttons are the HAX Button (secondary, from
-       nx-button.css). .ln-nxbtn gives them the global nav's move: they rest
+       hax-button.css). .ln-haxbtn gives them the global nav's move: they rest
        as pills and, on hover and focus, the corners close in to the Button's
        own 12px and the button lifts 1px, on the nav's timing (styles.css
        .gnav__cta, nav-mega.css .gnav__signup). Each pill radius is half the
        button's height, so the radius animates instead of snapping. */
-    .nx-scope .ln-nxbtn { border-radius: 20px; transition: background-color .15s ease, border-radius 260ms cubic-bezier(.22, 1, .36, 1), transform .18s cubic-bezier(.34, 1.56, .64, 1); }
-    .nx-scope .ln-nxbtn.h-9 { border-radius: 18px; }
-    .nx-scope .ln-nxbtn:hover, .nx-scope .ln-nxbtn:focus-visible { border-radius: 12px; transform: translateY(-1px); }
-    @media (prefers-reduced-motion: reduce) { .nx-scope .ln-nxbtn { transition: none; } }
+    .hax-scope .ln-haxbtn { border-radius: 20px; transition: background-color .15s ease, border-radius 260ms cubic-bezier(.22, 1, .36, 1), transform .18s cubic-bezier(.34, 1.56, .64, 1); }
+    .hax-scope .ln-haxbtn.h-9 { border-radius: 18px; }
+    .hax-scope .ln-haxbtn:hover, .hax-scope .ln-haxbtn:focus-visible { border-radius: 12px; transform: translateY(-1px); }
+    @media (prefers-reduced-motion: reduce) { .hax-scope .ln-haxbtn { transition: none; } }
     .ln-who__meta code { font: inherit; }
 
     /* 04 · Four moments — bento of live tiles */
@@ -1941,7 +1941,7 @@
     .ln-bt__foot h3 { margin: 2px 0 4px; font-size: 19px; font-weight: 600; letter-spacing: -0.015em; }
     .ln-bt__foot p { margin: 0; min-height: 3em; font-size: 14px; line-height: 1.5; color: var(--fg-mid); max-width: 46ch; }   /* 2 lines */
     .ln-bt__n { font: 600 11px/1 var(--font-mono); color: var(--fg-mid); }
-    .ln-bt__go { flex: 0 0 auto; }   /* the tile's HAX Button (.ln-nxbtn) keeps its size beside the text */
+    .ln-bt__go { flex: 0 0 auto; }   /* the tile's HAX Button (.ln-haxbtn) keeps its size beside the text */
 
     /* ── Four moments: native tile previews (one HAX pattern each, lightly interactive) ── */
     .ln-bt__stage { color: var(--fg); text-align: left; }
@@ -2725,7 +2725,7 @@
     /* No "Ask Lumen" on the home page for now (the user's choice, 2026-11-02):
        global.js adds the launcher on every page; hidden here only, as the
        Playground does */
-    #nx-launcher { display: none !important; }
+    #hax-launcher { display: none !important; }
   </style>
   <script>
     /* Logo intro (concept): decide BEFORE first paint, so the page never
@@ -2744,7 +2744,7 @@
         var kind = nav ? nav.type : (performance.navigation && performance.navigation.type === 1 ? 'reload' : 'navigate');
         var reload = kind === 'reload';
         var seen = false;
-        try { seen = sessionStorage.getItem('nx-home-seen') === '1'; sessionStorage.setItem('nx-home-seen', '1'); } catch (e) {}
+        try { seen = sessionStorage.getItem('hax-home-seen') === '1'; sessionStorage.setItem('hax-home-seen', '1'); } catch (e) {}
         if (!reload && (location.hash || seen || kind === 'back_forward')) return;
         /* A refresh starts the page over: from the top, without a #section,
            instead of the browser putting it back where it was scrolled. */
@@ -2753,38 +2753,38 @@
           if (location.hash) history.replaceState(null, '', location.pathname + location.search);
           scrollTo(0, 0);
         }
-        document.documentElement.classList.add('nx-intro-on');
+        document.documentElement.classList.add('hax-intro-on');
       } catch (e) {}
     })();
   </script>
   <style>
     /* ── Logo intro (concept, after animate-ui.com) ──
-       Draw the NUCLEUX wordmark, fill it, then fly it into the nav. */
-    html.nx-intro-on { overflow: hidden; scrollbar-gutter: stable; }
-    html.nx-intro-on:not(.nx-intro-built)::after {        /* cover until the overlay exists */
+       Draw the HAX wordmark, fill it, then fly it into the nav. */
+    html.hax-intro-on { overflow: hidden; scrollbar-gutter: stable; }
+    html.hax-intro-on:not(.hax-intro-built)::after {        /* cover until the overlay exists */
       content: ""; position: fixed; inset: 0; z-index: 9998; background: var(--bg, #fbfbfa);
     }
-    html.nx-intro-on .gnav .brand { visibility: hidden; }
-    html.nx-intro-on .gnav__center,
-    html.nx-intro-on .gnav__actions { opacity: 0; }
-    .nx-intro { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; pointer-events: none; }
-    .nx-intro__bg { position: absolute; inset: 0; background: var(--bg, #fbfbfa); }
-    .nx-intro__glow {
+    html.hax-intro-on .gnav .brand { visibility: hidden; }
+    html.hax-intro-on .gnav__center,
+    html.hax-intro-on .gnav__actions { opacity: 0; }
+    .hax-intro { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; pointer-events: none; }
+    .hax-intro__bg { position: absolute; inset: 0; background: var(--bg, #fbfbfa); }
+    .hax-intro__glow {
       position: absolute; width: 60vmin; height: 60vmin; border-radius: 50%;
       background: radial-gradient(closest-side, rgb(139 87 199 / .20), rgb(33 164 215 / .08) 55%, transparent);
       opacity: 0; transform: scale(.4);
     }
-    .nx-intro__logo { position: relative; width: min(72vw, 620px); transform-origin: 50% 50%; will-change: transform; }
-    .nx-intro__logo svg { display: block; width: 100%; height: auto; overflow: visible; }
-    @keyframes nx-reveal-x { from { opacity: 0; filter: blur(6px); transform: translateX(24px); } to { opacity: 1; filter: none; transform: none; } }
-    @keyframes nx-reveal-y { from { opacity: 0; filter: blur(6px); transform: translateY(-8px); } to { opacity: 1; filter: none; transform: none; } }
+    .hax-intro__logo { position: relative; width: min(72vw, 620px); transform-origin: 50% 50%; will-change: transform; }
+    .hax-intro__logo svg { display: block; width: 100%; height: auto; overflow: visible; }
+    @keyframes hax-reveal-x { from { opacity: 0; filter: blur(6px); transform: translateX(24px); } to { opacity: 1; filter: none; transform: none; } }
+    @keyframes hax-reveal-y { from { opacity: 0; filter: blur(6px); transform: translateY(-8px); } to { opacity: 1; filter: none; transform: none; } }
     /* the moment the mark starts its glide, the nav tabs and actions are
        simply there (no fade): the nav is lifted above the dissolving cover
        and its frost is held clear so the gliding mark stays visible */
-    html.nx-intro-navon .gnav { z-index: 10000; }
-    html.nx-intro-navon .gnav::before { background: transparent !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
-    html.nx-intro-navon .gnav__center,
-    html.nx-intro-navon .gnav__actions { opacity: 1; }
+    html.hax-intro-navon .gnav { z-index: 10000; }
+    html.hax-intro-navon .gnav::before { background: transparent !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    html.hax-intro-navon .gnav__center,
+    html.hax-intro-navon .gnav__actions { opacity: 1; }
   </style>
   <style>
     /* Hero announcement pill (concept, after ElevenLabs UI) — points people
@@ -2816,8 +2816,8 @@
     .ln-wrap .hero.is-pg .hero__pill-txt { color: var(--fg-mid, #57534e); }
     .ln-wrap .hero.is-pg .hero__pill:hover .hero__pill-txt { color: var(--fg, #0a0a0a); }
     /* the Playground view is the Playground alone: the rest of the page steps aside */
-    html.nx-pg-view .ln-wrap > :not(.scene), html.nx-pg-view .foot, html.nx-pg-view .nx-ann { display: none !important; }
-    html.nx-pg-view .ln-wrap .hero { min-height: 0 !important; padding-bottom: 32px !important; overflow: clip; }   /* the page ends just under the Playground (clip: the hero's glow mustn't add scroll) */
+    html.hax-pg-view .ln-wrap > :not(.scene), html.hax-pg-view .foot, html.hax-pg-view .hax-ann { display: none !important; }
+    html.hax-pg-view .ln-wrap .hero { min-height: 0 !important; padding-bottom: 32px !important; overflow: clip; }   /* the page ends just under the Playground (clip: the hero's glow mustn't add scroll) */
     /* Playground view: the headline, description and buttons give way to the live Playground */
     .hero__pg { width: min(1180px, 100%); margin: 6px auto 0; pointer-events: auto; }   /* the hero lets clicks through to the particle field; the Playground must take them */
     .hero__pg[hidden] { display: none; }
@@ -2843,10 +2843,10 @@
        finished coming in (headline → description → CTA), then slides down
        and rests open. The arrival animations are held paused until
        html.hero-intro-done, and start right away once released. */
-    html body .nx-ann { animation-delay: 0s; }
-    html body .nx-ann .nx-ann__inner { animation-delay: 60ms, 60ms; }
-    html:not(.hero-intro-done) .nx-ann,
-    html:not(.hero-intro-done) .nx-ann .nx-ann__inner { animation-play-state: paused; }
+    html body .hax-ann { animation-delay: 0s; }
+    html body .hax-ann .hax-ann__inner { animation-delay: 60ms, 60ms; }
+    html:not(.hero-intro-done) .hax-ann,
+    html:not(.hero-intro-done) .hax-ann .hax-ann__inner { animation-play-state: paused; }
   </style>
   <style>
     /* Hero install pill (concept): copies the npm command. Same height as
@@ -2877,7 +2877,7 @@
     .ln-wrap .hero__npm.is-copied .hero__npm-ok { opacity: 1; transform: none; }
     .ln-wrap .hero__npm-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     /* "Copied" toast — dark card, bottom centre, rises in, leaves after ~2.2s */
-    .nx-toast {
+    .hax-toast {
       position: fixed; left: 50%; bottom: 32px; z-index: 9000;
       display: inline-flex; align-items: center; gap: 8px;
       max-width: calc(100vw - 32px); padding: 9px 16px 9px 11px; border-radius: 999px;
@@ -2888,10 +2888,10 @@
       opacity: 0; transform: translate(-50%, 16px) scale(.98); pointer-events: none;
       transition: opacity .25s ease, transform .35s cubic-bezier(.22,1,.36,1);
     }
-    .nx-toast.is-on { opacity: 1; transform: translate(-50%, 0) scale(1); }
-    .nx-toast__ic { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #fff; color: #141414; flex: 0 0 auto; }
-    .nx-toast code { font: 500 13px/1 var(--font-mono, ui-monospace, monospace); color: rgb(255 255 255 / .82); }
-    @media (prefers-reduced-motion: reduce) { .nx-toast { transition: opacity .2s ease; transform: translate(-50%, 0); } }
+    .hax-toast.is-on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    .hax-toast__ic { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #fff; color: #141414; flex: 0 0 auto; }
+    .hax-toast code { font: 500 13px/1 var(--font-mono, ui-monospace, monospace); color: rgb(255 255 255 / .82); }
+    @media (prefers-reduced-motion: reduce) { .hax-toast { transition: opacity .2s ease; transform: translate(-50%, 0); } }
     @media (max-width: 480px) {
       .ln-wrap .hero__npm { height: 48px; padding-left: 16px; gap: 9px; }
       .ln-wrap .hero__npm-ic { width: 36px; height: 36px; }
@@ -3549,9 +3549,9 @@
             loaded with, not the page you just returned from. Read once and
             cleared, so it suppresses exactly the next hero view. */
       try {
-        if (sessionStorage.getItem('nx-from-auth') === '1') {
+        if (sessionStorage.getItem('hax-from-auth') === '1') {
           fromAuth = true;
-          sessionStorage.removeItem('nx-from-auth');
+          sessionStorage.removeItem('hax-from-auth');
         }
       } catch (e) {}
 
@@ -3586,7 +3586,7 @@
        ──────────────────────────────────────────────────── -->
   <header class="gnav">
     <div class="container gnav__inner">
-      <a class="brand" href="/" aria-label="HAX by Outshift Design" data-nx-home="/">
+      <a class="brand" href="/" aria-label="HAX by Outshift Design" data-hax-home="/">
         <svg class="brand__mark brand__mark--inline" aria-hidden="true" width="84" height="28" viewBox="0 0 101 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M16.9856 0L17.3137 0.73802V8.06348L16.9856 8.52816L16.3451 8.58415L9.93358 4.83807L9.6875 4.26402L16.9856 0Z" fill="#C5E3EB"/>
 <path d="M2.39062 8.52976L2.5546 9.04907L8.91443 12.6934L9.68872 12.7118L9.98942 12.2197V4.73031L9.68872 4.26562L2.39062 8.52976Z" fill="#C5E3EB"/>
@@ -3640,7 +3640,6 @@
           <ul class="ox-dd__menu" role="list">
             <li class="ox-dd__group"><span class="ox-dd__label">ShadCN</span>
               <ul class="ox-dd__sub" role="list">
-                <li><a href="basic-components">Basic Components</a></li>
                 <li><a href="library">Agentic Components</a></li>
               </ul>
             </li>
@@ -3670,17 +3669,17 @@
           headline starts typing. Only transform/opacity/stroke animate. */
 (function () {
   var root = document.documentElement;
-  if (!root.classList.contains('nx-intro-on')) return;
+  if (!root.classList.contains('hax-intro-on')) return;
   var brand = document.querySelector('.gnav .brand .brand__mark');
   function done() {
-    root.classList.remove('nx-intro-on');
-    root.classList.remove('nx-intro-navon');
-    dispatchEvent(new Event('nx-intro-done'));
+    root.classList.remove('hax-intro-on');
+    root.classList.remove('hax-intro-navon');
+    dispatchEvent(new Event('hax-intro-done'));
   }
-  if (!brand || !Element.prototype.animate) { root.classList.add('nx-intro-built'); return done(); }
+  if (!brand || !Element.prototype.animate) { root.classList.add('hax-intro-built'); return done(); }
 
-  var ov = document.createElement('div'); ov.className = 'nx-intro'; ov.setAttribute('aria-hidden', 'true');
-  ov.innerHTML = '<div class="nx-intro__bg"></div><div class="nx-intro__glow"></div><div class="nx-intro__logo"></div>';
+  var ov = document.createElement('div'); ov.className = 'hax-intro'; ov.setAttribute('aria-hidden', 'true');
+  ov.innerHTML = '<div class="hax-intro__bg"></div><div class="hax-intro__glow"></div><div class="hax-intro__logo"></div>';
   var svg = brand.cloneNode(true);
   svg.removeAttribute('width'); svg.removeAttribute('height'); svg.removeAttribute('class');
   /* own gradient ids, so the clone never depends on the hidden nav copy */
@@ -3689,11 +3688,11 @@
     svg.querySelectorAll('[fill="url(#' + old + ')"]').forEach(function (p) { p.setAttribute('fill', 'url(#' + nu + ')'); });
   });
   var word = getComputedStyle(brand).getPropertyValue('--brand-word').trim() || '#0A0A0A';
-  ov.querySelector('.nx-intro__logo').appendChild(svg);
+  ov.querySelector('.hax-intro__logo').appendChild(svg);
   document.body.appendChild(ov);
-  root.classList.add('nx-intro-built');
+  root.classList.add('hax-intro-built');
 
-  var logo = ov.querySelector('.nx-intro__logo'), glow = ov.querySelector('.nx-intro__glow'), bg = ov.querySelector('.nx-intro__bg');
+  var logo = ov.querySelector('.hax-intro__logo'), glow = ov.querySelector('.hax-intro__glow'), bg = ov.querySelector('.hax-intro__bg');
   var paths = [].slice.call(svg.querySelectorAll('path'));
   var START = 200, STAG = 30, DRAW = 950, EASE = 'cubic-bezier(.33,0,.2,1)';
   paths.forEach(function (p, i) {
@@ -3721,8 +3720,8 @@
     var GLIDE = { duration: 1400, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' };
     logo.animate([{ scale: '1' }, { scale: String(s) }], GLIDE);
     var fly = logo.animate([{ translate: '0px 0px' }, { translate: dx + 'px ' + dy + 'px' }], GLIDE);
-    root.classList.add('nx-intro-navon');            /* tabs appear at once */
-    dispatchEvent(new CustomEvent('nx-intro-fly', { detail: { duration: GLIDE.duration } }));
+    root.classList.add('hax-intro-navon');            /* tabs appear at once */
+    dispatchEvent(new CustomEvent('hax-intro-fly', { detail: { duration: GLIDE.duration } }));
     glow.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, fill: 'forwards' });
     bg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, delay: 200, easing: 'ease-out', fill: 'forwards' });
     fly.finished.then(function () {
@@ -3747,17 +3746,17 @@
        brings it back. It scrolls away with the page (never sticky).
        ──────────────────────────────────────────────────── -->
   <style>
-    .nx-ann {
-      --nx-ann-bg: #161617;
-      --nx-ann-fg: #f5f5f7;
-      --nx-ann-mid: rgb(245 245 247 / .72);
+    .hax-ann {
+      --hax-ann-bg: #161617;
+      --hax-ann-fg: #f5f5f7;
+      --hax-ann-mid: rgb(245 245 247 / .72);
       position: relative; z-index: 1;
-      background: var(--nx-ann-bg);
-      color: var(--nx-ann-fg);
+      background: var(--hax-ann-bg);
+      color: var(--hax-ann-fg);
       overflow: hidden;
-      container-type: inline-size; container-name: nxann;
+      container-type: inline-size; container-name: haxann;
     }
-    .nx-ann__inner {
+    .hax-ann__inner {
       position: relative;
       display: flex; align-items: center; justify-content: center;
       gap: var(--s-6);
@@ -3765,14 +3764,14 @@
       padding-block: 12px;
       padding-inline: calc(var(--gutter) + 40px);   /* room for × on either side, so the row stays centred */
     }
-    .nx-ann__text {
+    .hax-ann__text {
       margin: 0; min-width: 0;
       font-size: 17px; line-height: 1.35; letter-spacing: -0.012em;
-      color: var(--nx-ann-mid);
+      color: var(--hax-ann-mid);
       text-wrap: balance;
     }
-    .nx-ann__text strong { font-weight: 600; color: var(--nx-ann-fg); }
-    .nx-ann__link {
+    .hax-ann__text strong { font-weight: 600; color: var(--hax-ann-fg); }
+    .hax-ann__link {
       flex: 0 0 auto;
       display: inline-flex; align-items: center; gap: 0;
       min-height: 40px; padding: 0 18px;
@@ -3781,104 +3780,104 @@
          rounded rectangle under the pointer or keyboard focus. */
       border: 1px solid rgb(245 245 247 / .42); border-radius: 20px;
       font-size: 15px; font-weight: 500; line-height: 1;
-      color: var(--nx-ann-fg); text-decoration: none; white-space: nowrap;
+      color: var(--hax-ann-fg); text-decoration: none; white-space: nowrap;
       transition: background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
                   transform var(--dur-2) var(--ease), border-radius 260ms cubic-bezier(.22, 1, .36, 1);
     }
     /* .btn goes 26px → 16px on a 52px control; same proportion here. */
-    .nx-ann__link:hover, .nx-ann__link:focus-visible {
+    .hax-ann__link:hover, .hax-ann__link:focus-visible {
       border-radius: 12px;
       border-color: rgb(245 245 247 / .72); background: rgb(245 245 247 / .08);
     }
-    .nx-ann__link:hover { transform: translateY(-1px); }
-    .nx-ann__nb { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .nx-ann__arrow { transition: transform var(--dur-2) var(--ease); }
-    .nx-ann__link:hover .nx-ann__arrow { transform: translateX(3px); }
-    .nx-ann__close {
+    .hax-ann__link:hover { transform: translateY(-1px); }
+    .hax-ann__nb { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .hax-ann__arrow { transition: transform var(--dur-2) var(--ease); }
+    .hax-ann__link:hover .hax-ann__arrow { transform: translateX(3px); }
+    .hax-ann__close {
       position: absolute; top: 50%; right: calc(var(--gutter) - 10px); transform: translateY(-50%);
       width: 40px; height: 40px; padding: 0;
       display: inline-flex; align-items: center; justify-content: center;
-      border: 0; border-radius: 50%; background: transparent; color: var(--nx-ann-mid);
+      border: 0; border-radius: 50%; background: transparent; color: var(--hax-ann-mid);
       cursor: pointer;
       transition: background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
     }
-    .nx-ann__close::after { content: ""; position: absolute; inset: -2px; }
-    .nx-ann__close:hover { background: rgb(245 245 247 / .12); color: var(--nx-ann-fg); }
-    .nx-ann__link:focus-visible, .nx-ann__close:focus-visible { outline: 2px solid var(--nx-ann-fg); outline-offset: 3px; }
+    .hax-ann__close::after { content: ""; position: absolute; inset: -2px; }
+    .hax-ann__close:hover { background: rgb(245 245 247 / .12); color: var(--hax-ann-fg); }
+    .hax-ann__link:focus-visible, .hax-ann__close:focus-visible { outline: 2px solid var(--hax-ann-fg); outline-offset: 3px; }
 
     /* ── arrival: the strip slides down from under the nav and settles ── */
-    @keyframes nx-ann-open { from { grid-template-rows: 0fr; } to { grid-template-rows: 1fr; } }
-    @keyframes nx-ann-drop { from { transform: translateY(-18px) scale(.98); opacity: 0; } to { transform: none; opacity: 1; } }
-    @keyframes nx-ann-fade { from { opacity: 0; } to { opacity: 1; } }
-    .nx-ann[hidden] { display: none; }
+    @keyframes hax-ann-open { from { grid-template-rows: 0fr; } to { grid-template-rows: 1fr; } }
+    @keyframes hax-ann-drop { from { transform: translateY(-18px) scale(.98); opacity: 0; } to { transform: none; opacity: 1; } }
+    @keyframes hax-ann-fade { from { opacity: 0; } to { opacity: 1; } }
+    .hax-ann[hidden] { display: none; }
     /* Arrival waits ~0.7s so the page paints and settles first. Then the
        row opens on a critically damped spring (no bounce: it can't
        overshoot its own content) and, 60ms behind it, the content drops
        18px on a lightly underdamped spring (~4% overshoot, damping 0.72)
        and settles. */
-    .nx-ann { --nx-ann-spring: linear(0, 0.0284, 0.1001, 0.198, 0.3089, 0.4228, 0.5328, 0.6342, 0.7241, 0.8014, 0.8656, 0.9174, 0.9578, 0.9881, 1.0097, 1.0243, 1.033, 1.0374, 1.0384, 1.037, 1.0341, 1.0303, 1.026, 1.0216, 1.0174, 1.0136, 1.0102, 1.0073, 1.0049, 1.0029, 1.0014, 1.0003, 0.9995, 0.999, 0.9987, 0.9986, 0.9986, 0.9988, 0.9992, 0.9996, 1);
-      display: grid; grid-template-rows: 1fr; --nx-ann-settle: linear(0, 0.0218, 0.0754, 0.1472, 0.2275, 0.3101, 0.3908, 0.467, 0.5372, 0.6007, 0.6575, 0.7075, 0.7513, 0.7894, 0.8222, 0.8503, 0.8743, 0.8947, 0.912, 0.9266, 0.9389, 0.9492, 0.9579, 0.9651, 0.9711, 0.9761, 0.9803, 0.9837, 0.9866, 0.989, 0.9909, 0.9925, 0.9939, 0.995, 0.9959, 0.9966, 0.9972, 0.9977, 0.9982, 0.9985, 1);
-      animation: nx-ann-open 760ms var(--nx-ann-settle) 700ms both; }
-    .nx-ann__clip { min-height: 0; overflow: hidden; }
-    .nx-ann__inner { transform-origin: 50% 0;
-      animation: nx-ann-drop 900ms var(--nx-ann-spring) 760ms both, nx-ann-fade 420ms var(--ease-out) 760ms both; }
-    .nx-ann.is-leaving { display: block; overflow: hidden; animation: none; pointer-events: none; }
-    .nx-ann.is-leaving .nx-ann__inner { animation: none; }
+    .hax-ann { --hax-ann-spring: linear(0, 0.0284, 0.1001, 0.198, 0.3089, 0.4228, 0.5328, 0.6342, 0.7241, 0.8014, 0.8656, 0.9174, 0.9578, 0.9881, 1.0097, 1.0243, 1.033, 1.0374, 1.0384, 1.037, 1.0341, 1.0303, 1.026, 1.0216, 1.0174, 1.0136, 1.0102, 1.0073, 1.0049, 1.0029, 1.0014, 1.0003, 0.9995, 0.999, 0.9987, 0.9986, 0.9986, 0.9988, 0.9992, 0.9996, 1);
+      display: grid; grid-template-rows: 1fr; --hax-ann-settle: linear(0, 0.0218, 0.0754, 0.1472, 0.2275, 0.3101, 0.3908, 0.467, 0.5372, 0.6007, 0.6575, 0.7075, 0.7513, 0.7894, 0.8222, 0.8503, 0.8743, 0.8947, 0.912, 0.9266, 0.9389, 0.9492, 0.9579, 0.9651, 0.9711, 0.9761, 0.9803, 0.9837, 0.9866, 0.989, 0.9909, 0.9925, 0.9939, 0.995, 0.9959, 0.9966, 0.9972, 0.9977, 0.9982, 0.9985, 1);
+      animation: hax-ann-open 760ms var(--hax-ann-settle) 700ms both; }
+    .hax-ann__clip { min-height: 0; overflow: hidden; }
+    .hax-ann__inner { transform-origin: 50% 0;
+      animation: hax-ann-drop 900ms var(--hax-ann-spring) 760ms both, hax-ann-fade 420ms var(--ease-out) 760ms both; }
+    .hax-ann.is-leaving { display: block; overflow: hidden; animation: none; pointer-events: none; }
+    .hax-ann.is-leaving .hax-ann__inner { animation: none; }
 
     /* ── settled: a few seconds after it arrives, the strip changes colour
        only — dark to light grey. Size, type, layout and the button shape
        stay exactly as they were; text, border and × flip to dark so they
        stay legible on the light ground. ── */
-    .nx-ann { transition: background-color 700ms var(--ease), color 700ms var(--ease), box-shadow 700ms var(--ease); }
-    .nx-ann__text, .nx-ann__text strong { transition: color 700ms var(--ease); }
-    .nx-ann.is-compact .nx-ann__link { transition: background var(--dur-2) var(--ease), border-color 700ms var(--ease), color 700ms var(--ease),
+    .hax-ann { transition: background-color 700ms var(--ease), color 700ms var(--ease), box-shadow 700ms var(--ease); }
+    .hax-ann__text, .hax-ann__text strong { transition: color 700ms var(--ease); }
+    .hax-ann.is-compact .hax-ann__link { transition: background var(--dur-2) var(--ease), border-color 700ms var(--ease), color 700ms var(--ease),
                   transform var(--dur-2) var(--ease), border-radius 260ms cubic-bezier(.22, 1, .36, 1); }
-    .nx-ann.is-compact {
-      --nx-ann-bg: #f5f5f7; --nx-ann-fg: #1d1d1f; --nx-ann-mid: rgb(29 29 31 / .72);
+    .hax-ann.is-compact {
+      --hax-ann-bg: #f5f5f7; --hax-ann-fg: #1d1d1f; --hax-ann-mid: rgb(29 29 31 / .72);
       box-shadow: inset 0 -1px 0 rgb(0 0 0 / .06);
     }
-    .nx-ann.is-compact .nx-ann__link { border-color: rgb(29 29 31 / .42); }
-    .nx-ann.is-compact .nx-ann__link:hover, .nx-ann.is-compact .nx-ann__link:focus-visible {
+    .hax-ann.is-compact .hax-ann__link { border-color: rgb(29 29 31 / .42); }
+    .hax-ann.is-compact .hax-ann__link:hover, .hax-ann.is-compact .hax-ann__link:focus-visible {
       border-color: rgb(29 29 31 / .72); background: rgb(29 29 31 / .06);
     }
-    .nx-ann.is-compact .nx-ann__close { color: rgb(29 29 31 / .72); }
-    .nx-ann.is-compact .nx-ann__close:hover { background: rgb(0 0 0 / .06); color: #1d1d1f; }
+    .hax-ann.is-compact .hax-ann__close { color: rgb(29 29 31 / .72); }
+    .hax-ann.is-compact .hax-ann__close:hover { background: rgb(0 0 0 / .06); color: #1d1d1f; }
     @media (prefers-reduced-motion: reduce) {
-      .nx-ann, .nx-ann__inner { animation: none; }
-      .nx-ann, .nx-ann__text, .nx-ann__text strong,
-      .nx-ann__link, .nx-ann__arrow, .nx-ann__close, .nx-ann.is-compact .nx-ann__link { transition: none; }
+      .hax-ann, .hax-ann__inner { animation: none; }
+      .hax-ann, .hax-ann__text, .hax-ann__text strong,
+      .hax-ann__link, .hax-ann__arrow, .hax-ann__close, .hax-ann.is-compact .hax-ann__link { transition: none; }
     }
 
     /* ── medium: the same row, tighter ── */
-    @container nxann (max-width: 819px) {
-      .nx-ann__inner { gap: 14px; padding-inline: calc(var(--gutter) + 34px); }
-      .nx-ann__text { font-size: 15px; }
-      .nx-ann__link { min-height: 36px; padding: 0 14px; font-size: 14px; border-radius: 18px; }
-      .nx-ann__link:hover, .nx-ann__link:focus-visible { border-radius: 11px; }
+    @container haxann (max-width: 819px) {
+      .hax-ann__inner { gap: 14px; padding-inline: calc(var(--gutter) + 34px); }
+      .hax-ann__text { font-size: 15px; }
+      .hax-ann__link { min-height: 36px; padding: 0 14px; font-size: 14px; border-radius: 18px; }
+      .hax-ann__link:hover, .hax-ann__link:focus-visible { border-radius: 11px; }
     }
     /* ── phone: device and sentence on one row, the link beneath ── */
-    @container nxann (max-width: 599px) {
-      .nx-ann__inner {
+    @container haxann (max-width: 599px) {
+      .hax-ann__inner {
         flex-wrap: wrap; justify-content: flex-start;
         row-gap: 10px; min-height: 0; padding-block: 14px;
         padding-inline: var(--gutter) calc(var(--gutter) + 34px);
       }
-      .nx-ann__text { flex: 1 1 100%; }
-      .nx-ann__close { top: 8px; transform: none; right: calc(var(--gutter) - 12px); }
+      .hax-ann__text { flex: 1 1 100%; }
+      .hax-ann__close { top: 8px; transform: none; right: calc(var(--gutter) - 12px); }
     }
 
     /* The hero is sized to the first screen below the nav; with the
        announcement showing, the strip is part of that first screen. */
     body.landing-light .hero {
-      min-height: calc(100vh - var(--nav-h, 72px) - var(--nx-ann-h, 0px) - var(--fold-peek));
-      min-height: calc(100svh - var(--nav-h, 72px) - var(--nx-ann-h, 0px) - var(--fold-peek));
+      min-height: calc(100vh - var(--nav-h, 72px) - var(--hax-ann-h, 0px) - var(--fold-peek));
+      min-height: calc(100svh - var(--nav-h, 72px) - var(--hax-ann-h, 0px) - var(--fold-peek));
     }
     /* While the strip closes, the hero tracks it frame by frame. */
-    html.nx-ann-leaving body.landing-light .hero { transition: none; }
+    html.hax-ann-leaving body.landing-light .hero { transition: none; }
     @media (max-width: 720px) {
       body.landing-light .hero {
-        min-height: calc(100vh - var(--nav-h) - var(--nx-ann-h, 0px));
-        min-height: calc(100svh - var(--nav-h) - var(--nx-ann-h, 0px));
+        min-height: calc(100vh - var(--nav-h) - var(--hax-ann-h, 0px));
+        min-height: calc(100svh - var(--nav-h) - var(--hax-ann-h, 0px));
       }
       html.hero-intro-done body.landing-light .hero { min-height: var(--hero-rest, 0px); }
     }
@@ -3891,9 +3890,9 @@
   <style>
     /* ── Sleek strip (27 Oct): slim single line, subtle HAX gradient,
        plain underlined link — replaces the dark→grey pill version. ── */
-    .nx-ann, .nx-ann.is-compact {
-      --nx-ann-fg: #1d1b20;
-      --nx-ann-mid: rgb(29 27 32 / .74);
+    .hax-ann, .hax-ann.is-compact {
+      --hax-ann-fg: #1d1b20;
+      --hax-ann-mid: rgb(29 27 32 / .74);
       background:
         radial-gradient(42% 260% at 6% 50%,  rgb(208 188 255 / .60), transparent 72%),
         radial-gradient(40% 300% at 38% 120%, rgb(190 212 255 / .50), transparent 72%),
@@ -3902,50 +3901,50 @@
         #f8f5fc;
       box-shadow: none;
     }
-    .nx-ann .nx-ann__inner {
+    .hax-ann .hax-ann__inner {
       min-height: 40px; padding-block: 8px; gap: 12px;
     }
-    .nx-ann .nx-ann__text { font-size: 14px; line-height: 1.4; letter-spacing: -0.006em; }
-    .nx-ann .nx-ann__text strong { font-weight: 600; }
-    .nx-ann .nx-ann__link,
-    .nx-ann.is-compact .nx-ann__link {
+    .hax-ann .hax-ann__text { font-size: 14px; line-height: 1.4; letter-spacing: -0.006em; }
+    .hax-ann .hax-ann__text strong { font-weight: 600; }
+    .hax-ann .hax-ann__link,
+    .hax-ann.is-compact .hax-ann__link {
       min-height: 0; padding: 2px 0; border: 0; border-radius: 0; background: none;
-      font-size: 14px; font-weight: 500; color: var(--nx-ann-fg);
+      font-size: 14px; font-weight: 500; color: var(--hax-ann-fg);
       text-decoration: underline; text-decoration-thickness: 1px;
       text-underline-offset: 3px; text-decoration-color: rgb(29 27 32 / .45);
       transition: text-decoration-color var(--dur-2) var(--ease);
     }
-    .nx-ann .nx-ann__link:hover, .nx-ann .nx-ann__link:focus-visible,
-    .nx-ann.is-compact .nx-ann__link:hover, .nx-ann.is-compact .nx-ann__link:focus-visible {
+    .hax-ann .hax-ann__link:hover, .hax-ann .hax-ann__link:focus-visible,
+    .hax-ann.is-compact .hax-ann__link:hover, .hax-ann.is-compact .hax-ann__link:focus-visible {
       background: none; border-radius: 4px; transform: none;
       text-decoration-color: currentColor;
     }
-    .nx-ann .nx-ann__nb { gap: 4px; }
-    .nx-ann .nx-ann__close, .nx-ann.is-compact .nx-ann__close {
+    .hax-ann .hax-ann__nb { gap: 4px; }
+    .hax-ann .hax-ann__close, .hax-ann.is-compact .hax-ann__close {
       width: 32px; height: 32px; color: rgb(29 27 32 / .7);
     }
-    .nx-ann .nx-ann__close:hover { background: rgb(29 27 32 / .07); color: var(--nx-ann-fg); }
-    .nx-ann .nx-ann__link:focus-visible, .nx-ann .nx-ann__close:focus-visible { outline-color: var(--nx-ann-fg); }
-    @container nxann (max-width: 819px) {
-      .nx-ann .nx-ann__inner { gap: 10px; }
-      .nx-ann .nx-ann__text, .nx-ann .nx-ann__link { font-size: 13px; }
+    .hax-ann .hax-ann__close:hover { background: rgb(29 27 32 / .07); color: var(--hax-ann-fg); }
+    .hax-ann .hax-ann__link:focus-visible, .hax-ann .hax-ann__close:focus-visible { outline-color: var(--hax-ann-fg); }
+    @container haxann (max-width: 819px) {
+      .hax-ann .hax-ann__inner { gap: 10px; }
+      .hax-ann .hax-ann__text, .hax-ann .hax-ann__link { font-size: 13px; }
     }
-    @container nxann (max-width: 599px) {
-      .nx-ann .nx-ann__inner { row-gap: 2px; padding-block: 9px; }
-      .nx-ann .nx-ann__close { top: 4px; }
+    @container haxann (max-width: 599px) {
+      .hax-ann .hax-ann__inner { row-gap: 2px; padding-block: 9px; }
+      .hax-ann .hax-ann__close { top: 4px; }
     }
   </style>
 
-  <section class="nx-ann" id="nx-ann" aria-label="HAX for iPhone Duo">
-    <div class="nx-ann__clip">
-      <div class="nx-ann__inner">
-        <p class="nx-ann__text"><strong>HAX for iPhone Duo.</strong> The same agentic patterns. Now adapted for mobile.</p>
-        <a class="nx-ann__link" href="material-pattern?id=disclosure&amp;device=mobile">
-          Explore mobile&nbsp;<span class="nx-ann__nb">patterns<svg class="nx-ann__arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <section class="hax-ann" id="hax-ann" aria-label="HAX for iPhone Duo">
+    <div class="hax-ann__clip">
+      <div class="hax-ann__inner">
+        <p class="hax-ann__text"><strong>HAX for iPhone Duo.</strong> The same agentic patterns. Now adapted for mobile.</p>
+        <a class="hax-ann__link" href="material-pattern?id=disclosure&amp;device=mobile">
+          Explore mobile&nbsp;<span class="hax-ann__nb">patterns<svg class="hax-ann__arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg></span>
         </a>
-        <button class="nx-ann__close" type="button" aria-label="Dismiss announcement">
+        <button class="hax-ann__close" type="button" aria-label="Dismiss announcement">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
@@ -3955,15 +3954,15 @@
   </section>
   <script>
   (function () {
-    var el = document.getElementById('nx-ann'), root = document.documentElement;
+    var el = document.getElementById('hax-ann'), root = document.documentElement;
     if (!el) return;
     /* An earlier version remembered a dismissal; the strip now returns on
        every load, so any stored flag is cleared. */
-    try { localStorage.removeItem('nx-ann-iphone-duo'); } catch (e) {}
-    root.classList.remove('nx-ann-off');
-    function setH(h) { root.style.setProperty('--nx-ann-h', h + 'px'); }
+    try { localStorage.removeItem('hax-ann-iphone-duo'); } catch (e) {}
+    root.classList.remove('hax-ann-off');
+    function setH(h) { root.style.setProperty('--hax-ann-h', h + 'px'); }
     /* the hero subtracts the strip's settled height from its first screen */
-    var inner = el.querySelector('.nx-ann__inner');
+    var inner = el.querySelector('.hax-ann__inner');
     setH(inner.offsetHeight);
     var ro = window.ResizeObserver ? new ResizeObserver(function () { if (!el.hidden && !el.classList.contains('is-leaving')) setH(inner.offsetHeight); }) : null;
     if (ro) ro.observe(inner);
@@ -3972,13 +3971,13 @@
       if (el.hidden || el.classList.contains('is-leaving')) return;
       el.classList.add('is-compact');
     }, 4200);
-    el.querySelector('.nx-ann__close').addEventListener('click', function () {
+    el.querySelector('.hax-ann__close').addEventListener('click', function () {
       clearTimeout(settle);
       if (ro) ro.disconnect();
       var fin = false;
       function done() {
         if (fin) return; fin = true;
-        el.hidden = true; el.classList.remove('is-leaving'); root.classList.remove('nx-ann-leaving'); el.style.height = ''; setH(0);
+        el.hidden = true; el.classList.remove('is-leaving'); root.classList.remove('hax-ann-leaving'); el.style.height = ''; setH(0);
         if (el.getAnimations) el.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); });
         var t = document.querySelector('.hero__title');
         if (t) { t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true }); }
@@ -3988,7 +3987,7 @@
          while its height collapses — the hero follows frame by frame. */
       var h = el.getBoundingClientRect().height;
       el.style.height = h + 'px';
-      el.classList.add('is-leaving'); root.classList.add('nx-ann-leaving');
+      el.classList.add('is-leaving'); root.classList.add('hax-ann-leaving');
       var ease = 'cubic-bezier(0.4, 0, 0.2, 1)', dur = 440;
       /* Content and strip move as one piece: the inner slides up by exactly
          the height that collapses, so it reads as the strip retreating
@@ -4016,12 +4015,9 @@
     <div class="scene__bg"></div>
 
   <section class="hero">
-    <!-- media hero: aurora always renders; assets/hero.mp4 fades in over it if present -->
+    <!-- media hero: the aurora field. To add a video, put a <video class="ag-hero-media__video">
+         here; the script below fades it in once it can play. -->
     <div class="ag-hero-media" aria-hidden="true">
-      
-      <video class="ag-hero-media__video" autoplay muted loop playsinline preload="metadata">
-        <source src="assets/hero.mp4" type="video/mp4" />
-      </video>
       <div class="ag-hero-media__scrim"></div>
     </div>
 
@@ -4207,14 +4203,14 @@
         <div class="ln-who__art" data-shape="spark" aria-hidden="true"></div>
         <h3>For founders</h3>
         <p>One prompt. Your agent builds the screens.</p>
-        <span class="nx-scope"><a class="ln-who__btn ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-10 rounded-lg px-5 text-sm" href="#developers" data-tab="agent"><span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Copy the prompt</a></span>
+        <span class="hax-scope"><a class="ln-who__btn ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-10 rounded-lg px-5 text-sm" href="#developers" data-tab="agent"><span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Copy the prompt</a></span>
         <span class="ln-who__meta">Claude · Cursor · Codex</span>
       </div>
       <div class="ln-who__col ln-rv" style="--d:90ms">
         <div class="ln-who__art" data-shape="code" aria-hidden="true"></div>
         <h3>For developers</h3>
         <p>The same patterns, in React.</p>
-        <span class="nx-scope"><a class="ln-who__btn ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-10 rounded-lg px-5 text-sm" href="docs"><span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read the quick start</a></span>
+        <span class="hax-scope"><a class="ln-who__btn ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-10 rounded-lg px-5 text-sm" href="docs"><span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read the quick start</a></span>
         <span class="ln-who__meta"><code>npm i @hax/react</code></span>
       </div>
     </div>
@@ -4229,7 +4225,7 @@
         <h2 class="ln-h2 ln-rv" id="pat-h">Every pattern belongs to one of <em>four moments</em></h2>
         <p class="ln-lede ln-rv">The library is organised against this map so the right pattern is always one click away.</p>
       </div>
-      <span class="nx-scope ln-rv"><a class="ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-10 rounded-lg px-5 text-sm" href="library"><span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>All 84 patterns</a></span>
+      <span class="hax-scope ln-rv"><a class="ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-10 rounded-lg px-5 text-sm" href="library"><span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>All 84 patterns</a></span>
     </header>
     <div class="ln-bento">
       <article class="ln-bt ln-bt--s ln-rv" aria-labelledby="bt-1">
@@ -4243,7 +4239,7 @@
         </div>
         <footer class="ln-bt__foot">
           <div><span class="ln-bt__n">01</span><h3 id="bt-1">Onboarding</h3><p>Disclosure, consent and caveats — before anyone types.</p></div>
-          <span class="nx-scope ln-bt__go"><a class="ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-onboarding"><span data-count="12">12</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
+          <span class="hax-scope ln-bt__go"><a class="ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-onboarding"><span data-count="12">12</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
         </footer>
       </article>
       <article class="ln-bt ln-bt--w ln-rv" aria-labelledby="bt-2">
@@ -4264,7 +4260,7 @@
         </div>
         <footer class="ln-bt__foot">
           <div><span class="ln-bt__n">02</span><h3 id="bt-2">Initially</h3><p>The first prompt: open input, suggestions, examples and voice.</p></div>
-          <span class="nx-scope ln-bt__go"><a class="ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-initially"><span data-count="24">24</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
+          <span class="hax-scope ln-bt__go"><a class="ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-initially"><span data-count="24">24</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
         </footer>
       </article>
       <article class="ln-bt ln-bt--w ln-rv" aria-labelledby="bt-3">
@@ -4282,7 +4278,7 @@
         </div>
         <footer class="ln-bt__foot">
           <div><span class="ln-bt__n">03</span><h3 id="bt-3">During interaction</h3><p>Progress, sources, approvals and recovery while it works.</p></div>
-          <span class="nx-scope ln-bt__go"><a class="ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-during"><span data-count="37">37</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
+          <span class="hax-scope ln-bt__go"><a class="ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-during"><span data-count="37">37</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
         </footer>
       </article>
       <article class="ln-bt ln-bt--s ln-rv" aria-labelledby="bt-4">
@@ -4297,7 +4293,7 @@
         </div>
         <footer class="ln-bt__foot">
           <div><span class="ln-bt__n">04</span><h3 id="bt-4">Over time</h3><p>Memory, history and preferences people stay in control of.</p></div>
-          <span class="nx-scope ln-bt__go"><a class="ln-nxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-overtime"><span data-count="11">11</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
+          <span class="hax-scope ln-bt__go"><a class="ln-haxbtn inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap font-semibold tracking-[0.005em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:shrink-0 border border-border bg-background text-foreground shadow-sm hover:bg-accent h-9 rounded-lg px-4 text-sm" href="library#stage-overtime"><span data-count="11">11</span> patterns<span class="inline-flex shrink-0 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></span>
         </footer>
       </article>
     </div>
@@ -4318,7 +4314,7 @@
         <button class="ln-tab" role="tab" type="button" id="dt-react" aria-controls="dp-code" aria-selected="false" tabindex="-1" data-tab="react">React</button>
       </div>
       <div class="ln-code" id="dp-code" role="tabpanel" aria-labelledby="dt-agent">
-        <div class="ln-code__bar"><span data-file>Paste into your AI agent</span><button class="ln-copy nx-copy" type="button" aria-label="Copy"></button></div>
+        <div class="ln-code__bar"><span data-file>Paste into your AI agent</span><button class="ln-copy hax-copy" type="button" aria-label="Copy"></button></div>
         <pre><code data-code></code></pre>
       </div>
       <p class="ln-dev__note" data-note></p>
@@ -4567,7 +4563,6 @@ document.addEventListener('DOMContentLoaded', function () {
         <nav class="foot__links" aria-label="Footer">
           <a href="library">Pattern Library</a>
           <a href="https://outshift.cisco.com/" target="_blank" rel="noopener">outshift.cisco.com ↗</a>
-          <a href="contact">Contact ↗</a>
         </nav>
       </div>
     </div>
@@ -5220,8 +5215,8 @@ document.addEventListener('DOMContentLoaded', function () {
       (last ? last.finished : Promise.resolve()).then(finish);
     }
     function begin() {
-      if (root.classList.contains('nx-intro-on')) {
-        addEventListener('nx-intro-fly', function (e) { run((e.detail && e.detail.duration) || 1400); }, { once: true });
+      if (root.classList.contains('hax-intro-on')) {
+        addEventListener('hax-intro-fly', function (e) { run((e.detail && e.detail.duration) || 1400); }, { once: true });
       } else run(300);
     }
     setTimeout(finish, 30000);
@@ -5564,7 +5559,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ── Developers: tabs, sliding pill, view transition, copy ── */
   var esc = function (t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
-  var MCP = 'https://nucleux.in/mcp';
+  var MCP = 'https://YOUR-HAX-DOMAIN/mcp';
   var TABS = {
     agent: {
       file: 'Paste into your AI agent',
@@ -5577,11 +5572,22 @@ document.addEventListener('DOMContentLoaded', function () {
       note: 'Theming with Tailwind and all ~50 packages: <a href="docs">Read the Docs →</a>'
     }
   };
+  /* One pass over the raw text, so a highlight can never land inside another
+     highlight's markup (the old chained replaces leaked `"k">` into the code). */
+  var reEsc = function (t) { return t.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&'); };
+  var PAINT = {
+    react: { re: /(^npm install .*$)|('[^'\n]*'|"[^"\n]*")|\b(import|from|function|return)\b/gm, cls: ['c', 's', 'k'] },
+    agent: { re: new RegExp('(' + reEsc(MCP) + '|@hax\\/react)', 'g'), cls: ['k'] }
+  };
   function paint(text, kind) {
-    var h = esc(text);
-    if (kind === 'react') h = h.replace(/(\bimport\b|\bfrom\b|\bfunction\b|\breturn\b)/g, '<span class="k">$1</span>').replace(/('[^']*'|&quot;[^&]*&quot;|"[^"]*")/g, '<span class="s">$1</span>').replace(/^(npm install .*)$/m, '<span class="c">$1</span>');
-    if (kind === 'agent') h = h.replace(/(https:\/\/nucleux\.in\/mcp|@nucleux\/react)/g, '<span class="k">$1</span>');
-    return h;
+    var p = PAINT[kind]; if (!p) return esc(text);
+    var out = '', last = 0, m; p.re.lastIndex = 0;
+    while ((m = p.re.exec(text))) {
+      var g = 1; while (g < m.length && m[g] === undefined) g++;
+      out += esc(text.slice(last, m.index)) + '<span class="' + p.cls[g - 1] + '">' + esc(m[0]) + '</span>';
+      last = p.re.lastIndex;
+    }
+    return out + esc(text.slice(last));
   }
   var tabs = $$('.ln-tab'), tpill = $('.ln-tabs__pill'), code = $('[data-code]'), file = $('[data-file]'), note = $('[data-note]'), panel = $('#dp-code'), curTab = 'agent';
   function pillTab(b) { tpill.style.transform = 'translateX(' + b.offsetLeft + 'px) scaleX(' + (b.offsetWidth / 100).toFixed(3) + ')'; }
@@ -5603,8 +5609,8 @@ document.addEventListener('DOMContentLoaded', function () {
   fill('agent'); pillTab(tabs[0]);
   addEventListener('resize', function () { pillTab(tabs.filter(function (x) { return x.getAttribute('aria-selected') === 'true'; })[0]); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { pillTab(tabs.filter(function (x) { return x.getAttribute('aria-selected') === 'true'; })[0]); });
-  $('.ln-copy').addEventListener('click', function () { nxCopy(this, TABS[curTab].text); });
-  /* the shared .nx-copy icon button (js/global.js) */
+  $('.ln-copy').addEventListener('click', function () { haxCopy(this, TABS[curTab].text); });
+  /* the shared .hax-copy icon button (js/global.js) */
   $$('[data-tab="agent"].ln-card, [data-tab="agent"].ln-obtn, [data-tab="agent"].ln-who__btn').forEach(function (a) { a.addEventListener('click', function () { selectTab('agent'); }); });
 })();
 </script>
@@ -5628,7 +5634,7 @@ document.addEventListener('DOMContentLoaded', function () {
     pill.innerHTML = open ? PG : LIB;
     pill.setAttribute('aria-expanded', String(open));
     pill.setAttribute('aria-label', open ? 'HAX Playground is showing. Back to the pattern library' : 'Introducing the HAX Playground. Open it');
-    document.documentElement.classList.toggle('nx-pg-view', open);
+    document.documentElement.classList.toggle('hax-pg-view', open);
     hero.classList.add('is-swap'); hero.classList.toggle('is-pg', open); panel.hidden = !open;
     clearTimeout(t); t = setTimeout(function () { hero.classList.remove('is-swap'); }, 700);
     /* bring the pill up under the nav so the Playground has the screen; back to the top for the hero */
@@ -5691,8 +5697,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function onWheel(e, frameDoc) {
     /* search dialog open: the page stays put; only its result list scrolls */
-    if (document.body.classList.contains('is-nx-search')) {
-      if (!(e.target.closest && e.target.closest('.nx-search__results'))) e.preventDefault();
+    if (document.body.classList.contains('is-hax-search')) {
+      if (!(e.target.closest && e.target.closest('.hax-search__results'))) e.preventDefault();
       return;
     }
     if (!on() || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
@@ -5789,13 +5795,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var b = document.querySelector('.hero__npm'); if (!b) return;
   var live = b.querySelector('.hero__npm-live'), t, tt, el;
   function toast(msg) {
-    if (!el) { el = document.createElement('div'); el.className = 'nx-toast'; el.setAttribute('aria-hidden', 'true'); document.body.appendChild(el); }
-    el.innerHTML = '<span class="nx-toast__ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Copied</span>';
+    if (!el) { el = document.createElement('div'); el.className = 'hax-toast'; el.setAttribute('aria-hidden', 'true'); document.body.appendChild(el); }
+    el.innerHTML = '<span class="hax-toast__ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Copied</span>';
     var c = document.createElement('code'); c.textContent = msg; el.appendChild(c);
     void el.offsetWidth; el.classList.add('is-on');
     clearTimeout(tt); tt = setTimeout(function () { el.classList.remove('is-on'); }, 2200);
   }
-  window.nxToast = toast;
+  window.haxToast = toast;
   b.addEventListener('click', function () {
     var txt = b.getAttribute('data-copy');
     function ok() {
