@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Pattern — HAX</title>
+  <meta name="description" content="Pattern documentation: capabilities, examples, composition, code." />
+
+  <!-- ── SHARE CARD ──
+       X (and LinkedIn, Slack, iMessage…) build their link preview by
+       crawling these tags, not from anything the share button can pass in
+       the intent URL — there is no way to attach an image to a post from a
+       link. `summary_large_image` is what makes the card render as the wide
+       banner rather than a small thumbnail. The image URL must be absolute
+       and publicly reachable: the crawler fetches it from its own servers,
+       so a relative path or a localhost address renders no card at all. -->
+  <link rel="canonical" href="https://nucleux.in/pattern.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="HAX" />
+  <meta property="og:url" content="https://nucleux.in/pattern.html" />
+  <meta property="og:title" content="Pattern — HAX" />
+  <meta property="og:description" content="Pattern documentation: capabilities, examples, composition, code." />
+  <meta property="og:image" content="https://nucleux.in/share-on-x.png" />
+  <meta property="og:image:width" content="515" />
+  <meta property="og:image:height" content="272" />
+  <meta property="og:image:alt" content="HAX — UI components for AI agents" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pattern — HAX" />
+  <meta name="twitter:description" content="Pattern documentation: capabilities, examples, composition, code." />
+  <meta name="twitter:image" content="https://nucleux.in/share-on-x.png" />
+  <meta name="twitter:image:alt" content="HAX — UI components for AI agents" />
+
+
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://rsms.me/inter/inter.css" /></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <script>(function(d){d.documentElement.classList.add("gnav-pending");setTimeout(function(){d.documentElement.classList.remove("gnav-pending");},2000);})(document);</script>
+  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <link rel="stylesheet" href="css/nav-mega.css" />
+</head>
+<body class="has-shell">
+
+  <header class="gnav">
+    <div class="container gnav__inner">
+      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-nx-home="/">
+        <svg class="brand__mark brand__mark--inline" aria-hidden="true" width="84" height="28" viewBox="0 0 101 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.9856 0L17.3137 0.73802V8.06348L16.9856 8.52816L16.3451 8.58415L9.93358 4.83807L9.6875 4.26402L16.9856 0Z" fill="#C5E3EB"/>
+<path d="M2.39062 8.52976L2.5546 9.04907L8.91443 12.6934L9.68872 12.7118L9.98942 12.2197V4.73031L9.68872 4.26562L2.39062 8.52976Z" fill="#C5E3EB"/>
+<path d="M2.39062 25.4202L2.66396 24.8872L9.21651 21.1325L9.68872 21.2382L10.2901 21.0742L16.7633 24.7836L16.9868 25.4202L17.2192 25.8303V33.6203L16.9868 33.9484L2.39062 25.4202Z" fill="#78ABDB"/>
+<path d="M9.6875 4.26562L16.9856 8.52976L17.3137 9.26767V16.2104L16.9856 16.9758L16.0969 16.8949L9.9199 13.2857L9.6875 12.7118V4.26562Z" fill="#A4C0C5"/>
+<path d="M16.9854 16.975L16.8357 17.4036L10.4117 21.157L9.68735 21.239L9.46875 20.706V12.998L9.68735 12.7109L16.9854 16.975Z" fill="#7BA6C1"/>
+<path d="M2.39062 25.4195L9.68872 21.2374V12.7094L2.39062 8.52734V25.4195Z" fill="#98C3E4"/>
+<path d="M16.9856 16.9766L17.1769 17.5096V24.8076L16.9856 25.4226L9.6875 21.2406L16.9856 16.9766Z" fill="#4B7C9E"/>
+<path d="M16.9844 33.9494V25.4213L17.3479 25.3242L23.8999 29.1523L24.2825 29.6854L16.9844 33.9494Z" fill="#F4BC6A"/>
+<path d="M16.9844 16.9752V25.4213L24.2825 29.6854L24.5149 29.0704V21.7723L24.2825 21.2393L23.8588 20.6653L17.4785 16.9375L16.9844 16.9752Z" fill="#B48340"/>
+<path d="M24.2825 12.7109L24.5149 13.0799V20.624L24.2825 21.239L16.9844 16.975L17.3207 16.4383L23.4898 12.8339L24.2825 12.7109Z" fill="#8C3D33"/>
+<path d="M16.9844 8.52539L17.4627 8.40234L24.0104 12.1544L24.2825 12.7074L16.9844 16.9714V8.52539Z" fill="#C47973"/>
+<path d="M24.2852 29.6825V21.2363L24.7067 21.1406L31.2416 24.8853L31.5832 25.4183L24.2852 29.6825Z" fill="#F4BC6A"/>
+<path d="M31.5832 8.52734H30.9946L24.5393 12.2264L24.2852 12.7094V21.2374L31.5832 25.4195V8.52734Z" fill="#BB6651"/>
+<path d="M16.9844 0V8.52816L24.2825 12.7102L31.5806 8.52816L16.9844 0Z" fill="#E1938A"/>
+<path d="M42 7H47V14.6H53V7H58V27H53V19H47V27H42Z" fill="var(--brand-word, #8A8F96)"/>
+<path fill-rule="evenodd" d="M67.2 7H72.8L79.5 27H74.3L73 23H67L65.7 27H60.5ZM67.7 19H72.3L70 12Z" fill="var(--brand-word, #8A8F96)"/>
+<path d="M81.5 7H87.3L90.75 13.2L94.2 7H100L93.7 17L100 27H94.2L90.75 20.8L87.3 27H81.5L87.8 17Z" fill="var(--brand-word, #8A8F96)"/>
+</svg>
+        <span class="brand__divider" aria-hidden="true"></span>
+        <span class="os-lockup" aria-hidden="true"><img class="os-lockup__logo" src="img/outshift-logo.svg" alt="" width="78" height="32"><span class="os-lockup__word">design</span></span>
+        <span class="rot-sr">HAX by Outshift Design</span>
+      </a>
+
+      <nav class="gnav__center" aria-label="Primary">
+        <div class="ox-dd">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Initiatives">Initiatives</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li class="ox-dd__group"><a class="ox-dd__label" href="https://outshift.design/hax">The Human-Agent Experience</a></li>
+            <li><a href="https://outshift.cisco.com/internet-of-cognition/explore" target="_blank" rel="noopener noreferrer">Internet of Cognition <svg class="ox-dd__ext" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          </ul>
+        </div>
+        <div class="ox-dd ox-dd--end">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Research">Research</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li><a href="https://outshift.design/research/foundational-principles">Foundational Principles</a></li>
+            <li><a href="https://outshift.design/research/cognitive-frameworks">Cognitive Frameworks</a></li>
+            <li class="ox-dd__group"><a class="ox-dd__label" href="https://outshift.design/research/societal-impact">Societal Impact</a>
+              <ul class="ox-dd__sub" role="list">
+                <li><a href="https://outshift.design/research/societal-impact/agent-impact-map">Agent Impact Map</a></li>
+                <li><a href="https://outshift.design/research/societal-impact/cognitive-load-audit">Cognitive Load Audit</a></li>
+                <li><a href="https://outshift.design/research/societal-impact/foresight-canvas">Foresight Canvas</a></li>
+              </ul>
+            </li>
+            <li><a href="https://outshift.design/research/security-privacy">Security &amp; Privacy</a></li>
+          </ul>
+        </div>
+        <a class="gnav__link ox-link" href="https://outshift.design/blog"><span class="ox-t" data-t="Blog">Blog</span></a>
+        <div class="ox-dd ox-dd--comp">
+          <button class="ox-dd__btn is-current" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Components">Components</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li class="ox-dd__group"><span class="ox-dd__label">ShadCN</span>
+              <ul class="ox-dd__sub" role="list">
+                <li><a href="basic-components">Basic Components</a></li>
+                <li><a href="library">Agentic Components</a></li>
+              </ul>
+            </li>
+            <li class="ox-dd__group"><span class="ox-dd__label">Material 3.0</span>
+              <ul class="ox-dd__sub" role="list">
+                <li><span class="ox-dd__soon">Basic Components <em>Soon</em></span></li>
+                <li><a href="material-agentic">Agentic Components</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <a class="gnav__link" href="docs"><span class="ox-t" data-t="Docs">Docs</span></a>
+        <a class="gnav__link" href="mcp"><span class="ox-t" data-t="MCP">MCP</span></a>
+      </nav>
+
+      <div class="gnav__actions">
+      </div>
+    </div>
+  </header>
+
+  <div class="detail-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Library navigation"></aside>
+    <main class="detail" id="detail"></main>
+    <aside class="toc" id="toc" aria-label="On this page"></aside>
+  </div>
+
+  <script src="js/patterns.js"></script>
+  <script src="js/pattern.js?v=2"></script>
+  <script src="js/global.js?v=2"></script>
+<script src="js/nav-splitflap.js?v=2"></script>
+<script src="js/nav-mega.js"></script>
+</body>
+</html>

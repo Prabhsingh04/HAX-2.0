@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>MCP — HAX</title>
+  <meta name="description" content="Connect your design system to AI using the Model Context Protocol. Real-time access to components, tokens, and docs." />
+
+  <!-- ── SHARE CARD ──
+       X (and LinkedIn, Slack, iMessage…) build their link preview by
+       crawling these tags, not from anything the share button can pass in
+       the intent URL — there is no way to attach an image to a post from a
+       link. `summary_large_image` is what makes the card render as the wide
+       banner rather than a small thumbnail. The image URL must be absolute
+       and publicly reachable: the crawler fetches it from its own servers,
+       so a relative path or a localhost address renders no card at all. -->
+  <link rel="canonical" href="https://nucleux.in/mcp.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="HAX" />
+  <meta property="og:url" content="https://nucleux.in/mcp.html" />
+  <meta property="og:title" content="MCP — HAX" />
+  <meta property="og:description" content="Connect your design system to AI using the Model Context Protocol. Real-time access to components, tokens, and docs." />
+  <meta property="og:image" content="https://nucleux.in/share-on-x.png" />
+  <meta property="og:image:width" content="515" />
+  <meta property="og:image:height" content="272" />
+  <meta property="og:image:alt" content="HAX — UI components for AI agents" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MCP — HAX" />
+  <meta name="twitter:description" content="Connect your design system to AI using the Model Context Protocol. Real-time access to components, tokens, and docs." />
+  <meta name="twitter:image" content="https://nucleux.in/share-on-x.png" />
+  <meta name="twitter:image:alt" content="HAX — UI components for AI agents" />
+
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://rsms.me/inter/inter.css" /></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <script>(function(d){d.documentElement.classList.add("gnav-pending");setTimeout(function(){d.documentElement.classList.remove("gnav-pending");},2000);})(document);</script>
+  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <link rel="stylesheet" href="css/nav-mega.css" />
+  <style>
+
+    /* ─── MCP DOCS PAGE ─── */
+    .mx { position: relative; z-index: 1; }
+    .mx__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 760px);
+      justify-content: center;
+      gap: var(--s-12);
+      padding-block: var(--s-12) var(--s-24);
+    }
+        @media (max-width: 820px)  { .mx__grid { grid-template-columns: minmax(0, 1fr); padding-top: var(--s-8); } }
+
+
+    /* Article head */
+    .mx__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-4); }
+    .mx__title { font-size: var(--t-display-3); line-height: 1.05; letter-spacing: -0.04em; font-weight: 600; color: var(--fg); margin: 0; }
+    .mx__lede { font-size: 19px; line-height: 1.55; color: var(--fg); margin: var(--s-5) 0 var(--s-3); }
+    .mx__p { font-size: 15px; line-height: 1.65; color: var(--fg-mid); margin: 0 0 var(--s-4); }
+    .mx__p a, .mx__lede a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+    .mx__h2 { font-size: var(--t-h2); letter-spacing: -0.025em; font-weight: 600; color: var(--fg); margin: var(--s-16) 0 var(--s-5); scroll-margin-top: calc(var(--nav-h) + var(--s-6)); }
+    .mx code:not(pre code) {
+      font: 500 0.86em var(--font-mono); color: var(--fg);
+      background: var(--ink-50); border: 1px solid var(--border); border-radius: var(--r-1); padding: 1px 5px;
+    }
+
+
+
+    /* Manual setup — client code blocks */
+    .mx-code { position: relative; border: 1px solid var(--ink-800); border-radius: var(--r-4); background: var(--ink-950); overflow: hidden; margin: 0 0 var(--s-4); }
+    .mx-code__head { display: flex; align-items: center; gap: 10px; padding: 12px 16px 0; font-size: 13px; font-weight: 600; color: var(--ink-50); }
+    .mx-code__head img { width: 18px; height: 18px; border-radius: 4px; }
+    .mx-code pre { margin: 0; padding: var(--s-4) 56px var(--s-4) 16px; font: 13px/1.75 var(--font-mono); color: var(--ink-100); overflow-x: auto; counter-reset: ln; }
+    .mx-code pre .ln { display: block; }
+    .mx-code pre .ln::before { counter-increment: ln; content: counter(ln); display: inline-block; width: 2ch; margin-right: 16px; text-align: right; color: var(--ink-500); user-select: none; }
+    .mx-code__note { padding: 0 16px 14px; margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-400); }
+    .mx-code__note code { font: 12px var(--font-mono) !important; color: var(--ink-100) !important; background: var(--ink-800) !important; border: 1px solid var(--ink-700) !important; }
+    .mx-copy { position: absolute; top: 10px; right: 10px; }   /* the button is .nx-copy (css/styles.css) */
+    .t-k { color: #c4b5fd; } .t-s { color: #fde68a; } .t-p { color: var(--ink-400); }
+
+    /* Quick connect */
+    .mx-connect { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-8) 0 0; }
+    @media (max-width: 560px) { .mx-connect { grid-template-columns: 1fr; } }
+    .mx-connect__btn {
+      display: flex; align-items: center; gap: var(--s-3); padding: var(--s-4) var(--s-5);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-4); box-shadow: var(--shadow-2);
+      text-decoration: none; color: var(--fg); transition: border-color var(--dur-1), box-shadow var(--dur-1);
+    }
+    .mx-connect__btn:hover { border-color: var(--border-strong); box-shadow: var(--shadow-3); }
+    .mx-connect__btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+    .mx-connect__btn img { width: 28px; height: 28px; flex-shrink: 0; }
+    .mx-connect__name { display: block; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+    .mx-connect__hint { display: block; font-size: 13px; color: var(--fg-muted); margin-top: 2px; }
+    .mx-connect__arrow { margin-left: auto; color: var(--fg-muted); }
+    .mx-toast {
+      position: fixed; left: 50%; bottom: var(--s-6); transform: translate(-50%, 12px); opacity: 0; pointer-events: none;
+      padding: 10px 16px; border-radius: var(--r-3); background: var(--ink-900); color: var(--ink-50); font-size: 14px; box-shadow: var(--shadow-4);
+      transition: opacity var(--dur-2), transform var(--dur-2) var(--ease-out); z-index: 50;
+    }
+    .mx-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+    /* Platform switcher */
+    .mx-tabs { display: flex; gap: 2px; padding: 4px; margin: 0 0 var(--s-8); background: var(--ink-50); border: 1px solid var(--border); border-radius: var(--r-4); width: fit-content; max-width: 100%; overflow-x: auto; }
+    /* --font-body: the site has no --font-sans, which dropped this whole font rule to the browser's 16px */
+    .mx-tab { display: flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; font: 500 13px/1 var(--font-body); color: var(--fg-mid); background: transparent; border: 0; border-radius: var(--r-3); cursor: pointer; white-space: nowrap; transition: color var(--dur-1), background var(--dur-1); }
+    .mx-tab img { flex: none; width: 15px; height: 15px; border-radius: 3px; object-fit: contain; }
+    .mx-tab:hover:not([aria-selected="true"]) { color: var(--fg); }
+    .mx-tab[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: var(--shadow-2); }
+    .mx-tab:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+    .mx-steps { list-style: none; margin: 0; padding: 0; }
+    .mx-steps > li { position: relative; padding: 0 0 var(--s-8) 42px; }
+    .mx-steps > li:not(:last-child)::before { content: ""; position: absolute; left: 13px; top: 32px; bottom: 6px; width: 1px; background: var(--border); }
+    .mx-steps__n { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 27px; height: 27px; border-radius: var(--r-2); background: var(--ink-100); font: 600 13px var(--font-mono); color: var(--fg); }
+    .mx-steps__title { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; color: var(--fg); margin: 2px 0 var(--s-2); }
+    .mx-steps .mx__p { margin-bottom: var(--s-3); }
+    .mx-steps .mx-code { margin: var(--s-3) 0; }
+    .mx-steps b { color: var(--fg); font-weight: 600; }
+
+
+  </style>
+</head>
+<body class="has-shell">
+
+  <header class="gnav">
+    <div class="container gnav__inner">
+      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-nx-home="/">
+        <svg class="brand__mark brand__mark--inline" aria-hidden="true" width="84" height="28" viewBox="0 0 101 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.9856 0L17.3137 0.73802V8.06348L16.9856 8.52816L16.3451 8.58415L9.93358 4.83807L9.6875 4.26402L16.9856 0Z" fill="#C5E3EB"/>
+<path d="M2.39062 8.52976L2.5546 9.04907L8.91443 12.6934L9.68872 12.7118L9.98942 12.2197V4.73031L9.68872 4.26562L2.39062 8.52976Z" fill="#C5E3EB"/>
+<path d="M2.39062 25.4202L2.66396 24.8872L9.21651 21.1325L9.68872 21.2382L10.2901 21.0742L16.7633 24.7836L16.9868 25.4202L17.2192 25.8303V33.6203L16.9868 33.9484L2.39062 25.4202Z" fill="#78ABDB"/>
+<path d="M9.6875 4.26562L16.9856 8.52976L17.3137 9.26767V16.2104L16.9856 16.9758L16.0969 16.8949L9.9199 13.2857L9.6875 12.7118V4.26562Z" fill="#A4C0C5"/>
+<path d="M16.9854 16.975L16.8357 17.4036L10.4117 21.157L9.68735 21.239L9.46875 20.706V12.998L9.68735 12.7109L16.9854 16.975Z" fill="#7BA6C1"/>
+<path d="M2.39062 25.4195L9.68872 21.2374V12.7094L2.39062 8.52734V25.4195Z" fill="#98C3E4"/>
+<path d="M16.9856 16.9766L17.1769 17.5096V24.8076L16.9856 25.4226L9.6875 21.2406L16.9856 16.9766Z" fill="#4B7C9E"/>
+<path d="M16.9844 33.9494V25.4213L17.3479 25.3242L23.8999 29.1523L24.2825 29.6854L16.9844 33.9494Z" fill="#F4BC6A"/>
+<path d="M16.9844 16.9752V25.4213L24.2825 29.6854L24.5149 29.0704V21.7723L24.2825 21.2393L23.8588 20.6653L17.4785 16.9375L16.9844 16.9752Z" fill="#B48340"/>
+<path d="M24.2825 12.7109L24.5149 13.0799V20.624L24.2825 21.239L16.9844 16.975L17.3207 16.4383L23.4898 12.8339L24.2825 12.7109Z" fill="#8C3D33"/>
+<path d="M16.9844 8.52539L17.4627 8.40234L24.0104 12.1544L24.2825 12.7074L16.9844 16.9714V8.52539Z" fill="#C47973"/>
+<path d="M24.2852 29.6825V21.2363L24.7067 21.1406L31.2416 24.8853L31.5832 25.4183L24.2852 29.6825Z" fill="#F4BC6A"/>
+<path d="M31.5832 8.52734H30.9946L24.5393 12.2264L24.2852 12.7094V21.2374L31.5832 25.4195V8.52734Z" fill="#BB6651"/>
+<path d="M16.9844 0V8.52816L24.2825 12.7102L31.5806 8.52816L16.9844 0Z" fill="#E1938A"/>
+<path d="M42 7H47V14.6H53V7H58V27H53V19H47V27H42Z" fill="var(--brand-word, #8A8F96)"/>
+<path fill-rule="evenodd" d="M67.2 7H72.8L79.5 27H74.3L73 23H67L65.7 27H60.5ZM67.7 19H72.3L70 12Z" fill="var(--brand-word, #8A8F96)"/>
+<path d="M81.5 7H87.3L90.75 13.2L94.2 7H100L93.7 17L100 27H94.2L90.75 20.8L87.3 27H81.5L87.8 17Z" fill="var(--brand-word, #8A8F96)"/>
+</svg>
+        <span class="brand__divider" aria-hidden="true"></span>
+        <span class="os-lockup" aria-hidden="true"><img class="os-lockup__logo" src="img/outshift-logo.svg" alt="" width="78" height="32"><span class="os-lockup__word">design</span></span>
+        <span class="rot-sr">HAX by Outshift Design</span>
+      </a>
+      <nav class="gnav__center" aria-label="Primary">
+        <div class="ox-dd">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Initiatives">Initiatives</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li class="ox-dd__group"><a class="ox-dd__label" href="https://outshift.design/hax">The Human-Agent Experience</a></li>
+            <li><a href="https://outshift.cisco.com/internet-of-cognition/explore" target="_blank" rel="noopener noreferrer">Internet of Cognition <svg class="ox-dd__ext" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          </ul>
+        </div>
+        <div class="ox-dd ox-dd--end">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Research">Research</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li><a href="https://outshift.design/research/foundational-principles">Foundational Principles</a></li>
+            <li><a href="https://outshift.design/research/cognitive-frameworks">Cognitive Frameworks</a></li>
+            <li class="ox-dd__group"><a class="ox-dd__label" href="https://outshift.design/research/societal-impact">Societal Impact</a>
+              <ul class="ox-dd__sub" role="list">
+                <li><a href="https://outshift.design/research/societal-impact/agent-impact-map">Agent Impact Map</a></li>
+                <li><a href="https://outshift.design/research/societal-impact/cognitive-load-audit">Cognitive Load Audit</a></li>
+                <li><a href="https://outshift.design/research/societal-impact/foresight-canvas">Foresight Canvas</a></li>
+              </ul>
+            </li>
+            <li><a href="https://outshift.design/research/security-privacy">Security &amp; Privacy</a></li>
+          </ul>
+        </div>
+        <a class="gnav__link ox-link" href="https://outshift.design/blog"><span class="ox-t" data-t="Blog">Blog</span></a>
+        <div class="ox-dd ox-dd--comp">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Components">Components</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li class="ox-dd__group"><span class="ox-dd__label">ShadCN</span>
+              <ul class="ox-dd__sub" role="list">
+                <li><a href="basic-components">Basic Components</a></li>
+                <li><a href="library">Agentic Components</a></li>
+              </ul>
+            </li>
+            <li class="ox-dd__group"><span class="ox-dd__label">Material 3.0</span>
+              <ul class="ox-dd__sub" role="list">
+                <li><span class="ox-dd__soon">Basic Components <em>Soon</em></span></li>
+                <li><a href="material-agentic">Agentic Components</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <a class="gnav__link" href="docs"><span class="ox-t" data-t="Docs">Docs</span></a>
+        <a class="gnav__link is-current" href="mcp"><span class="ox-t" data-t="MCP">MCP</span></a>
+      </nav>
+      <div class="gnav__actions">
+      </div>
+    </div>
+  </header>
+
+  <main class="mx">
+    <div class="container mx__grid">
+
+
+      <article class="mx__main">
+        <div class="mx__head">
+          <h1 class="mx__title">MCP Server</h1>
+        </div>
+
+        <p class="mx__lede">Let your AI assistant search HAX patterns, components and tokens for you, straight from a prompt.</p>
+        <p class="mx__p">It works through the HAX MCP server. <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol</a> is an open standard that lets AI assistants connect to tools and data.</p>
+
+        <div class="mx-connect">
+          <a class="mx-connect__btn" id="connect-claude" href="#" target="_blank" rel="noopener">
+            <img src="./assets/logos/claude-mark.svg" alt="" aria-hidden="true">
+            <span><span class="mx-connect__name">Connect to Claude</span><span class="mx-connect__hint">Opens Claude with setup steps in the prompt</span></span>
+            <svg class="mx-connect__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="mx-connect__btn" id="connect-codex" href="#" target="_blank" rel="noopener">
+            <img src="./assets/logos/openai.svg" alt="" aria-hidden="true">
+            <span><span class="mx-connect__name">Connect to Codex</span><span class="mx-connect__hint">Opens Codex with setup steps in the prompt</span></span>
+            <svg class="mx-connect__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <h2 class="mx__h2" id="setup">Setup</h2>
+        <p class="mx__p">Pick where you work. The steps change to match.</p>
+        <div class="mx-tabs" role="tablist" aria-label="Platform" id="platform-tabs"></div>
+        <div role="tabpanel" id="platform-panel" tabindex="0"></div>
+
+      </article>
+
+
+    </div>
+  </main>
+  <div class="mx-toast" role="status" aria-live="polite"></div>
+
+  <footer class="foot foot--simple">
+    <div class="container">
+      <div class="foot__bottom">
+        <span class="foot__meta">© 2026 HAX · AI UX Pattern Library</span>
+        <nav class="foot__links" aria-label="Footer">
+          <a href="library.html">Pattern Library</a>
+          <a href="practices.html">Scenarios</a>
+          <a href="docs.html">Docs</a>
+          <a href="mcp.html">MCP</a>
+          <a href="contact.html">Contact ↗</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/patterns.js"></script>
+  <script src="js/global.js?v=2"></script>
+<script src="js/nav-splitflap.js?v=2"></script>
+<script src="js/nav-mega.js"></script>
+  <script>
+    // ── MCP docs page ──
+    (function () {
+      var URL_MCP = 'https://nucleux.in/mcp';
+
+
+      // Each platform: logo + ordered steps. A step may carry a code block (code/lang/note).
+      var PLATFORMS = [
+        { id: 'claude', name: 'Claude', logo: 'claude-mark.svg', steps: [
+          { title: 'Add a custom connector', text: 'In claude.ai or Claude Desktop, open <b>Settings → Connectors</b> and choose <b>Add custom connector</b>.' },
+          { title: 'Enter the server URL', text: 'Paste this as the URL, then click <b>Add</b>.', code: URL_MCP, lang: 'url' },
+          { title: 'Connect and sign in', text: 'Click <b>Connect</b> next to HAX and sign in with the same Google account. Turn it on from the <b>Search and tools</b> menu in any chat.' } ] },
+        { id: 'claude-code', name: 'Claude Code', logo: 'claude-mark.svg', steps: [
+          { title: 'Add the server', text: 'Run this in your terminal:', code: 'claude mcp add --transport http hax ' + URL_MCP, lang: 'sh',
+            note: 'Add <code>--scope project</code> to share it with your team through <code>.mcp.json</code>.' },
+          { title: 'Sign in', text: 'Restart Claude Code, run <code>/mcp</code>, pick <b>nucleux</b> and choose <b>Authenticate</b>. If it doesn\'t show up, <code>/mcp</code> also shows why.' } ] },
+        { id: 'codex', name: 'Codex', logo: 'openai.svg', steps: [
+          { title: 'Add the server', text: 'Add this to <code>~/.codex/config.toml</code>:', code: '[mcp_servers.nucleux]\nurl = "' + URL_MCP + '"', lang: 'toml' },
+          { title: 'Sign in', text: 'Run <code>codex mcp login nucleux</code>, finish sign-in in the browser, then restart Codex.' } ] },
+        { id: 'cursor', name: 'Cursor', logo: 'cursor.svg', steps: [
+          { title: 'Add the server', text: 'Add this to <code>~/.cursor/mcp.json</code> (or <code>.cursor/mcp.json</code> in your project):',
+            code: '{\n  "mcpServers": {\n    "nucleux": {\n      "url": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
+          { title: 'Enable it', text: 'Open <b>Cursor Settings → MCP</b>, turn on <b>nucleux</b> and click <b>Needs login</b> to sign in.' } ] },
+        { id: 'vscode', name: 'VS Code', logo: 'vscode.svg', steps: [
+          { title: 'Add the server', text: 'Add this to <code>.vscode/mcp.json</code> in your project:',
+            code: '{\n  "servers": {\n    "nucleux": {\n      "type": "http",\n      "url": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
+          { title: 'Start it', text: 'Click <b>Start</b> above the nucleux entry in <code>mcp.json</code> and sign in when asked. Use it from Copilot Chat in <b>Agent</b> mode.' } ] },
+        { id: 'windsurf', name: 'Windsurf', logo: 'windsurf.svg', steps: [
+          { title: 'Add the server', text: 'Add this to <code>~/.codeium/windsurf/mcp_config.json</code>:',
+            code: '{\n  "mcpServers": {\n    "nucleux": {\n      "serverUrl": "' + URL_MCP + '"\n    }\n  }\n}', lang: 'json' },
+          { title: 'Refresh', text: 'Open the <b>Cascade</b> MCP panel, click <b>Refresh</b> and sign in when asked.' } ] }
+      ];
+
+      function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+      function tint(line, lang) {
+        var h = esc(line);
+        if (lang === 'json') return h.replace(/"([^"]*)"(\s*:)?/g, function (m, v, colon) {
+          return colon ? '<span class="t-k">"' + v + '"</span>' + colon : '<span class="t-s">"' + v + '"</span>';
+        }).replace(/([{}\[\],])(?![^<]*<\/span>)/g, '<span class="t-p">$1</span>');
+        if (lang === 'toml') return /^\[/.test(h) ? '<span class="t-k">' + h + '</span>' : h.replace(/("[^"]*")/g, '<span class="t-s">$1</span>');
+        if (lang === 'url') return '<span class="t-s">' + h + '</span>';
+        return h.replace(/^(claude mcp add)/, '<span class="t-k">$1</span>');
+      }
+      function codeBlock(st) {
+        var lines = st.code.split('\n').map(function (l) { return '<span class="ln">' + tint(l, st.lang) + '</span>'; }).join('');
+        return '<div class="mx-code"><button class="mx-copy nx-copy" type="button" aria-label="Copy" data-copy="' + esc(st.code).replace(/"/g, '&quot;') + '"></button>' +
+          '<pre><code>' + lines + '</code></pre>' + (st.note ? '<p class="mx-code__note">' + st.note + '</p>' : '') + '</div>';
+      }
+
+      var tabsEl = document.getElementById('platform-tabs');
+      var panel = document.getElementById('platform-panel');
+      tabsEl.innerHTML = PLATFORMS.map(function (pl) {
+        return '<button class="mx-tab" role="tab" type="button" id="tab-' + pl.id + '" aria-controls="platform-panel" aria-selected="false" tabindex="-1">' +
+          '<img src="./assets/logos/' + pl.logo + '" alt="" aria-hidden="true">' + pl.name + '</button>';
+      }).join('');
+      var tabs = Array.prototype.slice.call(tabsEl.children);
+
+      function show(id) {
+        var pl = PLATFORMS.filter(function (x) { return x.id === id; })[0] || PLATFORMS[0];
+        tabs.forEach(function (t) { var on = t.id === 'tab-' + pl.id; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; });
+        panel.setAttribute('aria-labelledby', 'tab-' + pl.id);
+        panel.innerHTML = '<ol class="mx-steps">' + pl.steps.map(function (st, i) {
+          return '<li><span class="mx-steps__n">' + (i + 1) + '</span><h3 class="mx-steps__title">' + st.title + '</h3>' +
+            '<p class="mx__p">' + st.text + '</p>' + (st.code ? codeBlock(st) : '') +
+            '</li>';
+        }).join('') + '</ol>';
+        try { localStorage.setItem('nx-mcp-platform', pl.id); } catch (e) {}
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () { show(t.id.slice(4)); });
+        t.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (!d) return;
+          var next = tabs[(i + d + tabs.length) % tabs.length];
+          show(next.id.slice(4)); next.focus();
+        });
+      });
+      var saved; try { saved = localStorage.getItem('nx-mcp-platform'); } catch (e) {}
+      show(saved || 'claude');
+
+      document.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-copy]');
+        if (!b) return;
+        nxCopy(b, b.dataset.copy);
+      });
+
+      // ── Connect buttons: the whole guide as a prompt ──
+      function setupMd() {
+        var md = ['Read the HAX documentation below, then help me apply it. Ask which platform I use, then walk me through its setup.', '',
+          '# MCP Server', '', '> Source: https://nucleux.in/mcp.html', '',
+          'Let your AI assistant search HAX patterns, components and tokens for you, straight from a prompt.', '',
+          'It works through the HAX MCP server at `' + URL_MCP + '`. [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants connect to tools and data.', '',
+          '## Setup', ''];
+        PLATFORMS.forEach(function (pl) {
+          md.push('### ' + pl.name, '');
+          pl.steps.forEach(function (st, i) {
+            md.push((i + 1) + '. **' + st.title + '** — ' + st.text.replace(/<\/?b>/g, '**').replace(/<\/?code>/g, '`'));
+            if (st.code) md.push('', '   ```' + (st.lang === 'url' ? '' : st.lang), st.code.replace(/^/gm, '   '), '   ```');
+            if (st.note) md.push('', '   ' + st.note.replace(/<\/?code>/g, '`'));
+          });
+          md.push('');
+        });
+        return md.join('\n').trim();
+      }
+      var toast = document.querySelector('.mx-toast');
+      function say(msg) { toast.textContent = msg; toast.classList.add('is-on'); clearTimeout(say.t); say.t = setTimeout(function () { toast.classList.remove('is-on'); }, 2600); }
+
+      // Claude takes the prompt in the URL. Codex has no prefill link, so copy and say so.
+      document.getElementById('connect-claude').href = 'https://claude.ai/new?q=' + encodeURIComponent(setupMd());
+      var codex = document.getElementById('connect-codex');
+      codex.href = 'https://chatgpt.com/codex';
+      codex.addEventListener('click', function () {
+        navigator.clipboard.writeText(setupMd()).then(function () { say('Setup guide copied — paste it into Codex'); });
+      });
+    })();
+  </script>
+</body>
+</html>

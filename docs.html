@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Docs — HAX</title>
+  <meta name="description" content="HAX documentation — installation, design tokens, components, code examples, API reference." />
+
+  <!-- ── SHARE CARD ──
+       X (and LinkedIn, Slack, iMessage…) build their link preview by
+       crawling these tags, not from anything the share button can pass in
+       the intent URL — there is no way to attach an image to a post from a
+       link. `summary_large_image` is what makes the card render as the wide
+       banner rather than a small thumbnail. The image URL must be absolute
+       and publicly reachable: the crawler fetches it from its own servers,
+       so a relative path or a localhost address renders no card at all. -->
+  <link rel="canonical" href="https://nucleux.in/docs.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="HAX" />
+  <meta property="og:url" content="https://nucleux.in/docs.html" />
+  <meta property="og:title" content="Docs — HAX" />
+  <meta property="og:description" content="HAX documentation — installation, design tokens, components, code examples, API reference." />
+  <meta property="og:image" content="https://nucleux.in/share-on-x.png" />
+  <meta property="og:image:width" content="515" />
+  <meta property="og:image:height" content="272" />
+  <meta property="og:image:alt" content="HAX — UI components for AI agents" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Docs — HAX" />
+  <meta name="twitter:description" content="HAX documentation — installation, design tokens, components, code examples, API reference." />
+  <meta name="twitter:image" content="https://nucleux.in/share-on-x.png" />
+  <meta name="twitter:image:alt" content="HAX — UI components for AI agents" />
+
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://rsms.me/inter/inter.css" /></noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Newsreader:ital,opsz,wght@1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <script>(function(d){d.documentElement.classList.add("gnav-pending");setTimeout(function(){d.documentElement.classList.remove("gnav-pending");},2000);})(document);</script>
+  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <link rel="stylesheet" href="css/nav-mega.css" />
+  <style>
+
+    /* ── Docs page sections ── */
+    .dc-hero {
+      padding-block: var(--s-20) var(--s-10);
+      border-bottom: 1px solid var(--border);
+    }
+    .dc-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fg-muted);
+      letter-spacing: 0.02em;
+      margin: 0 0 var(--s-4);
+    }
+    /* the same heading as the MCP page's .mx__title */
+    .dc-hero__title {
+      font-size: var(--t-display-3);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      margin: 0 0 var(--s-5);
+      color: var(--fg);
+    }
+    /* the same size as the MCP page's descriptions (.mx__p) */
+    .dc-hero__lede {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--fg-mid);
+      max-width: var(--docs-w);
+      margin: 0 0 var(--s-7);
+    }
+    .dc-hero__install {
+      display: flex;
+      align-items: center;
+      gap: var(--s-5);
+      flex-wrap: wrap;
+    }
+    .dc-install-bar {
+      display: flex;
+      align-items: stretch;
+      background: var(--ink-950);
+      border: 1px solid var(--ink-800);
+      border-radius: var(--r-3);
+      overflow: hidden;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+    }
+    .dc-install-bar__cmd {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 20px;
+      color: var(--ink-100);
+    }
+    .dc-install-bar__cmd .p   { color: var(--ink-500); user-select: none; }
+    .dc-install-bar__cmd .pkg { color: #93c5fd; }
+    .dc-install-bar__copy {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 14px;
+      font-size: 11px;
+      color: var(--ink-400);
+      background: var(--ink-900);
+      border-left: 1px solid var(--ink-800);
+      cursor: pointer;
+      transition: background var(--dur-1), color var(--dur-1);
+    }
+    .dc-install-bar__copy:hover { background: var(--ink-800); color: var(--ink-100); }
+    .dc-npmjs-link {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fg-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .dc-npmjs-link:hover { color: var(--fg); }
+
+    /* Content sections */
+    :root { --docs-w: 980px; }
+
+    .dc-section {
+      padding-block: var(--s-10);
+      border-bottom: 1px solid var(--border);
+      max-width: var(--docs-w);
+    }
+    .dc-section:last-of-type { border-bottom: none; }
+    .dc-h2 {
+      font-size: clamp(24px, 2.8vw, 32px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      margin: 0 0 var(--s-4);
+    }
+    .dc-body {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--fg-mid);
+      margin: 0 0 var(--s-5);
+    }
+    .dc-body code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: rgba(12,12,10,0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--fg);
+    }
+    .dc-note {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--fg-muted);
+      padding-left: var(--s-4);
+      border-left: 2px solid var(--border);
+      margin-top: var(--s-4);
+    }
+    .dc-note code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(12,12,10,0.05);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ── Shared: all code/command containers inherit .dc-code padding ── */
+
+    /* Install command rows — reset white-space so newline text nodes between divs collapse */
+    .dc-code--install-rows {
+      white-space: normal;
+    }
+    /* Each command line */
+    .dc-irow {
+      display: block;
+      line-height: 1.5;
+      white-space: pre;
+      margin: 0;
+    }
+    /* Small visual gap between command groups (replaces dc-irow--gap height) */
+    .dc-irow--gap {
+      display: block;
+      height: 8px;
+      line-height: 0;
+      font-size: 0;
+    }
+    /* Command line with inline copy button */
+    .dc-irow--cmd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      white-space: normal;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .dc-irow--cmd > span { white-space: pre; }
+
+    /* Theming code block — inherits .dc-code padding; inner wrapper is zero-padded */
+    .dc-code--install {
+      white-space: normal;
+    }
+    .dc-install-row--block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      padding: 0;
+    }
+    .dc-install-block-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-4);
+    }
+    .dc-install-block-body {
+      display: block;
+      white-space: pre;
+    }
+
+    /* Code blocks */
+    .dc-code {
+      background: var(--ink-950);
+      border: 1px solid var(--ink-800);
+      border-radius: var(--r-3);
+      padding: var(--s-3) var(--s-5);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--ink-200);
+      overflow-x: auto;
+      position: relative;
+      margin: 0 0 var(--s-4);
+      white-space: pre;
+    }
+    .dc-code:last-child { margin-bottom: 0; }
+    .dc-code .c  { color: var(--ink-500); }
+    .dc-code .k  { color: #93c5fd; }
+    .dc-code .v  { color: #86efac; }
+    .dc-code .s  { color: #fcd34d; }
+    .dc-code .fn { color: #c4b5fd; }
+    .dc-code .p  { color: var(--ink-400); }
+    .dc-code__filename {
+      display: block;
+      font-size: 11px;
+      color: var(--ink-500);
+      letter-spacing: 0.04em;
+      margin-bottom: var(--s-3);
+    }
+    .dc-code__copy { position: absolute; top: 12px; right: 12px; }   /* the button is .nx-copy (css/styles.css) */
+
+    /* Packages tile section */
+    .dc-pkg-intro {
+      font-size: 15px;
+      color: var(--fg-mid);
+      line-height: 1.65;
+      margin: 0 0 var(--s-8);
+    }
+    .dc-pkg-intro code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: rgba(12,12,10,0.06);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: var(--fg);
+    }
+
+    /* chips inside tiles */
+    .dc-pkg-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: var(--s-3);
+    }
+    .dc-pkg-chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: var(--r-2);
+      background: rgba(12,12,10,0.05);
+      border: 1px solid rgba(12,12,10,0.08);
+      color: var(--fg-mid);
+    }
+
+    /* Compact tile overrides for packages grid */
+    .docs-outline__grid--pkg .docs-card {
+      min-height: 0;
+      padding: var(--s-4) var(--s-5);
+      gap: var(--s-1);
+    }
+    .docs-outline__grid--pkg .docs-card__name {
+      font-size: 17px;
+      margin-top: var(--s-1);
+    }
+    .docs-outline__grid--pkg .docs-card__desc {
+      margin-top: 2px;
+    }
+  </style>
+  <!-- Responsive layer: last, so it wins on order over the page styles above. -->
+  <link rel="stylesheet" href="css/responsive.css?v=4" />
+<link rel="icon" type="image/png" sizes="32x32" href="fav%20icon/Fav%20icon%203.png?v=7">
+<style>
+</style>
+</head>
+<body class="has-shell">
+
+  <header class="gnav">
+    <div class="container gnav__inner">
+      <a class="brand" href="index.html" aria-label="HAX by Outshift Design" data-nx-home="/">
+        <svg class="brand__mark brand__mark--inline" aria-hidden="true" width="84" height="28" viewBox="0 0 101 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.9856 0L17.3137 0.73802V8.06348L16.9856 8.52816L16.3451 8.58415L9.93358 4.83807L9.6875 4.26402L16.9856 0Z" fill="#C5E3EB"/>
+<path d="M2.39062 8.52976L2.5546 9.04907L8.91443 12.6934L9.68872 12.7118L9.98942 12.2197V4.73031L9.68872 4.26562L2.39062 8.52976Z" fill="#C5E3EB"/>
+<path d="M2.39062 25.4202L2.66396 24.8872L9.21651 21.1325L9.68872 21.2382L10.2901 21.0742L16.7633 24.7836L16.9868 25.4202L17.2192 25.8303V33.6203L16.9868 33.9484L2.39062 25.4202Z" fill="#78ABDB"/>
+<path d="M9.6875 4.26562L16.9856 8.52976L17.3137 9.26767V16.2104L16.9856 16.9758L16.0969 16.8949L9.9199 13.2857L9.6875 12.7118V4.26562Z" fill="#A4C0C5"/>
+<path d="M16.9854 16.975L16.8357 17.4036L10.4117 21.157L9.68735 21.239L9.46875 20.706V12.998L9.68735 12.7109L16.9854 16.975Z" fill="#7BA6C1"/>
+<path d="M2.39062 25.4195L9.68872 21.2374V12.7094L2.39062 8.52734V25.4195Z" fill="#98C3E4"/>
+<path d="M16.9856 16.9766L17.1769 17.5096V24.8076L16.9856 25.4226L9.6875 21.2406L16.9856 16.9766Z" fill="#4B7C9E"/>
+<path d="M16.9844 33.9494V25.4213L17.3479 25.3242L23.8999 29.1523L24.2825 29.6854L16.9844 33.9494Z" fill="#F4BC6A"/>
+<path d="M16.9844 16.9752V25.4213L24.2825 29.6854L24.5149 29.0704V21.7723L24.2825 21.2393L23.8588 20.6653L17.4785 16.9375L16.9844 16.9752Z" fill="#B48340"/>
+<path d="M24.2825 12.7109L24.5149 13.0799V20.624L24.2825 21.239L16.9844 16.975L17.3207 16.4383L23.4898 12.8339L24.2825 12.7109Z" fill="#8C3D33"/>
+<path d="M16.9844 8.52539L17.4627 8.40234L24.0104 12.1544L24.2825 12.7074L16.9844 16.9714V8.52539Z" fill="#C47973"/>
+<path d="M24.2852 29.6825V21.2363L24.7067 21.1406L31.2416 24.8853L31.5832 25.4183L24.2852 29.6825Z" fill="#F4BC6A"/>
+<path d="M31.5832 8.52734H30.9946L24.5393 12.2264L24.2852 12.7094V21.2374L31.5832 25.4195V8.52734Z" fill="#BB6651"/>
+<path d="M16.9844 0V8.52816L24.2825 12.7102L31.5806 8.52816L16.9844 0Z" fill="#E1938A"/>
+<path d="M42 7H47V14.6H53V7H58V27H53V19H47V27H42Z" fill="var(--brand-word, #8A8F96)"/>
+<path fill-rule="evenodd" d="M67.2 7H72.8L79.5 27H74.3L73 23H67L65.7 27H60.5ZM67.7 19H72.3L70 12Z" fill="var(--brand-word, #8A8F96)"/>
+<path d="M81.5 7H87.3L90.75 13.2L94.2 7H100L93.7 17L100 27H94.2L90.75 20.8L87.3 27H81.5L87.8 17Z" fill="var(--brand-word, #8A8F96)"/>
+</svg>
+        <span class="brand__divider" aria-hidden="true"></span>
+        <span class="os-lockup" aria-hidden="true"><img class="os-lockup__logo" src="img/outshift-logo.svg" alt="" width="78" height="32"><span class="os-lockup__word">design</span></span>
+        <span class="rot-sr">HAX by Outshift Design</span>
+      </a>
+      <nav class="gnav__center" aria-label="Primary">
+        <div class="ox-dd">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Initiatives">Initiatives</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li class="ox-dd__group"><a class="ox-dd__label" href="https://outshift.design/hax">The Human-Agent Experience</a></li>
+            <li><a href="https://outshift.cisco.com/internet-of-cognition/explore" target="_blank" rel="noopener noreferrer">Internet of Cognition <svg class="ox-dd__ext" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+          </ul>
+        </div>
+        <div class="ox-dd ox-dd--end">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Research">Research</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li><a href="https://outshift.design/research/foundational-principles">Foundational Principles</a></li>
+            <li><a href="https://outshift.design/research/cognitive-frameworks">Cognitive Frameworks</a></li>
+            <li class="ox-dd__group"><a class="ox-dd__label" href="https://outshift.design/research/societal-impact">Societal Impact</a>
+              <ul class="ox-dd__sub" role="list">
+                <li><a href="https://outshift.design/research/societal-impact/agent-impact-map">Agent Impact Map</a></li>
+                <li><a href="https://outshift.design/research/societal-impact/cognitive-load-audit">Cognitive Load Audit</a></li>
+                <li><a href="https://outshift.design/research/societal-impact/foresight-canvas">Foresight Canvas</a></li>
+              </ul>
+            </li>
+            <li><a href="https://outshift.design/research/security-privacy">Security &amp; Privacy</a></li>
+          </ul>
+        </div>
+        <a class="gnav__link ox-link" href="https://outshift.design/blog"><span class="ox-t" data-t="Blog">Blog</span></a>
+        <div class="ox-dd ox-dd--comp">
+          <button class="ox-dd__btn" type="button" aria-expanded="false" aria-haspopup="true"><span class="ox-t" data-t="Components">Components</span><svg class="ox-dd__chev" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor"/></svg></button>
+          <ul class="ox-dd__menu" role="list">
+            <li class="ox-dd__group"><span class="ox-dd__label">ShadCN</span>
+              <ul class="ox-dd__sub" role="list">
+                <li><a href="basic-components">Basic Components</a></li>
+                <li><a href="library">Agentic Components</a></li>
+              </ul>
+            </li>
+            <li class="ox-dd__group"><span class="ox-dd__label">Material 3.0</span>
+              <ul class="ox-dd__sub" role="list">
+                <li><span class="ox-dd__soon">Basic Components <em>Soon</em></span></li>
+                <li><a href="material-agentic">Agentic Components</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <a class="gnav__link is-current" href="docs"><span class="ox-t" data-t="Docs">Docs</span></a>
+        <a class="gnav__link" href="mcp"><span class="ox-t" data-t="MCP">MCP</span></a>
+      </nav>
+      <div class="gnav__actions">
+      </div>
+    </div>
+  </header>
+
+  <main class="docs-page">
+
+    <!-- ── Hero ── -->
+    <section class="dc-hero">
+      <div class="container">
+        <h1 class="dc-hero__title">The agentic <span style="white-space:nowrap">UI library</span> for React.</h1>
+        <p class="dc-hero__lede">HAX ships every pattern in this library as a real, installable React component. One umbrella package, ~50 focused sub-packages, Tailwind-native theming, TypeScript throughout — the same components the Meeting Summariser is built from.</p>
+      </div>
+    </section>
+
+
+    <!-- ── Install ── -->
+    <section id="install">
+      <div class="container">
+        <div class="dc-section">
+          <h2 class="dc-h2">Install</h2>
+          <p class="dc-body">The umbrella package re-exports every component; you can also install any sub-package on its own.</p>
+          <div class="dc-code dc-code--install-rows">
+<div class="dc-irow"><span class="c"># everything (recommended)</span></div>
+<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">@hax/react</span></span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, 'npm install @hax/react')"></button></div>
+<div class="dc-irow dc-irow--gap"> </div>
+<div class="dc-irow"><span class="c"># or just what you need</span></div>
+<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">@hax/message</span> <span class="v">@hax/agent-composer</span> <span class="v">@hax/button</span></span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, 'npm install @hax/message @hax/agent-composer @hax/button')"></button></div>
+<div class="dc-irow dc-irow--gap"> </div>
+<div class="dc-irow"><span class="c"># peer deps</span></div>
+<div class="dc-irow dc-irow--cmd"><span>npm install <span class="v">react</span> <span class="v">react-dom</span></span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, 'npm install react react-dom')"></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Set up theming ── -->
+    <section id="theming">
+      <div class="container">
+        <div class="dc-section">
+          <h2 class="dc-h2">Set up theming</h2>
+          <p class="dc-body">Components are styled with Tailwind utilities bound to design tokens in <code>@hax/tokens</code>. Add the preset, scan the compiled components, and import the token stylesheet.</p>
+          <div class="dc-code dc-code--install">
+<div class="dc-install-row dc-install-row--block">
+  <div class="dc-install-block-head"><span class="c">// tailwind.config.js</span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, `import nucleux from '@hax/tokens/preset'\n\nexport default {\n  presets: [nucleux],\n  content: [\n    './src/**/*.{js,jsx,ts,tsx}',\n    './node_modules/@hax/**/dist/*.js',\n  ],\n}`)"></button></div>
+  <div class="dc-install-block-body"><span class="k">import</span> nucleux <span class="k">from</span> <span class="s">'@hax/tokens/preset'</span>
+<span class="k">export default</span> {
+  <span class="p">presets</span>: [hax],
+  <span class="p">content</span>: [
+    <span class="s">'./src/**/*.{js,jsx,ts,tsx}'</span>,
+    <span class="s">'./node_modules/@hax/**/dist/*.js'</span>, <span class="c">// generate component classes</span>
+  ],
+}</div>
+</div>
+          </div>
+          <div class="dc-code dc-code--install" style="margin-top:var(--s-4)">
+<div class="dc-install-row dc-install-row--block">
+  <div class="dc-install-block-head"><span class="c">/* index.css */</span><button class="nx-copy" type="button" aria-label="Copy" onclick="nxCopy(this, `@import '@hax/tokens/styles.css';\n@tailwind components;\n@tailwind utilities;`)"></button></div>
+  <div class="dc-install-block-body"><span class="k">@import</span> <span class="s">'@hax/tokens/styles.css'</span>; <span class="c">/* --nx-* tokens, light + .dark */</span>
+<span class="k">@tailwind</span> components;
+<span class="k">@tailwind</span> utilities;</div>
+</div>
+          </div>
+          <p class="dc-note">Toggle dark mode with a <code>.dark</code> class on a parent element. Tokens cover colour, radius, and the <code>nx-*</code> keyframes (caret blink, typing dots, fade-in).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Quick start ── -->
+    <section>
+      <div class="container">
+        <div class="dc-section">
+          <h2 class="dc-h2">Quick start — an agent chat</h2>
+          <p class="dc-body">A scrolling transcript with auto-pin, streamed assistant messages, and a composer that submits on Enter.</p>
+          <div class="dc-code"><button class="dc-code__copy nx-copy" type="button" aria-label="Copy" style="top:12px;right:12px" onclick="nxCopy(this, `import { Thread, Message, AgentComposer, Badge } from '@hax/react'\n\nfunction Chat({ messages, input, setInput, onSend, busy }) {\n  return (\n    <Thread autoScrollKey={messages.length}>\n      {messages.map((m) => (\n        <Message key={m.id} role={m.role} content={m.text} streaming={m.streaming} />\n      ))}\n      <AgentComposer\n        value={input}\n        onValueChange={setInput}\n        onSubmit={onSend}\n        loading={busy}\n        placeholder='Ask anything…'\n      />\n    </Thread>\n  )\n}`)"></button><span class="k">import</span> { <span class="v">Thread</span>, <span class="v">Message</span>, <span class="v">AgentComposer</span>, <span class="v">Badge</span> } <span class="k">from</span> <span class="s">'@hax/react'</span>
+<span class="fn">function</span> <span class="v">Chat</span>({ messages, input, setInput, onSend, busy }) {
+  <span class="k">return</span> (
+    &lt;<span class="v">Thread</span> autoScrollKey={messages.length}&gt;
+      {messages.<span class="fn">map</span>((m) =&gt; (
+        &lt;<span class="v">Message</span> key={m.id} role={m.role} content={m.text} streaming={m.streaming} /&gt;
+      ))}
+      &lt;<span class="v">AgentComposer</span>
+        value={input}
+        onValueChange={setInput}
+        onSubmit={onSend}
+        loading={busy}
+        placeholder=<span class="s">"Ask anything…"</span>
+      /&gt;
+    &lt;/<span class="v">Thread</span>&gt;
+  )
+}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Packages ── -->
+    <section class="docs-outline" style="padding-top:var(--s-10)">
+      <div class="container">
+        <div style="max-width:var(--docs-w)">
+        <h2 class="dc-h2" style="margin-bottom:var(--s-3)">Packages</h2>
+        <p class="dc-pkg-intro">~50 sub-packages under the <code>@hax/*</code> scope. Import from the umbrella (<code>@hax/react</code>) or per-package. Every export is typed.</p>
+        <div class="docs-outline__grid docs-outline__grid--pkg">
+
+          <article class="docs-card">
+            <h3 class="docs-card__name">Agentic &amp; chat</h3>
+            <p class="docs-card__desc">The building blocks for assistant UIs.</p>
+            <div class="dc-pkg-chips">
+              <span class="dc-pkg-chip">agent-composer</span>
+              <span class="dc-pkg-chip">input-bar</span>
+              <span class="dc-pkg-chip">message</span>
+              <span class="dc-pkg-chip">thread</span>
+              <span class="dc-pkg-chip">reasoning</span>
+              <span class="dc-pkg-chip">streaming-text</span>
+              <span class="dc-pkg-chip">typing-indicator</span>
+              <span class="dc-pkg-chip">tool-call</span>
+              <span class="dc-pkg-chip">suggestions</span>
+              <span class="dc-pkg-chip">follow-up</span>
+            </div>
+          </article>
+
+          <article class="docs-card">
+            <h3 class="docs-card__name">Actions &amp; inputs</h3>
+            <p class="docs-card__desc">Buttons and form controls.</p>
+            <div class="dc-pkg-chips">
+              <span class="dc-pkg-chip">button</span>
+              <span class="dc-pkg-chip">icon-button</span>
+              <span class="dc-pkg-chip">link-button</span>
+              <span class="dc-pkg-chip">checkbox</span>
+              <span class="dc-pkg-chip">checklist</span>
+              <span class="dc-pkg-chip">radio-group</span>
+              <span class="dc-pkg-chip">rich-checkbox-group</span>
+              <span class="dc-pkg-chip">switch</span>
+              <span class="dc-pkg-chip">select</span>
+              <span class="dc-pkg-chip">search-input</span>
+            </div>
+          </article>
+
+          <article class="docs-card">
+            <h3 class="docs-card__name">Layout &amp; navigation</h3>
+            <p class="docs-card__desc">Shells, surfaces, and overlays.</p>
+            <div class="dc-pkg-chips">
+              <span class="dc-pkg-chip">sidebar</span>
+              <span class="dc-pkg-chip">nav-panel</span>
+              <span class="dc-pkg-chip">global-nav</span>
+              <span class="dc-pkg-chip">right-sidebar</span>
+              <span class="dc-pkg-chip">page-header</span>
+              <span class="dc-pkg-chip">breadcrumb</span>
+              <span class="dc-pkg-chip">tabs</span>
+              <span class="dc-pkg-chip">separator</span>
+              <span class="dc-pkg-chip">card</span>
+              <span class="dc-pkg-chip">media-card</span>
+              <span class="dc-pkg-chip">sheet</span>
+              <span class="dc-pkg-chip">dialog</span>
+              <span class="dc-pkg-chip">popover</span>
+              <span class="dc-pkg-chip">menu</span>
+            </div>
+          </article>
+
+          <article class="docs-card">
+            <h3 class="docs-card__name">Feedback &amp; status</h3>
+            <p class="docs-card__desc">Signals, badges, and progress.</p>
+            <div class="dc-pkg-chips">
+              <span class="dc-pkg-chip">alert</span>
+              <span class="dc-pkg-chip">toast</span>
+              <span class="dc-pkg-chip">badge</span>
+              <span class="dc-pkg-chip">chip</span>
+              <span class="dc-pkg-chip">progress</span>
+              <span class="dc-pkg-chip">avatar</span>
+              <span class="dc-pkg-chip">tooltip</span>
+            </div>
+          </article>
+
+          <article class="docs-card">
+            <h3 class="docs-card__name">Content &amp; data</h3>
+            <p class="docs-card__desc">Rich content and structured display.</p>
+            <div class="dc-pkg-chips">
+              <span class="dc-pkg-chip">code-block</span>
+              <span class="dc-pkg-chip">table</span>
+              <span class="dc-pkg-chip">accordion</span>
+              <span class="dc-pkg-chip">action-tile</span>
+              <span class="dc-pkg-chip">getting-started-pill</span>
+              <span class="dc-pkg-chip">modular-consent</span>
+              <span class="dc-pkg-chip">related-patterns-grid</span>
+            </div>
+          </article>
+
+          <article class="docs-card">
+            <h3 class="docs-card__name">Foundations</h3>
+            <p class="docs-card__desc">Tokens, hooks, and utilities.</p>
+            <div class="dc-pkg-chips">
+              <span class="dc-pkg-chip">tokens</span>
+              <span class="dc-pkg-chip">tokens/preset</span>
+              <span class="dc-pkg-chip">tokens/styles.css</span>
+              <span class="dc-pkg-chip">hooks</span>
+              <span class="dc-pkg-chip">utils</span>
+            </div>
+          </article>
+
+        </div>
+        </div>
+      </div>
+    </section>
+
+
+  </main>
+
+  <footer class="foot foot--simple">
+    <div class="container">
+      <div class="foot__bottom">
+        <span class="foot__meta">© 2026 HAX · AI UX Pattern Library</span>
+        <nav class="foot__links" aria-label="Footer">
+          <a href="library.html">Pattern Library</a>
+          <a href="practices.html">Scenarios</a>
+          <a href="docs.html">Docs</a>
+          <a href="mcp.html">MCP</a>
+          <a href="contact.html">Contact ↗</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/patterns.js"></script>
+  <script src="js/global.js?v=2"></script>
+<script src="js/nav-splitflap.js?v=2"></script>
+<script src="js/nav-mega.js"></script>
+</body>
+</html>
