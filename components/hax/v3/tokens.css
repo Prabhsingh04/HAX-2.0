@@ -1,0 +1,66 @@
+/* HAX v3 · Outshift dark (Figma 🌐 Website v3, 103:5524). One colour moment per page (the
+   hero world, or a gradient band); everything else is calm panels on the page colour. */
+.hax-v3 {
+  --bg: #0f1117;
+  --panel: #161a21;
+  --panel-2: #1d2129;
+  --text: #e0e4ec;
+  --text-2: #9ca3b0;
+  --text-3: #8a919c;
+  --text-soft: rgba(255, 255, 255, .78);
+  --edge: rgba(255, 255, 255, .08);
+  --edge-2: rgba(255, 255, 255, .15);
+  --edge-3: rgba(255, 255, 255, .24);
+  --cyan: #3fc6ee;
+  --cyan-hover: #6ad3f2;
+  --cyan-press: #2fb2dc;
+  --ice: #b5e9f8;
+  /* the H1's second line; thin neon lines use --grad-line (fills never carry the full run) */
+  --grad-text: linear-gradient(90deg, #3fc6ee 0%, #b98cf0 50%, #ff8a50 100%);
+  --grad-line: linear-gradient(90deg, #00bceb 0%, #3fc6ee 35%, #9345e1 50%, #ff6d2d 68%, #ff8a50 100%);
+  --grad-band: linear-gradient(149deg, #0a3c8f 0%, #0051af 33.3%, #5b2fb8 66.7%, #9345e1 100%);
+  --font-ui: "Manrope", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --radius-pill: 999px;
+  --focus-ring: rgba(63, 198, 238, .45);
+
+  /* names v1's CodeBlock (imported read-only) reads, with v1's values */
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+  --surface-code: #0f1117;
+  --text-code: #e0e4ec;
+  --text-tertiary: #8a93a3;
+  --radius-xl: 12px;
+
+  font-family: var(--font-ui);
+  font-optical-sizing: none;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+.hax-v3 p { margin: 0; }
+/* app/globals.css tracks h1–h3 at -0.02em; v3 sets its own tracking per style */
+html :where(.hax-v3) :is(h1, h2, h3, h4) { letter-spacing: 0; }
+
+/* The chat and pattern mock-ups stay light, like the product UI they show (v1 tokens). */
+.hax-v3 .h3-light {
+  --font-ui: "InterVariable", "Inter", system-ui, sans-serif;
+  --text-primary: #293247;
+  --text-secondary: #67707f;
+  --text-link: #187adc;
+  --text-on-accent: #fff;
+  --text-on-inverse: #fff;
+  --surface-page: #fff;
+  --surface-raised: #fff;
+  --surface-inverse: #293247;
+  --surface-tint: rgba(41, 50, 71, .04);
+  --surface-tint-pressed: rgba(41, 50, 71, .15);
+  --surface-assistant: #6d6af2;
+  --surface-message-person: #187adc;
+  --surface-message-assistant: rgba(41, 50, 71, .04);
+  --stroke-subtle: rgba(41, 50, 71, .08);
+  --stroke-default: rgba(41, 50, 71, .15);
+  --status-warning: #c47f00;
+  --status-warning-subtle: rgba(245, 165, 36, .12);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+}

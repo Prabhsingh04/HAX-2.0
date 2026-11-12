@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="560" height="420" viewBox="0 0 560 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse id="Aura &#194;&#183; Band &#194;&#183; orange glow" cx="280" cy="210" rx="280" ry="210" fill="url(#paint0_radial_0_6)"/>
+<defs>
+<radialGradient id="paint0_radial_0_6" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(280 210) scale(280 210)">
+<stop stop-color="#FF6D2D" stop-opacity="0.35"/>
+<stop offset="0.45" stop-color="#FF6D2D" stop-opacity="0.1575"/>
+<stop offset="1" stop-color="#FF6D2D" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

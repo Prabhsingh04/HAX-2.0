@@ -1,0 +1,101 @@
+/* HAX v3 · states and motion. Buttons keep their shape in every state: hover and press only
+   change fill and edge. Keyboard focus gets a 3px cyan ring. */
+.hax-v3 { --ease-out: cubic-bezier(.22, 1, .36, 1); --spring: cubic-bezier(.34, 1.56, .64, 1); }
+
+.hax-v3 :is(.h3-btn, .h3-chip, .h3-tab, .h3-card, .h3-nav, .h3-icon, .h3-side, .h3-field) {
+  transition: background-color .2s var(--ease-out), border-color .2s var(--ease-out), color .2s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+/* primary: solid cyan */
+.hax-v3 .h3-btn--primary { background: var(--cyan); color: var(--bg); }
+.hax-v3 .h3-btn--primary:hover { background: var(--cyan-hover); }
+.hax-v3 .h3-btn--primary:active { background: var(--cyan-press); }
+/* secondary: raised dark */
+.hax-v3 .h3-btn--secondary { background: var(--panel-2); border: 1px solid var(--edge-2); color: var(--text); }
+.hax-v3 .h3-btn--secondary:hover { background: #262b34; border-color: var(--edge-3); }
+.hax-v3 .h3-btn--secondary:active { background: #171a20; }
+/* glass: over the hero sky */
+.hax-v3 .h3-btn--glass { background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .3); color: #fff; }
+.hax-v3 .h3-btn--glass:hover { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .45); }
+.hax-v3 .h3-btn--glass:active { background: rgba(255, 255, 255, .08); }
+/* light: the contact form's submit (Figma 106:8852) */
+.hax-v3 .h3-btn--light { background: #e8ebf1; color: var(--bg); }
+.hax-v3 .h3-btn--light:hover { background: #fff; }
+.hax-v3 .h3-btn--light:active { background: #cfd4dd; }
+
+.hax-v3 :is(.h3-btn, .h3-chip, .h3-tab, .h3-card, .h3-nav, .h3-icon, .h3-side, .h3-link, .h3-copy):focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.hax-v3 .h3-arrow { transition: transform .3s var(--spring); }
+.hax-v3 :is(a, button):hover > .h3-arrow, .hax-v3 a.h3-card:hover .h3-arrow { transform: translateX(3px); }
+.hax-v3 :is(a, button):hover > .h3-arrow--up { transform: translate(2px, -2px); }
+.hax-v3 :is(a, button):hover > .h3-arrow--down { transform: translateY(3px); }
+
+/* text links: underline draws in */
+.hax-v3 .h3-link { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .3s var(--ease-out), color .2s; }
+.hax-v3 .h3-link:hover { background-size: 100% 1px; }
+
+/* nav: label brightens; the current section carries a short neon underline */
+.hax-v3 .h3-nav { color: var(--text-soft); }
+.hax-v3 .h3-nav:hover, .hax-v3 .h3-nav[aria-expanded="true"] { color: #fff; }
+.hax-v3 .h3-nav[aria-current] { color: #fff; font-weight: 600; }
+.hax-v3 .h3-nav[aria-current]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--grad-line); }
+.hax-v3 .h3-icon:hover { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .4); }
+.hax-v3 .h3-icon:active { background: rgba(255, 255, 255, .06); }
+.hax-v3 .h3-menuitem { transition: background-color .15s, padding-left .25s var(--ease-out); }
+.hax-v3 .h3-menuitem:hover { background: rgba(255, 255, 255, .06); padding-left: 16px; }
+
+/* cards: the edge firms up; no lift */
+.hax-v3 .h3-card:hover { border-color: var(--edge-3); }
+.hax-v3 .h3-card:active { background-color: #13161c; }
+
+/* chips and tabs */
+.hax-v3 .h3-chip:hover:not([aria-pressed="true"]) { background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .4); }
+.hax-v3 .h3-chip:active { background: rgba(255, 255, 255, .06); }
+.hax-v3 .h3-tab:not([aria-selected="true"]):hover { background: rgba(255, 255, 255, .1); color: #fff; }
+.hax-v3 .h3-tab:not([aria-selected="true"]):active { background: rgba(255, 255, 255, .04); }
+.hax-v3 .h3-side:hover { color: #fff; }
+
+/* fields */
+.hax-v3 .h3-field:hover { border-color: var(--edge-3); }
+.hax-v3 .h3-field:focus, .hax-v3 .h3-field:focus-within { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(63, 198, 238, .18); outline: none; }
+.hax-v3 .h3-check { display: grid; place-content: center; transition: background-color .15s, border-color .15s; }
+.hax-v3 .h3-check:checked { background: var(--cyan); border-color: var(--cyan); }
+.hax-v3 .h3-check:checked::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--bg); border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.hax-v3 .h3-check:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.hax-v3 .h3-copy:active { transform: scale(.9); }
+
+/* hero entrance and scroll reveal */
+@keyframes h3-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.hax-v3 .h3-rise { animation: h3-rise .9s var(--ease-out) both; }
+.hax-v3 .h3-rise--2 { animation-delay: .12s; }
+.hax-v3 .h3-rise--3 { animation-delay: .24s; }
+.hax-v3 .h3-rise--4 { animation-delay: .36s; }
+.hax-v3 .h3-hold .h3-rise { animation-play-state: paused; opacity: 0; }
+.hax-v3 .h3-reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.hax-v3 .h3-reveal.is-in { opacity: 1; transform: none; }
+@keyframes h3-swap { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.hax-v3 .h3-swap { animation: h3-swap .35s var(--ease-out); }
+
+/* hero stage word: every phrase shares one grid cell, so the line never shifts */
+.hax-v3 .h3-rot { display: inline-grid; vertical-align: bottom; overflow: hidden; text-align: left; padding-bottom: .14em; margin-bottom: -.14em; }
+.hax-v3 .h3-rot__item { grid-area: 1 / 1; padding-bottom: .1em; margin-bottom: -.1em; transform: translateY(110%); opacity: 0; transition: transform .9s var(--ease-out), opacity .9s var(--ease-out); }
+.hax-v3 .h3-rot__item.is-in { transform: none; opacity: 1; }
+.hax-v3 .h3-rot__item.is-out { transform: translateY(-110%); }
+
+/* with/without: the chosen pattern stays crisp, the rest recede */
+.hax-v3 .h3-part { transition: opacity .35s var(--ease-out); }
+.hax-v3 .h3-parts[data-active] .h3-part:not(.is-hl) { opacity: .32; }
+
+/* gradient-edged panel (featured code block, featured post, contact form): a 1.5px neon
+   edge; wrap it in .h3-glow for the soft glow that fades out below it */
+.hax-v3 .h3-neon { position: relative; border: 1.5px solid transparent; background: linear-gradient(var(--panel), var(--panel)) padding-box, var(--grad-line) border-box; }
+.hax-v3 .h3-glow { position: relative; isolation: isolate; }
+.hax-v3 .h3-glow::before { content: ""; position: absolute; inset: 35% 3% -22px; z-index: -1; border-radius: 32px; background: var(--grad-line); filter: blur(30px); opacity: .32; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hax-v3 *, .hax-v3 *::before, .hax-v3 *::after { animation: none !important; transition: none !important; }
+  .hax-v3 .h3-reveal { opacity: 1; transform: none; }
+}
+
+/* v1's CodeBlock copy button (imported read-only) */
+.hax-v3 .hx-copy { transition: transform .15s; }
+.hax-v3 .hx-copy:active { transform: scale(.9); }
+.hax-v3 .hx-copy:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
