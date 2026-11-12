@@ -2,10 +2,17 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const isReviewaExport = process.env.REVIEWA_BUILD === "1";
+// Optional: a local dev server can build into its own folder, so several can run from this
+// checkout without overwriting each other (NEXT_DIST_DIR=.next-v2 npx next dev -p 3010).
+// Each folder gets a tsconfig.next-*.json beside this file, so Next leaves tsconfig.json alone.
+const distDir = process.env.NEXT_DIST_DIR;
 
 const nextConfig: NextConfig = {
   ...(isReviewaExport
     ? { output: "export" as const, trailingSlash: false }
+    : {}),
+  ...(distDir
+    ? { distDir, typescript: { tsconfigPath: `tsconfig.${distDir.replace(/^\./, "")}.json` } }
     : {}),
   outputFileTracingRoot: path.join(__dirname),
   // Native module used by the durable instance store (server/state-store.ts);

@@ -1,0 +1,117 @@
+/* HAX v1 · hover + micro-interactions */
+.hax-v1 { --ease-out: cubic-bezier(.22,1,.36,1); --spring: cubic-bezier(.34,1.56,.64,1); }
+
+/* Buttons keep their pill shape in every state (no radius morph, no lift, no glow).
+   - Main (solid): the HAX blue gradient slides toward its brighter end on hover and
+     darkens on press. Selected tabs, chips and checkboxes wear the same gradient.
+   - Outline, install snippet, gradient border: grey fill and a firmer edge on hover,
+     a deeper fill on press. Fills are opaque so the washes behind never show through.
+   - All: 3px Focus/Ring for keyboard focus. */
+@property --hx-fill { syntax: "<color>"; inherits: false; initial-value: #fff; }
+.hax-v1 :is(.hx-btn, .hx-snippet) { transition: background-color .2s var(--ease-out), border-color .2s var(--ease-out), background-position .5s var(--ease-out), --hx-fill .2s var(--ease-out); }
+.hax-v1 :is(.hx-btn--solid, .hx-tab[aria-selected="true"], .hx-chip[aria-pressed="true"]) {
+  background-image: var(--gradient-hax-fill); background-size: 200% 100%; background-position: 0 0;
+  background-origin: border-box; color: var(--text-on-accent); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22); }
+.hax-v1 .hx-chip[aria-pressed="true"] { border-color: transparent; }
+.hax-v1 .hx-btn--solid:hover { background-position: 70% 0; }
+.hax-v1 .hx-btn--solid:active { background-image: linear-gradient(rgba(12, 12, 10, .2), rgba(12, 12, 10, .2)), var(--gradient-hax-fill); }
+.hax-v1 :is(.hx-btn--outline, .hx-snippet):hover { background-color: var(--surface-hover); border-color: var(--stroke-strong); }
+.hax-v1 :is(.hx-btn--outline, .hx-snippet):active { background-color: var(--surface-pressed); }
+.hax-v1 .hx-btn--grad { --hx-fill: var(--surface-page); border: 1.5px solid transparent;
+  background: linear-gradient(var(--hx-fill), var(--hx-fill)) padding-box, var(--gradient-hax) border-box; }
+.hax-v1 .hx-btn--grad:hover { --hx-fill: var(--surface-hover); }
+.hax-v1 .hx-btn--grad:active { --hx-fill: var(--surface-pressed); }
+/* Focused state: 3px Focus/Ring, keyboard only */
+.hax-v1 :is(.hx-btn, .hx-snippet, .hx-tab, .hx-nav, .hx-iconbtn, .hx-chat, .hx-copy, .hx-card, .hx-side):focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 0; }
+.hax-v1 .hx-arrow { transition: transform .3s var(--spring); }
+.hax-v1 a:hover > .hx-arrow, .hax-v1 button:hover > .hx-arrow { transform: translateX(3px); }
+.hax-v1 a:hover > .hx-arrow[src*="up-right"] { transform: translate(2px,-2px); }
+
+.hax-v1 .hx-nav { transition: background-color .2s; }
+.hax-v1 .hx-nav:hover, .hax-v1 .hx-nav[aria-expanded="true"] { background: var(--surface-tint); }
+/* current section: a short HAX-gradient bar under the item */
+.hax-v1 .hx-nav[aria-current]::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -6px; height: 2px; border-radius: 2px; background: var(--gradient-hax); }
+.hax-v1 .hx-iconbtn { transition: background-color .2s, transform .5s var(--spring); }
+.hax-v1 .hx-iconbtn:hover { background: var(--surface-tint); transform: rotate(-20deg); }
+.hax-v1 .hx-menuitem { transition: background-color .15s, padding-left .25s var(--ease-out); }
+.hax-v1 .hx-menuitem:hover { padding-left: 16px; }
+.hax-v1 .hx-link { background: linear-gradient(currentColor,currentColor) 0 100% / 0 1px no-repeat; transition: background-size .3s var(--ease-out); }
+.hax-v1 .hx-link:hover { background-size: 100% 1px; }
+
+/* cards: no lift or glow (Figma has neither); the edge firms up and the card's own
+   button takes its hover state */
+.hax-v1 .hx-card { transition: border-color .2s; }
+.hax-v1 .hx-card:hover { border-color: var(--stroke-default); }
+.hax-v1 .hx-card:hover .hx-btn--outline { background-color: var(--surface-hover); border-color: var(--stroke-strong); }
+
+/* tabs: unselected ones darken their label and take a grey fill on hover */
+.hax-v1 .hx-tab { transition: background-color .25s var(--ease-out), color .2s; }
+.hax-v1 .hx-tab:not([aria-selected="true"]):hover { background-color: var(--surface-tint-hover); color: var(--text-primary); }
+
+/* hero entrance + drifting washes */
+@keyframes hx-rise { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.hax-v1 .hx-rise { animation: hx-rise .8s var(--ease-out) both; }
+.hax-v1 .hx-rise--2 { animation-delay: .12s; }
+.hax-v1 .hx-rise--3 { animation-delay: .24s; }
+@keyframes hx-drift { from { transform: translate3d(-20px,0,0) scale(1); } to { transform: translate3d(20px,-10px,0) scale(1.05); } }
+.hax-v1 .hx-wash { animation: hx-drift 10s ease-in-out infinite alternate; }
+.hax-v1 .hx-wash--2 { animation-duration: 15s; animation-direction: alternate-reverse; }
+.hax-v1 .hx-wash--3 { animation-duration: 8s; }
+
+/* scroll reveal (useReveal adds .is-in) */
+.hax-v1 .hx-reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.hax-v1 .hx-reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hax-v1 *, .hax-v1 *::after { animation: none !important; transition: none !important; }
+  .hax-v1 .hx-reveal { opacity: 1; transform: none; }
+}
+
+/* with/without HAX: chosen pattern stays crisp, the rest recede */
+.hax-v1 .hx-part { transition: opacity .35s var(--ease-out); }
+.hax-v1 .hx-parts[data-active] .hx-part:not(.is-hl) { opacity: .38; }
+@keyframes hx-swap { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.hax-v1 .hx-swap { animation: hx-swap .35s var(--ease-out); }
+.hax-v1 .hx-copy:active { transform: scale(.9); }
+@keyframes hx-float { from { transform: translateY(-4px); } to { transform: translateY(4px); } }
+.hax-v1 .hx-cube { animation: hx-float 5s ease-in-out infinite alternate; }
+.hax-v1 .hx-chat { transition: background-color .2s var(--ease-out); }
+.hax-v1 .hx-chat:hover { background-color: #5c59e3; }
+.hax-v1 .hx-chat:active { background-color: #4e4bd2; }
+/* hero rotating stage word: every phrase sits in one grid cell, so the box is as wide as
+   the widest phrase and "teams in" never moves. Phrases sit flush left, rise in from
+   below and leave through the top. Item padding keeps descenders inside the clipped
+   gradient; the negative margins keep the line box at the headline's 58px. */
+.hax-v1 .hx-rot { display: inline-grid; vertical-align: bottom; overflow: hidden; text-align: left; padding-bottom: .14em; margin-bottom: -.14em; }
+.hax-v1 .hx-rot__item { grid-area: 1 / 1; padding-bottom: .1em; margin-bottom: -.1em; transform: translateY(110%); opacity: 0; transition: transform .9s var(--ease-out), opacity .9s var(--ease-out); }
+.hax-v1 .hx-rot__item.is-in { transform: none; opacity: 1; }
+.hax-v1 .hx-rot__item.is-out { transform: translateY(-110%); }
+.hax-v1 .hx-side { transition: background-color .2s, color .2s; }
+.hax-v1 .hx-side:hover { background: var(--surface-tint); }
+.hax-v1 a.hx-card:hover .hx-arrow { transform: translateX(3px); }
+.hax-v1 .hx-field { transition: border-color .2s, box-shadow .2s; }
+.hax-v1 .hx-field:hover { border-color: var(--stroke-strong); }
+.hax-v1 .hx-field:focus { border-color: var(--text-link); box-shadow: 0 0 0 3px rgba(24,122,220,.12); }
+.hax-v1 .hx-check { transition: background-color .15s, border-color .15s; display: grid; place-content: center; }
+.hax-v1 .hx-check:checked { background: var(--gradient-hax-fill) border-box; border-color: transparent; }
+.hax-v1 .hx-check:checked::after { content: ""; width: 9px; height: 5px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.hax-v1 .hx-check:focus-visible { outline: 2px solid var(--text-link); outline-offset: 2px; }
+.hax-v1 .hx-chip { transition: background-color .2s, border-color .2s, color .2s; }
+.hax-v1 .hx-chip[aria-pressed="false"]:hover { background: var(--surface-tint); }
+.hax-v1 a.hx-card:hover .hx-arrow { transform: translateX(3px); }
+
+/* Dark theme (colours in tokens.css). What the tokens can't reach:
+   - Icons are single-colour SVGs drawn in light-theme ink, so a filter recolours them by
+     role: ink → light ink, the two greys → lighter greys, link blue → the dark link blue.
+     White icons sit on blue or violet buttons and stay as they are.
+   - Assets with a light and a dark version (moon/sun, Outshift logo) show the right one.
+   - The pastel washes drop to a soft glow, and the amber–rose headings lift a little. */
+.hax-v1 .hx-dark-only { display: none; }
+html[data-hax-theme="dark"] .hax-v1 .hx-dark-only { display: block; }
+html[data-hax-theme="dark"] .hax-v1 .hx-light-only { display: none; }
+html[data-hax-theme="dark"] .hax-v1 :is(img[src$="/chevron-down.svg"], img[src$="/icon-arrow-right-12.svg"], img[src$="/icon-arrow-right-14.svg"], img[src$="-ink.svg"], img[src$="/icon-user.svg"], img[src$="/icon-sun.svg"]) { filter: brightness(0) invert(.91); }
+html[data-hax-theme="dark"] .hax-v1 :is(img[src$="/chevron-sidebar.svg"], img[src$="/icon-arrow-up-right-16.svg"], img[src$="/icon-calendar.svg"], img[src$="/icon-copy.svg"]) { filter: brightness(0) invert(.67); }
+html[data-hax-theme="dark"] .hax-v1 :is(img[src$="/icon-copy-tertiary.svg"], img[src$="/icon-search.svg"]) { filter: brightness(0) invert(.53); }
+html[data-hax-theme="dark"] .hax-v1 :is(img[src$="/icon-arrow-right-link-12.svg"], img[src$="/icon-arrow-up-right.svg"], img[src$="/icon-check.svg"], img[src$="/icon-external-link-12.svg"]) { filter: brightness(1.3); }
+html[data-hax-theme="dark"] .hax-v1 .hx-wash { opacity: .4; }
+html[data-hax-theme="dark"] .hax-v1 .bg-clip-text { filter: brightness(1.18); }

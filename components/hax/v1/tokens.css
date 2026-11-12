@@ -1,0 +1,112 @@
+/* HAX v1 · Figma variables (HAX 2.0 file, 🎨 Foundations). Names match the
+   Figma variable paths so MCP-generated classes like var(--text-primary)
+   resolve to the same values. */
+.hax-v1 {
+  --font-ui: "InterVariable", "Inter", system-ui, sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+  --text-primary: #293247;
+  --text-secondary: #67707f;
+  --text-tertiary: #8a93a3;
+  --text-link: #187adc;
+  --text-on-inverse: #fff;
+  --text-on-accent: #fff;
+  --surface-page: #fff;
+  --surface-raised: #fff;
+  --surface-inverse: #293247;
+  --surface-accent: #00bceb;
+  --surface-tint: rgba(41, 50, 71, .04);
+  --surface-tint-pressed: rgba(41, 50, 71, .15);
+  --surface-assistant: #6d6af2;
+  --surface-message-person: #187adc;
+  --surface-message-assistant: rgba(41, 50, 71, .04);
+  --stroke-subtle: rgba(41, 50, 71, .08);
+  --stroke-default: rgba(41, 50, 71, .15);
+  --brand-marker: #f5a524;
+  --status-warning: #c47f00;
+  --status-warning-subtle: rgba(245, 165, 36, .12);
+  --radius-pill: 999px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  /* Focus/Ring (Figma Button set 94:17180) */
+  --focus-ring: rgba(0, 188, 235, .35);
+  /* HAX theme gradients, from the logo (no purple in HAX).
+     Lines (gradient borders, nav underline): the full blue H → cyan A → orange X run.
+     Fills (main button, selected tabs/chips): the H and A blues only; blue meeting
+     orange inside a small pill turned muddy, and white text must read end to end. */
+  --gradient-hax: linear-gradient(90deg, #0051af 0%, #0096d6 32%, #00bceb 55%, #ff8a50 80%, #ff6d2d 100%);
+  --gradient-hax-fill: linear-gradient(120deg, #0051af 0%, #0a6bd6 24%, #0096d6 50%, #00a9e2 75%, #00bceb 100%);
+  /* drawn at 200% width: rest shows the deep half, hover slides to the brighter half */
+  /* opaque hover/press fills for outline-style buttons (page + 5% / 10% ink) */
+  --surface-hover: #f4f5f6;
+  --surface-pressed: #eaebed;
+  --stroke-strong: rgba(41, 50, 71, .3);
+  font-family: var(--font-ui);
+  /* Figma sets every size in Inter's text cut; auto optical sizing switches InterVariable
+     to its narrower display cut at headline sizes (50px headings came out ~10% narrow) */
+  font-optical-sizing: none;
+  font-feature-settings: "calt", "liga";
+  color: var(--text-primary);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+}
+.hax-v1 p { margin: 0; }
+/* app/globals.css gives h1–h3 -0.02em tracking, which squeezed every HAX heading ~40px
+   narrower than Figma, and its own text colour (the same #293247 in light, but it stayed
+   dark in the dark theme). (0,0,2) beats that rule in any load order; tracking-[…] and
+   text-[…] utilities (0,1,0) still win. */
+html :where(.hax-v1) :is(h1, h2, h3) { letter-spacing: 0; color: var(--text-primary); }
+.hax-v1 {
+  --surface-code: #0f1117;
+  --text-code: #e0e4ec;
+}
+.hax-v1 { --surface-accent-subtle: rgba(0, 188, 235, .1); }
+.hax-v1 { --surface-tint-hover: rgba(41, 50, 71, .08); }
+.hax-v1 { --radius-md: 8px; }
+/* colours that used to be written inline, so the dark theme can swap them */
+.hax-v1 {
+  --stroke-emphasis: rgba(41, 50, 71, .55); /* active callout leader line */
+  --dot-ink: 41, 50, 71; /* "Two ways in" field dots, as r, g, b for the canvas */
+  --gradient-announce: linear-gradient(90deg, rgba(255, 184, 150, .35) 0%, rgba(196, 181, 255, .35) 50%, rgba(158, 223, 255, .35) 100%);
+}
+
+/* Dark theme. The header switch sets data-hax-theme="dark" on <html> and saves the choice
+   ("hax-theme" in localStorage); app/(hax)/layout.tsx applies it before first paint.
+   Same roles as light: navy surfaces built from the HAX ink, light ink for text, white
+   overlays where light uses ink tints. Inverse stays navy with white text, because solid
+   buttons put --text-on-inverse on the blue gradient in both themes. */
+html[data-hax-theme="dark"] .hax-v1 {
+  color-scheme: dark;
+  --text-primary: #e7eaf0;
+  --text-secondary: #a2abb9;
+  --text-tertiary: #7d8798;
+  --text-link: #1f9fff; /* #187adc × 1.3, so blue icons match it with brightness(1.3) */
+  --surface-page: #0c1018;
+  --surface-raised: #141924;
+  --surface-inverse: #313b50;
+  --surface-tint: rgba(255, 255, 255, .04);
+  --surface-tint-hover: rgba(255, 255, 255, .08);
+  --surface-tint-pressed: rgba(255, 255, 255, .14);
+  --surface-message-assistant: rgba(255, 255, 255, .05);
+  --surface-accent-subtle: rgba(0, 188, 235, .14);
+  --surface-hover: #1a202b;
+  --surface-pressed: #232a37;
+  --surface-code: #151b27;
+  --stroke-subtle: rgba(255, 255, 255, .08);
+  --stroke-default: rgba(255, 255, 255, .14);
+  --stroke-strong: rgba(255, 255, 255, .28);
+  --stroke-emphasis: rgba(255, 255, 255, .6);
+  --status-warning: #f2ac3c;
+  --status-warning-subtle: rgba(245, 165, 36, .14);
+  --focus-ring: rgba(0, 188, 235, .5);
+  --dot-ink: 231, 234, 240;
+  /* the pastels at 35% turn grey over navy; a lighter wash keeps the band's colour */
+  --gradient-announce: linear-gradient(90deg, rgba(255, 184, 150, .16) 0%, rgba(196, 181, 255, .16) 50%, rgba(158, 223, 255, .16) 100%);
+}
+/* the page behind the shell (overscroll, short pages) and the scrollbars */
+html[data-hax-theme="dark"]:has(.hax-v1) { background: #0c1018; color-scheme: dark; }
+
+/* Theme switch: the new theme is revealed as a circle from the switch (Header.tsx animates the clip-path);
+   no default cross-fade under it. Only while a theme switch runs (html.hx-vt). */
+html.hx-vt::view-transition-old(root),
+html.hx-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.hx-vt::view-transition-new(root) { z-index: 2; }
