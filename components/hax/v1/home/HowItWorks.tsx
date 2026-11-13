@@ -1,9 +1,12 @@
 // Figma: How it works 98:19623. Steps stack (sticky) as you scroll, like the
-// old v1 "How HAX works" tiles.
-const STEPS = [
-  { n: 1, title: ["Describe the screen", "you need"], body: "Tell Claude what you want to build. Start with your intent.", ex: "describe" },
-  { n: 2, title: ["HAX finds the right", "building blocks"], body: "Your agent gets HAX patterns that fit the task.", ex: "compose" },
-  { n: 3, title: ["Watch your UI", "take shape"], body: "Your agent assembles the interface in your theme.", ex: "assemble" },
+// old v1 "How HAX works" tiles. Each tile plays its animated scene
+// (HowItWorksScene, ported from HAX-2.0/index.html) instead of a still image.
+import { HowItWorksScene, type SceneKind } from "./HowItWorksScene";
+
+const STEPS: { n: number; title: [string, string]; body: string; ex: string; scene: SceneKind }[] = [
+  { n: 1, title: ["Describe the screen", "you need"], body: "Tell Claude what you want to build. Start with your intent.", ex: "describe", scene: "chat" },
+  { n: 2, title: ["HAX finds the right", "building blocks"], body: "Your agent gets HAX patterns that fit the task.", ex: "compose", scene: "map" },
+  { n: 3, title: ["Watch your UI", "take shape"], body: "Your agent assembles the interface in your theme.", ex: "assemble", scene: "ui" },
 ];
 
 export function HowItWorks() {
@@ -36,7 +39,7 @@ export function HowItWorks() {
               <p className="font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase">Interaction example: {s.ex}</p>
               <div className="relative w-[648px]">
                 <div className="bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] pl-[44px] pr-[28px] py-[28px] rounded-[var(--radius-2xl)] w-[648px]">
-                  <img alt={`Interaction example: ${s.ex}`} src={`/hax/v1/how-step-${s.n}.jpg`} className="block h-[454px] w-full object-cover rounded-[12px]" />
+                  <HowItWorksScene kind={s.scene} />
                 </div>
                 <span className="absolute bg-[var(--brand-marker)] flex items-center justify-center left-[12px] top-[40px] rounded-[var(--radius-pill)] size-[20px] font-semibold leading-[16px] text-[12px] text-[color:var(--text-on-accent)] tracking-[0.06px]">{s.n}</span>
               </div>
