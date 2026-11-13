@@ -145,3 +145,12 @@
 .hw-chat__user, .hw-chat__bot { opacity: 0; transform: translateY(8px); transition: opacity .45s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
 .hw-chat__user.is-in, .hw-chat__bot.is-in, [data-hw].is-done .hw-chat__user, [data-hw].is-done .hw-chat__bot { opacity: 1; transform: none; }
 .hw-chat.is-sent .hw-chat__hello, [data-hw].is-done .hw-chat__hello { opacity: 0; }
+
+/* the white UI cards float in the translucent frame (after outshift.design/hax) */
+.hw-chat, .hw-db { box-shadow: 0 2px 8px rgba(0, 0, 0, .06), 0 8px 32px rgba(41, 50, 71, .1), 0 32px 72px rgba(41, 50, 71, .12); }
+
+/* keep every pattern tag inside the dashboard card (it clips at its rounded edge):
+   elements at the very top show their tag below them instead of above */
+.hw-db__btn[data-tag]::after, .hw-db__aria[data-tag]::after { top: auto; bottom: -2px; transform: translateY(100%) scale(.9); }
+.hw-db__btn[data-tag].is-tag::after, .hw-db__aria[data-tag].is-tag::after { transform: translateY(100%); }
+.hw-db__aria[data-tag]::after { left: 0; right: auto; }

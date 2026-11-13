@@ -24,9 +24,6 @@ export function BlogPage() {
   return (
     <>
       <section className="flex flex-col gap-[16px] items-center pb-[40px] pt-[56px] px-[144px] relative w-full overflow-hidden" data-node-id="101:4621">
-        <img alt="" aria-hidden src="/hax/v1/wash-peach-302.svg" className="hx-wash absolute h-[302px] left-0 top-0 w-[760px] max-w-none pointer-events-none" />
-        <img alt="" aria-hidden src="/hax/v1/wash-sky-302.svg" className="hx-wash hx-wash--2 absolute h-[302px] left-[740px] top-0 w-[700px] max-w-none pointer-events-none" />
-        <img alt="" aria-hidden src="/hax/v1/wash-lavender-302.svg" className="hx-wash hx-wash--3 absolute h-[302px] left-[520px] top-0 w-[640px] max-w-none pointer-events-none" />
         <h1 className="hx-rise relative font-semibold leading-[48px] text-[40px] text-center tracking-[-0.5px] whitespace-nowrap">Insights &amp; Perspectives</h1>
         <p className="hx-rise hx-rise--2 relative leading-[22px] text-[14px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">Explore our latest thoughts on design, research, and innovation in the world of product development.</p>
         <div className="relative pb-[8px] pt-[12px] w-[520px]">

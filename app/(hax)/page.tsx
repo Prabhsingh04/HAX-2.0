@@ -10,7 +10,7 @@ import { BuiltBy } from "@/components/hax/v1/home/BuiltBy";
 // Figma: HAX · Home 98:19357 (🌐 Website v1, file WHKYAV3BKe6iBdrxD4mzKU)
 export default function Home() {
   return (
-    <SiteShell announcement>
+    <SiteShell announcement blobs>
       <Hero />
       <HowCompare />
       <HowItWorks />

@@ -29,7 +29,7 @@ function Moment({ m, i }: { m: (typeof MOMENTS)[number]; i: number }) {
 
 export function FourMoments() {
   return (
-    <section id="patterns" className="flex flex-col gap-[28px] items-center px-[144px] py-[96px] relative w-full" data-node-id="98:19721">
+    <section id="patterns" data-hx-blob-o="0.72" className="flex flex-col gap-[28px] items-center px-[144px] py-[96px] relative w-full" data-node-id="98:19721">
       <h2 className="hx-reveal font-extralight leading-[60px] text-[50px] text-center whitespace-nowrap">
         Every pattern belongs to one of{" "}
         <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, rgb(217, 119, 6) 0%, rgb(217, 119, 6) 68.644%, rgb(225, 29, 72) 87.458%, rgb(190, 24, 93) 100%)" }}>

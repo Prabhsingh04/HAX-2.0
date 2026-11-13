@@ -152,8 +152,11 @@ export function Header() {
 }
 
 // Figma: Announcement bar 94:18699 (instance 98:19419)
+// Arrives 2s after load: the slot opens while the bar slides down from under the
+// header and settles (.hx-announce in motion.css).
 export function AnnouncementBar() {
   return (
+    <div className="hx-announce">
     <div className="flex h-[40px] items-center justify-center gap-[10px]" style={{ backgroundImage: "var(--gradient-announce)" }} data-node-id="94:18699">
       <p className="font-normal leading-[20px] text-[13px] text-[color:var(--text-primary)] whitespace-nowrap">
         HAX for iPhone Duo. The same agentic patterns. Now adapted for mobile.
@@ -162,6 +165,7 @@ export function AnnouncementBar() {
         <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore mobile patterns</span>
         <img alt="" src="/hax/v1/icon-arrow-up-right.svg" className="hx-arrow size-[12px]" />
       </a>
+    </div>
     </div>
   );
 }

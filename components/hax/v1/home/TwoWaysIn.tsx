@@ -19,7 +19,7 @@ export function TwoWaysIn() {
   const btn = "hx-btn hx-btn--outline bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[40px] items-center justify-center px-[20px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[20px] text-[14px] tracking-[0.07px] whitespace-nowrap";
   const cap = "font-[family-name:var(--font-code)] leading-[16px] text-[11.5px] text-[color:var(--text-secondary)] tracking-[0.2px] whitespace-nowrap";
   return (
-    <section id="start" ref={sec} className="bg-[var(--surface-page)] border-y border-[var(--stroke-subtle)] relative w-full h-[828px] overflow-hidden" data-node-id="98:19688">
+    <section id="start" ref={sec} className="border-y border-[var(--stroke-subtle)] relative w-full h-[828px] overflow-hidden" data-node-id="98:19688">
       <canvas ref={cv} aria-hidden className="absolute inset-0 size-full pointer-events-none" />
       <div className="relative flex flex-col gap-[56px] items-center py-[128px] w-full">
         <h2 className="hx-reveal font-semibold leading-[58px] text-[50px] text-center tracking-[-0.6px] whitespace-nowrap">

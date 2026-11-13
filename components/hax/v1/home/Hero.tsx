@@ -38,10 +38,7 @@ export function Hero() {
   return (
     // No breadcrumb: the site is only the HAX initiative. pt 42 = Figma's 24 + the 18px
     // breadcrumb row, so the headline keeps its Figma position.
-    <section className="flex flex-col items-center pb-[128px] pt-[42px] px-[144px] relative w-full overflow-hidden" data-node-id="98:19425">
-      <img alt="" aria-hidden src="/hax/v1/wash-lavender.svg" className="hx-wash absolute h-[500px] left-[380px] top-0 w-[760px] max-w-none" />
-      <img alt="" aria-hidden src="/hax/v1/wash-sky.svg" className="hx-wash hx-wash--2 absolute h-[500px] left-[580px] top-0 w-[860px] max-w-none" />
-      <img alt="" aria-hidden src="/hax/v1/wash-peach.svg" className="hx-wash hx-wash--3 absolute h-[500px] left-0 top-0 w-[900px] max-w-none" />
+    <section className="flex flex-col items-center pb-[128px] pt-[42px] px-[144px] relative w-full overflow-hidden" data-node-id="98:19425" data-hx-hero>
       <div className="flex flex-col gap-[28px] items-center pt-[88px] relative">
         <h1 className="hx-rise font-semibold text-[50px] leading-[58px] text-[color:var(--text-primary)] text-center tracking-[-0.6px] whitespace-nowrap">
           One pattern library for the

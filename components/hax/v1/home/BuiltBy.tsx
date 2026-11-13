@@ -2,8 +2,6 @@
 export function BuiltBy() {
   return (
     <section className="flex gap-[64px] items-center px-[144px] py-[96px] relative w-full" data-node-id="98:19879">
-      <img alt="" aria-hidden src="/hax/v1/wash-peach-412.svg" className="hx-wash absolute h-[412px] left-0 top-0 w-[760px] max-w-none pointer-events-none" />
-      <img alt="" aria-hidden src="/hax/v1/wash-lavender-412.svg" className="hx-wash hx-wash--2 absolute h-[412px] left-[380px] top-0 w-[700px] max-w-none pointer-events-none" />
       <div className="hx-reveal relative flex flex-col gap-[20px] items-start shrink-0 w-[500px]">
         <h2 className="font-semibold leading-[36px] text-[29px] tracking-[-0.2px] w-[500px]">
           Built by people who design{" "}

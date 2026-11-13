@@ -57,8 +57,6 @@ export function DocsPage() {
   return (
     <>
       <section className="flex flex-col gap-[16px] items-start pb-[56px] pt-[72px] px-[144px] relative w-full overflow-hidden" data-node-id="101:2669">
-        <img alt="" aria-hidden src="/hax/v1/wash-peach-314.svg" className="hx-wash absolute h-[314px] left-0 top-0 w-[760px] max-w-none pointer-events-none" />
-        <img alt="" aria-hidden src="/hax/v1/wash-sky-314.svg" className="hx-wash hx-wash--2 absolute h-[314px] left-[740px] top-0 w-[700px] max-w-none pointer-events-none" />
         <nav aria-label="Breadcrumb" className="relative flex gap-[8px] leading-[18px] text-[12px]">
           <a href="/hax-docs" className="hx-link text-[color:var(--text-link)]">Docs</a>
           <span className="text-[color:var(--text-tertiary)]">/</span>

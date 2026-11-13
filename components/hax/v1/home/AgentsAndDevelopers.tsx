@@ -30,8 +30,6 @@ export function AgentsAndDevelopers() {
   const keys = Object.keys(TABS) as K[];
   return (
     <section id="developers" className="flex flex-col gap-[28px] items-center px-[144px] py-[96px] relative w-full overflow-hidden" data-node-id="98:19846">
-      <img alt="" aria-hidden src="/hax/v1/wash-sky-700.svg" className="hx-wash absolute h-[560px] left-[740px] top-0 w-[700px] max-w-none pointer-events-none" />
-      <img alt="" aria-hidden src="/hax/v1/wash-peach-700.svg" className="hx-wash hx-wash--2 absolute h-[560px] left-0 top-[140px] w-[700px] max-w-none pointer-events-none" />
       <h2 className="hx-reveal relative font-extralight leading-[60px] text-[50px] text-center whitespace-nowrap">
         Your AI agent already{" "}
         <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, rgb(217, 119, 6) 0%, rgb(217, 119, 6) 50.883%, rgb(225, 29, 72) 80.353%, rgb(190, 24, 93) 100%)" }}>

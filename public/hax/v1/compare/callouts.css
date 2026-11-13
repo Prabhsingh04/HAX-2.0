@@ -54,3 +54,11 @@
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co line { stroke: rgb(182 154 230 / .5); }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co circle { fill: #b69ae6; }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co .is-hot line { stroke: #b69ae6; }
+
+/* Let the site's fixed blob background (BlobLayer) show through the section, as on every other
+   section, in both themes (html + body outrank the dark-theme background rule above). The
+   "Without HAX" card keeps its faint tint, laid over the page colour so it stays opaque: the
+   background gradient never shows on the UI. */
+html body .hax-v1 .hx-vs.landing-light, html body .hax-v1 .hx-vs.landing-dark { background: transparent !important; }
+html .hax-v1 .hx-vs .vs__side--without .vs__card { background: linear-gradient(rgba(12, 12, 10, .035), rgba(12, 12, 10, .035)) var(--surface-page); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hax-v1 .hx-vs .vs__side--without .vs__card { background: linear-gradient(rgb(255 255 255 / .04), rgb(255 255 255 / .04)) var(--surface-page); }
