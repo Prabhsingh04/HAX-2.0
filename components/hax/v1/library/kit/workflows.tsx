@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowRight, Bot, Calendar, Check, ChevronDown, GripVertical, Hand, Mail, Pencil, Play, Plus, Sparkle, Ticket, Zap } from "lucide-react";
+import { ArrowRight, Bot, Calendar, Check, ChevronDown, GripVertical, Hand, Mail, Pencil, Play, Plus, Sparkle, Ticket, Zap } from "./icons";
 import { Ag, Me, Spin, sel, tog, type Entry, type Props } from "./ui";
 
 /* Plan — Claude Code / Codex plan mode, Cursor plan, Manus todo, Copilot Workspace
@@ -8,7 +8,7 @@ function Plan({ o }: { o: Props }) {
   const steps = ["Read the churn report and Q2 baseline", "Split churn by region and plan size", "Draft three next steps with owners", "Write the one-page summary"];
   const run = o.state === "Running";
   return (
-    <div className="hk-panel !rounded-[18px] w-[500px] p-[16px] hk-col gap-[12px]">
+    <div className="hk-panel w-[500px] p-[16px] hk-col gap-[12px]">
       <div className="hk-row justify-between"><span className="hk-h">Plan · 4 steps</span><span className="hk-s">{run ? "Step 2 of 4" : "About 6 min"}</span></div>
       <div className="hk-col gap-[2px]">
         {steps.map((s, i) => (
@@ -51,7 +51,7 @@ function TaskList({ o }: { o: Props }) {
 function HandOff({ o }: { o: Props }) {
   const toAgent = o.to === "Another agent";
   return (
-    <div className="hk-panel !rounded-[18px] w-[520px] p-[16px] hk-col gap-[14px]">
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[14px]">
       <div className="hk-row gap-[12px]">
         <span className="hk-col items-center gap-[4px]"><Ag size="lg" /><span className="hk-s">Atlas</span></span>
         <span className="hk-grow hk-col items-center gap-[4px]"><span className="hk-s">{o.state === "Waiting" ? "Waiting to be picked up" : "Picked up 2 min ago"}</span><span className="h-[2px] w-full rounded-full" style={o.state === "Waiting" ? { background: "repeating-linear-gradient(90deg, var(--k-edge-2) 0 6px, transparent 6px 11px)" } : toAgent ? { background: "var(--k-agent)" } : { background: "var(--gradient-hax)", transform: "scaleX(-1)" }} /><ArrowRight size={14} className="hk-faint -mt-[9px] self-end" /></span>
@@ -90,7 +90,7 @@ function ProgressSteps({ o }: { o: Props }) {
    rejoins before the action, so it is clear where a person steps in. */
 function WorkflowCanvas({ o }: { o: Props }) {
   const Node = ({ x, y, ic, k, t, on, human }: { x: number; y: number; ic: ReactNode; k: string; t: string; on?: boolean; human?: boolean }) => (
-    <div className="absolute hk-panel !rounded-[12px] hk-row gap-[10px] w-[156px] h-[56px] px-[10px]" style={{ left: x, top: y, ...(on ? { borderColor: "var(--k-blue)", boxShadow: "0 0 0 3px var(--focus-ring), var(--k-shadow)" } : {}), ...(human ? { borderStyle: "dashed", borderColor: "var(--k-warn)" } : {}) }}>
+    <div className="absolute hk-panel !rounded-[var(--hk-r-lg)] hk-row gap-[10px] w-[156px] h-[56px] px-[10px]" style={{ left: x, top: y, ...(on ? { borderColor: "var(--k-blue)", boxShadow: "0 0 0 3px var(--focus-ring), var(--k-shadow)" } : {}), ...(human ? { borderStyle: "dashed", borderColor: "var(--k-warn)" } : {}) }}>
       <span className="hk-app !size-[30px]">{ic}</span><span className="hk-col min-w-0"><span className="hk-xs">{k}</span><span className="hk-t !text-[13px] hk-trunc">{t}</span></span>
     </div>
   );
@@ -118,10 +118,47 @@ function WorkflowCanvas({ o }: { o: Props }) {
   );
 }
 
+/* Shared status — one live view of the goal, what is known, what is still open and who is on
+   it, for the people and the agents working the same problem (incident.io and PagerDuty
+   incident pages, Linear project updates, Slack canvases). */
+function SharedStatus({ o }: { o: Props }) {
+  const known: [ReactNode, string][] = [
+    [<Ag key="a" size="sm" icon={Bot} />, "Errors began at 09:12, seven minutes after the deploy"],
+    [<Me key="m" i="JK" />, "Rolling back fixed checkout on staging"],
+  ];
+  const open: [string, string][] = [["Do we refund the failed orders?", "Billing agent"], ["What do we tell customers?", "Sam"]];
+  return (
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
+      <div className="hk-row justify-between !items-start">
+        <span className="hk-col gap-[2px]"><span className="hk-xs">Goal · checkout outage</span><span className="hk-h">Checkout working again before 14:00</span></span>
+        <span className="hk-tag hk-tag--bad"><i className="size-[6px] rounded-full bg-current" />Live</span>
+      </div>
+      <div className="hk-col gap-[6px]">
+        <span className="hk-xs">What we know</span>
+        {known.map(([who, t]) => <span key={t} className="hk-row gap-[10px] text-[13.5px] leading-[19px]"><span className="grid place-items-center size-[28px] shrink-0">{who}</span>{t}</span>)}
+      </div>
+      {o.open && (
+        <div className="hk-col gap-[6px]">
+          <span className="hk-xs">Still open</span>
+          {open.map(([q, who]) => <span key={q} className="hk-row justify-between gap-[10px] text-[13.5px] leading-[19px]"><span>{q}</span><span className="hk-s whitespace-nowrap">{who}</span></span>)}
+        </div>
+      )}
+      {o.who && (
+        <div className="hk-row gap-[10px] pt-[10px] border-t border-[var(--k-edge)]">
+          <span className="hk-row !gap-[4px]"><Ag size="sm" icon={Bot} /><Ag size="sm" icon={Bot} /><Me i="JK" /><Me i="SR" /></span>
+          <span className="hk-s hk-grow">2 agents and 2 people on it</span>
+          <span className="hk-s hk-link">Open the incident</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export const WORKFLOWS: Record<string, Entry> = {
   plan: { C: Plan, opts: [sel("state", "State", ["Review", "Running"]), tog("editable", "Editable")], refs: ["Claude Code plan mode", "Codex", "Cursor plan", "Manus", "Copilot Workspace"] },
   "task-list": { C: TaskList, opts: [tog("owners", "Owners"), tog("send", "Send to tracker"), tog("ai", "AI label")], refs: ["Copilot in Teams", "Notion AI", "Granola", "Linear"] },
   "hand-off": { C: HandOff, opts: [sel("to", "Hand to", ["A person", "Another agent"]), sel("state", "State", ["Picked up", "Waiting"]), tog("context", "Context passed")], refs: ["Intercom Fin", "Salesforce Agentforce", "Copilot Studio"] },
   "progress-steps": { C: ProgressSteps, opts: [sel("view", "View", ["Expanded", "Collapsed"]), tog("details", "Step details")], refs: ["ChatGPT agent", "Perplexity", "Claude research", "Gemini Deep Research"] },
+  "shared-status": { C: SharedStatus, opts: [tog("open", "Open questions"), tog("who", "Who is on it")], refs: ["incident.io", "PagerDuty", "Linear project updates", "Slack canvas"] },
   "workflow-canvas": { C: WorkflowCanvas, opts: [tog("human", "Human check"), tog("running", "Running", false)], refs: ["n8n", "Zapier", "Make", "OpenAI Agent Builder", "Copilot Studio"] },
 };

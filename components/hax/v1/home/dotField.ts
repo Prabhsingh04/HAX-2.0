@@ -1,7 +1,8 @@
-// "Two ways in" particle field, ported from the old v1 #start script.
+// "Ways in" particle field, ported from the old v1 #start script.
 // 24px grid mirrored about centre, 1.15px dots in Figma's field colour (the theme's ink,
-// --dot-ink, @15%, node 98:19689) wandering slowly; hovering a half raises dots into a
-// shape on a 6.2px hex lattice (blue #21A4D7 → violet #8B57C7). Keyboard focus in a column
+// --dot-ink, @15%, node 98:19689) wandering slowly; hovering a column raises dots into its
+// shape on a 6.2px hex lattice, in the logo blues (#0A6BD6 → #00BCEB, no violet). Shapes:
+// spark (AI), code ({ }), and Lucide's frame and bot outlines. Keyboard focus in a column
 // holds its shape.
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => void {
@@ -13,7 +14,7 @@ export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => vo
   const WANDER_PX = 4.5, WANDER_W = [0.35, 0.95];
   const SHIMMER_PX = 0.7, SHIMMER_W = 2.1, FIELD_A = 0.15, CLAIM = 1.4;
   const SCATTER_R = 200, SCATTER_PX = 40, SCATTER_OUT_MS = 160, SCATTER_BACK_MS = 900;
-  const BLUE = [33, 164, 215], VIOLET = [139, 87, 199];
+  const BLUE = [10, 107, 214], CYAN = [0, 188, 235];
   const ctx = cv.getContext("2d");
   if (!ctx) return () => {};
   // field ink follows the theme (tokens.css --dot-ink); light ink #293247 until read
@@ -38,7 +39,16 @@ export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => vo
     g.lineTo(xb, b - e); g.quadraticCurveTo(xb, b, xb + e, b);
     g.stroke();
   };
+  // a Lucide icon (24-unit box, stroke 2) drawn as large as the art box allows, centred
+  const lucide = (paths: string[]) => (g: CanvasRenderingContext2D, w: number, h: number) => {
+    const s = (Math.min(w, h) * 0.94) / 24;
+    g.translate((w - 24 * s) / 2, (h - 24 * s) / 2); g.scale(s, s);
+    g.lineWidth = 2; g.lineCap = g.lineJoin = "round";
+    paths.forEach((d) => g.stroke(new Path2D(d)));
+  };
   const SHAPES: Record<string, (g: CanvasRenderingContext2D, w: number, h: number) => void> = {
+    frame: lucide(["M22 6H2", "M22 18H2", "M6 2v20", "M18 2v20"]),
+    bot: lucide(["M12 8V4H8", "M6 8h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z", "M2 14h2", "M20 14h2", "M15 13v2", "M9 13v2"]),
     spark: (g, w, h) => {
       const r = Math.min(w, h) * 0.44, cx = w / 2 - r * 0.18, cy = h / 2 + r * 0.06;
       g.beginPath(); star(g, cx, cy, r); star(g, cx + r, cy - r * 0.78, r * 0.34); g.fill();
@@ -100,7 +110,7 @@ export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => vo
     m.P = [];
     for (let k = 0; k < n; k++) {
       const t = T[Math.floor(k * T.length / n)], c = C[Math.floor(k * C.length / n)];
-      m.P.push({ i: c.i, tx: t.x, ty: t.y, c: mix(BLUE, VIOLET, (t.x - ox - lo) / (hi - lo || 1)),
+      m.P.push({ i: c.i, tx: t.x, ty: t.y, c: mix(BLUE, CYAN, (t.x - ox - lo) / (hi - lo || 1)),
         arc: (Math.random() - 0.5) * 40, sp: Math.random() * TAU, from: m.goal, to: m.goal, at: now, dur: 1 });
     }
   }
@@ -209,7 +219,12 @@ export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => vo
       if (e.pointerType === "touch") return;
       const r = sec.getBoundingClientRect();
       mx = e.clientX - r.left; my = e.clientY - r.top;
-      if (!touchMode.matches) pick(Math.min(cols.length - 1, Math.floor(mx / (W / cols.length))));
+      // the column whose centre is nearest the pointer (two halves for two columns, as before)
+      if (!touchMode.matches) {
+        let best = -1, bd = Infinity;
+        cols.forEach((m, i) => { const c = m.col.getBoundingClientRect(), d = Math.abs(e.clientX - (c.left + c.width / 2)); if (d < bd) { bd = d; best = i; } });
+        pick(best);
+      }
     });
     on(sec, "pointerleave", () => { mx = null; if (!touchMode.matches) pick(-1); });
   }

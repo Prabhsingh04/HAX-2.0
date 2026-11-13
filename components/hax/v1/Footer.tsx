@@ -1,6 +1,7 @@
 // Figma: Footer 98:19910
 const HAX = [
-  ["Pattern library", "/library"],
+  ["Components", "/library"],
+  ["Patterns", "/patterns"],
   ["Docs", "/hax-docs"],
   ["MCP", "/mcp"],
   ["Contact", "/contact"],

@@ -1,4 +1,4 @@
-import { Check, ChevronDown, FileText, ShieldCheck, Terminal, X } from "lucide-react";
+import { Check, ChevronDown, FileText, ShieldCheck, Terminal, X } from "./icons";
 import { AgentHead, Chk, sel, tog, type Entry, type Props } from "./ui";
 
 /* Approval card — ChatGPT agent "confirm before purchase / send", Claude Code plan
@@ -6,7 +6,7 @@ import { AgentHead, Chk, sel, tog, type Entry, type Props } from "./ui";
 function ApprovalCard({ o }: { o: Props }) {
   const risk = o.risk as string;
   return (
-    <div className="hk-panel !rounded-[18px] w-[500px] overflow-hidden">
+    <div className="hk-panel w-[500px] overflow-hidden">
       <div className="p-[16px] hk-col gap-[12px]">
         <div className="hk-row justify-between"><AgentHead note="wants to" />{risk !== "Low" && <span className={`hk-tag ${risk === "High" ? "hk-tag--bad" : "hk-tag--warn"}`}>{risk === "High" ? "Can't be undone" : "Sends outside the team"}</span>}</div>
         <p className="hk-h">Send 3 renewal emails</p>
@@ -30,7 +30,7 @@ function ApprovalCard({ o }: { o: Props }) {
 function PermissionRequest({ o }: { o: Props }) {
   const tool = o.kind === "Command";
   return (
-    <div className="hk-panel !rounded-[18px] w-[500px] p-[16px] hk-col gap-[12px]">
+    <div className="hk-panel w-[500px] p-[16px] hk-col gap-[12px]">
       <div className="hk-row gap-[10px]"><ShieldCheck size={18} className="hk-blue shrink-0 self-start mt-[1px]" /><span className="hk-col"><span className="hk-t">{tool ? "Allow Atlas to run this command?" : "Allow Atlas to read your Slack?"}</span><span className="hk-s">{tool ? "In acme/atlas-web, on this computer" : "Only the #launch and #pricing channels"}</span></span></div>
       {tool ? (
         <div className="hk-code"><span className="hk-row gap-[8px] !text-[color:var(--text-code)]"><Terminal size={13} />npm run test -- --grep &quot;login&quot;</span></div>
@@ -53,7 +53,7 @@ function PermissionRequest({ o }: { o: Props }) {
    one", Gmail bulk send sample. */
 function PreviewBeforeRun({ o }: { o: Props }) {
   return (
-    <div className="hk-panel !rounded-[18px] w-[520px] p-[16px] hk-col gap-[12px]">
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
       <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Try it on one first</span><span className="hk-s">Rewrite 240 product descriptions</span></span><span className="hk-tag hk-tag--blue">Sample 1 of 240</span></div>
       <div className={o.compare ? "grid grid-cols-2 gap-[8px]" : ""}>
         {o.compare && <div className="hk-well p-[12px] hk-col gap-[4px]"><span className="hk-xs">Before</span><span className="text-[13px] leading-[19px] hk-mute">Blue mug. 350ml. Ceramic. Dishwasher safe.</span></div>}

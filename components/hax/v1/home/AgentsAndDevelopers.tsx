@@ -31,10 +31,7 @@ export function AgentsAndDevelopers() {
   return (
     <section id="developers" className="flex flex-col gap-[28px] items-center px-[144px] py-[96px] relative w-full overflow-hidden" data-node-id="98:19846">
       <h2 className="hx-reveal relative font-extralight leading-[60px] text-[50px] text-center whitespace-nowrap">
-        Your AI agent already{" "}
-        <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, rgb(217, 119, 6) 0%, rgb(217, 119, 6) 50.883%, rgb(225, 29, 72) 80.353%, rgb(190, 24, 93) 100%)" }}>
-          knows how to use it
-        </span>
+        Your AI agent already knows how to use it
       </h2>
       <p className="relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">
         HAX runs an MCP server, so Claude, Cursor, Codex and VS Code can ask it which patterns to use

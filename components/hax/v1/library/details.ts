@@ -151,6 +151,13 @@ export const DETAILS: Record<string, Detail> = {
     dos: ["Keep it to one tap; the reason is optional.", "Say what the feedback is used for."],
     donts: ["Don't interrupt people with a survey.", "Don't hide try again behind a thumbs down."],
   },
+  "team-decision": {
+    how: ["When a choice needs several people, like a price, a launch date or a policy.", "The question, its owner and deadline, the options the agents prepared with what each costs, and who has weighed in.", "The owner decides. The card records the choice and the agents carry on with it."],
+    states: [["Open", "People can weigh in until the deadline."], ["Decided", "Shows the choice and who made it."], ["Reopened", "Back to open, with the earlier choice kept."]],
+    needs: { question: "Which price ships in March?", channel: "#pricing", owner: "Maya Ruiz", due: "Friday", options: [{ label: "Keep $12 a seat", note: "least churn risk, revenue flat", by: "Pricing agent", votes: ["MR", "JK", "AL"] }, { label: "Raise to $14", note: "revenue up 9%, churn up about 2 points", by: "Revenue agent", votes: ["SR"] }] },
+    dos: ["Name one owner who makes the call.", "Let the agents lay out what each option costs."],
+    donts: ["Don't let the agents vote.", "Don't decide by vote count alone."],
+  },
 
   /* Controllers */
   "stop-and-pause": {
@@ -180,6 +187,13 @@ export const DETAILS: Record<string, Detail> = {
     needs: { checkpoint: { at: "10:42", before: "6 file changes" }, branch: { current: 2, of: 3 } },
     dos: ["Make a checkpoint before every change to data.", "Show what Restore will undo before doing it."],
     donts: ["Don't throw away newer work when restoring.", "Don't hide branches; show the count."],
+  },
+  "agent-access": {
+    how: ["In settings, wherever several agents share one workflow.", "A grid of agents and the systems they can use, with what each may do there.", "Changing a cell changes what that agent can do from its next step. Rules that keep powers apart stay listed."],
+    states: [["Default", "Each agent has only what its job needs."], ["Rule broken", "A change that would give one agent two powers that must stay apart is refused, with the rule."], ["Waiting", "An agent asked for more access and an admin has to approve it."]],
+    needs: { workflow: "Refunds", agents: [{ name: "Billing agent", access: { stripe: "refund" } }, { name: "Support agent", access: { stripe: "read", zendesk: "reply" } }, { name: "Outreach agent", access: { zendesk: "read", gmail: "send" } }], rules: ["No agent can both refund a payment and email the customer"] },
+    dos: ["Give each agent only what its job needs.", "Keep the rules that split powers in view."],
+    donts: ["Don't let one agent hold every key a task needs.", "Don't show access without saying what it allows."],
   },
 
   /* Approvals */
@@ -248,6 +262,13 @@ export const DETAILS: Record<string, Detail> = {
     dos: ["Mark every step where a person checks the agent's work.", "Label each branch with the rule that picks it."],
     donts: ["Don't let a branch skip a person without saying when.", "Don't hide the steps that send or spend."],
   },
+  "shared-status": {
+    how: ["While people and agents work the same problem, like an outage or a launch.", "The goal, what everyone knows with who found it, what is still open with who is on it, and who is working now.", "Anyone can add what they learn. Agents post their findings here instead of in private threads."],
+    states: [["Live", "Updates as people and agents report."], ["Resolved", "The goal is met and the page becomes the record."], ["Quiet", "Nothing new for a while; says when it last changed."]],
+    needs: { goal: "Checkout working again before 14:00", known: [{ by: "Triage agent", fact: "Errors began at 09:12, seven minutes after the deploy" }, { by: "Jon", fact: "Rolling back fixed checkout on staging" }], open: [{ question: "Do we refund the failed orders?", owner: "Billing agent" }, { question: "What do we tell customers?", owner: "Sam" }], working: { agents: 2, people: 2 } },
+    dos: ["Say who found each fact.", "Give every open question an owner."],
+    donts: ["Don't bury it in a chat thread.", "Don't let an agent mark the goal met on its own."],
+  },
 
   /* Explorers */
   reasoning: {
@@ -298,6 +319,27 @@ export const DETAILS: Record<string, Detail> = {
     needs: { context: { used: 568000, of: 1000000 }, limits: [{ name: "5-hour limit", used: 0.26, resetsIn: "4h 25m" }], credits: { used: 12.4, currency: "USD" } },
     dos: ["Show what's left, not just what's used.", "Warn before the limit, not at it."],
     donts: ["Don't show raw numbers without a plain meaning.", "Don't stop mid-task without saving the work."],
+  },
+  "agent-agreement": {
+    how: ["When several agents answer the same question, or a lead agent asks others for a second view.", "The adopted answer first, then how many agents agree, with each agent's pick and its reason.", "People can open how they decided, or approve the answer. A dissent stays in view until someone checks it."],
+    states: [["Agreed", "Every agent picked the same answer."], ["Split", "Most agree; the dissent and its reason stay in view."], ["Waiting on a person", "The agents can't settle it, so a person picks."]],
+    needs: { question: "Vendor choice", adopted: "Contoso", agents: [{ name: "Pricing agent", pick: "Contoso", reason: "Lowest cost over three years" }, { name: "Risk agent", pick: "Contoso", reason: "Best uptime of the three, 99.5%" }, { name: "Legal agent", pick: "Fabrikam", reason: "The only one that keeps data in the EU" }], dissent: "Contoso stores data in the US." },
+    dos: ["Lead with the adopted answer, then the count.", "Keep a dissent and its reason on the card."],
+    donts: ["Don't hide which agent disagreed.", "Don't treat a vote as proof; show the reasons."],
+  },
+  "agent-disagreement": {
+    how: ["When two agents reach different answers to the same question.", "What each agent could see, what it assumed and what it concluded, side by side, with the difference marked.", "A person picks the right assumption, and both agents carry on from it."],
+    states: [["Differ", "The rows where they differ are marked."], ["Settled", "The chosen assumption is shown and the agents run again."], ["Same inputs", "They saw the same data and still differ; it says so."]],
+    needs: { incident: "INC-2207", agents: [{ name: "Triage agent", saw: "Error logs since 09:00", assumed: "The outage began at 09:40", concluded: "Not caused by a deploy" }, { name: "Release agent", saw: "Error logs and the deploy history", assumed: "The outage began at 09:12", concluded: "Caused by the 09:05 deploy" }], differsOn: "assumed" },
+    dos: ["Name the one thing they differ on.", "Let a person settle it in one click."],
+    donts: ["Don't average two answers into one.", "Don't hide what each agent could not see."],
+  },
+  "decision-trail": {
+    how: ["Whenever someone asks why something was decided, or before an audit.", "The decision, then everything it rests on, newest first: who signed off, what the agents found and the records under that.", "Each step opens its source. The owner of the decision is always named."],
+    states: [["Decided", "Shows who owns the decision."], ["Direct inputs", "Only the steps the decision used directly."], ["Full trail", "Every step, down to the records."]],
+    needs: { decision: "Hold payment on INV-2041", owner: "Maya Ruiz", trail: [{ by: "Maya Ruiz", did: "Approved holding the payment", at: "10:42" }, { by: "Risk agent", did: "Flagged the invoice", detail: "The amount is 3× Acme's usual", at: "10:31" }, { by: "Bank agent", did: "Spotted new bank details", detail: "Changed last Tuesday", at: "10:30" }, { record: "Acme vendor record", source: "ERP", at: "2 Sep" }] },
+    dos: ["Name a person as the owner of every decision.", "Link every step to where it came from."],
+    donts: ["Don't drop the agents' steps from the trail.", "Don't let anyone edit the trail after the fact."],
   },
 
   /* Notifiers */

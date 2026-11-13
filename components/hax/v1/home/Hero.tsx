@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 // the phrase rises out the top and the next rises in from below. The box keeps the width
 // of the widest phrase, so "teams in" never moves (see .hx-rot in motion.css).
 const STAGES = ["Enterprise", "Scale Stage", "Growth Stage", "Early Stage", "Prelaunch"];
-const GRAD = "linear-gradient(90deg, rgb(217, 119, 6) 0%, rgb(217, 119, 6) 42.59%, rgb(225, 29, 72) 71.124%, rgb(190, 24, 93) 90.147%, rgb(190, 24, 93) 100%)";
 function RotatingStage() {
   const [s, setS] = useState({ i: 1, prev: -1 });
   useEffect(() => {
@@ -17,7 +16,7 @@ function RotatingStage() {
     <>
       <span className="hx-rot" aria-hidden="true">
         {STAGES.map((w, k) => (
-          <span key={w} className={`hx-rot__item bg-clip-text text-transparent${k === s.i ? " is-in" : k === s.prev ? " is-out" : ""}`} style={{ backgroundImage: GRAD }}>{w}</span>
+          <span key={w} className={`hx-rot__item${k === s.i ? " is-in" : k === s.prev ? " is-out" : ""}`} style={{ color: "var(--hx-human)" }}>{w}</span>
         ))}
       </span>
       {/* screen readers get one stable phrase instead of a ticker */}
@@ -47,7 +46,7 @@ export function Hero() {
           <RotatingStage />
         </h1>
         <p className="hx-rise hx-rise--2 font-normal leading-[28px] text-[18px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">
-          Give your AI a face people trust. Describe it in a sentence — HAX does the rest.
+          Give your AI a face people trust. Describe it in a sentence and HAX does the rest.
         </p>
         <div className="hx-rise hx-rise--3 flex gap-[12px] items-center">
           <a href="/library" className="hx-btn hx-btn--solid bg-[var(--surface-inverse)] flex gap-[6px] h-[40px] items-center justify-center px-[20px] rounded-[var(--radius-pill)]">

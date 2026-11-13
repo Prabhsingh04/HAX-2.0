@@ -21,13 +21,15 @@ const MENUS: Record<string, Menu> = {
     label: "Components",
     items: [
       { label: "ShadCN · Agentic Components", href: "/library" },
-      { label: "Material 3.0 · Agentic Components", href: "/material-agentic" },
+      { label: "Material 3.0 · Agentic Components", href: "/library?ds=material" },
     ],
   },
 };
 
 // The nav item for the section you're in shows the current state (see .hx-nav[aria-current]).
+// Patterns comes first: the Components rule also matches "/patterns".
 const SECTIONS: [string, RegExp][] = [
+  ["Patterns", /^\/(patterns|interaction-patterns)(\/|$)/],
   ["Components", /^\/(library|pattern|material-)/],
   ["Docs", /^\/hax-docs/],
   ["MCP", /^\/mcp/],
@@ -141,6 +143,7 @@ export function Header() {
         <nav className="flex gap-[20px] items-center shrink-0" aria-label="Primary">
           <NavItem label="Research" dropdown />
           <NavItem label="Components" dropdown current={section === "Components"} />
+          <NavItem label="Patterns" href="/patterns" current={section === "Patterns"} />
           <NavItem label="Docs" href="/hax-docs" current={section === "Docs"} />
           <NavItem label="MCP" href="/mcp" current={section === "MCP"} />
           <NavItem label="Blog" href="/blog" current={section === "Blog"} />

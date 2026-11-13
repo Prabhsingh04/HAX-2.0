@@ -1,170 +1,47 @@
-/* HAX v1 · component kit. Every component is drawn at its real size (14 px body, 36 px
-   controls), the way ChatGPT, Claude, Gemini and Firefly draw theirs. Library cards show
-   the same component scaled to half; the component page shows it at 1× with its options.
-   Colours come from the site tokens (tokens.css) and the --k-* roles below, so the dark
-   theme needs no per-component work. Blue = the person and main actions; orange = the
-   agent, used only on its own mark. */
-.hax-v1 .hk {
-  --k-panel: var(--surface-raised);
-  --k-soft: #f6f7f9;
-  --k-edge: rgba(41, 50, 71, .12);
-  --k-edge-2: rgba(41, 50, 71, .2);
-  --k-shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 12px 32px -14px rgba(16, 24, 40, .18);
-  --k-pop: 0 2px 6px rgba(16, 24, 40, .06), 0 20px 44px -16px rgba(16, 24, 40, .3);
-  --k-blue: #0a6bd6;
-  --k-blue-soft: rgba(10, 107, 214, .08);
-  --k-agent: #ff6d2d;
-  --k-ok: #0f7553; --k-ok-bg: #e8f6ef;
-  --k-warn: #a35f00; --k-warn-bg: #fdf3df;
-  --k-bad: #c9302c; --k-bad-bg: #fdeceb;
-  --k-sel: rgba(10, 107, 214, .14);
-  --k-on-blue: #fff;         /* text on solid blue (flags, avatars, active citation) */
-  --k-on-agent: #1d2433;     /* text on the agent orange: white fails contrast there */
-  --k-bad-solid: #c9302c;    /* danger button fill, the same in both themes */
-  --k-tag-ink: #5c6574;      /* tag + initials text on grey tints (passes 4.5:1) */
-  color: var(--text-primary); font-size: 14px; line-height: 20px; text-align: left;
-  -webkit-font-smoothing: antialiased; letter-spacing: -.05px;
-}
-html[data-hax-theme="dark"] .hax-v1 .hk {
-  --k-soft: #1a2030;
-  --k-edge: rgba(255, 255, 255, .1);
-  --k-edge-2: rgba(255, 255, 255, .18);
-  --k-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 14px 34px -14px rgba(0, 0, 0, .7);
-  --k-pop: 0 2px 6px rgba(0, 0, 0, .4), 0 22px 46px -16px rgba(0, 0, 0, .8);
-  --k-blue: #3aa5ff;
-  --k-blue-soft: rgba(58, 165, 255, .12);
-  --k-ok: #4cc79a; --k-ok-bg: rgba(76, 199, 154, .14);
-  --k-warn: #f2ac3c; --k-warn-bg: rgba(242, 172, 60, .14);
-  --k-bad: #ff7b72; --k-bad-bg: rgba(255, 123, 114, .14);
-  --k-sel: rgba(58, 165, 255, .24);
-  --k-on-blue: #0c1018;
-  --k-tag-ink: var(--text-secondary);
-}
+/* HAX v1 · component kit: structure only. Every component is drawn at real size; library
+   cards show it at half, the component page at 1×. How each part looks comes from the design
+   system on the stage (data-ds): ds-shadcn.css draws them as shadcn/ui, ds-m3.css as
+   Material 3. Both define the same roles (--k-*), so the rules here hold in either. */
+.hax-v1 .hk { font-size: 14px; line-height: 20px; text-align: left; -webkit-font-smoothing: antialiased; color: var(--text-primary); }
 .hax-v1 .hk * { box-sizing: border-box; }
 .hax-v1 .hk svg { flex-shrink: 0; }
 
-/* stage: the canvas a component sits on (card = 578 × 362 at 0.5, page = full width) */
+/* stage: the canvas a component sits on (card = 578 × 362 at 0.5, page = full width), in the
+   design system's own page colour */
 .hax-v1 .hk-stage { position: relative; display: grid; place-items: center; overflow: hidden; isolation: isolate;
-  background: radial-gradient(circle, rgba(41, 50, 71, .09) 1px, transparent 1.25px) 0 0 / 20px 20px, var(--surface-page); }
-html[data-hax-theme="dark"] .hax-v1 .hk-stage { background: radial-gradient(circle, rgba(255, 255, 255, .06) 1px, transparent 1.25px) 0 0 / 20px 20px, var(--surface-page); }
+  background: radial-gradient(circle, var(--hk-dot) 1px, transparent 1.25px) 0 0 / 20px 20px, var(--hk-canvas); }
 .hax-v1 .hk-card { width: 289px; height: 181px; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--stroke-subtle); pointer-events: none; user-select: none; }
 .hax-v1 .hk-card--flush { border-radius: 0; box-shadow: inset 0 -1px 0 var(--stroke-subtle); }
 .hax-v1 .hk-card > .hk-scale { position: absolute; left: 50%; top: 50%; width: 578px; height: 362px; transform: translate(-50%, -50%) scale(.5); display: grid; place-items: center; }
 .hax-v1 .hk-page { width: 100%; min-height: 440px; padding: 56px 32px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--stroke-subtle); }
 
-/* type */
-.hax-v1 .hk-h { font-size: 15px; line-height: 22px; font-weight: 600; letter-spacing: -.15px; }
-.hax-v1 .hk-t { font-size: 14px; line-height: 20px; font-weight: 600; }
-.hax-v1 .hk-b { font-size: 14px; line-height: 21px; }
-.hax-v1 .hk-s { font-size: 12.5px; line-height: 18px; color: var(--text-secondary); }
-.hax-v1 .hk-xs { font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-tertiary); }
-.hax-v1 .hk-mono { font-family: var(--font-code); font-size: 12px; line-height: 18px; }
-.hax-v1 .hk-mute { color: var(--text-secondary); }
-.hax-v1 .hk-faint { color: var(--text-tertiary); }
-.hax-v1 .hk-link { color: var(--text-link); font-weight: 500; }
-.hax-v1 .hk-blue { color: var(--k-blue); }
-.hax-v1 .hk-agentc { color: var(--k-agent); }
-.hax-v1 .hk-okc { color: var(--k-ok); } .hax-v1 .hk-warnc { color: var(--k-warn); } .hax-v1 .hk-badc { color: var(--k-bad); }
+/* layout */
 .hax-v1 .hk-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .hax-v1 .hk-col { display: flex; flex-direction: column; min-width: 0; }
 .hax-v1 .hk-trunc { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-width: 0; }
 .hax-v1 .hk-grow { flex: 1; min-width: 0; }
 
-/* surfaces */
-.hax-v1 .hk-panel { background: var(--k-panel); border: 1px solid var(--k-edge); border-radius: 16px; box-shadow: var(--k-shadow); }
-.hax-v1 .hk-pop { background: var(--k-panel); border: 1px solid var(--k-edge); border-radius: 14px; box-shadow: var(--k-pop); padding: 6px; }
-.hax-v1 .hk-well { background: var(--k-soft); border: 1px solid var(--k-edge); border-radius: 12px; }
-.hax-v1 .hk-rule { height: 1px; background: var(--k-edge); align-self: stretch; flex-shrink: 0; }
-.hax-v1 .hk-code { background: var(--surface-code); color: var(--text-code); border-radius: 10px; padding: 12px 14px; font-family: var(--font-code); font-size: 12px; line-height: 19px; white-space: pre; overflow: hidden; }
-.hax-v1 .hk-code b { color: #7cc4ff; font-weight: 400; } .hax-v1 .hk-code i { color: #a8e1b8; font-style: normal; } .hax-v1 .hk-code em { color: #8a93a3; font-style: normal; }
-html[data-hax-theme="dark"] .hax-v1 .hk-code { box-shadow: inset 0 0 0 1px var(--k-edge); } /* the code surface matches the panel in dark */
-/* code drawn on the page surface (editor canvas), not in a dark block: theme-aware syntax colours */
-.hax-v1 .hk .hk-code.hk-code--plain { background: transparent; color: var(--text-primary); box-shadow: none; }
-.hax-v1 .hk .hk-code--plain b { color: var(--k-blue); font-weight: 500; } .hax-v1 .hk .hk-code--plain i { color: var(--k-ok); } .hax-v1 .hk .hk-code--plain em { color: var(--text-tertiary); }
+/* colour roles as text colours */
+.hax-v1 .hk-mute { color: var(--text-secondary); }
+.hax-v1 .hk-faint { color: var(--text-tertiary); }
+.hax-v1 .hk-blue { color: var(--k-blue); }
+.hax-v1 .hk-agentc { color: var(--k-agent); }
+.hax-v1 .hk-okc { color: var(--k-ok); } .hax-v1 .hk-warnc { color: var(--k-warn); } .hax-v1 .hk-badc { color: var(--k-bad); }
 
-/* buttons: one main action per surface (blue), the rest quiet */
-.hax-v1 .hk-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13.5px; font-weight: 600; white-space: nowrap; border: 1px solid var(--k-edge-2); background: var(--k-panel); color: var(--text-primary); }
-.hax-v1 .hk-btn--main { border-color: transparent; color: #fff; background: var(--gradient-hax-fill); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); }
-.hax-v1 .hk-btn--ghost { border-color: transparent; background: transparent; color: var(--text-secondary); padding: 0 10px; }
-.hax-v1 .hk-btn--danger { border-color: transparent; color: #fff; background: var(--k-bad-solid); }
-.hax-v1 .hk-btn--sm { height: 28px; padding: 0 11px; font-size: 12.5px; }
-.hax-v1 .hk-ib { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; color: var(--text-secondary); flex-shrink: 0; }
-.hax-v1 .hk-ib--sm { width: 28px; height: 28px; }
-.hax-v1 .hk-ib--line { border: 1px solid var(--k-edge-2); background: var(--k-panel); }
-.hax-v1 .hk-ib--on { background: var(--k-blue-soft); color: var(--k-blue); }
-/* icon-only actions inside rows (close, edit, delete, copy): a 28 px hit area that takes no extra room */
-.hax-v1 .hk-ib--bare { width: 28px; height: 28px; margin: -6px; }
-.hax-v1 .hk-send { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; color: #fff; background: var(--gradient-hax-fill); flex-shrink: 0; }
-.hax-v1 .hk-send--off { background: var(--surface-tint-hover); color: var(--text-tertiary); }
-.hax-v1 .hk-send--stop { background: var(--text-primary); color: var(--surface-page); }
-
-/* pickers in a composer: text + chevron, no box until hover (Claude, Gemini, Codex) */
-.hax-v1 .hk-pick { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 9px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--text-secondary); white-space: nowrap; }
-.hax-v1 .hk-pick--box { border: 1px solid var(--k-edge-2); background: var(--k-panel); color: var(--text-primary); }
-.hax-v1 .hk-pick--on { background: var(--k-blue-soft); color: var(--k-blue); }
-.hax-v1 .hk-chip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--k-edge-2); background: var(--k-panel); font-size: 13px; font-weight: 500; white-space: nowrap; color: var(--text-primary); }
-.hax-v1 .hk-chip--sel { border-color: var(--k-blue); background: var(--k-blue-soft); color: var(--k-blue); }
-.hax-v1 .hk-tag { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap; background: var(--surface-tint-hover); color: var(--k-tag-ink); }
-.hax-v1 .hk-tag--ok { color: var(--k-ok); background: var(--k-ok-bg); }
-.hax-v1 .hk-tag--warn { color: var(--k-warn); background: var(--k-warn-bg); }
-.hax-v1 .hk-tag--bad { color: var(--k-bad); background: var(--k-bad-bg); }
-.hax-v1 .hk-tag--blue { color: var(--k-blue); background: var(--k-blue-soft); }
-.hax-v1 .hk-kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 5px; border: 1px solid var(--k-edge-2); font-size: 11px; font-weight: 600; color: var(--text-tertiary); }
-
-/* menus */
-.hax-v1 .hk-mi { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 6px 10px; border-radius: 9px; font-size: 13.5px; }
-.hax-v1 .hk-mi--on { background: var(--surface-tint-hover); }
-.hax-v1 .hk-mi .hk-s { font-size: 12px; line-height: 16px; }
-
-/* form bits */
-.hax-v1 .hk-field { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--k-edge-2); background: var(--k-panel); font-size: 13.5px; min-width: 0; }
-.hax-v1 .hk-field--ai { border-color: color-mix(in srgb, var(--k-blue) 45%, transparent); background: color-mix(in srgb, var(--k-blue) 4%, var(--k-panel)); }
-.hax-v1 .hk-field--empty { color: var(--text-tertiary); }
-.hax-v1 .hk-field--focus { border-color: var(--k-blue); box-shadow: 0 0 0 3px var(--focus-ring); }
-.hax-v1 .hk-check { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--k-edge-2); color: #fff; flex-shrink: 0; }
-.hax-v1 .hk-check--on { border-color: transparent; background: var(--k-blue); }
-.hax-v1 .hk-radio { width: 18px; height: 18px; border-radius: 999px; border: 1.5px solid var(--k-edge-2); flex-shrink: 0; }
-.hax-v1 .hk-radio--on { border: 5.5px solid var(--k-blue); }
-.hax-v1 .hk-switch { position: relative; width: 34px; height: 20px; border-radius: 999px; background: var(--surface-tint-pressed); flex-shrink: 0; }
-.hax-v1 .hk-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 999px; background: #fff; box-shadow: 0 1px 2px rgba(16, 24, 40, .3); }
-.hax-v1 .hk-switch--on { background: var(--k-blue); }
-.hax-v1 .hk-switch--on::after { left: 16px; }
-.hax-v1 .hk-opt { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--k-edge-2); background: var(--k-panel); }
-.hax-v1 .hk-opt--on { border-color: var(--k-blue); box-shadow: 0 0 0 1px var(--k-blue); }
-.hax-v1 .hk-bar { position: relative; height: 6px; border-radius: 999px; background: var(--surface-tint-hover); overflow: hidden; }
-.hax-v1 .hk-bar > i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--k-blue); }
-.hax-v1 .hk-bar--warn > i { background: var(--k-warn); }
-.hax-v1 .hk-bar--bad > i { background: var(--k-bad); }
-
-/* files, citations, highlights */
-.hax-v1 .hk-file { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px 0 6px; border-radius: 12px; border: 1px solid var(--k-edge); background: var(--k-soft); }
-.hax-v1 .hk-file > span:first-child { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9px; color: #fff; }
-.hax-v1 .hk-thumb { width: 48px; height: 48px; border-radius: 12px; border: 1px solid var(--k-edge); overflow: hidden; flex-shrink: 0; }
-.hax-v1 .hk-cite { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; margin-left: 3px; border-radius: 6px; vertical-align: 1px; font-size: 11px; font-weight: 700; line-height: 1; color: var(--k-blue); background: var(--k-blue-soft); }
+/* parts that look the same in both systems, from the roles */
 .hax-v1 .hk-hl { background: var(--k-sel); border-radius: 3px; box-shadow: 0 0 0 2px var(--k-sel); }
-.hax-v1 .hk-ai { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px 0 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
-  border: 1px solid transparent; background: linear-gradient(var(--k-panel), var(--k-panel)) padding-box, var(--gradient-hax) border-box; }
-
-/* people and agents: agent = ink disc in a hairline of the HAX gradient; people = initials */
-.hax-v1 .hk-ag { position: relative; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; color: #fff; flex-shrink: 0;
-  border: 2px solid transparent; background: linear-gradient(#293247, #293247) padding-box, var(--gradient-hax) border-box; }
-html[data-hax-theme="dark"] .hax-v1 .hk-ag { background: linear-gradient(#313b50, #313b50) padding-box, var(--gradient-hax) border-box; }
-.hax-v1 .hk-ag--sm { width: 22px; height: 22px; border-width: 1.5px; }
-.hax-v1 .hk-ag--lg { width: 40px; height: 40px; }
-.hax-v1 .hk-ag > b { position: absolute; right: -2px; bottom: -2px; width: 11px; height: 11px; border-radius: 999px; border: 2px solid var(--k-panel); background: var(--text-tertiary); }
-.hax-v1 .hk-me { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; flex-shrink: 0; background: var(--surface-tint-hover); color: var(--k-tag-ink); font-size: 11px; font-weight: 700; }
-.hax-v1 .hk-app { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--k-edge); background: var(--k-soft); color: var(--text-secondary); flex-shrink: 0; }
-.hax-v1 .hk-bubble { align-self: flex-end; max-width: 78%; padding: 9px 14px; border-radius: 18px 18px 6px 18px; background: var(--surface-tint-hover); font-size: 14px; line-height: 20px; }
-.hax-v1 .hk-step { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; border: 1.5px solid var(--k-edge-2); flex-shrink: 0; color: #fff; font-size: 11px; font-weight: 700; }
-.hax-v1 .hk-step--done { border: 0; background: var(--k-ok); }
-.hax-v1 .hk-step--now { border-color: var(--k-blue); }
-.hax-v1 .hk-step--num { color: var(--text-secondary); }
-
-/* diff */
 .hax-v1 .hk-dl { display: flex; align-items: center; gap: 10px; height: 24px; padding: 0 12px; font-family: var(--font-code); font-size: 12px; }
 .hax-v1 .hk-dl--ctx { color: var(--text-tertiary); }
 .hax-v1 .hk-dl--del { background: var(--k-bad-bg); } .hax-v1 .hk-dl--del > span:first-child { color: var(--k-bad); }
 .hax-v1 .hk-dl--add { background: var(--k-ok-bg); } .hax-v1 .hk-dl--add > span:first-child { color: var(--k-ok); }
+
+/* icons in the Material version: Material Symbols from the icon font. Size and weight arrive
+   as variables, so a part can set its own size (icon button 24, chip 18). */
+.hax-v1 .hk-sym { display: inline-block; flex-shrink: 0; width: 1em; height: 1em; overflow: hidden; font-family: "Material Symbols Outlined"; font-size: var(--hk-s, 24px);
+  font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; white-space: nowrap; word-wrap: normal; direction: ltr;
+  font-feature-settings: "liga"; -webkit-font-feature-settings: "liga"; font-variation-settings: "FILL" var(--hk-fill, 0), "wght" var(--hk-wght, 400), "GRAD" 0; user-select: none; }
+/* Material's circular progress indicator (the shadcn spinner is Lucide's turning loader) */
+.hax-v1 .hk-cprog { display: inline-block; flex-shrink: 0; border-radius: 999px; border-style: solid; border-color: var(--k-track, transparent); border-top-color: var(--k-blue); border-right-color: var(--k-blue); }
 
 /* motion: quiet loops that show the component is live */
 @keyframes hk-blink { 50% { opacity: 0; } }
@@ -180,10 +57,10 @@ html[data-hax-theme="dark"] .hax-v1 .hk-ag { background: linear-gradient(#313b50
 .hax-v1 .hk-shimmer { background: linear-gradient(90deg, var(--text-tertiary) 0%, var(--text-primary) 40%, var(--text-tertiary) 80%) 0 0 / 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: hk-shimmer 2.2s linear infinite; }
 @media (prefers-reduced-motion: reduce) { .hax-v1 :is(.hk-caret, .hk-typing i, .hk-spin, .hk-wave i, .hk-shimmer) { animation: none; } }
 
-/* component page: the options bar above the live component */
+/* component page: the options bar above the live component (site chrome, not the kit) */
 .hax-v1 .hk-opts { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; padding: 14px 18px; border-radius: 14px; border: 1px solid var(--stroke-subtle); background: var(--surface-tint); width: 100%; font-size: 13px; }
 .hax-v1 .hk-opts label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-secondary); font-weight: 500; }
 .hax-v1 .hk-opts select { appearance: none; -webkit-appearance: none; height: 32px; border-radius: 8px; border: 1px solid var(--stroke-default); background-color: var(--surface-page); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; color: var(--text-primary); font: inherit; font-weight: 500; padding: 0 32px 0 12px; cursor: pointer; transition: border-color .15s; }
 .hax-v1 .hk-opts select:hover { border-color: var(--text-tertiary); }
-.hax-v1 .hk-opts select:focus-visible { outline: 2px solid var(--k-blue); outline-offset: 1px; }
+.hax-v1 .hk-opts select:focus-visible { outline: 2px solid #0a6bd6; outline-offset: 1px; }
 .hax-v1 .hk-opts input[type="checkbox"] { width: 16px; height: 16px; accent-color: #0a6bd6; }

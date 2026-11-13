@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import {
   ArrowUp, Braces, Check, Code2, ChevronDown, GitPullRequest, ChevronRight, Copy, Download, Expand, FileText, Languages, ListTree, Maximize2,
   Minimize2, Pause, Play, RefreshCw, Share2, Sparkle, Square, ThumbsDown, ThumbsUp, Wand2,
-} from "lucide-react";
+} from "./icons";
 import { AgentHead, Bullets, Caret, Me, Spin, Typing, sel, tog, type Entry, type Props } from "./ui";
 
 // the row of actions under any agent answer (ChatGPT, Claude, Gemini all ship this)
@@ -89,7 +89,7 @@ function Table({ o }: { o: Props }) {
       <div className="hk-row justify-between"><span className="hk-h">Pipeline health</span><span className="hk-s">From the CRM · 5 min ago</span></div>
       <div className="grid grid-cols-3 gap-[8px]">
         {[["Accounts at risk", "3", "All renew this quarter"], ["Revenue at risk", "$795K", "Across 14 open deals"], ["Call first", "Acme", "Renews in 18 days"]].map(([l, v, s]) => (
-          <div key={l} className="hk-panel !shadow-none !rounded-[14px] p-[14px] hk-col gap-[2px]">
+          <div key={l} className="hk-panel !shadow-none p-[14px] hk-col gap-[2px]">
             <span className="hk-s">{l}</span><span className="text-[24px] leading-[32px] font-semibold tracking-[-.3px]">{v}</span><span className="hk-s">{s}</span>
           </div>
         ))}
@@ -108,7 +108,7 @@ function Table({ o }: { o: Props }) {
   if (f === "JSON") return (
     <div className="w-[520px] hk-col gap-[8px]">
       <div className="hk-code !p-0">
-        <div className="hk-row justify-between px-[14px] h-[38px] border-b border-white/10 font-sans"><span className="hk-row gap-[6px] text-[12.5px] font-semibold text-[#c9d1dc]"><Braces size={14} />vendors.json</span><span className="hk-ib hk-ib--bare !text-[#8a93a3]"><Copy size={14} /></span></div>
+        <div className="hk-row justify-between px-[14px] h-[38px] border-b border-[var(--k-edge)]"><span className="hk-row gap-[6px] text-[12.5px] font-semibold"><Braces size={14} />vendors.json</span><span className="hk-ib hk-ib--bare"><Copy size={14} /></span></div>
         <div className="p-[14px]">
           {"[\n"}
           {[["Northwind", "1200", "99.9"], ["Contoso", "980", "99.5"], ["Fabrikam", "1450", "99.99"]].map(([v, p, u], i) => (
@@ -152,11 +152,11 @@ function Chart({ o }: { o: Props }) {
         {[33, 66].map((y) => <i key={y} className="absolute left-0 right-0 border-t border-dashed border-[var(--k-edge)]" style={{ bottom: `${y}%` }} />)}
         {line ? (
           <svg viewBox="0 0 480 150" preserveAspectRatio="none" className="absolute inset-0 size-full">
-            <polyline fill="none" stroke="var(--k-blue)" strokeWidth="2.5" points={h.map((v, i) => `${i * 66 + 9},${150 - v * 2}`).join(" ")} />
-            {h.map((v, i) => <circle key={i} cx={i * 66 + 9} cy={150 - v * 2} r={i === 5 ? 5 : 3} fill={i === 5 ? "var(--k-blue)" : "var(--k-panel)"} stroke="var(--k-blue)" strokeWidth="2" />)}
+            <polyline fill="none" stroke="var(--k-chart)" strokeWidth="2.5" points={h.map((v, i) => `${i * 66 + 9},${150 - v * 2}`).join(" ")} />
+            {h.map((v, i) => <circle key={i} cx={i * 66 + 9} cy={150 - v * 2} r={i === 5 ? 5 : 3} fill={i === 5 ? "var(--k-chart)" : "var(--k-panel)"} stroke="var(--k-chart)" strokeWidth="2" />)}
           </svg>
         ) : (
-          <div className="absolute inset-0 flex items-end gap-[12px]">{h.map((v, i) => <i key={i} className="flex-1 rounded-t-[5px]" style={{ height: `${v}%`, background: i >= 5 ? "var(--k-blue)" : "color-mix(in srgb, var(--k-blue) 22%, transparent)" }} />)}</div>
+          <div className="absolute inset-0 flex items-end gap-[12px]">{h.map((v, i) => <i key={i} className="flex-1 rounded-t-[5px]" style={{ height: `${v}%`, background: i >= 5 ? "var(--k-chart)" : "color-mix(in srgb, var(--k-chart) 22%, transparent)" }} />)}</div>
         )}
         {o.callout && <span className="absolute left-[296px] top-[2px] hk-tag hk-tag--blue !h-[24px]">Launch · Oct 1</span>}
       </div>
@@ -187,7 +187,7 @@ function Variations({ o }: { o: Props }) {
       <div className="hk-col"><span className="hk-h">Which response do you prefer?</span><span className="hk-s">Your pick becomes the answer. The other one stays a tap away.</span></div>
       <div className="grid grid-cols-2 gap-[10px]">
         {REPLIES.map(([d, t], i) => (
-          <div key={d} className={`hk-panel !rounded-[14px] !shadow-none p-[14px] hk-col gap-[10px] ${i === 0 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
+          <div key={d} className={`hk-panel !shadow-none p-[14px] hk-col gap-[10px] ${i === 0 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
             <div className="hk-row justify-between"><span className="hk-t">Response {i + 1}</span><span className="hk-s">{d}</span></div>
             <p className="text-[13.5px] leading-[20px] hk-grow">{t}</p>
             {i === 0
@@ -202,11 +202,11 @@ function Variations({ o }: { o: Props }) {
     <div className="w-[540px] hk-col gap-[12px]">
       <div className="hk-row justify-between"><span className="hk-h">{img ? "4 images" : pal ? "Brand palette · 3 options" : "Headline · 3 versions"}</span><span className="hk-pick"><RefreshCw size={13} />More like these</span></div>
       {img ? (
-        <div className="grid grid-cols-4 gap-[8px]">{g.map((b, i) => <div key={i} className={`h-[118px] rounded-[12px] relative ${i === 1 ? "ring-2 ring-[var(--k-blue)] ring-offset-2 ring-offset-[var(--surface-page)]" : ""}`} style={{ background: b }}>{i === 1 && <span className="absolute right-[6px] top-[6px] hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>)}</div>
+        <div className="grid grid-cols-4 gap-[8px]">{g.map((b, i) => <div key={i} className={`h-[118px] rounded-[var(--hk-r-lg)] relative ${i === 1 ? "ring-2 ring-[var(--k-blue)] ring-offset-2 ring-offset-[var(--surface-page)]" : ""}`} style={{ background: b }}>{i === 1 && <span className="absolute right-[6px] top-[6px] hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>)}</div>
       ) : pal ? (
         <div className="grid grid-cols-3 gap-[8px]">
           {PALETTES.map(([n, d, c, dark], i) => (
-            <div key={n} className={`hk-panel !rounded-[14px] !shadow-none overflow-hidden ${i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
+            <div key={n} className={`hk-panel !shadow-none overflow-hidden ${i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
               <div className="flex h-[44px]">{c.map((x) => <i key={x} className="flex-1" style={{ background: x }} />)}</div>
               <div className="p-[12px] hk-col gap-[10px]">
                 <div className="hk-row justify-between !items-start"><span className="hk-col"><span className="hk-t">{n}</span><span className="hk-s">{d}</span></span>{i === 1 && <span className="hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>
@@ -225,7 +225,7 @@ function Variations({ o }: { o: Props }) {
       ) : (
         <div className="grid grid-cols-3 gap-[8px]">
           {opts.map((t, i) => (
-            <div key={t} className={`hk-panel !rounded-[14px] !shadow-none p-[14px] hk-col gap-[10px] h-[124px] ${i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
+            <div key={t} className={`hk-panel !shadow-none p-[14px] hk-col gap-[10px] h-[124px] ${i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
               <div className="hk-row justify-between h-[18px]"><span className="hk-xs">Version {"ABC"[i]}</span>{i === 1 && <span className="hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>
               <p className="text-[15px] leading-[20px] font-semibold">{t}</p>
             </div>
@@ -247,7 +247,7 @@ function Media({ o }: { o: Props }) {
     <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
       <p className="hk-b">Here is the launch recap{t === "Audio" ? " as a 2-minute audio briefing" : t === "Slides" ? " as six slides" : " as a 40-second video"}.</p>
       {t === "Audio" && (
-        <div className="hk-well !rounded-[16px] p-[12px] hk-row gap-[12px]">
+        <div className="hk-well p-[12px] hk-row gap-[12px]">
           <span className="hk-send !size-[40px]">{o.playing ? <Pause size={16} fill="currentColor" strokeWidth={0} /> : <Play size={16} fill="currentColor" strokeWidth={0} />}</span>
           <span className="hk-col hk-grow gap-[4px]">
             <span className="hk-row justify-between"><span className="hk-t">Q3 recap · two hosts</span><span className="hk-s tabular-nums">0:48 / 2:10</span></span>
@@ -260,7 +260,7 @@ function Media({ o }: { o: Props }) {
       {t === "Slides" && (
         <div className="grid grid-cols-3 gap-[8px]">
           {["Atlas reached 1,240 teams", "Churn fell in NA", "Next: annual tier"].map((s, i) => (
-            <div key={s} className="h-[96px] rounded-[10px] p-[10px] hk-col justify-between border border-[var(--k-edge)]" style={i === 0 ? { background: "#10213d", color: "#fff" } : { background: "var(--k-soft)" }}>
+            <div key={s} className="h-[96px] rounded-[var(--hk-r-md)] p-[10px] hk-col justify-between border border-[var(--k-edge)]" style={i === 0 ? { background: "#10213d", color: "#fff" } : { background: "var(--k-soft)" }}>
               <span className="text-[11px] font-semibold uppercase tracking-[.06em] opacity-70">Slide {i + 1}</span><span className="text-[12.5px] leading-[16px] font-semibold">{s}</span>
             </div>
           ))}
@@ -268,7 +268,7 @@ function Media({ o }: { o: Props }) {
       )}
       {t === "Video" && (
         <div className="hk-col gap-[8px]">
-          <div className="h-[170px] rounded-[14px] relative overflow-hidden" style={{ background: "linear-gradient(160deg,#1b2a44,#2f4f7a 55%,#6b8fb8)" }}>
+          <div className="h-[170px] rounded-[var(--hk-r-lg)] relative overflow-hidden" style={{ background: "linear-gradient(160deg,#1b2a44,#2f4f7a 55%,#6b8fb8)" }}>
             <span className="absolute inset-0 grid place-items-center"><span className="grid place-items-center size-[52px] rounded-full bg-white/90 text-[#293247]"><Play size={20} fill="currentColor" strokeWidth={0} /></span></span>
             <span className="absolute left-[12px] bottom-[12px] text-white text-[12px] font-semibold">0:14 / 0:40 · 1080p</span>
             <span className="absolute left-0 right-0 bottom-0 h-[3px] bg-white/25"><i className="block h-full w-[35%] bg-white" /></span>
@@ -333,7 +333,7 @@ function Canvas({ o }: { o: Props }) {
   ];
   const changed = [3, 5];
   return (
-    <div className="hk-panel w-[700px] h-[400px] !rounded-[16px] overflow-hidden flex">
+    <div className="hk-panel w-[700px] h-[400px] overflow-hidden flex">
       {o.chat && (
         <div className="w-[230px] shrink-0 border-r border-[var(--k-edge)] p-[14px] hk-col gap-[12px]">
           <span className="hk-bubble self-end !text-[13px] !leading-[18px]">{code ? "Disable the form while it signs in" : "Make the intro warmer"}</span>
@@ -420,7 +420,7 @@ function RefineMenu({ o }: { o: Props }) {
       {/* everything opens just under the selection, on top of the page */}
       <div className="hk-col items-start gap-[8px] pl-[40px]">
         {bar && (
-          <div className="hk-pop !rounded-[12px] !p-[4px] hk-row !gap-[2px]">
+          <div className="hk-pop !p-[4px] hk-row !gap-[2px]">
             <span className="hk-pick hk-pick--on"><Sparkle size={13} />Ask Atlas</span>
             {(["Improve", "Shorter", "Longer"] as const).map((t, i) => { const I = items[i][0]; return <span key={t} className="hk-pick !text-[color:var(--text-primary)]"><I size={13} />{t}</span>; })}
             <span className="hk-pick"><ChevronDown size={13} /></span>
@@ -428,7 +428,7 @@ function RefineMenu({ o }: { o: Props }) {
         )}
         {!bar && !o.result && (
           <div className="hk-pop w-[250px]">
-            {o.ask && <div className="hk-field !h-[36px] !rounded-[9px] mb-[4px] hk-field--empty"><Sparkle size={14} className="hk-blue" />Ask Atlas to edit…</div>}
+            {o.ask && <div className="hk-field !h-[36px] mb-[4px] hk-field--empty"><Sparkle size={14} className="hk-blue" />Ask Atlas to edit…</div>}
             {items.map(([I, t], i) => <div key={t} className={`hk-mi ${i === 1 ? "hk-mi--on" : ""}`}><I size={15} strokeWidth={1.9} className="hk-faint" /><span className="hk-grow">{t}</span>{t === "Translate" && <ChevronRight size={14} className="hk-faint" />}</div>)}
           </div>
         )}
@@ -454,5 +454,5 @@ export const ARTIFACTS: Record<string, Entry> = {
   transcript: { C: Transcript, opts: [tog("live", "Live"), tog("actions", "Action items")], refs: ["Otter", "Fireflies", "Granola", "Zoom"] },
   canvas: { C: Canvas, card: 0.38, opts: [sel("kind", "Content", ["Document", "Code"]), tog("chat", "Chat beside"), tog("cursors", "Who is editing")], refs: ["ChatGPT Canvas", "Claude Artifacts", "Gemini Canvas", "v0"] },
   "form-fill": { C: FormFill, opts: [tog("banner", "AI label"), tog("sources", "Field sources"), tog("missing", "Missing field")], refs: ["Gemini in Chrome autofill", "Copilot in Edge", "Notion AI properties"] },
-  "refine-menu": { C: RefineMenu, opts: [sel("style", "Style", ["Menu", "Toolbar"]), tog("ask", "Free-text ask"), tog("result", "Result preview", false)], refs: ["Notion AI", "Google Docs Help me write", "ChatGPT Canvas", "Grammarly"] },
+  "refine-menu": { C: RefineMenu, card: 0.48, opts: [sel("style", "Style", ["Menu", "Toolbar"]), tog("ask", "Free-text ask"), tog("result", "Result preview", false)], refs: ["Notion AI", "Google Docs Help me write", "ChatGPT Canvas", "Grammarly"] },
 };

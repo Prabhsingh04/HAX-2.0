@@ -1,4 +1,5 @@
 import { CodeBlock } from "./CodeBlock";
+import { BY_COMP } from "./library/catalog";
 
 // Figma: HAX · Docs 101:1999 (hero 101:2669, body 101:2681)
 const INSTALL = `# everything (recommended)
@@ -50,6 +51,18 @@ const PACKAGES: [string, string, string[]][] = [
   ["Content & data", "Rich content and structured display.", ["code-block", "table", "accordion", "action-tile", "getting-started-pill", "modular-consent", "related-patterns-grid"]],
   ["Foundations", "Tokens, hooks, and utilities.", ["tokens", "tokens/preset", "tokens/styles.css", "hooks", "utils"]],
 ];
+// For product managers: the calls to make before launch. Each one shows up in the product as a
+// component in the library, so the row links to it (names from library/catalog).
+const CALLS: [string, string, string, string][] = [
+  ["Read the CRM and draft a reply", "Acts alone", "Every step lands in the activity log, and people can stop it at any point.", "activity-log"],
+  ["Send email outside the team", "Asks first", "An approval card says who gets it, what it costs and how long the undo lasts.", "approval-card"],
+  ["Use a new tool or read new data", "Asks once", "A permission request shows what will be sent. People allow it once or always.", "permission-request"],
+  ["Change 240 records at once", "Tries one first", "A sample shows the before and after, then people choose to run it on the rest.", "preview-before-run"],
+  ["Refund a double charge", "Hands off", "A named person picks it up, with what the agent found passed along.", "hand-off"],
+  ["Delete files or send payments", "Never", "It sits on the list of what the agent can use as a hard limit.", "capabilities"],
+];
+const pill = "hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap";
+const th = "px-[20px] py-[12px] text-left align-bottom font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase";
 const h2 = "font-semibold leading-[36px] text-[29px] tracking-[-0.2px] whitespace-nowrap";
 const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[720px]";
 
@@ -66,9 +79,13 @@ export function DocsPage() {
         <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[760px]">
           HAX ships every pattern in this library as a real, installable React component. One umbrella package, about 50 focused sub-packages, Tailwind-native theming, TypeScript throughout. The same components the Meeting Summariser is built from.
         </p>
+        <div className="hx-rise hx-rise--3 relative flex gap-[8px] pt-[8px]">
+          <a href="#install" className={pill}>For engineers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
+          <a href="#product-managers" className={pill}>For product managers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
+        </div>
       </section>
       <div className="flex flex-col gap-[56px] items-start pb-[96px] pt-[16px] px-[144px] w-full" data-node-id="101:2681">
-        <section id="install" className="hx-reveal flex flex-col gap-[14px] items-start w-full">
+        <section id="install" className="scroll-mt-[110px] hx-reveal flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Install</h2>
           <p className={sub}>The umbrella package re-exports every component; you can also install any sub-package on its own.</p>
           <CodeBlock code={INSTALL} className="w-[880px]" />
@@ -101,6 +118,34 @@ export function DocsPage() {
               </div>
             ))}
           </div>
+        </section>
+        <section id="product-managers" className="scroll-mt-[110px] hx-reveal flex flex-col gap-[14px] items-start w-full">
+          <h2 className={h2}>For product managers</h2>
+          <p className={sub}>Before launch, decide where the agent acts alone, where it asks first, and what it never does. Each call shows up in the product as one HAX component, so your team builds exactly what you decided.</p>
+          <div className="w-[1040px] max-w-full overflow-hidden rounded-[var(--radius-xl)] border border-[var(--stroke-subtle)]">
+            <table className="w-full border-collapse">
+              <caption className="sr-only">What the agent may do on its own, and what people see</caption>
+              <colgroup><col className="w-[32%]" /><col className="w-[17%]" /><col /></colgroup>
+              <thead className="bg-[var(--surface-tint)]">
+                <tr><th scope="col" className={th}>When the agent wants to</th><th scope="col" className={th}>Your call</th><th scope="col" className={th}>What people see</th></tr>
+              </thead>
+              <tbody>
+                {CALLS.map(([act, call, see, id]) => (
+                  <tr key={id} className="border-t border-[var(--stroke-subtle)] align-top">
+                    <td className="px-[20px] py-[16px] leading-[22px] text-[14px]">{act}</td>
+                    <td className="px-[20px] py-[16px] font-semibold leading-[22px] text-[14px] whitespace-nowrap">{call}</td>
+                    <td className="px-[20px] py-[16px]">
+                      <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)] [text-wrap:pretty]">{see}</p>
+                      <a href={`/pattern?id=${id}`} className="hx-link mt-[6px] inline-flex items-center gap-[4px] font-semibold leading-[20px] text-[13px] text-[color:var(--text-link)]">
+                        {BY_COMP.get(id)?.c.name}<img alt="" src="/hax/v1/icon-arrow-right-link-12.svg" className="hx-arrow size-[12px]" />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className={sub}>Share this table with your engineers. Every row links to the component, with its states and the data it needs.</p>
         </section>
       </div>
     </>

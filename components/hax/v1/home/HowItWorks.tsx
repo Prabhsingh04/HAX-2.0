@@ -19,10 +19,7 @@ export function HowItWorks() {
     <section id="how-works" data-hx-blob-o="0.42" className="flex flex-col gap-[48px] items-center px-[144px] py-[96px] relative w-full overflow-x-clip" data-node-id="98:19623">
       <div className="hx-reveal flex flex-col gap-[16px] items-center relative text-center whitespace-nowrap">
         <h2 className="font-extralight text-[50px] leading-[60px]">
-          From one sentence to{" "}
-          <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, rgb(217, 119, 6) 0%, rgb(217, 119, 6) 50.348%, rgb(225, 29, 72) 80.139%, rgb(190, 24, 93) 100%)" }}>
-            screens you can ship
-          </span>
+          From one sentence to screens you can ship
         </h2>
         <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)]">Describe what you need. HAX helps your agent build it.</p>
       </div>

@@ -1,0 +1,220 @@
+/* The kit in Material 3, coloured the way Google colours its AI products (Gemini, Antigravity)
+   with Neural Expressive:
+   · base (most of the UI): Google's own Material 3 roles as Gemini ships them (gem-sys):
+     neutral cool surfaces, ink #1f1f1f, blue #0b57d0 for actions. Antigravity's UI is the same
+     idea, nearly all grey with one blue.
+   · neural layer, only where the agent is doing something: blue light. Glow #9dd2ff behind
+     the input, task light #3186ff → #5259fd, the agent's ring #3186ff → #a9a8ff. It always
+     starts from the thing it describes (the input, the agent, the field it filled); no
+     floating blobs, no light on plain UI.
+   Then the M3 type scale in Roboto, the shape scale (4 / 8 / 12 / 16 / 28 / full), elevation
+   and component specs: buttons, icon buttons, chips, outlined text field, checkbox, radio,
+   switch, progress, cards, menus, lists. Icons are Material Symbols Outlined. */
+.hax-v1 [data-ds="m3"] {
+  --md-primary: #0b57d0; --md-on-primary: #ffffff; --md-primary-container: #d3e3fd; --md-on-primary-container: #0842a0;
+  --md-secondary: #00639b; --md-on-secondary: #ffffff; --md-secondary-container: #c2e7ff; --md-on-secondary-container: #001d35;
+  --md-tertiary: #146c2e; --md-on-tertiary: #ffffff; --md-tertiary-container: #c4eed0; --md-on-tertiary-container: #072711;
+  --md-error: #b3261e; --md-on-error: #ffffff; --md-error-container: #f9dedc; --md-on-error-container: #410e0b;
+  --md-surface: #ffffff; --md-on-surface: #1f1f1f; --md-surface-variant: #e1e3e1; --md-on-surface-variant: #444746;
+  --md-surface-container-lowest: #ffffff; --md-surface-container-low: #f8fafd; --md-surface-container: #f0f4f9; --md-surface-container-high: #e9eef6; --md-surface-container-highest: #dde3ea;
+  --md-outline: #747775; --md-outline-variant: #c4c7c5; --md-inverse-surface: #303030; --md-inverse-on-surface: #f2f2f2; --md-inverse-primary: #a8c7fa;
+  --md-success: #146c2e; --md-on-success: #ffffff; --md-success-container: #c4eed0; --md-on-success-container: #072711;
+  --md-warning: #8e4e00; --md-on-warning: #ffffff; --md-warning-container: #ffdcc1; --md-on-warning-container: #2e1500;
+  --md-elev-1: 0 1px 2px 0 rgb(0 0 0 / .3), 0 1px 3px 1px rgb(0 0 0 / .15);
+  --md-elev-2: 0 1px 2px 0 rgb(0 0 0 / .3), 0 2px 6px 2px rgb(0 0 0 / .15);
+  /* the neural layer (Gemini: brand blue, task indigo, chat glow, avatar ring) */
+  --nx-blue: #3186ff; --nx-indigo: #5259fd; --nx-glow: #9dd2ff; --nx-ink: #1157ce;
+  --nx-ring: linear-gradient(135deg, #3186ff, #a9a8ff);
+  --nx-rim: linear-gradient(90deg, #3186ff, #5259fd 55%, #9dd2ff);
+
+  /* the kit's roles, in Material's terms */
+  --k-panel: var(--md-surface); --k-soft: var(--md-surface-container);
+  --k-edge: var(--md-outline-variant); --k-edge-2: var(--md-outline);
+  --k-shadow: none; --k-pop: var(--md-elev-2);
+  --k-blue: var(--md-primary); --k-blue-soft: var(--md-secondary-container); --k-sel: color-mix(in srgb, var(--md-primary) 14%, transparent);
+  --k-chart: var(--md-primary); --k-track: var(--md-surface-container-highest);
+  --k-agent: var(--nx-indigo); --k-on-agent: #ffffff; --k-on-blue: var(--md-on-primary);
+  --k-ok: var(--md-success); --k-ok-bg: color-mix(in srgb, var(--md-success-container) 60%, var(--md-surface));
+  --k-warn: var(--md-warning); --k-warn-bg: color-mix(in srgb, var(--md-warning-container) 70%, var(--md-surface));
+  --k-bad: var(--md-error); --k-bad-bg: color-mix(in srgb, var(--md-error-container) 75%, var(--md-surface)); --k-bad-solid: var(--md-error);
+  --k-tag-ink: var(--md-on-secondary-container);
+  /* site tokens the components read, pointed at Material's */
+  --text-primary: var(--md-on-surface); --text-secondary: var(--md-on-surface-variant); --text-tertiary: var(--md-on-surface-variant); --text-link: var(--md-primary);
+  --surface-page: var(--md-surface); --surface-raised: var(--md-surface-container-low); --surface-tint: var(--md-surface-container); --surface-tint-hover: var(--md-surface-container-highest); --surface-tint-pressed: var(--md-outline-variant);
+  --surface-code: var(--md-surface-container-highest); --text-code: var(--md-on-surface);
+  --focus-ring: color-mix(in srgb, var(--nx-glow) 75%, transparent);
+  --gradient-hax: linear-gradient(90deg, var(--nx-indigo), var(--md-primary));
+  --font-code: "Roboto Mono", ui-monospace, monospace;
+  --hk-canvas: var(--md-surface); --hk-dot: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
+  --hk-r-md: 8px; --hk-r-lg: 12px; --hk-r-xl: 16px;
+  --hk-send: 40px; --hk-ib-sm: 32px;
+  font-family: Roboto, system-ui, sans-serif; color: var(--md-on-surface); letter-spacing: .25px;
+}
+html[data-hax-theme="dark"] .hax-v1 [data-ds="m3"] {
+  --md-primary: #a8c7fa; --md-on-primary: #062e6f; --md-primary-container: #1f3760; --md-on-primary-container: #d3e3fd;
+  --md-secondary: #7fcfff; --md-on-secondary: #003355; --md-secondary-container: #004a77; --md-on-secondary-container: #c2e7ff;
+  --md-tertiary: #6dd58c; --md-on-tertiary: #0a3818; --md-tertiary-container: #0f5223; --md-on-tertiary-container: #c4eed0;
+  --md-error: #f2b8b5; --md-on-error: #601410; --md-error-container: #8c1d18; --md-on-error-container: #f9dedc;
+  --md-surface: #131314; --md-on-surface: #e3e3e3; --md-surface-variant: #444746; --md-on-surface-variant: #c4c7c5;
+  --md-surface-container-lowest: #0e0e0e; --md-surface-container-low: #1b1b1b; --md-surface-container: #1e1f20; --md-surface-container-high: #282a2c; --md-surface-container-highest: #333537;
+  --md-outline: #8e918f; --md-outline-variant: #444746; --md-inverse-surface: #e3e3e3; --md-inverse-on-surface: #303030; --md-inverse-primary: #0b57d0;
+  --md-success: #6dd58c; --md-on-success: #0a3818; --md-success-container: #0f5223; --md-on-success-container: #c4eed0;
+  --md-warning: #ffb77c; --md-on-warning: #4b2800; --md-warning-container: #6d3a00; --md-on-warning-container: #ffdcc1;
+  --nx-blue: #60c1ff; --nx-indigo: #a9a8ff; --nx-glow: #1f3b9b; --nx-ink: #a1c9ff;
+  --nx-ring: linear-gradient(135deg, #4e8ff8, #a9a8ff);
+  --nx-rim: linear-gradient(90deg, #3186ff, #5259fd 55%, #60c1ff);
+  --k-on-agent: #131314;
+  --k-ok-bg: color-mix(in srgb, var(--md-success-container) 60%, var(--md-surface));
+  --k-warn-bg: color-mix(in srgb, var(--md-warning-container) 60%, var(--md-surface));
+  --k-bad-bg: color-mix(in srgb, var(--md-error-container) 55%, var(--md-surface));
+}
+
+/* type: the M3 scale (title medium / small, body medium / small, label medium) */
+.hax-v1 [data-ds="m3"] .hk-h { font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: .15px; }
+.hax-v1 [data-ds="m3"] .hk-t { font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .1px; }
+.hax-v1 [data-ds="m3"] .hk-b { font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: .25px; }
+.hax-v1 [data-ds="m3"] .hk-s { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: .4px; color: var(--md-on-surface-variant); }
+.hax-v1 [data-ds="m3"] .hk-xs { font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--md-on-surface-variant); }
+.hax-v1 [data-ds="m3"] .hk-mono { font-family: var(--font-code); font-size: 12px; line-height: 16px; letter-spacing: 0; }
+.hax-v1 [data-ds="m3"] .hk-link { color: var(--md-primary); font-weight: 500; }
+.hax-v1 [data-ds="m3"] :is(.font-semibold, .font-bold) { font-weight: 500; }
+.hax-v1 [data-ds="m3"] .font-sans { font-family: inherit; }
+.hax-v1 [data-ds="m3"] .font-mono { font-family: var(--font-code); }
+
+/* outlined card: surface, outline variant, medium corner, no elevation */
+.hax-v1 [data-ds="m3"] .hk-panel { background: var(--md-surface); color: var(--md-on-surface); border: 1px solid var(--md-outline-variant); border-radius: 12px; box-shadow: none; }
+/* an input bar: a filled container with the extra large corner */
+.hax-v1 [data-ds="m3"] .hk-panel--bar { background: var(--md-surface-container-high); border-color: transparent; border-radius: 28px; }
+/* menu: surface container, extra small corner, level 2, 8 dp above and below the items */
+.hax-v1 [data-ds="m3"] .hk-pop { background: var(--md-surface-container); color: var(--md-on-surface); border: 0; border-radius: 4px; box-shadow: var(--md-elev-2); padding: 8px 0; }
+/* popovers that carry content (rich tooltip): medium corner */
+.hax-v1 [data-ds="m3"] .hk-pop[class*="!p-["] { border-radius: 12px; }
+/* a floating toolbar: full corner */
+.hax-v1 [data-ds="m3"] .hk-pop.hk-row { border-radius: 999px; padding: 4px; }
+/* an inset area: a filled container */
+.hax-v1 [data-ds="m3"] .hk-well { background: var(--md-surface-container); border: 1px solid transparent; border-radius: 12px; }
+.hax-v1 [data-ds="m3"] .hk-well[class*="!bg-"] { border-color: var(--md-outline-variant); }
+.hax-v1 [data-ds="m3"] .hk-rule { height: 1px; background: var(--md-outline-variant); align-self: stretch; flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-code { background: var(--md-surface-container-highest); color: var(--md-on-surface); border-radius: 8px; padding: 12px 16px; font-family: var(--font-code); font-size: 12px; line-height: 18px; white-space: pre; overflow: hidden; }
+.hax-v1 [data-ds="m3"] .hk-code b { color: var(--md-primary); font-weight: 400; } .hax-v1 [data-ds="m3"] .hk-code i { color: var(--md-tertiary); font-style: normal; } .hax-v1 [data-ds="m3"] .hk-code em { color: var(--md-on-surface-variant); font-style: normal; }
+.hax-v1 [data-ds="m3"] .hk-code.hk-code--plain { background: transparent; border-radius: 0; padding: 0; }
+
+/* common buttons: 40 dp, full corner, label large, icon 18; outlined by default, filled for
+   the main action, text for the quiet one; 32 dp for small (extra small button) */
+.hax-v1 [data-ds="m3"] .hk-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--md-outline);
+  background: transparent; color: var(--md-primary); font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .1px; white-space: nowrap; }
+.hax-v1 [data-ds="m3"] .hk-btn:has(> .hk-sym) { padding: 0 24px 0 16px; }
+.hax-v1 [data-ds="m3"] .hk-btn .hk-sym { font-size: 18px; }
+.hax-v1 [data-ds="m3"] .hk-btn--sm { height: 32px; padding: 0 16px; gap: 6px; }
+.hax-v1 [data-ds="m3"] .hk-btn--sm:has(> .hk-sym) { padding: 0 16px 0 12px; }
+.hax-v1 [data-ds="m3"] .hk-btn--main { background: var(--md-primary); color: var(--md-on-primary); border-color: transparent; }
+.hax-v1 [data-ds="m3"] .hk-btn--ghost { background: transparent; border-color: transparent; padding-left: 12px; padding-right: 12px; }
+.hax-v1 [data-ds="m3"] .hk-btn--danger { background: var(--md-error); color: var(--md-on-error); border-color: transparent; }
+
+/* icon buttons: 40 dp standard (32 dp small), full corner, icon 24 (20) in on surface variant;
+   selected = tonal, outlined = outline variant edge */
+.hax-v1 [data-ds="m3"] .hk-ib { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; color: var(--md-on-surface-variant); flex-shrink: 0; border: 1px solid transparent; }
+.hax-v1 [data-ds="m3"] .hk-ib .hk-sym { font-size: 24px; }
+.hax-v1 [data-ds="m3"] .hk-ib--sm { width: 32px; height: 32px; }
+.hax-v1 [data-ds="m3"] .hk-ib--sm .hk-sym { font-size: 20px; }
+.hax-v1 [data-ds="m3"] .hk-ib--line { border-color: var(--md-outline-variant); }
+.hax-v1 [data-ds="m3"] .hk-ib--on { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.hax-v1 [data-ds="m3"] .hk-ib--bare { width: 32px; height: 32px; margin: -6px; }
+.hax-v1 [data-ds="m3"] .hk-ib--bare .hk-sym { font-size: 20px; }
+/* send: a filled icon button; off = disabled (on surface at 12% and 38%) */
+.hax-v1 [data-ds="m3"] .hk-send { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; background: var(--md-primary); color: var(--md-on-primary); flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-send .hk-sym { font-size: 24px; }
+.hax-v1 [data-ds="m3"] .hk-send--off { background: color-mix(in srgb, var(--md-on-surface) 12%, transparent); color: color-mix(in srgb, var(--md-on-surface) 38%, transparent); }
+
+/* pickers in an input bar: text buttons in on surface variant; boxed = assist chip; on = selected filter chip */
+.hax-v1 [data-ds="m3"] .hk-pick { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid transparent; font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .1px; color: var(--md-on-surface-variant); white-space: nowrap; }
+.hax-v1 [data-ds="m3"] .hk-pick .hk-sym { font-size: 18px; }
+.hax-v1 [data-ds="m3"] .hk-pick--box { border-color: var(--md-outline-variant); border-radius: 8px; color: var(--md-on-surface); padding: 0 8px 0 8px; }
+.hax-v1 [data-ds="m3"] .hk-pick--on { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; border-radius: 8px; }
+/* suggestion and filter chips: 32 dp, small corner, outline variant; selected = secondary container + check */
+.hax-v1 [data-ds="m3"] .hk-chip { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px; border-radius: 8px; border: 1px solid var(--md-outline-variant); background: transparent; color: var(--md-on-surface-variant); font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .1px; white-space: nowrap; }
+.hax-v1 [data-ds="m3"] .hk-chip.hk-chip--sel { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; padding-left: 8px; }
+.hax-v1 [data-ds="m3"] .hk-chip.hk-chip--sel::before { content: "check"; display: inline-block; width: 18px; height: 18px; overflow: hidden; font-family: "Material Symbols Outlined"; font-size: 18px; line-height: 1; font-weight: normal; letter-spacing: normal; font-feature-settings: "liga"; -webkit-font-feature-settings: "liga"; }
+/* labels: small tonal containers (secondary, primary, success, warning, error) */
+.hax-v1 [data-ds="m3"] .hk-tag { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px; border-radius: 8px; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; white-space: nowrap; background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.hax-v1 [data-ds="m3"] .hk-tag--blue { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+.hax-v1 [data-ds="m3"] .hk-tag--ok { background: var(--md-success-container); color: var(--md-on-success-container); }
+.hax-v1 [data-ds="m3"] .hk-tag--warn { background: var(--md-warning-container); color: var(--md-on-warning-container); }
+.hax-v1 [data-ds="m3"] .hk-tag--bad { background: var(--md-error-container); color: var(--md-on-error-container); }
+.hax-v1 [data-ds="m3"] .hk-kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 4px; background: var(--md-surface-container-highest); color: var(--md-on-surface-variant); font-size: 11px; line-height: 16px; font-weight: 500; letter-spacing: .5px; }
+
+/* menu items: 48 dp, label large, 12 dp sides, icon 24; the chosen item = secondary container */
+.hax-v1 [data-ds="m3"] .hk-mi { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 12px; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .1px; }
+.hax-v1 [data-ds="m3"] .hk-pop > .hk-mi { border-radius: 0; }
+.hax-v1 [data-ds="m3"] .hk-mi .hk-sym { font-size: 24px; }
+.hax-v1 [data-ds="m3"] .hk-mi .hk-sym:not(.hk-blue) { color: var(--md-on-surface-variant); }
+.hax-v1 [data-ds="m3"] .hk-mi--on { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+
+/* outlined text field: 56 dp, extra small corner, outline, body large; focused = 2 dp primary */
+.hax-v1 [data-ds="m3"] .hk-field { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border-radius: 4px; border: 1px solid var(--md-outline); background: transparent; font-size: 16px; line-height: 24px; letter-spacing: .5px; color: var(--md-on-surface); min-width: 0; }
+.hax-v1 [data-ds="m3"] .hk-field .hk-sym { font-size: 24px; }
+.hax-v1 [data-ds="m3"] .hk-field .hk-sym:not(.hk-blue) { color: var(--md-on-surface-variant); }
+.hax-v1 [data-ds="m3"] .hk-field--empty { color: var(--md-on-surface-variant); }
+.hax-v1 [data-ds="m3"] .hk-field--focus { border-color: var(--md-primary); box-shadow: inset 0 0 0 1px var(--md-primary); }
+.hax-v1 [data-ds="m3"] .hk-field--ai { border-color: var(--nx-blue); background: color-mix(in srgb, var(--nx-glow) 16%, transparent); }
+
+/* checkbox 18 dp, 2 dp corner and edge; radio 20 dp; switch 52 × 32 with the handle that grows */
+.hax-v1 [data-ds="m3"] .hk-check { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 2px; border: 2px solid var(--md-on-surface-variant); color: var(--md-on-primary); flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-check .hk-sym { font-size: 16px; }
+.hax-v1 [data-ds="m3"] .hk-check--on { background: var(--md-primary); border-color: var(--md-primary); }
+.hax-v1 [data-ds="m3"] .hk-radio { width: 20px; height: 20px; border-radius: 999px; border: 2px solid var(--md-on-surface-variant); flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-radio--on { border-color: var(--md-primary); background: radial-gradient(circle, var(--md-primary) 0 5px, transparent 5.5px); }
+.hax-v1 [data-ds="m3"] .hk-switch { position: relative; display: inline-block; width: 52px; height: 32px; border-radius: 999px; border: 2px solid var(--md-outline); background: var(--md-surface-container-highest); flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-switch::after { content: ""; position: absolute; top: 50%; left: 6px; width: 16px; height: 16px; margin-top: -8px; border-radius: 999px; background: var(--md-outline); }
+.hax-v1 [data-ds="m3"] .hk-switch--on { background: var(--md-primary); border-color: var(--md-primary); }
+.hax-v1 [data-ds="m3"] .hk-switch--on::after { left: 22px; width: 24px; height: 24px; margin-top: -12px; background: var(--md-on-primary); }
+/* a choice row: outline variant edge, medium corner; chosen = secondary container */
+.hax-v1 [data-ds="m3"] .hk-opt { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 8px 16px; border-radius: 12px; border: 1px solid var(--md-outline-variant); }
+.hax-v1 [data-ds="m3"] .hk-opt.hk-opt--on { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; }
+/* a chosen card: primary edge, a primary wash */
+.hax-v1 [data-ds="m3"] .hk-panel.hk-opt--on { background: color-mix(in srgb, var(--md-primary) 6%, var(--md-surface)); box-shadow: inset 0 0 0 1px var(--md-primary); }
+/* linear progress: 4 dp, full corner, secondary container track */
+.hax-v1 [data-ds="m3"] .hk-bar { position: relative; display: block; height: 4px; border-radius: 999px; background: var(--md-secondary-container); overflow: hidden; }
+.hax-v1 [data-ds="m3"] .hk-bar > i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--md-primary); }
+.hax-v1 [data-ds="m3"] .hk-bar--warn > i { background: var(--md-warning); }
+.hax-v1 [data-ds="m3"] .hk-bar--bad > i { background: var(--md-error); }
+
+/* attachments, citations, labels */
+.hax-v1 [data-ds="m3"] .hk-file { display: inline-flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px 0 8px; border-radius: 12px; background: var(--md-surface-container-highest); }
+.hax-v1 [data-ds="m3"] .hk-file > span:first-child { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; color: #fff; }
+.hax-v1 [data-ds="m3"] .hk-thumb { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-cite { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 3px; border-radius: 999px; vertical-align: 1px; font-size: 11px; line-height: 16px; font-weight: 500; letter-spacing: .5px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+/* made by the agent: an assist chip with the icon in neural blue */
+.hax-v1 [data-ds="m3"] .hk-ai { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 10px 0 6px; border-radius: 8px; border: 1px solid var(--md-outline-variant); background: var(--md-surface); color: var(--md-on-surface); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; white-space: nowrap; }
+.hax-v1 [data-ds="m3"] .hk-ai .hk-sym { font-size: 16px; color: var(--nx-blue); }
+
+/* avatars: the agent is a neutral disc in the neural ring, a person is initials in primary container */
+.hax-v1 [data-ds="m3"] .hk-ag { position: relative; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; border: 2px solid transparent; flex-shrink: 0;
+  background: linear-gradient(var(--md-surface-container-low), var(--md-surface-container-low)) padding-box, var(--nx-ring) border-box; color: var(--nx-ink); }
+.hax-v1 [data-ds="m3"] .hk-ag .hk-sym { font-size: 18px; }
+.hax-v1 [data-ds="m3"] .hk-ag--sm { width: 24px; height: 24px; } .hax-v1 [data-ds="m3"] .hk-ag--sm .hk-sym { font-size: 16px; }
+.hax-v1 [data-ds="m3"] .hk-ag--lg { width: 40px; height: 40px; } .hax-v1 [data-ds="m3"] .hk-ag--lg .hk-sym { font-size: 24px; }
+.hax-v1 [data-ds="m3"] .hk-ag > b { position: absolute; right: -2px; bottom: -2px; width: 12px; height: 12px; border-radius: 999px; border: 2px solid var(--md-surface); background: var(--md-outline); }
+.hax-v1 [data-ds="m3"] .hk-me { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 12px; font-weight: 500; letter-spacing: .5px; flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-app { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--md-surface-container-high); color: var(--md-on-surface-variant); flex-shrink: 0; }
+.hax-v1 [data-ds="m3"] .hk-app .hk-sym { font-size: 20px; }
+/* the person's message: Gemini's query bubble, surface container high with a small corner at the top right */
+.hax-v1 [data-ds="m3"] .hk-bubble { align-self: flex-end; max-width: 78%; padding: 12px 16px; border-radius: 24px 4px 24px 24px; background: var(--md-surface-container-high); color: var(--md-on-surface); font-size: 14px; line-height: 20px; letter-spacing: .25px; }
+.hax-v1 [data-ds="m3"] .hk-step { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; border: 1px solid var(--md-outline); flex-shrink: 0; color: var(--md-on-primary); font-size: 11px; font-weight: 500; letter-spacing: .5px; }
+.hax-v1 [data-ds="m3"] .hk-step .hk-sym { font-size: 14px; }
+.hax-v1 [data-ds="m3"] .hk-step--done { border-color: var(--md-primary); background: var(--md-primary); }
+.hax-v1 [data-ds="m3"] .hk-step--now { border: 2px solid var(--md-primary); }
+.hax-v1 [data-ds="m3"] .hk-step--num { color: var(--md-on-surface-variant); }
+
+/* Neural Expressive: light only where the agent is at work, starting from what it describes */
+/* the input while the agent works or listens: a rim of task light and a glow beneath the bar */
+.hax-v1 [data-ds="m3"] .hk-panel--bar:is([data-state="Working"], [data-state="Listening"]) { border: 1.5px solid transparent;
+  background: linear-gradient(var(--md-surface-container-high), var(--md-surface-container-high)) padding-box, var(--nx-rim) border-box;
+  box-shadow: 0 10px 32px -10px color-mix(in srgb, var(--nx-glow) 90%, transparent); }
+/* thinking text: the line shimmers in neural blue */
+.hax-v1 [data-ds="m3"] .hk-shimmer { background-image: linear-gradient(90deg, var(--md-on-surface-variant) 0%, var(--nx-blue) 30%, var(--nx-indigo) 42%, var(--md-on-surface-variant) 70%); }
+/* the agent typing, writing, listening and working */
+.hax-v1 [data-ds="m3"] :is(.hk-typing, .hk-ai .hk-blue) { color: var(--nx-blue); }
+.hax-v1 [data-ds="m3"] .hk-caret { background: var(--nx-blue); }
+.hax-v1 [data-ds="m3"] .hk-wave i { background: linear-gradient(var(--nx-blue), var(--nx-indigo)); }
+.hax-v1 [data-ds="m3"] .hk-cprog { border-color: transparent; border-top-color: var(--nx-blue); border-right-color: var(--nx-indigo); }

@@ -48,6 +48,7 @@ export const FAMILIES: Family[] = [
       { id: "choice-picker", name: "Choice picker", line: "The agent offers a few options and waits for the person to pick one.", covers: [] },
       { id: "form-request", name: "Form request", line: "The agent asks for the details it is missing, in a short form.", covers: [] },
       { id: "feedback", name: "Feedback", line: "Thumbs up or down with a reason, on any answer.", covers: ["feedback"] },
+      { id: "team-decision", name: "Team decision", line: "Agents lay out the options, people weigh in and the owner makes the call.", covers: [] },
     ],
   },
   {
@@ -61,6 +62,7 @@ export const FAMILIES: Family[] = [
       { id: "memory", name: "Memory", line: "What the agent remembers about a person, which they can see, edit or switch off.",
         covers: ["memory", "incognito", "personalization"] },
       { id: "checkpoints", name: "Checkpoints and branches", line: "Go back to any earlier point, or try another path without losing this one.", covers: ["branches"] },
+      { id: "agent-access", name: "Access per agent", line: "Which agent can use which system, so no single agent holds all the access a task needs.", covers: [] },
     ],
   },
   {
@@ -86,6 +88,7 @@ export const FAMILIES: Family[] = [
       { id: "hand-off", name: "Hand-off", line: "Work moving between agents and people, and who has it now.", covers: ["task-assignment"] },
       { id: "progress-steps", name: "Progress steps", line: "What the agent is doing right now, step by step, in real words.", covers: ["processing-steps"] },
       { id: "workflow-canvas", name: "Workflow canvas", line: "A multi-step automation drawn as connected steps, with the human checks marked.", covers: ["chained-action"] },
+      { id: "shared-status", name: "Shared status", line: "One live view of the goal, what is known, what is open and who is on it.", covers: [] },
     ],
   },
   {
@@ -100,6 +103,9 @@ export const FAMILIES: Family[] = [
       { id: "tool-call", name: "Tool call", line: "Each tool the agent used: what it sent, what came back and how long it took.", covers: [] },
       { id: "rationale", name: "Rationale", line: "A verdict and the reason behind it, right next to the result.", covers: [] },
       { id: "usage-meter", name: "Usage meter", line: "How much context, time and credit the agent has used, and what is left.", covers: [] },
+      { id: "agent-agreement", name: "Agent agreement", line: "Several agents answer the same question. It shows the adopted answer, who agrees and why.", covers: [] },
+      { id: "agent-disagreement", name: "Disagreement", line: "Two agents reach different answers. It shows what each saw and assumed, so a person can settle it.", covers: [] },
+      { id: "decision-trail", name: "Decision trail", line: "Traces a decision back to what it rests on, people, agents and records, each with an owner.", covers: [] },
     ],
   },
   {
@@ -121,4 +127,14 @@ export const BY_COMP = new Map(COMPS.map((x) => [x.c.id, x]));
 // Old /pattern ids: an absorbed entry opens the component that took it over.
 export const FROM_OLD = new Map(COMPS.flatMap((x) => x.c.covers.map((old) => [old, x.c.id] as const)));
 // Components with nothing to take over are new in HAX 2.0, except Rationale, carried over from HAX 1.0.
-export const ORIGIN: Record<string, string> = { rationale: "Carried over from HAX 1.0, where it was called Inline Rationale." };
+// For components with nothing to absorb from the earlier library: where they come from. The six
+// for setups with several agents or people carry HAX Studio's interaction patterns.
+export const ORIGIN: Record<string, string> = {
+  rationale: "Carried over from HAX 1.0, where it was called Inline Rationale.",
+  "agent-agreement": "New in HAX 2.0, for setups with several agents. HAX Studio calls this pattern Convergence Point.",
+  "agent-disagreement": "New in HAX 2.0, for setups with several agents. HAX Studio calls this pattern Assumption Surface.",
+  "decision-trail": "New in HAX 2.0, for teams working with agents. HAX Studio calls this pattern Lineage View.",
+  "agent-access": "New in HAX 2.0, for setups with several agents. HAX Studio calls this pattern Credential Boundary.",
+  "team-decision": "New in HAX 2.0, for teams working with agents. HAX Studio calls this pattern Workshop Card.",
+  "shared-status": "New in HAX 2.0, for teams working with agents. HAX Studio calls this pattern Shared Cognitive State.",
+};

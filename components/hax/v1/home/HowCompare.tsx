@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 // Prabh's "With and without HAX" section (HAX-2.0 index.html #how), run as-is: his markup (vs.html),
 // his script (vs.js) and his styles scoped under .hx-vs (vs.css). callouts.css/js (ours) turn his pattern legend into callouts. Refresh: node scripts/build-hax-compare.mjs <HAX-2.0>
-const V = "6";
+const V = "7";
 
 export function HowCompare() {
   const ref = useRef<HTMLDivElement>(null);

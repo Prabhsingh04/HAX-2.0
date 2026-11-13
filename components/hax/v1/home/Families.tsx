@@ -9,15 +9,12 @@ export function Families() {
   return (
     <section id="patterns" data-hx-blob-o="0.72" className="flex flex-col gap-[28px] items-center px-[114px] py-[96px] relative w-full" data-node-id="98:19721">
       <h2 className="hx-reveal font-extralight leading-[60px] text-[50px] text-center whitespace-nowrap">
-        Every component sits in one of{" "}
-        <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, rgb(217, 119, 6) 0%, rgb(217, 119, 6) 68.644%, rgb(225, 29, 72) 87.458%, rgb(190, 24, 93) 100%)" }}>
-          eight families
-        </span>
+        Every component sits in one of eight families
       </h2>
       <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">
         Each family is one job the interface does between a person and an agent, so the right component is always one click away.
       </p>
-      <a href="/library" className="hx-btn hx-btn--grad hx-btn--sm flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap">
+      <a href="/library" className="hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap">
         <img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="hx-arrow size-[14px]" />
         All {COMPS.length} components
       </a>

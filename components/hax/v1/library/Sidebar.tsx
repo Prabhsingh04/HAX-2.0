@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FAMILIES, COMPS } from "./catalog";
+import { withDS, type DS } from "./kit/ds";
 
 // Library sidebar (Figma 98:20057 / 98:25488). Lists the 45 components by family.
 export function Count({ n }: { n: number | string }) {
@@ -9,7 +10,7 @@ export function Count({ n }: { n: number | string }) {
 
 // Family rows expand and collapse on click (no selected fill). Scrolling into a family opens
 // it again, so the list follows the page until you change it.
-export function Sidebar({ active, selected }: { active: string; selected?: string }) {
+export function Sidebar({ active, selected, ds = "shadcn" }: { active: string; selected?: string; ds?: DS }) {
   const [open, setOpen] = useState([active]);
   useEffect(() => setOpen([active]), [active]);
   const toggle = (id: string) => setOpen((o) => (o.includes(id) ? o.filter((x) => x !== id) : [...o, id]));
@@ -32,7 +33,7 @@ export function Sidebar({ active, selected }: { active: string; selected?: strin
                 </span>
               </button>
               {isOpen && f.comps.map((c) => (
-                <a key={c.id} href={`/pattern?id=${c.id}`} aria-current={selected === c.id ? "page" : undefined}
+                <a key={c.id} href={withDS(`/pattern?id=${c.id}`, ds)} aria-current={selected === c.id ? "page" : undefined}
                   className={`hx-side flex h-[30px] items-center pl-[18px] pr-[10px] rounded-[6px] leading-[20px] text-[13px] ${selected === c.id ? "bg-[var(--surface-tint)] font-semibold text-[color:var(--text-primary)]" : "text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]"}`}>{c.name}</a>
               ))}
             </div>

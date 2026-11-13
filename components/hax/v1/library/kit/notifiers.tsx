@@ -1,4 +1,4 @@
-import { ArrowRight, BellRing, Bot, Check, CircleAlert, FileText, Sparkle, WifiOff, X } from "lucide-react";
+import { ArrowRight, BellRing, Bot, Check, CircleAlert, FileText, Sparkle, WifiOff, X } from "./icons";
 import { Ag, Bullets, sel, tog, type Entry, type Props } from "./ui";
 
 /* AI label — Adobe Content Credentials "cr" pin, Google SynthID notice, Meta "AI info",
@@ -7,7 +7,7 @@ function AILabel({ o }: { o: Props }) {
   const v = o.on as string;
   if (v === "Image")
     return (
-      <div className="w-[360px] h-[260px] rounded-[16px] relative overflow-hidden" style={{ background: "linear-gradient(160deg,#dfe7ef,#9fb5cb 55%,#6b84a0)" }}>
+      <div className="w-[360px] h-[260px] rounded-[var(--hk-r-xl)] relative overflow-hidden" style={{ background: "linear-gradient(160deg,#dfe7ef,#9fb5cb 55%,#6b84a0)" }}>
         <span className="hk-ai absolute left-[12px] top-[12px]"><Sparkle size={12} className="hk-blue" />Made with AI</span>
         {o.details && <div className="hk-pop absolute left-[12px] top-[44px] w-[230px] !p-[12px] hk-col gap-[4px]"><span className="hk-t !text-[13px]">Content credentials</span><span className="hk-s">Made with Atlas Image 4 on 12 Nov. Edited in Photoshop.</span></div>}
       </div>
@@ -28,7 +28,7 @@ function AgentAvatar({ o }: { o: Props }) {
   return (
     <div className="w-[480px] hk-col gap-[10px]">
       {st.map(([s, c, d], i) => (
-        <div key={s} className="hk-panel !rounded-[14px] !shadow-none hk-row gap-[12px] px-[14px] h-[60px]">
+        <div key={s} className="hk-panel !shadow-none hk-row gap-[12px] px-[14px] h-[60px]">
           <Ag size="lg" icon={i === 2 ? Bot : Sparkle} dot={c} />
           <span className="hk-col hk-grow"><span className="hk-row gap-[6px]"><span className="hk-t">{["Atlas", "Billing agent", "Research agent"][i]}</span>{o.badge && <span className="hk-tag !h-[20px] !text-[11px]">Agent</span>}</span><span className="hk-s">{d}</span></span>
           <span className="hk-s font-medium" style={{ color: c }}>{s}</span>
@@ -54,7 +54,7 @@ function ProactiveSuggestion({ o }: { o: Props }) {
         <span className="hk-xs pb-[6px]">Invoices</span>
         {[["INV-2041", "Acme", "34 days late"], ["INV-2038", "Globex", "41 days late"], ["INV-2032", "Initech", "33 days late"]].map(([a, b, c]) => <div key={a} className="hk-row gap-[12px] py-[7px] border-t border-[var(--k-edge)] text-[13px]"><span className="hk-mono w-[80px]">{a}</span><span className="hk-grow">{b}</span><span className="hk-badc font-medium">{c}</span></div>)}
         {/* inline: part of the page, right under what it is about (Gemini in Gmail, Notion AI) */}
-        {inline && <div className="hk-well !rounded-[12px] mt-[8px] p-[12px] hk-col gap-[10px]">{body}</div>}
+        {inline && <div className="hk-well mt-[8px] p-[12px] hk-col gap-[10px]">{body}</div>}
       </div>
       {/* floating: a card on top of the app, in the corner, easy to dismiss (Copilot in Outlook) */}
       {!inline && <div className="hk-pop !p-[14px] hk-col gap-[10px] w-[340px] self-end">{body}</div>}
@@ -67,7 +67,7 @@ function ProactiveSuggestion({ o }: { o: Props }) {
 function UpdateNotice({ o }: { o: Props }) {
   if (o.style === "Banner")
     return (
-      <div className="hk-panel !rounded-[14px] w-[540px] hk-row gap-[10px] px-[14px] h-[52px]">
+      <div className="hk-panel w-[540px] hk-row gap-[10px] px-[14px] h-[52px]">
         <span className="hk-tag hk-tag--blue">New</span><span className="hk-b hk-grow">Atlas can now read your team wiki.</span><span className="hk-s hk-link hk-row gap-[4px]">What changed<ArrowRight size={13} /></span><span className="hk-ib hk-ib--bare"><X size={15} /></span>
       </div>
     );

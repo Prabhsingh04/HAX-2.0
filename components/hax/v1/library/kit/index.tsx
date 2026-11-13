@@ -1,6 +1,9 @@
 "use client";
 import "./kit.css";
+import "./ds-shadcn.css";
+import "./ds-m3.css";
 import { useEffect, useState } from "react";
+import { DSFonts, useDS } from "./ds";
 import { defaults, type Entry, type Props } from "./ui";
 import { COMPOSERS } from "./composers";
 import { ARTIFACTS } from "./artifacts";
@@ -14,12 +17,15 @@ import { NOTIFIERS } from "./notifiers";
 // The HAX v1 component kit: one real-size component per catalog id, with options.
 export const KIT: Record<string, Entry> = { ...COMPOSERS, ...ARTIFACTS, ...COLLECTORS, ...CONTROLLERS, ...APPROVALS, ...WORKFLOWS, ...EXPLORERS, ...NOTIFIERS };
 
-// Library card / Home: the component with its default options, at half size.
+// Library card / Home: the component with its default options, at half size, drawn in the
+// design system the page has chosen (shadcn/ui unless it says Material 3).
 export function KitCard({ id, flush }: { id: string; flush?: boolean }) {
   const e = KIT[id];
+  const ds = useDS();
   if (!e) return null;
   return (
-    <div aria-hidden="true" className={`hk hk-stage hk-card ${flush ? "hk-card--flush" : ""}`}>
+    <div aria-hidden="true" data-ds={ds} className={`hk hk-stage hk-card ${flush ? "hk-card--flush" : ""}`}>
+      <DSFonts ds={ds} />
       <div className="hk-scale" style={e.card ? { width: 289 / e.card, height: 181 / e.card, transform: `translate(-50%, -50%) scale(${e.card})` } : undefined}><e.C o={defaults(e.opts)} /></div>
     </div>
   );
@@ -28,6 +34,7 @@ export function KitCard({ id, flush }: { id: string; flush?: boolean }) {
 // Component page: the component at 1×, with a control for every option it takes.
 export function KitPlayground({ id }: { id: string }) {
   const e = KIT[id];
+  const ds = useDS();
   const [o, setO] = useState<Props>(() => (e ? defaults(e.opts) : {}));
   // ?o.effort=false&o.surface=Image opens the page on that version, so a version can be linked
   useEffect(() => {
@@ -50,7 +57,7 @@ export function KitPlayground({ id }: { id: string }) {
         ))}
         <button type="button" onClick={() => setO(defaults(e.opts))} className="ml-auto hk-link text-[13px]">Reset</button>
       </div>
-      <div className="hk-stage hk-page" aria-hidden="true"><e.C o={o} /></div>
+      <div className="hk-stage hk-page" data-ds={ds} aria-hidden="true"><DSFonts ds={ds} /><e.C o={o} /></div>
       <p className="hk-s">Studied: {e.refs.join(" · ")}</p>
     </div>
   );

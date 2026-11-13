@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
-import { ArrowUp, Check, LoaderCircle, Sparkle, Square, type LucideIcon } from "lucide-react";
+import { ArrowUp, Check, LoaderCircle, Sparkle, Square, type LucideIcon } from "./icons";
 
 // Each kit entry: the component, the options it takes (shown as controls on its page) and
 // the products we studied for it. Option values are plain strings or booleans so they can

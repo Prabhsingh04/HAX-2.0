@@ -97,8 +97,8 @@ html[data-hax-theme="dark"] .hax-v1 .hx-blobs { background: none; opacity: max(0
 @keyframes hx-float { from { transform: translateY(-4px); } to { transform: translateY(4px); } }
 .hax-v1 .hx-cube { animation: hx-float 5s ease-in-out infinite alternate; }
 .hax-v1 .hx-chat { transition: background-color .2s var(--ease-out); }
-.hax-v1 .hx-chat:hover { background-color: #5c59e3; }
-.hax-v1 .hx-chat:active { background-color: #4e4bd2; }
+.hax-v1 .hx-chat:hover { background-color: #0959b3; }
+.hax-v1 .hx-chat:active { background-color: #084c99; }
 /* hero rotating stage word: every phrase sits in one grid cell, so the box is as wide as
    the widest phrase and "teams in" never moves. Phrases sit flush left, rise in from
    below and leave through the top. Item padding keeps descenders inside the clipped

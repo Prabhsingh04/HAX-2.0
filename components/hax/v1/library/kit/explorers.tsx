@@ -1,5 +1,6 @@
-import { Brain, Check, ChevronDown, ChevronRight, CircleAlert, Globe, Info, Wrench } from "lucide-react";
-import { Spin, sel, tog, type Entry, type Props } from "./ui";
+import { Fragment, type ReactNode } from "react";
+import { Bot, Brain, Check, ChevronDown, ChevronRight, CircleAlert, FileText, Globe, Info, Wrench } from "./icons";
+import { Ag, Me, Spin, sel, tog, type Entry, type Props } from "./ui";
 
 /* Reasoning — Claude "Thought for 12s", ChatGPT "Thought for …" with summary steps,
    Gemini "Show thinking", DeepSeek. Folded by default. */
@@ -34,7 +35,7 @@ function Sources({ o }: { o: Props }) {
     <div className="w-[540px] hk-col gap-[12px]">
       {o.layout === "Cards on top" && (
         <div className="grid grid-cols-3 gap-[8px]">
-          {src.map(([t, s, c], i) => <div key={t} className="hk-well !rounded-[12px] p-[10px] hk-col gap-[6px]"><span className="hk-row gap-[6px]"><span className="size-[18px] rounded-[5px] grid place-items-center text-white text-[11px] font-bold shrink-0" style={{ background: c }}>{i + 1}</span><span className="hk-s hk-trunc">{s}</span></span><span className="hk-t !text-[13px] hk-trunc">{t}</span></div>)}
+          {src.map(([t, s, c], i) => <div key={t} className="hk-well p-[10px] hk-col gap-[6px]"><span className="hk-row gap-[6px]"><span className="size-[18px] rounded-[5px] grid place-items-center text-white text-[11px] font-bold shrink-0" style={{ background: c }}>{i + 1}</span><span className="hk-s hk-trunc">{s}</span></span><span className="hk-t !text-[13px] hk-trunc">{t}</span></div>)}
         </div>
       )}
       <p className="hk-b">Churn rose 4 points in EMEA after the May price change<span className="hk-cite">1</span>. Most of the loss was teams under ten seats<span className="relative inline-block">
@@ -96,7 +97,7 @@ function ToolCall({ o }: { o: Props }) {
   const st = o.state as string;
   return (
     <div className="w-[520px] hk-col gap-[8px]">
-      <div className="hk-panel !rounded-[14px] overflow-hidden">
+      <div className="hk-panel overflow-hidden">
         <div className="hk-row gap-[10px] px-[14px] h-[48px]">
           {st === "Done" ? <span className="hk-step hk-step--done"><Check size={12} strokeWidth={3} /></span> : st === "Failed" ? <span className="hk-step !border-0 !bg-[var(--k-bad)]"><CircleAlert size={12} strokeWidth={3} /></span> : <Spin />}
           <Wrench size={14} className="hk-faint" /><span className="hk-mono hk-grow">linear.create_issue</span>
@@ -111,7 +112,7 @@ function ToolCall({ o }: { o: Props }) {
           </div>
         )}
       </div>
-      <div className="hk-panel !rounded-[14px] !shadow-none hk-row gap-[10px] px-[14px] h-[44px]"><Spin s={15} /><Wrench size={14} className="hk-faint" /><span className="hk-mono hk-grow">slack.post_message</span><span className="hk-s">Waiting</span></div>
+      <div className="hk-panel !shadow-none hk-row gap-[10px] px-[14px] h-[44px]"><Spin s={15} /><Wrench size={14} className="hk-faint" /><span className="hk-mono hk-grow">slack.post_message</span><span className="hk-s">Waiting</span></div>
     </div>
   );
 }
@@ -149,6 +150,101 @@ function UsageMeter({ o }: { o: Props }) {
   );
 }
 
+/* Agent agreement — Google AI co-scientist (ideas ranked after debate), Claude Research
+   sub-agents, Perplexity, Grok Heavy: several agents take the same question; the card leads
+   with the adopted answer, says how many agree, and lists each agent's pick and reason. */
+function AgentAgreement({ o }: { o: Props }) {
+  const split = o.result === "Split";
+  const picks: [string, string, string, boolean][] = [
+    ["Pricing agent", "Contoso", "Lowest cost over three years", true],
+    ["Risk agent", "Contoso", "Best uptime of the three, 99.5%", true],
+    ["Legal agent", split ? "Fabrikam" : "Contoso", split ? "The only one that keeps data in the EU" : "Standard contract terms", !split],
+  ];
+  return (
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[10px]">
+      <div className="hk-row justify-between !items-start">
+        <span className="hk-col gap-[2px]"><span className="hk-xs">Vendor choice · 3 agents</span><span className="hk-h">Go with Contoso</span></span>
+        <span className={`hk-tag ${split ? "hk-tag--warn" : "hk-tag--ok"}`}>{split ? "2 of 3 agree" : "All 3 agree"}</span>
+      </div>
+      <div className="hk-col">
+        {picks.map(([n, pick, why, agrees]) => (
+          <div key={n} className="hk-row !items-start gap-[10px] py-[8px] border-t border-[var(--k-edge)]">
+            <Ag size="sm" icon={Bot} />
+            <span className="hk-col hk-grow"><span className="hk-t">{n}</span>{o.reasons && <span className="hk-s">{why}</span>}</span>
+            <span className={`hk-row !gap-[6px] text-[13.5px] font-medium whitespace-nowrap ${agrees ? "" : "hk-warnc"}`}>
+              {agrees ? <Check size={14} strokeWidth={2.5} className="hk-okc" /> : <CircleAlert size={14} />}{pick}
+            </span>
+          </div>
+        ))}
+      </div>
+      {split && o.dissent && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px] hk-s"><CircleAlert size={14} className="hk-warnc shrink-0" />Legal disagrees: Contoso stores data in the US. Check this before you sign.</div>}
+      {o.person && <div className="hk-row justify-end gap-[8px]"><span className="hk-btn hk-btn--ghost">See how they decided</span><span className="hk-btn hk-btn--main">Approve Contoso</span></div>}
+    </div>
+  );
+}
+
+/* Disagreement — what each agent could see, what it assumed and what it concluded, side by
+   side, so a person can find the one assumption they differ on and settle it (incident.io and
+   PagerDuty incident reviews, Google AI co-scientist debates, Cursor background agents). */
+function Disagreement({ o }: { o: Props }) {
+  const rows: [string, string, string, boolean?][] = [
+    ["Could see", "Error logs since 09:00", "Error logs and the deploy history"],
+    ["Assumed", "The outage began at 09:40", "The outage began at 09:12", true],
+    ["Concluded", "Not caused by a deploy", "Caused by the 09:05 deploy"],
+  ];
+  const cell = "text-[13.5px] leading-[19px] px-[12px] py-[10px] border-t border-[var(--k-edge)]";
+  return (
+    <div className="hk-panel w-[540px] overflow-hidden">
+      <div className="hk-row justify-between px-[16px] h-[46px]"><span className="hk-t">Why the agents disagree</span><span className="hk-s">Checkout outage · INC-2207</span></div>
+      <div className="grid grid-cols-[96px_1fr_1fr]">
+        <span className="border-t border-[var(--k-edge)]" />
+        {["Triage agent", "Release agent"].map((a) => <span key={a} className="hk-row gap-[8px] px-[12px] py-[8px] border-t border-[var(--k-edge)]"><Ag size="sm" icon={Bot} /><span className="hk-t !text-[13px]">{a}</span></span>)}
+        {rows.map(([l, a, b, diff]) => (
+          <Fragment key={l}>
+            <span className={`${cell} hk-s !pl-[16px]`}>{l}</span>
+            {[a, b].map((v, i) => <span key={i} className={`${cell} ${diff && o.highlight ? "bg-[var(--k-warn-bg)] font-medium" : ""}`}>{v}</span>)}
+          </Fragment>
+        ))}
+      </div>
+      {o.settle && (
+        <div className="hk-row justify-between gap-[12px] px-[16px] py-[12px] border-t border-[var(--k-edge)] bg-[var(--k-soft)]">
+          <span className="hk-s">They differ on one thing: when it began.</span>
+          <span className="hk-row gap-[8px]"><span className="hk-btn hk-btn--sm">09:40</span><span className="hk-btn hk-btn--sm hk-btn--main">09:12 is right</span></span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Decision trail — a decision traced back to what it rests on: the person who signed off, the
+   agents' findings and the record under them, each with its owner and time (Git history,
+   Linear issue history, dbt and Datadog lineage, Notion page history). */
+function DecisionTrail({ o }: { o: Props }) {
+  const steps: [ReactNode, string, string, string][] = [
+    [<Me key="m" i="MR" />, "Maya approved holding the payment", "Finance · owns this decision", "10:42"],
+    [<Ag key="r" size="sm" />, "Risk agent flagged the invoice", "The amount is 3× Acme's usual", "10:31"],
+    [<Ag key="b" size="sm" icon={Bot} />, "Bank agent spotted new bank details", "Changed last Tuesday", "10:30"],
+  ];
+  if (o.depth === "Full trail") steps.push([<span key="s" className="hk-app !size-[28px]"><FileText size={14} /></span>, "Acme vendor record", "ERP · last edited by Jon on 2 Sep", "2 Sep"]);
+  return (
+    <div className="hk-panel w-[500px] p-[16px] hk-col gap-[12px]">
+      <div className="hk-row justify-between !items-start">
+        <span className="hk-col gap-[2px]"><span className="hk-xs">Decision</span><span className="hk-h">Hold payment on INV-2041</span></span>
+        <span className="hk-tag hk-tag--ok">Decided</span>
+      </div>
+      <div className="hk-col">
+        {steps.map(([who, t, s, at], i) => (
+          <div key={t} className="hk-row !items-stretch gap-[12px]">
+            <span className="hk-col items-center shrink-0 w-[28px]"><span className="grid place-items-center size-[28px]">{who}</span>{i < steps.length - 1 && <i className="block w-[2px] flex-1 my-[4px] rounded-full bg-[var(--k-edge)]" />}</span>
+            <span className="hk-col hk-grow pt-[4px] pb-[14px]"><span className="text-[13.5px] leading-[19px] font-medium">{t}</span>{o.owners && <span className="hk-s">{s}</span>}</span>
+            <span className="hk-s whitespace-nowrap pt-[5px]">{at}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export const EXPLORERS: Record<string, Entry> = {
   reasoning: { C: Reasoning, opts: [sel("state", "State", ["Open", "Thinking", "Folded"]), tog("steps", "Step titles")], refs: ["Claude thinking", "ChatGPT reasoning summary", "Gemini show thinking"] },
   sources: { C: Sources, opts: [sel("layout", "Source list", ["Cards on top", "List below", "Inline only"]), tog("hover", "Hover card", false)], refs: ["Perplexity", "ChatGPT search", "Claude citations", "Microsoft Copilot"] },
@@ -156,5 +252,8 @@ export const EXPLORERS: Record<string, Entry> = {
   "activity-log": { C: ActivityLog, opts: [tog("recap", "Recap"), tog("filters", "Filters", false)], refs: ["ChatGPT agent", "Devin", "Manus", "Zapier task history"] },
   "tool-call": { C: ToolCall, opts: [sel("state", "State", ["Done", "Running", "Failed"]), tog("open", "Expanded")], refs: ["Claude tool use", "Cursor", "Vercel AI Elements", "MCP Inspector"] },
   rationale: { C: Rationale, opts: [tog("factors", "Factors"), tog("actions", "Actions")], refs: ["HAX 1.0 Inline Rationale", "GitHub Copilot", "Gmail why this"] },
+  "agent-agreement": { C: AgentAgreement, opts: [sel("result", "Result", ["Split", "Agreed"]), tog("reasons", "Reasons"), tog("dissent", "Dissent note"), tog("person", "Person approves", false)], refs: ["Google AI co-scientist", "Claude Research", "Perplexity", "Grok Heavy"] },
+  "agent-disagreement": { C: Disagreement, opts: [tog("highlight", "Mark the difference"), tog("settle", "Person settles it")], refs: ["incident.io", "PagerDuty incident review", "Google AI co-scientist", "Cursor background agents"] },
+  "decision-trail": { C: DecisionTrail, opts: [sel("depth", "Show", ["Full trail", "Direct inputs"]), tog("owners", "Owners and details")], refs: ["Git history", "Linear issue history", "dbt lineage", "Notion page history"] },
   "usage-meter": { C: UsageMeter, opts: [sel("state", "State", ["Normal", "Near limit"]), tog("weekly", "Weekly limit")], refs: ["Claude Code /context", "Cursor usage", "Codex usage", "ChatGPT limits"] },
 };

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import {
   ArrowUpRight, AudioLines, BookOpen, Brain, Check, ChevronDown, Cloud, FileText, Folder, GitBranch, Globe, HardDrive,
   Image as ImageIcon, Laptop, ListChecks, MessageCircle, Mic, Palette, Paperclip, Plus, Ratio, Search, SlidersHorizontal, Sparkle, Telescope, Wand2, X, Zap,
-} from "lucide-react";
+} from "./icons";
 import { Caret, Send, Spin, Wave, sel, tog, type Entry, type Props } from "./ui";
 
 /* ── Prompt input ───────────────────────────────────────────────
@@ -36,9 +36,10 @@ function PromptInput({ o }: { o: Props }) {
   // "Run in" lives on the environment row, so opening it shows that row
   const ws = open === "Workspace" ? "Environment" : (o.workspace as string);
   const mic = o.voice === "Dictate" || st === "Listening";
-  // the picker's right edge, from the composer's outer edge: border 1 + padding 10 +
-  // send 34 (Generate 112) + gap 2 + mic 28 + gap 2 — so the menu opens right above it
-  const pickerRight = 1 + 10 + (img ? 112 : 34) + 2 + (mic ? 30 : 0);
+  // the picker's right edge, from the composer's outer edge: border 1 + padding 10 + send
+  // (Generate 112) + gap 2 + mic + gap 2, with send and mic at the design system's sizes,
+  // so the menu opens right above it
+  const pickerRight = `calc(13px + ${img ? "112px" : "var(--hk-send)"}${mic ? " + var(--hk-ib-sm) + 2px" : ""})`;
   const menu = open === "Model" && o.model
     ? <Menu title="Model" on={1} w={270} rows={(img ? [["Image 4", "Best detail and lighting"], ["Image 4 Ultra", "Highest quality, slower"], ["Partner model", "Uses other providers"]] as [string, string][] : MODELS).map(([t, s]) => [<Sparkle key={t} size={15} strokeWidth={2} className="hk-faint" />, t, s])} />
     : open === "Effort" && o.effort && !img
@@ -49,7 +50,7 @@ function PromptInput({ o }: { o: Props }) {
     <div className="hk-col gap-[8px] w-[560px]" style={runIn ? { paddingBottom: 168 } : undefined}>
       {menu && <div className="hk-row justify-end" style={{ paddingRight: pickerRight }}>{menu}</div>}
       {st === "Working" && <div className="hk-row hk-s pl-[16px]"><Spin s={13} />Working on it · you can type the next ask</div>}
-      <div className="hk-panel !rounded-[24px] p-[10px] pl-[12px] hk-col gap-[6px] relative">
+      <div className="hk-panel hk-panel--bar p-[10px] pl-[12px] hk-col gap-[6px] relative" data-state={st}>
         {o.attachments && st !== "Empty" && (
           <div className="hk-row gap-[8px] pb-[4px]">
             {img ? (
@@ -126,7 +127,7 @@ function SourcePicker({ o }: { o: Props }) {
     <div className="w-[480px] hk-col gap-[8px]">
       {/* open menu: left edge on the "sources" button, 8 px above the composer (Perplexity, Claude) */}
       <div className="hk-pop relative z-10 w-[300px] ml-[11px]">
-        {o.search && <div className="hk-field !h-[34px] !rounded-[9px] mb-[4px] hk-field--empty"><Search size={14} strokeWidth={2} />Find a source</div>}
+        {o.search && <div className="hk-field !h-[34px] mb-[4px] hk-field--empty"><Search size={14} strokeWidth={2} />Find a source</div>}
         {rows.map(([ic, t, s, on]) => (
           <div key={t} className="hk-mi">
             <span className="w-[20px] grid place-items-center hk-mute shrink-0">{ic}</span>
@@ -137,7 +138,7 @@ function SourcePicker({ o }: { o: Props }) {
         <div className="hk-rule my-[4px] mx-[6px]" />
         <div className="hk-mi hk-link"><span className="w-[20px] grid place-items-center shrink-0"><Plus size={16} strokeWidth={2} /></span>Add connectors</div>
       </div>
-      <div className="hk-panel !rounded-[22px] h-[56px] px-[10px] hk-row">
+      <div className="hk-panel hk-panel--bar h-[56px] px-[10px] hk-row">
         <span className="hk-pick hk-pick--on"><Globe size={14} strokeWidth={2} />{n} sources<ChevronDown size={13} strokeWidth={2} /></span>
         <span className="hk-s hk-grow">Ask across your sources</span>
         <Send state="off" />
@@ -154,7 +155,7 @@ function SuggestedPrompts({ o }: { o: Props }) {
   return (
     <div className="w-[520px] hk-col gap-[18px] items-center">
       {o.greeting && <p className="text-[24px] leading-[30px] font-semibold tracking-[-.4px]">What should we work on, Maya?</p>}
-      <div className="hk-panel !rounded-[22px] w-full h-[56px] hk-row justify-between pl-[18px] pr-[10px]"><span className="hk-b hk-faint">Ask anything</span><Send state="off" /></div>
+      <div className="hk-panel hk-panel--bar w-full h-[56px] hk-row justify-between pl-[18px] pr-[10px]"><span className="hk-b hk-faint">Ask anything</span><Send state="off" /></div>
       {o.layout === "Chips" ? (
         <div className="hk-row flex-wrap justify-center gap-[8px]">
           {chips.slice(0, n).map((c) => <span key={c} className="hk-chip">{c}</span>)}
@@ -162,7 +163,7 @@ function SuggestedPrompts({ o }: { o: Props }) {
       ) : (
         <div className="grid grid-cols-2 gap-[8px] w-full">
           {asks.slice(0, n).map(([v, t]) => (
-            <div key={t} className="hk-well !rounded-[14px] !bg-[var(--k-panel)] px-[14px] py-[10px] hk-row !items-start justify-between">
+            <div key={t} className="hk-well !bg-[var(--k-panel)] px-[14px] py-[10px] hk-row !items-start justify-between">
               <span className="hk-col"><span className="hk-t">{v}</span><span className="hk-s">{t}</span></span>
               <ArrowUpRight size={15} strokeWidth={2} className="hk-faint mt-[2px]" />
             </div>
@@ -177,12 +178,12 @@ function SuggestedPrompts({ o }: { o: Props }) {
 function Suggestions({ o }: { o: Props }) {
   const chips = o.after ? ["Turn this into a slide", "Shorten to 3 bullets", "Email it to the team"] : ["Close 3 stale issues", "Review 2 open PRs", "Draft release notes"];
   return (
-    <div className="hk-panel !rounded-[22px] w-[520px] p-[14px] hk-col gap-[12px]">
+    <div className="hk-panel hk-panel--bar w-[520px] p-[14px] hk-col gap-[12px]">
       <p className="hk-s hk-row gap-[6px]"><Sparkle size={14} strokeWidth={2.25} className="hk-blue" />{o.after ? "Next steps for this answer" : <span>Suggested for <b className="text-[color:var(--text-primary)] font-semibold">atlas-web</b> right now</span>}</p>
       {o.layout === "List" ? (
         <div className="hk-col gap-[6px]">
           {chips.map((c) => (
-            <div key={c} className="hk-mi !px-[10px] border border-[var(--k-edge)] !rounded-[12px]">
+            <div key={c} className="hk-mi !px-[10px] border border-[var(--k-edge)] !rounded-[var(--hk-r-lg)]">
               <Sparkle size={14} strokeWidth={2} className="hk-faint" /><span className="hk-grow">{c}</span><ArrowUpRight size={14} strokeWidth={2} className="hk-faint" />
             </div>
           ))}
@@ -224,7 +225,7 @@ function ExampleGallery({ o }: { o: Props }) {
   const img = o.kind === "Images";
   const tiles: [string, ReactNode][] = img
     ? [["Paper boat at dawn", "linear-gradient(160deg,#dfe7ef,#9fb5cb 55%,#6b84a0)"], ["Neon street in rain", "linear-gradient(160deg,#2b1d4e,#6a2c91 50%,#f06292)"], ["Clay desk scene", "linear-gradient(160deg,#f7e3cf,#e8b48d 55%,#c27b54)"]].map(([t, g]) => [t as string, <span key={t as string} className="block size-full" style={{ background: g as string }} />])
-    : [["Weekly KPI dashboard", <div key="k" className="flex items-end gap-[6px] h-full p-[12px]">{[34, 46, 40, 58, 52, 76].map((h, i) => <i key={i} className="flex-1 rounded-t-[3px]" style={{ height: `${h}%`, background: i === 5 ? "var(--k-blue)" : "color-mix(in srgb, var(--k-blue) 24%, transparent)" }} />)}</div>],
+    : [["Weekly KPI dashboard", <div key="k" className="flex items-end gap-[6px] h-full p-[12px]">{[34, 46, 40, 58, 52, 76].map((h, i) => <i key={i} className="flex-1 rounded-t-[3px]" style={{ height: `${h}%`, background: i === 5 ? "var(--k-chart)" : "color-mix(in srgb, var(--k-chart) 24%, transparent)" }} />)}</div>],
        ["Vendor comparison", <div key="v" className="hk-col gap-[7px] p-[12px] text-[11px]">{[["Northwind", "$1.2k"], ["Contoso", "$980"], ["Fabrikam", "$1.4k"]].map(([n, v]) => <span key={n} className="hk-row justify-between border-b border-[var(--k-edge)] pb-[5px]"><span>{n}</span><span className="font-semibold">{v}</span></span>)}</div>],
        ["Launch checklist", <div key="c" className="hk-col gap-[8px] p-[12px] text-[11px]">{["Final brief", "QA sign-off", "Go live"].map((r, i) => <span key={r} className="hk-row !gap-[6px]"><span className={`hk-check !size-[13px] ${i < 2 ? "hk-check--on" : ""}`}>{i < 2 && <Check size={9} strokeWidth={3} />}</span>{r}</span>)}</div>]];
   return (
@@ -233,7 +234,7 @@ function ExampleGallery({ o }: { o: Props }) {
       {o.filters && <div className="hk-row gap-[6px]">{["All", img ? "Photo" : "Reports", img ? "Illustration" : "Planning", img ? "3D" : "Data"].map((t, i) => <span key={t} className={`hk-chip !h-[28px] ${i === 0 ? "hk-chip--sel" : ""}`}>{t}</span>)}</div>}
       <div className="grid grid-cols-3 gap-[10px]">
         {tiles.map(([t, art], i) => (
-          <div key={t} className="hk-panel !rounded-[14px] overflow-hidden hk-col">
+          <div key={t} className="hk-panel overflow-hidden hk-col">
             <div className="h-[120px] relative" style={{ background: "var(--k-soft)" }}>{art}
               {i === 0 && o.hover && <span className="absolute inset-0 grid place-items-center" style={{ background: "rgba(16,24,40,.45)" }}><span className="hk-btn hk-btn--sm">{img ? "Use prompt" : "Remix"}</span></span>}
             </div>

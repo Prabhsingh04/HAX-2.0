@@ -7,6 +7,7 @@ import { DETAILS } from "./details";
 import { Sidebar } from "./Sidebar";
 import { PreviewLarge } from "./Previews";
 import { CodeBlock } from "../CodeBlock";
+import { DSContext, withDS, type DS } from "./kit/ds";
 
 // Figma: HAX · Component · Disclosure 98:25413, now the page for each of the 45 components (?id=).
 // An id from the old 89-entry list opens the component that took it over; one that was cut
@@ -28,8 +29,9 @@ const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[64
 const eyebrow = "font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase";
 const tile = "bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] rounded-[var(--radius-xl)]";
 
-export function PatternPage() {
-  const lib = "/library";
+export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
+  const lib = withDS("/library", ds);
+  const page = (to: string) => withDS(`/pattern?id=${to}`, ds);
   const [id, setId] = useState<string | null>(null);
   const [onPage, setOnPage] = useState("preview");
   useEffect(() => {
@@ -37,10 +39,10 @@ export function PatternPage() {
     if (BY_COMP.has(q)) setId(q);
     else if (FROM_OLD.has(q)) {
       const to = FROM_OLD.get(q)!;
-      history.replaceState(null, "", `/pattern?id=${to}`);
+      history.replaceState(null, "", page(to));
       setId(to);
     } else location.replace(lib);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const cur = id ? BY_COMP.get(id) : undefined;
 
   useEffect(() => {
@@ -60,13 +62,14 @@ export function PatternPage() {
   const covered = c.covers.map((o) => OLD.get(o)).filter((p): p is NonNullable<typeof p> => !!p);
 
   return (
+    <DSContext.Provider value={ds}>
     <div className="flex w-full items-start" data-node-id="98:25487">
-      <Sidebar active={f.id} selected={c.id} />
+      <Sidebar active={f.id} selected={c.id} ds={ds} />
       <article key={c.id} className="hx-swap flex-1 min-w-0 flex flex-col gap-[56px] items-start pb-[96px] pl-[64px] pr-[48px] pt-[40px]" data-node-id="98:25539">
         <header className="flex flex-col gap-[14px] items-start w-full">
           <nav aria-label="Breadcrumb" className="flex gap-[8px] leading-[18px] text-[12px] whitespace-nowrap">
             <a href={lib} className="hx-link text-[color:var(--text-link)]">Components</a><span className="text-[color:var(--text-tertiary)]">/</span>
-            <a href={`${lib}#${f.id}`} className="hx-link text-[color:var(--text-link)]">{f.name}</a><span className="text-[color:var(--text-tertiary)]">/</span>
+            <a href={withDS(`/library#${f.id}`, ds)} className="hx-link text-[color:var(--text-link)]">{f.name}</a><span className="text-[color:var(--text-tertiary)]">/</span>
             <span>{c.name}</span>
           </nav>
           <h1 className="font-semibold leading-[58px] text-[50px] tracking-[-0.6px]">{c.name}</h1>
@@ -157,7 +160,7 @@ export function PatternPage() {
           <p className={sub}>{f.job}</p>
           <div className="flex gap-[8px] flex-wrap">
             {f.comps.filter((x) => x.id !== c.id).map((x) => (
-              <a key={x.id} href={`/pattern?id=${x.id}`} className="hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap">
+              <a key={x.id} href={page(x.id)} className="hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap">
                 {x.name}
                 <img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="hx-arrow size-[14px]" />
               </a>
@@ -166,11 +169,11 @@ export function PatternPage() {
         </section>
 
         <nav aria-label="Component pagination" className="flex gap-[16px] w-full">
-          <a href={prev ? `/pattern?id=${prev.c.id}` : lib} className={`hx-card flex-1 ${tile} flex flex-col gap-[4px] px-[22px] py-[20px] font-semibold`}>
+          <a href={prev ? page(prev.c.id) : lib} className={`hx-card flex-1 ${tile} flex flex-col gap-[4px] px-[22px] py-[20px] font-semibold`}>
             <span className={eyebrow}>Previous</span>
             <span className="leading-[24px] text-[16px]">{prev ? prev.c.name : "Back to the library"}</span>
           </a>
-          <a href={next ? `/pattern?id=${next.c.id}` : lib} className={`hx-card flex-1 ${tile} flex flex-col gap-[4px] items-end px-[22px] py-[20px] font-semibold`}>
+          <a href={next ? page(next.c.id) : lib} className={`hx-card flex-1 ${tile} flex flex-col gap-[4px] items-end px-[22px] py-[20px] font-semibold`}>
             <span className={eyebrow}>Next</span>
             <span className="leading-[24px] text-[16px]">{next ? next.c.name : "Back to the library"}</span>
           </a>
@@ -188,5 +191,6 @@ export function PatternPage() {
         </div>
       </aside>
     </div>
+    </DSContext.Provider>
   );
 }

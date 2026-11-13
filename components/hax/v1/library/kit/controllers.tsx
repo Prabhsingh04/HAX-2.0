@@ -1,4 +1,5 @@
-import { Brain, ChevronDown, ChevronLeft, ChevronRight, GitBranch, GitFork, HardDrive, History, Lock, Mail, MessageSquare, Pause, Pencil, Play, Plus, RotateCcw, Square, Ticket, Trash2 } from "lucide-react";
+import { Fragment } from "react";
+import { Bot, Brain, ChevronDown, ChevronLeft, ChevronRight, GitBranch, GitFork, HardDrive, History, Lock, Mail, MessageSquare, Pause, Pencil, Play, Plus, RotateCcw, Square, Ticket, Trash2 } from "./icons";
 import { Ag, Spin, sel, tog, type Entry, type Props } from "./ui";
 
 /* Stop and pause — ChatGPT Agent "Take over" + pause, Claude Code Esc to interrupt,
@@ -6,7 +7,7 @@ import { Ag, Spin, sel, tog, type Entry, type Props } from "./ui";
 function StopAndPause({ o }: { o: Props }) {
   const st = o.state as string;
   return (
-    <div className="hk-panel !rounded-[18px] w-[520px] p-[16px] hk-col gap-[12px]">
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
       <div className="hk-row gap-[10px]">
         <Ag dot={st === "Running" ? "var(--k-ok)" : st === "Paused" ? "var(--k-warn)" : "var(--text-tertiary)"} />
         <span className="hk-col hk-grow"><span className="hk-t">Updating 48 customer records</span><span className="hk-s">{st === "Running" ? "Step 3 of 5 · 2 min left" : st === "Paused" ? "Paused by you at step 3" : "Stopped · 21 of 48 updated"}</span></span>
@@ -92,7 +93,7 @@ function Checkpoints({ o }: { o: Props }) {
       <div className="hk-panel p-[8px] hk-col">
         <div className="hk-row justify-between px-[8px] py-[6px]"><span className="hk-t">Checkpoints</span><span className="hk-s hk-row gap-[4px]"><GitBranch size={13} />main</span></div>
         {pts.map(([t, s, hov], i) => (
-          <div key={t} className={`hk-mi !rounded-[10px] ${hov ? "hk-mi--on" : ""}`}>
+          <div key={t} className={`hk-mi ${hov ? "hk-mi--on" : ""}`}>
             <span className={`hk-step ${i === 0 ? "hk-step--now" : "hk-step--num"}`} />
             <span className="hk-col hk-grow"><span className="font-medium">{t}</span><span className="hk-s">{s}</span></span>
             {hov && <><span className="hk-btn hk-btn--sm"><RotateCcw size={13} />Restore</span>{o.fork && <span className="hk-btn hk-btn--sm"><GitFork size={13} />Branch</span>}</>}
@@ -104,9 +105,34 @@ function Checkpoints({ o }: { o: Props }) {
   );
 }
 
+/* Access per agent — which agent may use which system, so no single agent holds all the
+   access a task needs (Okta app assignments, GitHub fine-grained tokens, AWS IAM roles,
+   Copilot Studio agent permissions). */
+function AgentAccess({ o }: { o: Props }) {
+  const apps = ["Stripe", "Zendesk", "Gmail"];
+  const rows: [string, string[]][] = [["Billing agent", ["Refund", "", ""]], ["Support agent", ["Read", "Reply", ""]], ["Outreach agent", ["", "Read", "Send"]]];
+  return (
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[10px]">
+      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Who can use what</span><span className="hk-s">Refunds workflow · 3 agents</span></span>{o.edit && <span className="hk-btn hk-btn--sm">Edit access</span>}</div>
+      <div className="grid grid-cols-[1.6fr_1fr_1fr_1fr] items-stretch">
+        <span className="hk-s pb-[6px]">Agent</span>
+        {apps.map((a) => <span key={a} className="hk-s font-medium pb-[6px] px-[8px]">{a}</span>)}
+        {rows.map(([n, cells]) => (
+          <Fragment key={n}>
+            <span className="hk-row gap-[8px] py-[9px] border-t border-[var(--k-edge)]"><Ag size="sm" icon={Bot} /><span className="hk-t !text-[13.5px] hk-trunc">{n}</span></span>
+            {cells.map((c, i) => <span key={i} className="hk-row px-[8px] py-[9px] border-t border-[var(--k-edge)]">{c ? <span className="hk-tag">{c}</span> : <span className="hk-faint text-[13px]">None</span>}</span>)}
+          </Fragment>
+        ))}
+      </div>
+      {o.rule && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px] hk-s"><Lock size={14} className="shrink-0" />No agent can both refund a payment and email the customer.</div>}
+    </div>
+  );
+}
+
 export const CONTROLLERS: Record<string, Entry> = {
   "stop-and-pause": { C: StopAndPause, opts: [sel("state", "State", ["Running", "Paused", "Stopped"]), tog("takeover", "Take over"), tog("live", "Live step")], refs: ["ChatGPT agent", "Claude Code", "Codex cloud", "Manus"] },
   capabilities: { C: Capabilities, opts: [sel("style", "Access control", ["Levels", "Switches"]), tog("limits", "Hard limits")], refs: ["ChatGPT connectors", "Claude integrations", "Cursor allow-list", "MCP clients"] },
   memory: { C: Memory, opts: [sel("view", "View", ["Manage", "Saved toast"]), tog("off", "Memory off", false), tog("temporary", "Temporary chat", false)], refs: ["ChatGPT memory", "Claude memory", "Gemini saved info"] },
+  "agent-access": { C: AgentAccess, opts: [tog("rule", "Separation rule"), tog("edit", "Edit access", false)], refs: ["Okta app assignments", "GitHub fine-grained tokens", "AWS IAM roles", "Copilot Studio agents"] },
   checkpoints: { C: Checkpoints, opts: [tog("branch", "Edit and branch"), tog("fork", "Branch from here")], refs: ["Cursor checkpoints", "Claude Code rewind", "ChatGPT branches", "Lovable history"] },
 };
