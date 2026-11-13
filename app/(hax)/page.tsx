@@ -3,7 +3,7 @@ import { Hero } from "@/components/hax/v1/home/Hero";
 import { HowCompare } from "@/components/hax/v1/home/HowCompare";
 import { HowItWorks } from "@/components/hax/v1/home/HowItWorks";
 import { TwoWaysIn } from "@/components/hax/v1/home/TwoWaysIn";
-import { FourMoments } from "@/components/hax/v1/home/FourMoments";
+import { Families } from "@/components/hax/v1/home/Families";
 import { AgentsAndDevelopers } from "@/components/hax/v1/home/AgentsAndDevelopers";
 import { BuiltBy } from "@/components/hax/v1/home/BuiltBy";
 
@@ -15,7 +15,7 @@ export default function Home() {
       <HowCompare />
       <HowItWorks />
       <TwoWaysIn />
-      <FourMoments />
+      <Families />
       <AgentsAndDevelopers />
       <BuiltBy />
     </SiteShell>

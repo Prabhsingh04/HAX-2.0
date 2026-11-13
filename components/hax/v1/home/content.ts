@@ -27,11 +27,11 @@ export const WITH = {
 // what the approval card says after Send or Not now
 export const ANSWERS = { send: "Sent to Billing for review.", skip: "OK, nothing was sent." };
 
-// The HAX patterns labelled on the With HAX reply, top to bottom
+// The HAX components labelled on the With HAX reply, top to bottom (names from library/catalog.ts)
 export type ComparePart = "trace" | "message" | "disclosure" | "consent";
 export const CALLOUTS: { k: ComparePart; title: string; desc: string }[] = [
-  { k: "trace", title: "Stream of thought", desc: "Shows what Aria checked" },
+  { k: "trace", title: "Reasoning", desc: "Shows what Aria checked" },
   { k: "message", title: "Streaming", desc: "Writes the reply live" },
-  { k: "disclosure", title: "Disclosure", desc: "Says it’s an AI" },
-  { k: "consent", title: "Consent", desc: "Asks before it acts" },
+  { k: "disclosure", title: "AI label", desc: "Says it’s an AI" },
+  { k: "consent", title: "Approval card", desc: "Asks before it acts" },
 ];
