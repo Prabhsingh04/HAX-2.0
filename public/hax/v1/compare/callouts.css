@@ -24,33 +24,34 @@
 .hx-vs .vs-co__lab:focus-visible { outline: 2px solid #8b57c7; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .hx-vs .vs-co line, .hx-vs .vs-co circle, .hx-vs .vs-co__lab { transition: none !important; } }
 
-/* Dark theme (the site's switch sets :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"])); his section had light colours only.
+/* Dark theme (the site's switch sets :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3))); his section had light colours only.
    Same shapes and layout, colours mapped to the site's dark surfaces. */
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs.landing-light {
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs.landing-light {
   --bg: #0c1018; --surface: #151a24; --border: rgba(255,255,255,.10); --border-strong: rgba(255,255,255,.20);
   --fg: #f2f2f4; --fg-alt: #d6d7dc; --fg-mid: #a3a6b0; --fg-muted: #7d808a;
   background: #0c1018 !important; color: var(--fg);
 }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--without .vs__label i { background: rgb(255 255 255 / .28); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__replay { border-color: rgb(255 255 255 / .16); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__replay:hover { border-color: rgb(255 255 255 / .32); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--without .vs__card { background: rgb(255 255 255 / .04); border-color: rgb(255 255 255 / .08); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--with .vs__card { border-color: rgb(255 255 255 / .10); box-shadow: 0 1px 2px rgb(0 0 0 / .3), 0 30px 60px -30px rgb(139 87 199 / .35); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__hd, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__hd, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__disc { border-color: rgb(255 255 255 / .10); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__hd i, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__bot i { background: rgb(255 255 255 / .18); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__user { background: #f2f2f4; color: #0c0c0a; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__dots b { background: rgb(255 255 255 / .4); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--without .vs__notes svg { color: #f97066; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--with .vs__notes svg, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__disc svg { color: #b69ae6; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__av { background: #2c2442; color: #c9b6f0; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__bubble { background: #252036; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__consent { background: #221d33; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__doc { background: #151a24; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__tag { background: #352c52; color: #ddd3f5; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__btn { border-color: #9d88dc; color: #d3c6f5; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__btn--p { background: #6f5bb8; border-color: #6f5bb8; color: #fff; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__p.is-hl { box-shadow: 0 0 0 2px #151a24, 0 0 0 4px rgb(182 154 230 / .6); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co__lab { background: rgb(182 154 230 / .14); color: #cdb9f3; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co line { stroke: rgb(182 154 230 / .5); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co circle { fill: #b69ae6; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co .is-hot line { stroke: #b69ae6; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__side--without .vs__label i { background: rgb(255 255 255 / .28); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__replay { border-color: rgb(255 255 255 / .16); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__replay:hover { border-color: rgb(255 255 255 / .32); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__side--without .vs__card { background: rgb(255 255 255 / .04); border-color: rgb(255 255 255 / .08); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__side--with .vs__card { border-color: rgb(255 255 255 / .10); box-shadow: 0 1px 2px rgb(0 0 0 / .3), 0 30px 60px -30px rgb(139 87 199 / .35); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__hd, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__hd, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__disc { border-color: rgb(255 255 255 / .10); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__hd i, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__bot i { background: rgb(255 255 255 / .18); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__user { background: #f2f2f4; color: #0c0c0a; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__dots b { background: rgb(255 255 255 / .4); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__side--without .vs__notes svg { color: #f97066; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs__side--with .vs__notes svg, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__disc svg { color: #b69ae6; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__av { background: #2c2442; color: #c9b6f0; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__bubble { background: #252036; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__consent { background: #221d33; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__doc { background: #151a24; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__tag { background: #352c52; color: #ddd3f5; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__btn { border-color: #9d88dc; color: #d3c6f5; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__btn--p { background: #6f5bb8; border-color: #6f5bb8; color: #fff; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .hx__p.is-hl { box-shadow: 0 0 0 2px #151a24, 0 0 0 4px rgb(182 154 230 / .6); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs-co__lab { background: rgb(182 154 230 / .14); color: #cdb9f3; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs-co line { stroke: rgb(182 154 230 / .5); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs-co circle { fill: #b69ae6; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"], html:has(.hax-v3)) .hx-vs .vs-co .is-hot line { stroke: #b69ae6; }
+

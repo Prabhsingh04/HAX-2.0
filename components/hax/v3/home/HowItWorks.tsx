@@ -1,10 +1,13 @@
 import { Eyebrow, H2 } from "../ui";
+import { HowItWorksStage } from "./HowItWorksStage";
+import type { SceneKind } from "../../v1/home/HowItWorksScene";
 
 // Figma: How it works 105:5951. The page's band: deep blue to purple, with soft glows round it.
-const STEPS = [
-  { n: 1, title: "Describe the screen you need", body: "Tell Claude what you want to build. Start with your intent.", ex: "describe" },
-  { n: 2, title: "HAX finds the right building blocks", body: "Your agent gets HAX patterns that fit the task.", ex: "compose" },
-  { n: 3, title: "Watch your UI take shape", body: "Your agent assembles the interface in your theme.", ex: "assemble" },
+// Each step plays v1's animated scene (HowItWorksStage, as on v2) instead of a still image.
+const STEPS: { n: number; title: string; body: string; scene: SceneKind }[] = [
+  { n: 1, title: "Describe the screen you need", body: "Tell Claude what you want to build. Start with your intent.", scene: "chat" },
+  { n: 2, title: "HAX finds the right building blocks", body: "Your agent gets HAX patterns that fit the task.", scene: "map" },
+  { n: 3, title: "Watch your UI take shape", body: "Your agent assembles the interface in your theme.", scene: "ui" },
 ];
 
 export function HowItWorks() {
@@ -29,7 +32,9 @@ export function HowItWorks() {
               </div>
               <h3 className="font-semibold leading-[28px] text-[20px] text-[color:var(--text)]">{s.title}</h3>
               <p className="leading-[20px] text-[14px] text-[rgba(255,255,255,.72)]">{s.body}</p>
-              <img alt={`Interaction example: ${s.ex}`} src={`/hax/v3/how-step-${s.n}.png`} className="mt-[8px] block aspect-[384/304] w-full rounded-[16px] border border-[rgba(255,255,255,.35)] object-cover" />
+              <div className="mt-[8px] overflow-hidden rounded-[16px] border border-[rgba(255,255,255,.35)]">
+                <HowItWorksStage kind={s.scene} />
+              </div>
             </li>
           ))}
         </ol>

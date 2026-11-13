@@ -64,3 +64,13 @@ html :where(.hax-v3) :is(h1, h2, h3, h4) { letter-spacing: 0; }
   font-family: var(--font-ui);
   color: var(--text-primary);
 }
+
+/* "With and without HAX" (v1's shared section, components/hax/v1/home/HowCompare): his
+   colour scale mapped onto the v3 palette, on the page colour (see-through). The shape
+   colours for dark come from public/hax/v1/compare/callouts.css. */
+html body .hax-v3 .hx3-compare .hx-vs.landing-light {
+  --bg: #0f1117; --surface: #161a21;
+  --border: rgba(255, 255, 255, .08); --border-strong: rgba(255, 255, 255, .15);
+  --fg: #e0e4ec; --fg-alt: #c9ced8; --fg-mid: #9ca3b0; --fg-muted: #8a919c;
+  background: transparent !important; color: var(--fg);
+}

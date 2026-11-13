@@ -8,6 +8,9 @@
   /* where each callout leaves its part: left into the gap between the cards, or down below the card */
   var DIR = { trace: 'left', message: 'left', disclosure: 'left', consent: 'down' };
   var ORDER = ['trace', 'message', 'disclosure', 'consent'];
+  /* v3: Consent joins the others in the left column, pointing at the approval card's icon */
+  var V3 = !!root.closest('.hax-v3');
+  if (V3) DIR.consent = 'left';
   var co = document.createElement('div'); co.className = 'vs-co';
   var svg = document.createElementNS(NS, 'svg'); co.appendChild(svg); side.appendChild(co);
   var items = {};
@@ -28,6 +31,7 @@
     if (k === 'trace') return b.querySelector('.hx__ck');
     if (k === 'message') return b.querySelector('.hx__av');
     if (k === 'disclosure') return b.querySelector('svg');
+    if (k === 'consent' && DIR.consent === 'left') return b.querySelector('.hx__doc') || b;
     return b;
   }
   function layout() {
