@@ -51,7 +51,7 @@ export function McpBand() {
             const sel = tab === k;
             return (
               <button key={k} type="button" role="tab" id={`hx2-use-${k}`} aria-controls="hx2-use-panel" aria-selected={sel} tabIndex={sel ? 0 : -1} onClick={() => setTab(k)}
-                className={`hx2-tab flex h-[28px] items-center rounded-full px-[12px] text-[13px] leading-[18px] ${sel ? "bg-[#00bceb] font-semibold text-white" : "font-medium text-white/[.64] hover:bg-white/[.08] hover:text-white"}`}>
+                className={`hx2-tab flex h-[28px] items-center rounded-full px-[12px] text-[13px] leading-[18px] ${sel ? "bg-[#00bceb] font-semibold text-[#0a0a0b]" : "font-medium text-white/[.64] hover:bg-white/[.08] hover:text-white"}`}>
                 {TABS[k].label}
               </button>
             );

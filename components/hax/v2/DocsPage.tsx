@@ -27,7 +27,7 @@ export function DocsPage() {
           <nav aria-label="Breadcrumb" className="hx2-rise flex w-fit items-center gap-[8px] rounded-full border border-[color:var(--line)] bg-[color:var(--card)] px-[12px] py-[4px] font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase leading-[16px] tracking-[0.04em]">
             <span className="size-[8px] rounded-full bg-[color:var(--orange)]" />
             <a href="/v2/hax-docs" className="hx2-link text-[color:var(--grey)]">Docs</a>
-            <span className="text-[color:var(--line)]">/</span>
+            <span aria-hidden className="text-[color:var(--grey)]">/</span>
             <span className="text-[color:var(--ink)]">React</span>
           </nav>
           <h1 className="hx2-h1 hx2-rise hx2-rise--2 text-[72px] font-semibold leading-[72px] tracking-[-0.03em]">The agentic UI library<br />for React.</h1>

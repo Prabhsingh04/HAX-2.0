@@ -45,7 +45,7 @@ export function Library() {
             const s = STAGES.find((x) => x.id === k), sel = tab === k;
             return (
               <button key={k} type="button" role="tab" aria-selected={sel} aria-controls="hx2-stages" tabIndex={sel ? 0 : -1} onClick={() => choose(k)}
-                className={`hx2-tab rounded-[8px] px-[16px] py-[8px] text-[14px] font-semibold leading-[20px] ${sel ? "bg-[color:var(--btn)] text-white" : "text-[color:var(--grey)] hover:bg-[color:var(--fill)] hover:text-[color:var(--ink)]"}`}>
+                className={`hx2-tab rounded-[8px] px-[16px] py-[8px] text-[14px] font-semibold leading-[20px] ${sel ? "bg-[color:var(--btn)] text-[color:var(--btn-ink)]" : "text-[color:var(--grey)] hover:bg-[color:var(--fill)] hover:text-[color:var(--ink)]"}`}>
                 {s ? `${s.num} ${s.label}` : "All patterns"}
               </button>
             );

@@ -1,8 +1,12 @@
-// Figma: HAX v2 · Home · How it works 103:3325. The step pictures are v1's (same inner UI in every version).
-const STEPS = [
-  { n: 1, title: "Describe the screen you need", body: "Tell Claude what you want to build. Start with your intent.", ex: "describe" },
-  { n: 2, title: "HAX finds the right building blocks", body: "Your agent gets HAX patterns that fit the task.", ex: "compose" },
-  { n: 3, title: "Watch your UI take shape", body: "Your agent assembles the interface in your theme.", ex: "assemble" },
+// Figma: HAX v2 · Home · How it works 103:3325. Each step plays v1's animated scene
+// (HowItWorksStage → v1 HowItWorksScene, ported from HAX-2.0), same inner UI in every version.
+import { HowItWorksStage } from "./HowItWorksStage";
+import type { SceneKind } from "../../v1/home/HowItWorksScene";
+
+const STEPS: { n: number; title: string; body: string; scene: SceneKind }[] = [
+  { n: 1, title: "Describe the screen you need", body: "Tell Claude what you want to build. Start with your intent.", scene: "chat" },
+  { n: 2, title: "HAX finds the right building blocks", body: "Your agent gets HAX patterns that fit the task.", scene: "map" },
+  { n: 3, title: "Watch your UI take shape", body: "Your agent assembles the interface in your theme.", scene: "ui" },
 ];
 const eyebrow = "font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase leading-[16px] tracking-[0.06em] text-[color:var(--grey)]";
 
@@ -32,7 +36,7 @@ export function HowItWorks() {
               {i < STEPS.length - 1 && <span aria-hidden className="h-px flex-1 bg-[color:var(--line)]" />}
             </div>
             <div className="flex flex-1 flex-col rounded-[24px] border border-[color:var(--line)] bg-[color:var(--card)] p-[8px]">
-              <img alt={`Interaction example: ${s.ex}`} src={`/hax/v1/how-step-${s.n}.jpg`} className="block h-[292px] w-full rounded-[16px] object-cover" />
+              <HowItWorksStage kind={s.scene} />
               <div className="flex flex-col gap-[8px] px-[16px] pb-[16px] pt-[24px]">
                 <h3 className="text-[18px] font-semibold leading-[28px]">{s.title}</h3>
                 <p className="text-[14px] leading-[20px] text-[color:var(--grey)]">{s.body}</p>

@@ -26,7 +26,7 @@ export function BlogPage() {
           <div className="hx2-rise hx2-rise--3 flex flex-wrap justify-center gap-[8px]">
             {TOPICS.map((t) => { const sel = on.includes(t); return (
               <button key={t} type="button" aria-pressed={sel} onClick={() => toggle(t)}
-                className={`rounded-full border px-[14px] py-[6px] text-[14px] font-medium leading-[20px] transition-colors duration-300 ${sel ? "border-[#111] bg-[color:var(--btn)] text-white" : "border-[color:var(--line)] bg-[color:var(--card)] text-[color:var(--ink)] hover:border-[color:var(--line-strong)]"}`}>{t}</button>
+                className={`rounded-full border px-[14px] py-[6px] text-[14px] font-medium leading-[20px] transition-colors duration-300 ${sel ? "border-[color:var(--btn)] bg-[color:var(--btn)] text-[color:var(--btn-ink)]" : "border-[color:var(--line)] bg-[color:var(--card)] text-[color:var(--ink)] hover:border-[color:var(--line-strong)]"}`}>{t}</button>
             ); })}
           </div>
         </div>

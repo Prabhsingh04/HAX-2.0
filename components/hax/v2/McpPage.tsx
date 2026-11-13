@@ -58,13 +58,13 @@ export function McpPage() {
               onKeyDown={(e) => { if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; const d = e.key === "ArrowRight" ? 1 : -1, i = PLATFORMS.findIndex((p) => p.id === tab), n = PLATFORMS[(i + d + PLATFORMS.length) % PLATFORMS.length]; pick(n.id); (document.getElementById(`tab2-${n.id}`) as HTMLElement | null)?.focus(); }}>
               {PLATFORMS.map((p) => { const sel = p.id === tab; return (
                 <button key={p.id} id={`tab2-${p.id}`} role="tab" type="button" aria-selected={sel} tabIndex={sel ? 0 : -1} onClick={() => pick(p.id)}
-                  className={`rounded-full px-[16px] py-[8px] text-[14px] font-medium leading-[20px] transition-colors duration-300 ${sel ? "bg-[color:var(--btn)] text-white" : "text-[color:var(--grey)] hover:bg-[color:var(--card)] hover:text-[color:var(--ink)]"}`}>{p.name}</button>
+                  className={`rounded-full px-[16px] py-[8px] text-[14px] font-medium leading-[20px] transition-colors duration-300 ${sel ? "bg-[color:var(--btn)] text-[color:var(--btn-ink)]" : "text-[color:var(--grey)] hover:bg-[color:var(--card)] hover:text-[color:var(--ink)]"}`}>{p.name}</button>
               ); })}
             </div>
             <ol key={tab} role="tabpanel" aria-labelledby={`tab2-${tab}`} className="hx2-rise flex flex-col gap-[32px]">
               {pl.steps.map((st, i) => (
                 <li key={st.title} className="flex gap-[20px]">
-                  <span className="flex size-[32px] shrink-0 items-center justify-center rounded-full bg-[color:var(--btn)] font-[family-name:var(--font-mono)] text-[14px] font-medium text-white">{i + 1}</span>
+                  <span className="flex size-[32px] shrink-0 items-center justify-center rounded-full bg-[color:var(--btn)] font-[family-name:var(--font-mono)] text-[14px] font-medium text-[color:var(--btn-ink)]">{i + 1}</span>
                   <div className="flex w-[760px] flex-col gap-[4px]">
                     <h3 className="text-[18px] font-semibold leading-[28px]">{st.title}</h3>
                     <p className="max-w-[720px] text-[16px] leading-[24px] text-[color:var(--grey)] [text-wrap:balance]">{st.text}</p>
@@ -77,7 +77,7 @@ export function McpPage() {
           </div>
         </div>
       </section>
-      <div role="status" aria-live="polite" className={`fixed bottom-[96px] left-1/2 z-50 -translate-x-1/2 rounded-full bg-[color:var(--btn)] px-[16px] py-[10px] text-[14px] text-white shadow-[0_8px_24px_rgba(17,17,17,0.2)] transition-all duration-300 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"}`}>{toast}</div>
+      <div role="status" aria-live="polite" className={`fixed bottom-[96px] left-1/2 z-50 -translate-x-1/2 rounded-full bg-[color:var(--btn)] px-[16px] py-[10px] text-[14px] text-[color:var(--btn-ink)] shadow-[0_8px_24px_rgba(17,17,17,0.2)] transition-all duration-300 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"}`}>{toast}</div>
     </>
   );
 }
