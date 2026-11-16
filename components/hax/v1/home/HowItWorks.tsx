@@ -16,33 +16,33 @@ const STEPS: { n: number; title: [string, string]; body: string; ex: string; sce
 
 export function HowItWorks() {
   return (
-    <section id="how-works" data-hx-blob-o="0.42" className="flex flex-col gap-[48px] items-center px-[144px] py-[96px] relative w-full overflow-x-clip" data-node-id="98:19623">
-      <div className="hx-reveal flex flex-col gap-[16px] items-center relative text-center whitespace-nowrap">
-        <h2 className="font-extralight text-[50px] leading-[60px]">
+    <section id="how-works" data-hx-blob-o="0.42" className="flex flex-col gap-[40px] items-center px-[var(--hx-gutter)] py-[72px] relative w-full overflow-x-clip md:py-[96px] xl:gap-[48px]" data-node-id="98:19623">
+      <div className="hx-reveal flex flex-col gap-[16px] items-center relative text-center">
+        <h2 className="font-extralight leading-[42px] text-[34px] [text-wrap:balance] md:leading-[52px] md:text-[42px] xl:leading-[60px] xl:text-[50px] xl:whitespace-nowrap">
           From one sentence to screens you can ship
         </h2>
-        <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)]">Describe what you need. HAX helps your agent build it.</p>
+        <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] [text-wrap:balance]">Describe what you need. HAX helps your agent build it.</p>
       </div>
       <ol className="flex flex-col items-start relative w-full">
         {STEPS.map((s, i) => (
-          <li key={s.n} className={`hx-stack flex gap-[64px] items-center py-[40px] w-full sticky top-[94px] bg-[var(--surface-page)] ${i ? "border-t border-[var(--stroke-subtle)]" : ""}`} style={{ zIndex: i + 1 }}>
+          <li key={s.n} className={`hx-stack relative flex w-full flex-col items-start gap-[24px] py-[32px] bg-[var(--surface-page)] lg:sticky lg:top-[94px] lg:flex-row lg:items-center lg:gap-[48px] lg:py-[40px] xl:gap-[64px] ${i ? "border-t border-[var(--stroke-subtle)]" : ""}`} style={{ zIndex: i + 1 }}>
             {/* clip-path (not overflow) clips the fixed blob layer to this backdrop */}
-            <div aria-hidden className="absolute inset-y-0 left-[-144px] right-[-144px] z-0 pointer-events-none bg-[var(--surface-page)] [clip-path:inset(0)]">
+            <div aria-hidden className="absolute inset-y-0 -inset-x-[var(--hx-gutter)] z-0 pointer-events-none bg-[var(--surface-page)] [clip-path:inset(0)]">
               <BlobLayer />
             </div>
-            <div className="relative z-[1] flex flex-col gap-[12px] items-start shrink-0 w-[400px]">
+            <div className="relative z-[1] flex w-full flex-col gap-[12px] items-start lg:w-[340px] lg:shrink-0 xl:w-[400px]">
               <p className="font-semibold leading-[16px] text-[11px] text-[color:var(--text-link)] tracking-[1.2px] uppercase">0{s.n} / 03</p>
-              <h3 className="font-semibold leading-[40px] text-[32px] tracking-[-0.3px] w-[400px]">
+              <h3 className="font-semibold leading-[34px] text-[26px] tracking-[-0.3px] md:leading-[40px] md:text-[32px]">
                 {s.title[0]}
                 <br />
                 {s.title[1]}
               </h3>
-              <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[360px]">{s.body}</p>
+              <p className="max-w-[360px] leading-[22px] text-[14px] text-[color:var(--text-secondary)]">{s.body}</p>
             </div>
-            <div className="relative z-[1] flex flex-1 flex-col gap-[10px] items-start min-w-px">
+            <div className="relative z-[1] flex w-full min-w-0 flex-col gap-[10px] items-start lg:flex-1">
               <p className="font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase">Interaction example: {s.ex}</p>
-              <div className="bg-[var(--surface-frame)] border border-[var(--stroke-subtle)] p-[14px] rounded-[var(--radius-2xl)] w-[648px]">
-                <HowItWorksScene kind={s.scene} />
+              <div className="w-full max-w-[648px] bg-[var(--surface-frame)] border border-[var(--stroke-subtle)] p-[10px] rounded-[var(--radius-2xl)] md:p-[14px]">
+                <HowItWorksScene kind={s.scene} fit />
               </div>
             </div>
           </li>

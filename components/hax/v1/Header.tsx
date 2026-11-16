@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { flushSync } from "react-dom";
+import { Menu, X } from "lucide-react";
 
 // Figma: Header 94:18574 (instance 98:19358 on 🌐 Website v1)
 type Menu = { label: string; items: { label: string; href: string; ext?: boolean; sub?: boolean }[] };
@@ -15,13 +16,6 @@ const MENUS: Record<string, Menu> = {
       { label: "Cognitive Frameworks", href: "https://outshift.design/research/cognitive-frameworks" },
       { label: "Societal Impact", href: "https://outshift.design/research/societal-impact" },
       { label: "Security & Privacy", href: "https://outshift.design/research/security-privacy" },
-    ],
-  },
-  Components: {
-    label: "Components",
-    items: [
-      { label: "ShadCN · Agentic Components", href: "/library" },
-      { label: "Material 3.0 · Agentic Components", href: "/library?ds=material" },
     ],
   },
 };
@@ -92,7 +86,8 @@ function ThemeSwitch() {
   const [dark, setDark] = useState(false);
   useEffect(() => setDark(document.documentElement.dataset.haxTheme === "dark"), []);
   const flip = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const next = !dark;
+    // read the page, not this switch: the header has a second switch for small screens
+    const next = document.documentElement.dataset.haxTheme !== "dark";
     try { localStorage.setItem("hax-theme", next ? "dark" : "light"); } catch {}
     const apply = () => { document.documentElement.dataset.haxTheme = next ? "dark" : "light"; setDark(next); };
     // the new theme spreads out from the switch as a growing circle (view transitions); instant where
@@ -120,13 +115,54 @@ function ThemeSwitch() {
   );
 }
 
+// Below 1024px the links move into a menu under the header. The button opens it; Escape, a click
+// outside it or following a link closes it (Escape returns focus to the button).
+const LINKS: [string, string][] = [["Components", "/library"], ["Docs", "/hax-docs"], ["MCP", "/mcp"], ["Blog", "/blog"]];
+function MobileNav({ section }: { section?: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); btn.current?.focus(); } };
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", close); document.removeEventListener("keydown", esc); };
+  }, [open]);
+  const item = "hx-menuitem flex items-center gap-[6px] rounded-[8px] px-[12px] py-[10px] text-[16px] leading-[24px] text-[color:var(--text-primary)] hover:bg-[var(--surface-tint)]";
+  return (
+    <div ref={ref} className="flex items-center gap-[4px] lg:hidden">
+      <ThemeSwitch />
+      <button ref={btn} type="button" aria-expanded={open} aria-controls="hx-mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}
+        className="hx-iconbtn flex size-[40px] shrink-0 items-center justify-center rounded-[var(--radius-pill)] text-[color:var(--text-primary)]">
+        {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+      </button>
+      <nav id="hx-mobile-nav" aria-label="Primary"
+        className={`absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-64px)] overflow-y-auto border-b border-[var(--stroke-subtle)] bg-[var(--surface-page)] px-[var(--hx-gutter)] pb-[20px] pt-[8px] shadow-[0px_8px_24px_0px_rgba(41,50,71,0.08)] transition-all duration-200 ${open ? "visible translate-y-0 opacity-100" : "invisible pointer-events-none -translate-y-1 opacity-0"}`}>
+        <ul className="flex flex-col">
+          {LINKS.map(([l, h]) => (
+            <li key={l}><a href={h} aria-current={section === l ? "page" : undefined} onClick={() => setOpen(false)} className={`${item}${section === l ? " font-semibold" : ""}`}>{l}</a></li>
+          ))}
+        </ul>
+        <p className="mt-[12px] px-[12px] pb-[4px] font-semibold leading-[16px] text-[11px] tracking-[1.2px] uppercase text-[color:var(--text-secondary)]">Research</p>
+        <ul className="flex flex-col">
+          {MENUS.Research.items.map((it) => (
+            <li key={it.label}><a href={it.href} onClick={() => setOpen(false)} className={item}>{it.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  );
+}
+
 export function Header() {
   const path = usePathname() ?? "/";
   const section = SECTIONS.find(([, re]) => re.test(path))?.[0];
   return (
     <header className="sticky top-0 z-40 bg-[var(--surface-page)] border-[var(--stroke-subtle)] border-b border-solid" data-node-id="94:18574">
-      <div className="flex h-[94px] items-center justify-between px-[144px] max-w-[1440px] mx-auto">
-        <a href="/" className="flex gap-[14px] items-center shrink-0" aria-label="HAX by Outshift Design">
+      <div className="relative flex h-[64px] items-center justify-between px-[var(--hx-gutter)] max-w-[1440px] mx-auto lg:h-[94px]">
+        <a href="/" className="flex gap-[14px] items-center shrink-0 [zoom:0.72] sm:[zoom:0.86] lg:[zoom:0.92] xl:[zoom:1]" aria-label="HAX by Outshift Design">
           <img alt="" src="/hax/v1/logo-hax-weave.svg" className="h-[32px] w-[86.9px] shrink-0" />
           <span className="bg-[var(--stroke-default)] h-[28px] w-px shrink-0" />
           <span className="relative h-[49.909px] w-[122px] overflow-clip shrink-0">
@@ -140,15 +176,15 @@ export function Header() {
           </span>
           <span className="font-light leading-[32px] text-[26px] text-[color:var(--text-primary)] tracking-[-0.2px] whitespace-nowrap">design</span>
         </a>
-        <nav className="flex gap-[20px] items-center shrink-0" aria-label="Primary">
+        <nav className="hidden lg:flex gap-[8px] items-center shrink-0 xl:gap-[20px]" aria-label="Primary">
           <NavItem label="Research" dropdown />
-          <NavItem label="Components" dropdown current={section === "Components"} />
-          <NavItem label="Patterns" href="/patterns" current={section === "Patterns"} />
+          <NavItem label="Components" href="/library" current={section === "Components"} />
           <NavItem label="Docs" href="/hax-docs" current={section === "Docs"} />
           <NavItem label="MCP" href="/mcp" current={section === "MCP"} />
           <NavItem label="Blog" href="/blog" current={section === "Blog"} />
           <ThemeSwitch />
         </nav>
+        <MobileNav section={section} />
       </div>
     </header>
   );
@@ -160,9 +196,9 @@ export function Header() {
 export function AnnouncementBar() {
   return (
     <div className="hx-announce">
-    <div className="flex h-[40px] items-center justify-center gap-[10px]" style={{ backgroundImage: "var(--gradient-announce)" }} data-node-id="94:18699">
+    <div className="flex h-[40px] items-center justify-center gap-[10px] px-[20px]" style={{ backgroundImage: "var(--gradient-announce)" }} data-node-id="94:18699">
       <p className="font-normal leading-[20px] text-[13px] text-[color:var(--text-primary)] whitespace-nowrap">
-        HAX for iPhone Duo. The same agentic patterns. Now adapted for mobile.
+        HAX for iPhone Duo.<span className="hidden md:inline"> The same agentic patterns. Now adapted for mobile.</span>
       </p>
       <a href="/material-pattern?id=disclosure&device=mobile" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
         <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore mobile patterns</span>

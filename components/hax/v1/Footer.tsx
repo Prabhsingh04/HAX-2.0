@@ -1,7 +1,6 @@
 // Figma: Footer 98:19910
 const HAX = [
   ["Components", "/library"],
-  ["Patterns", "/patterns"],
   ["Docs", "/hax-docs"],
   ["MCP", "/mcp"],
   ["Contact", "/contact"],
@@ -35,15 +34,15 @@ function Ext({ label, href }: { label: string; href: string }) {
 export function Footer() {
   return (
     <footer className="border-t border-[var(--stroke-subtle)] w-full" data-node-id="98:19910">
-      <div className="mx-auto max-w-[1440px] flex flex-col gap-[40px] items-start pb-[40px] pt-[48px] px-[144px]">
-        <div className="flex items-start justify-between w-full">
+      <div className="mx-auto max-w-[1440px] flex flex-col gap-[40px] items-start pb-[40px] pt-[48px] px-[var(--hx-gutter)]">
+        <div className="flex w-full flex-col items-start gap-[32px] md:flex-row md:justify-between">
           <a href="https://outshift.cisco.com" aria-label="Outshift by Cisco" className="relative block h-[49.909px] w-[122px] overflow-clip shrink-0">
             <span className="absolute inset-[0_0.58%_0_0] block" style={{ maskImage: 'url("/hax/v1/outshift-mask.svg")', maskSize: "121.289px 49.909px", maskRepeat: "no-repeat" }}>
               <img alt="" src="/hax/v1/outshift-logo-footer.svg" className="hx-light-only absolute inset-0 block size-full max-w-none" />
               <img alt="" src="/hax/v1/outshift-logo-footer-dark.svg" className="hx-dark-only absolute inset-0 block size-full max-w-none" />
             </span>
           </a>
-          <nav aria-label="Footer" className="flex gap-[96px] items-start">
+          <nav aria-label="Footer" className="flex flex-wrap items-start gap-x-[56px] gap-y-[28px] lg:gap-x-[96px]">
             <div className="flex flex-col gap-[10px] items-start">
               <p className={eyebrow}>HAX</p>
               {HAX.map(([l, h]) => (
@@ -60,11 +59,11 @@ export function Footer() {
             </div>
           </nav>
         </div>
-        <div className="flex items-center justify-between leading-[18px] text-[12px] w-full whitespace-nowrap">
-          <div className="flex gap-[16px] items-start">
-            {LEGAL.map(([l, h]) => <a key={l} href={h} target="_blank" rel="noreferrer" className="hx-link">{l}</a>)}
+        <div className="flex w-full flex-col items-start gap-[12px] leading-[18px] text-[12px] lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap gap-x-[16px] gap-y-[6px] items-start">
+            {LEGAL.map(([l, h]) => <a key={l} href={h} target="_blank" rel="noreferrer" className="hx-link whitespace-nowrap">{l}</a>)}
           </div>
-          <p className="text-[color:var(--text-secondary)]">© 2026 Outshift. All rights reserved.</p>
+          <p className="whitespace-nowrap text-[color:var(--text-secondary)]">© 2026 Outshift. All rights reserved.</p>
         </div>
       </div>
     </footer>

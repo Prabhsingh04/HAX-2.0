@@ -2,13 +2,14 @@ import { COMPS, FAMILIES } from "../library/catalog";
 import { FourWaysInField, type Way } from "./FourWaysInField";
 
 // "One library. Four ways in": HAX Studio v2's four audiences in place of the old two (founders
-// and developers), shown the way "Two ways in" was. Each column's dots gather into its shape:
-// designers a frame, PMs the AI spark, engineers the { } of code, agents a bot. Each line is that
+// and developers). Each column's words sit in the dot field, and hovering gathers the dots into a
+// picture drawn round them: designers the pen tool, PMs AI sparks, engineers the { } of code, agents
+// a bot whose face is the words. Each line is that
 // audience's Studio title, word for word. Where each one goes (the user's call): designers to the
 // components, PMs and engineers to the docs, agents to MCP.
 const WAYS: Way[] = [
   {
-    id: "designers", shape: "frame", title: "For designers",
+    id: "designers", shape: "pen", title: "For designers",
     line: "Design the interaction, not just the screen",
     cta: { label: "Browse components", href: "/library" },
     caption: `${COMPS.length} components · ${FAMILIES.length} families`,

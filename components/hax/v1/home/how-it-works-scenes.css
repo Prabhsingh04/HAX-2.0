@@ -2,6 +2,8 @@
    HowItWorksScene adds .is-in / .is-sent / .is-fab / .is-open as each scene plays,
    and .is-done on [data-hw] for the finished state (reduced motion). */
 .hw-scene { position: relative; height: 454px; font-family: var(--font-sans, InterVariable, Inter, system-ui, sans-serif); text-align: left; }
+.hw-fit { width: 100%; }
+.hw-fit > .hw-scene { width: 620px; zoom: var(--hw-k, 1); }
 .hw-replay { position: absolute; right: 10px; bottom: 10px; z-index: 5; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid rgb(12 12 10 / .12); border-radius: 50%; background: #fff; color: #333; cursor: pointer; box-shadow: 0 2px 6px rgb(0 0 0 / .06); }
 .hw-replay:hover { color: #000; border-color: rgb(12 12 10 / .25); }
 .hw-replay:focus-visible { outline: 2px solid #000; outline-offset: 2px; }

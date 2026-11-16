@@ -19,19 +19,19 @@ const eyebrow = "font-semibold leading-[16px] text-[11px] text-[color:var(--text
 
 export function FourSetups() {
   return (
-    <section id="setups" className="flex w-full flex-col items-center px-[144px] py-[96px]">
+    <section id="setups" className="flex w-full flex-col items-center px-[var(--hx-gutter)] py-[72px] md:py-[96px]">
       <div className="hx-reveal flex flex-col items-center gap-[16px] text-center">
-        <h2 className="whitespace-nowrap font-extralight leading-[60px] text-[50px]">The same patterns work across four setups</h2>
+        <h2 className="font-extralight leading-[42px] text-[34px] [text-wrap:balance] md:leading-[52px] md:text-[42px] xl:leading-[60px] xl:text-[50px] xl:whitespace-nowrap">The same patterns work across four setups</h2>
         <p className="max-w-[640px] leading-[26px] text-[16px] text-[color:var(--text-secondary)] [text-wrap:balance]">
           Choose the simplest setup that fits the exchange. As more agents and people join, make responsibilities and decision rights clear.
         </p>
       </div>
-      <div className="hx-reveal mt-[48px] grid w-full max-w-[1152px] grid-cols-4 divide-x divide-[var(--stroke-subtle)] rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)]">
+      <div className="hx-reveal mt-[40px] grid w-full max-w-[1152px] grid-cols-1 rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] md:grid-cols-2 xl:mt-[48px] xl:grid-cols-4">
         {LEVEL_ORDER.map((l, i) => {
           const n = compsIn(l).length;
           return (
             // four bands shared across the columns (subgrid), so titles, counts, lists and links line up
-            <div key={l} className="su-live row-span-4 grid grid-rows-subgrid p-[20px]">
+            <div key={l} className="su-live row-span-4 grid grid-rows-subgrid border-[var(--stroke-subtle)] p-[20px] max-md:[&:not(:first-child)]:border-t md:max-xl:[&:nth-child(even)]:border-l md:max-xl:[&:nth-child(n+3)]:border-t xl:[&:not(:first-child)]:border-l">
               <SetupArt level={l} />
               <div className="flex flex-col gap-[6px] pt-[20px]">
                 <p className={eyebrow}>{String(i + 1).padStart(2, "0")}</p>
@@ -63,7 +63,7 @@ export function FourSetups() {
           );
         })}
       </div>
-      <div className="mt-[20px] flex w-full max-w-[1152px] items-center justify-between">
+      <div className="mt-[20px] flex w-full max-w-[1152px] flex-col items-start gap-[16px] md:flex-row md:items-center md:justify-between">
         <SetupKey />
         <a href="/library" className="hx-btn hx-btn--outline hx-btn--sm flex h-[32px] items-center gap-[6px] whitespace-nowrap rounded-[var(--radius-pill)] border border-[var(--stroke-default)] bg-[var(--surface-page)] px-[12px] font-semibold leading-[18px] text-[13px] tracking-[0.07px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
           Browse all {COMPS.length} components

@@ -12,7 +12,7 @@ import type { Level } from "@/lib/v2/types";
 // 89 patterns gave way to 45 components in 8 families; every card draws its component live.
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// ds: the design system from the Components menu (?ds=material is Material 3).
+// ds: the design system from the sidebar switch (?ds=material is Material 3).
 // setup: one of the four setups on Home (?setup=L2), to list only the components for it.
 export function Library({ ds = "shadcn", setup }: { ds?: DS; setup?: Level }) {
   const [active, setActive] = useState(FAMILIES[0].id);

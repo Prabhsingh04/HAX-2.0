@@ -78,7 +78,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
 
         <section id="preview" className="scroll-mt-[110px] flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Preview</h2>
-          <p className={sub}>The component at real size. Switch its options to see every version it ships in.</p>
+          <p className={sub}>The component at real size, and live: hover it, click it. Customize switches its states and options; Code shows the code for this version.</p>
           <PreviewLarge id={c.id} />
         </section>
 
@@ -179,7 +179,10 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
           </a>
         </nav>
       </article>
-      <aside className="sticky top-[94px] shrink-0 w-[240px] flex flex-col gap-[4px] items-start pr-[32px] pt-[48px]" data-node-id="98:25540">
+      <aside className="hk-side sticky top-[94px] shrink-0 w-[240px] flex flex-col gap-[4px] items-start pr-[32px] pt-[48px]" data-node-id="98:25540">
+        {/* the Customize panel opens here, in place of the page index */}
+        <div id="hk-custom-slot" className="contents" />
+        <div className="hk-side-toc flex flex-col gap-[4px] items-start">
         <p className={eyebrow}>On this page</p>
         {SECTIONS.map(([k, t]) => (
           <a key={k} href={`#${k}`} className={`hx-side flex h-[30px] items-center pl-[18px] pr-[10px] rounded-[6px] w-[200px] leading-[20px] text-[13px] ${onPage === k ? "bg-[var(--surface-tint)] font-semibold" : "text-[color:var(--text-secondary)]"}`}>{t}</a>
@@ -188,6 +191,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
           <p className={eyebrow}>Family</p>
           <p className="font-medium leading-[18px] text-[13px]">{f.name}</p>
           <p className="leading-[18px] text-[12px] text-[color:var(--text-secondary)] w-[200px]">{f.job}</p>
+        </div>
         </div>
       </aside>
     </div>

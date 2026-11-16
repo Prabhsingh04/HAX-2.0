@@ -1,14 +1,18 @@
 import { Check, ChevronDown, FileText, ShieldCheck, Terminal, X } from "./icons";
-import { AgentHead, Chk, sel, tog, type Entry, type Props } from "./ui";
+import { AgentHead, Chk, sel, st, tog, type Entry, type Props } from "./ui";
+import { Btn, Progress, Tag, TextLink } from "./parts";
 
 /* Approval card — ChatGPT agent "confirm before purchase / send", Claude Code plan
    approval, Copilot "Confirm" cards, Manus: what will happen, cost, undo window. */
 function ApprovalCard({ o }: { o: Props }) {
   const risk = o.risk as string;
+  const decided = o.state === "Approved" ? <><Tag tone="ok">Approved</Tag>Dana approved this 2 min ago. The emails are sending.</>
+    : o.state === "Rejected" ? <><Tag tone="bad">Rejected</Tag>Dana rejected this: &quot;Wrong list, use the EMEA one.&quot;</>
+    : o.state === "Expired" ? <><Tag tone="warn">Expired</Tag>No answer in 30 min. Nothing was sent.</> : null;
   return (
     <div className="hk-panel w-[500px] overflow-hidden">
       <div className="p-[16px] hk-col gap-[12px]">
-        <div className="hk-row justify-between"><AgentHead note="wants to" />{risk !== "Low" && <span className={`hk-tag ${risk === "High" ? "hk-tag--bad" : "hk-tag--warn"}`}>{risk === "High" ? "Can't be undone" : "Sends outside the team"}</span>}</div>
+        <div className="hk-row justify-between"><AgentHead note="wants to" />{risk !== "Low" && <Tag tone={risk === "High" ? "bad" : "warn"}>{risk === "High" ? "Can't be undone" : "Sends outside the team"}</Tag>}</div>
         <p className="hk-h">Send 3 renewal emails</p>
         <div className="grid grid-cols-[84px_1fr] gap-y-[8px] text-[13.5px]">
           <span className="hk-mute">To</span><span>Acme, Globex and Initech billing</span>
@@ -19,7 +23,7 @@ function ApprovalCard({ o }: { o: Props }) {
         {o.preview && <div className="hk-well px-[12px] py-[10px] hk-col gap-[2px]"><span className="hk-s font-semibold text-[color:var(--text-primary)]">Your Acme plan renews on 1 Dec</span><span className="hk-s hk-trunc">Hi Dana, a quick note that your Team plan renews at $12 a seat…</span></div>}
       </div>
       <div className="hk-row justify-end px-[16px] py-[12px] border-t border-[var(--k-edge)] bg-[var(--k-soft)]">
-        <span className="hk-row gap-[8px]"><span className="hk-btn hk-btn--ghost">Reject</span><span className="hk-btn">Edit</span><span className={`hk-btn ${risk === "High" ? "hk-btn--danger" : "hk-btn--main"}`}><Check size={14} strokeWidth={2.5} />Approve and send</span></span>
+        {decided ? <span className="hk-row gap-[8px] hk-s">{decided}</span> : <span className="hk-row gap-[8px]"><Btn kind="ghost">Reject</Btn><Btn>Edit</Btn><Btn kind={risk === "High" ? "danger" : "main"} icon={<Check size={14} strokeWidth={2.5} />}>Approve and send</Btn></span>}
       </div>
     </div>
   );
@@ -41,10 +45,14 @@ function PermissionRequest({ o }: { o: Props }) {
         </div>
       )}
       {o.data && <span className="hk-s">Sent to the tool: <span className="hk-mono">{tool ? "the command above" : "channel ids, date range"}</span></span>}
-      <div className="hk-row justify-end gap-[8px]">
-        <span className="hk-btn hk-btn--ghost">Deny</span>
-        {o.scope === "Once / always" ? <><span className="hk-btn">Always allow</span><span className="hk-btn hk-btn--main">Allow once</span></> : <span className="hk-btn hk-btn--main">Allow<ChevronDown size={13} /></span>}
-      </div>
+      {o.state === "Allowed" || o.state === "Denied" ? (
+        <div className="hk-row justify-end gap-[8px] hk-s">{o.state === "Allowed" ? <><Tag tone="ok">Allowed</Tag>Atlas is running it. See the activity log.</> : <><Tag tone="bad">Denied</Tag>Atlas carries on without it.</>}</div>
+      ) : (
+        <div className="hk-row justify-end gap-[8px]">
+          <Btn kind="ghost">Deny</Btn>
+          {o.scope === "Once / always" ? <><Btn>Always allow</Btn><Btn kind="main">Allow once</Btn></> : <Btn kind="main" trailing={<ChevronDown size={13} />}>Allow</Btn>}
+        </div>
+      )}
     </div>
   );
 }
@@ -52,14 +60,20 @@ function PermissionRequest({ o }: { o: Props }) {
 /* Preview before run — Zapier / Make test step, Clay "run 10 rows", Copilot "try on
    one", Gmail bulk send sample. */
 function PreviewBeforeRun({ o }: { o: Props }) {
+  const another = o.state === "Another";
+  const running = o.state === "Running";
   return (
     <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
-      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Try it on one first</span><span className="hk-s">Rewrite 240 product descriptions</span></span><span className="hk-tag hk-tag--blue">Sample 1 of 240</span></div>
+      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Try it on one first</span><span className="hk-s">Rewrite 240 product descriptions</span></span><Tag tone="blue">{o.state === "Another" ? "Sample 2 of 240" : o.state === "Running" ? "Running 96 of 240" : "Sample 1 of 240"}</Tag></div>
       <div className={o.compare ? "grid grid-cols-2 gap-[8px]" : ""}>
-        {o.compare && <div className="hk-well p-[12px] hk-col gap-[4px]"><span className="hk-xs">Before</span><span className="text-[13px] leading-[19px] hk-mute">Blue mug. 350ml. Ceramic. Dishwasher safe.</span></div>}
-        <div className="hk-well p-[12px] hk-col gap-[4px] !border-[var(--k-blue)]"><span className="hk-xs !text-[color:var(--k-blue)]">After</span><span className="text-[13px] leading-[19px]">A deep-blue ceramic mug that holds a full 350 ml and goes straight in the dishwasher.</span></div>
+        {o.compare && <div className="hk-well p-[12px] hk-col gap-[4px]"><span className="hk-xs">Before</span><span className="text-[13px] leading-[19px] hk-mute">{another ? "Steel bottle. 750ml. Insulated. BPA free." : "Blue mug. 350ml. Ceramic. Dishwasher safe."}</span></div>}
+        <div className="hk-well p-[12px] hk-col gap-[4px] !border-[var(--k-blue)]"><span className="hk-xs !text-[color:var(--k-blue)]">After</span><span className="text-[13px] leading-[19px]">{another ? "A 750 ml insulated steel bottle that keeps drinks cold for a day and is free of BPA." : "A deep-blue ceramic mug that holds a full 350 ml and goes straight in the dishwasher."}</span></div>
       </div>
-      <div className="hk-row justify-between"><span className="hk-btn">Try another</span><span className="hk-row gap-[8px]"><span className="hk-btn hk-btn--ghost">Change the ask</span><span className="hk-btn hk-btn--main">Run on all 240</span></span></div>
+      {running ? (
+        <div className="hk-row gap-[12px]"><span className="hk-grow"><Progress value={40} label="96 of 240 done" /></span><span className="hk-s">96 of 240</span><Btn>Stop</Btn></div>
+      ) : (
+        <div className="hk-row justify-between"><Btn>Try another</Btn><span className="hk-row gap-[8px]"><Btn kind="ghost">Change the ask</Btn><Btn kind="main">Run on all 240</Btn></span></div>
+      )}
     </div>
   );
 }
@@ -71,8 +85,8 @@ function DiffView({ o }: { o: Props }) {
   return (
     <div className="hk-panel w-[540px] overflow-hidden">
       <div className="hk-row justify-between px-[14px] h-[44px] border-b border-[var(--k-edge)]">
-        <span className="hk-row gap-[8px]"><FileText size={15} className="hk-faint" /><span className="hk-t !text-[13px]">{prose ? "launch-note.md" : "src/auth/login.ts"}</span><span className="hk-s"><span className="hk-okc">+2</span> <span className="hk-badc">−1</span></span></span>
-        <span className="hk-row gap-[6px]"><span className="hk-btn hk-btn--sm hk-btn--ghost">Reject all</span><span className="hk-btn hk-btn--sm hk-btn--main">Accept all</span></span>
+        <span className="hk-row gap-[8px]"><FileText size={15} className="hk-faint" /><span className="hk-t !text-[13px]">{prose ? "launch-note.md" : "src/auth/login.ts"}</span><span className="hk-s"><span className="hk-okc">+2</span> <span className="hk-badc">−1</span>{o.state === "Partly accepted" && " · 1 of 3 accepted"}</span></span>
+        {o.state === "Applied" ? <span className="hk-row gap-[8px] hk-s"><Tag tone="ok">Saved</Tag><TextLink>Undo</TextLink></span> : <span className="hk-row gap-[6px]"><Btn size="sm" kind="ghost">Reject all</Btn><Btn size="sm" kind="main">Accept all</Btn></span>}
       </div>
       {prose ? (
         <p className="hk-b p-[16px]">We are launching <span className="line-through hk-badc bg-[var(--k-bad-bg)] px-[2px]">the new pricing to every single customer at the same time</span><span className="hk-okc bg-[var(--k-ok-bg)] px-[2px]">new pricing for everyone on 18 March</span>. Support will be ready.</p>
@@ -82,7 +96,7 @@ function DiffView({ o }: { o: Props }) {
           <div className="hk-dl hk-dl--del"><span>13</span><span>await retry(login, 3);</span></div>
           <div className="hk-dl hk-dl--add"><span>13</span><span>await retry(login, {"{"} tries: 3, backoff: 200 {"}"});</span></div>
           <div className="hk-dl hk-dl--add"><span>14</span><span>track(&quot;login_retry&quot;);</span></div>
-          {o.hunk && <div className="hk-row justify-end gap-[6px] px-[12px] pt-[6px]"><span className="hk-btn hk-btn--sm"><X size={12} />Reject</span><span className="hk-btn hk-btn--sm"><Check size={12} />Accept</span></div>}
+          {(o.hunk || o.state === "Partly accepted") && o.state !== "Applied" && <div className="hk-row justify-end gap-[6px] px-[12px] pt-[6px]"><Btn size="sm" icon={<X size={12} />}>Reject</Btn><Btn size="sm" icon={<Check size={12} />}>Accept</Btn></div>}
           <div className="hk-dl hk-dl--ctx"><span>15</span><span>return session;</span></div>
         </div>
       )}
@@ -92,8 +106,8 @@ function DiffView({ o }: { o: Props }) {
 }
 
 export const APPROVALS: Record<string, Entry> = {
-  "approval-card": { C: ApprovalCard, opts: [sel("risk", "Risk", ["Medium", "Low", "High"]), tog("cost", "Cost"), tog("preview", "Content preview", false), tog("remember", "Don't ask again", false)], refs: ["ChatGPT agent confirmations", "Claude Code plan approval", "Microsoft Copilot confirm", "Manus"] },
-  "permission-request": { C: PermissionRequest, opts: [sel("kind", "Asks for", ["Command", "Data access"]), sel("scope", "Choices", ["Once / always", "Single allow"]), tog("data", "What is sent")], refs: ["Claude Code permissions", "Codex approvals", "ChatGPT connectors", "MCP tool consent"] },
-  "preview-before-run": { C: PreviewBeforeRun, opts: [tog("compare", "Before and after")], refs: ["Zapier test step", "Clay run 10 rows", "Copilot try on one"] },
-  "diff-view": { C: DiffView, opts: [sel("kind", "Content", ["Code", "Text"]), tog("hunk", "Accept per change"), tog("why", "Why it changed", false)], refs: ["GitHub Copilot", "Cursor", "Claude Code", "Google Docs suggestions"] },
+  "approval-card": { C: ApprovalCard, opts: [sel("risk", "Risk", ["Medium", "Low", "High"]), tog("cost", "Cost"), tog("preview", "Content preview", false), tog("remember", "Don't ask again", false), sel("state", "State", ["Waiting", "Approved", "Rejected", "Expired"])], refs: ["ChatGPT agent confirmations", "Claude Code plan approval", "Microsoft Copilot confirm", "Manus"], states: ["Waiting", "Approved", "Rejected", "Expired"].map((n) => st(n, { state: n })) },
+  "permission-request": { C: PermissionRequest, opts: [sel("kind", "Asks for", ["Command", "Data access"]), sel("scope", "Choices", ["Once / always", "Single allow"]), tog("data", "What is sent"), sel("state", "State", ["Asking", "Allowed", "Denied"])], refs: ["Claude Code permissions", "Codex approvals", "ChatGPT connectors", "MCP tool consent"], states: ["Asking", "Allowed", "Denied"].map((n) => st(n, { state: n })) },
+  "preview-before-run": { C: PreviewBeforeRun, opts: [tog("compare", "Before and after"), sel("state", "State", ["Sample", "Another", "Running"])], refs: ["Zapier test step", "Clay run 10 rows", "Copilot try on one"], states: ["Sample", "Another", "Running"].map((n) => st(n, { state: n })) },
+  "diff-view": { C: DiffView, opts: [sel("kind", "Content", ["Code", "Text"]), tog("hunk", "Accept per change"), tog("why", "Why it changed", false), sel("state", "State", ["Proposed", "Partly accepted", "Applied"])], refs: ["GitHub Copilot", "Cursor", "Claude Code", "Google Docs suggestions"], states: ["Proposed", "Partly accepted", "Applied"].map((n) => st(n, { state: n })) },
 };

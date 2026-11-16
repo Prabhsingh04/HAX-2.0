@@ -1,5 +1,5 @@
-// The design system the kit is drawn in. The Components menu offers both: shadcn/ui and
-// Material 3. Same components, same options and copy; only the system underneath changes.
+// The design system the kit is drawn in. The switch at the top of the library sidebar offers
+// both: shadcn/ui and Material 3. Same components, same options and copy; only the system underneath changes.
 // No React here, so server pages can read ?ds= too.
 export type DS = "shadcn" | "m3";
 

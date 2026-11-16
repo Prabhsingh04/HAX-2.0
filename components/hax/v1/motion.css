@@ -17,6 +17,9 @@
 .hax-v1 .hx-btn--solid:active { background-image: linear-gradient(rgba(12, 12, 10, .2), rgba(12, 12, 10, .2)), var(--gradient-hax-fill); }
 .hax-v1 :is(.hx-btn--outline, .hx-snippet):hover { background-color: var(--surface-hover); border-color: var(--stroke-strong); }
 .hax-v1 :is(.hx-btn--outline, .hx-snippet):active { background-color: var(--surface-pressed); }
+/* Tertiary (in-page jumps): no border or fill at rest; a soft fill on hover, deeper when pressed */
+.hax-v1 .hx-btn--tertiary:hover { background-color: var(--surface-hover); }
+.hax-v1 .hx-btn--tertiary:active { background-color: var(--surface-pressed); }
 .hax-v1 .hx-btn--grad { --hx-fill: var(--surface-page); border: 1.5px solid transparent;
   background: linear-gradient(var(--hx-fill), var(--hx-fill)) padding-box, var(--gradient-hax) border-box; }
 .hax-v1 .hx-btn--grad:hover { --hx-fill: var(--surface-hover); }

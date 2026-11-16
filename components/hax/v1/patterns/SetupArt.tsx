@@ -74,7 +74,7 @@ export function SetupArt({ level, muted = false, className = "" }: { level: Leve
 export function SetupKey({ className = "" }: { className?: string }) {
   const g = useSvgId("sk");
   return (
-    <ul className={`flex gap-[20px] items-center leading-[18px] text-[12px] text-[color:var(--text-secondary)] ${className}`}>
+    <ul className={`flex flex-wrap gap-x-[20px] gap-y-[8px] items-center leading-[18px] text-[12px] text-[color:var(--text-secondary)] ${className}`}>
       <li className="flex gap-[8px] items-center">
         <svg viewBox="0 0 16 16" className="size-[16px]" aria-hidden="true"><defs><HaxRing id={g} /></defs><AgentMark p={[8, 8]} r={6.6} g={g} w={1.6} /></svg>
         Agent

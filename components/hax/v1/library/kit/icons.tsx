@@ -77,31 +77,37 @@ import { SYM, type SymName } from "./ds-shared";
 import { useDS } from "./ds";
 
 // The kit imports its icons from here instead of lucide-react. In shadcn/ui they are the Lucide
-// icons themselves; in Material 3 each one is its Material Symbol, at Material's icon sizes.
-export type LucideIcon = (p: LucideProps) => JSX.Element;
+// icons themselves; in Material 3 each one is its Material Symbol (md-icon), at Material's
+// icon sizes. `slot` puts an icon into a Material component's slot (parts.tsx does that), and
+// there the component sizes it.
+export type IconProps = LucideProps & { slot?: string; "data-md"?: string };
+export type LucideIcon = ((p: IconProps) => JSX.Element) & { icon?: { lucide: string; symbol: string } };
 
 const mSize = (px: number) => (px <= 12 ? 16 : px <= 16 ? 18 : px <= 18 ? 20 : 24);
 
 function icon(name: SymName, Lu: LIcon): LucideIcon {
-  const I = (p: LucideProps) => {
+  const I: LucideIcon = ({ slot, "data-md": inButton, ...p }: IconProps) => {
     const ds = useDS();
     if (ds !== "m3") return <Lu {...p} />;
     const px = Number(p.size ?? 24), filled = !!p.fill && p.fill !== "none", bold = Number(p.strokeWidth ?? 2) >= 2.5;
-    // size and weight go in as variables, so a part (an icon button, a chip) can set its own size
+    // size and weight go in as variables, so a part (a chip, an avatar) can set its own size;
+    // inside a Material component's slot the component sets the size instead
     const st = { "--hk-s": `${mSize(px)}px`, "--hk-fill": filled ? 1 : 0, "--hk-wght": bold ? 600 : 400, ...p.style } as CSSProperties;
-    return <span aria-hidden className={`hk-sym ${p.className ?? ""}`} style={st}>{SYM[name]}</span>;
+    return <md-icon aria-hidden="true" slot={slot} data-md={inButton} className={`hk-sym ${p.className ?? ""}`} style={st}>{SYM[name]}</md-icon>;
   };
-  I.displayName = `${name}Icon`;
+  I.icon = { lucide: name, symbol: SYM[name] };
   return I;
 }
 
 // a spinner in Material is its circular progress indicator, not a turning glyph
-export const LoaderCircle: LucideIcon = (p) => {
+export const LoaderCircle: LucideIcon = ({ slot, "data-md": _md, ...p }: IconProps) => {
   const ds = useDS();
   if (ds !== "m3") return <LLoaderCircle {...p} />;
   const px = Number(p.size ?? 24);
-  return <span aria-hidden className={`hk-cprog ${p.className ?? ""}`} style={{ width: px, height: px, borderWidth: Math.max(2, Math.round(px / 7)), ...p.style }} />;
+  return <md-circular-progress indeterminate aria-label="Working" slot={slot} className={`hk-mdcp ${p.className ?? ""}`}
+    style={{ "--md-circular-progress-size": `${px + 4}px`, ...p.style } as CSSProperties} />;
 };
+LoaderCircle.icon = { lucide: "LoaderCircle", symbol: "progress_activity" };
 
 export const ArrowRight = icon("ArrowRight", LArrowRight);
 export const ArrowUp = icon("ArrowUp", LArrowUp);

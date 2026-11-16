@@ -5,7 +5,7 @@ import { useState } from "react";
 export function CodeBlock({ code, label = "Terminal", header = true, className = "w-full", icon = "/hax/v1/icon-copy-tertiary.svg" }: { code: string; label?: string; header?: boolean; className?: string; icon?: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className={`relative bg-[var(--surface-code)] flex flex-col gap-[12px] items-start pb-[22px] pt-[18px] px-[24px] rounded-[var(--radius-xl)] ${className}`}>
+    <div className={`relative bg-[var(--surface-code)] flex min-w-0 max-w-full flex-col gap-[12px] items-start pb-[22px] pt-[18px] px-[24px] rounded-[var(--radius-xl)] ${className}`}>
       <div className={header ? "flex items-center justify-between w-full" : "absolute right-[20px] top-[22px]"}>
         {header && <p className="font-semibold leading-[16px] text-[11px] text-[color:var(--text-tertiary)] tracking-[1.2px] uppercase">{label}</p>}
         <button type="button" aria-label="Copy code" className="hx-copy relative size-[14px]"

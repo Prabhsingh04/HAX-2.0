@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 import {
-  ArrowUp, Braces, Check, Code2, ChevronDown, GitPullRequest, ChevronRight, Copy, Download, Expand, FileText, Languages, ListTree, Maximize2,
+  ArrowUp, Braces, Check, Code2, ChevronDown, GitPullRequest, ChevronRight, Copy, Download, Expand, FileText, Languages, ListTree, Maximize2, Search,
   Minimize2, Pause, Play, RefreshCw, Share2, Sparkle, Square, ThumbsDown, ThumbsUp, Wand2,
 } from "./icons";
-import { AgentHead, Bullets, Caret, Me, Spin, Typing, sel, tog, type Entry, type Props } from "./ui";
+import { AgentHead, Bullets, Caret, Me, Send, Spin, Typing, sel, st as stt, tog, type Entry, type Props } from "./ui";
+import { Btn, Chip, Field, IconBtn, Menu, MenuItem, Pick, Pressable, Progress, Tag, TextLink } from "./parts";
 
 // the row of actions under any agent answer (ChatGPT, Claude, Gemini all ship this)
 const Actions = () => (
   <div className="hk-row !gap-[2px] -ml-[6px]">
-    {[Copy, ThumbsUp, ThumbsDown, RefreshCw, Share2].map((I, i) => <span key={i} className="hk-ib hk-ib--sm"><I size={15} strokeWidth={1.9} /></span>)}
+    {([[Copy, "Copy"], [ThumbsUp, "Good answer"], [ThumbsDown, "Bad answer"], [RefreshCw, "Try again"], [Share2, "Share"]] as const).map(([I, l]) => <IconBtn key={l} size="sm" label={l} icon={<I size={15} strokeWidth={1.9} />} />)}
   </div>
 );
 
@@ -23,8 +24,8 @@ function Streaming({ o }: { o: Props }) {
         <p className="hk-b">Churn rose 4 points in EMEA after the May price change. Most of the loss came from teams under ten seats, who moved to the monthly plan{st === "Writing" ? <Caret /> : st === "Stopped" ? "…" : " and then left within two billing cycles. The fix is a smaller annual tier."}</p>
       )}
       {st === "Starting" && <div className="hk-col gap-[8px]">{[100, 92, 64].map((w) => <i key={w} className="block h-[10px] rounded-full bg-[var(--surface-tint-hover)]" style={{ width: `${w}%` }} />)}</div>}
-      {st === "Writing" && o.stop && <div className="hk-row"><span className="hk-btn hk-btn--sm"><Square size={9} fill="currentColor" strokeWidth={0} />Stop</span></div>}
-      {st === "Stopped" && <div className="hk-row gap-[8px]"><span className="hk-btn hk-btn--sm">Continue</span><span className="hk-s">86 words kept</span></div>}
+      {st === "Writing" && o.stop && <div className="hk-row"><Btn size="sm" icon={<Square size={9} fill="currentColor" strokeWidth={0} />}>Stop</Btn></div>}
+      {st === "Stopped" && <div className="hk-row gap-[8px]"><Btn size="sm">Continue</Btn><span className="hk-s">86 words kept</span></div>}
       {st === "Done" && o.actions && <Actions />}
     </div>
   );
@@ -65,16 +66,17 @@ function Summary({ o }: { o: Props }) {
         ))}
       </div>
       <Done items={["All 148 tests pass", "Retries now wait 200 ms before trying again"]} />
-      <div className="hk-row gap-[8px]"><span className="hk-btn hk-btn--sm"><GitPullRequest size={13} />View PR</span><span className="hk-btn hk-btn--sm hk-btn--ghost">Undo changes</span></div>
+      <div className="hk-row gap-[8px]"><Btn size="sm" icon={<GitPullRequest size={13} />}>View PR</Btn><Btn size="sm" kind="ghost">Undo changes</Btn></div>
     </div>
   );
-  const long = o.length === "Detailed";
+  const long = o.length === "Detailed" || o.length === "Updated";
+  const updated = o.length === "Updated";
   return (
     <div className="hk-panel w-[520px] p-[18px] hk-col gap-[12px]">
-      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Pricing sync</span><span className="hk-s">Tue 14 Oct · 42 min · 5 people</span></span>{o.ai && <span className="hk-ai"><Sparkle size={12} strokeWidth={2.5} className="hk-blue" />Summary</span>}</div>
-      {o.tabs && <div className="hk-row gap-[4px]">{["Summary", "Decisions", "Actions", "Transcript"].map((t, i) => <span key={t} className={`hk-chip !h-[28px] ${i === 0 ? "hk-chip--sel" : "!border-transparent"}`}>{t}</span>)}</div>}
-      <Bullets items={["The Team plan stays at $12 a seat.", "Launch moves to March 18, after the billing fix.", ...(long ? ["Sales gets the new quote template on Monday.", "Churn review moves to every two weeks."] : []), <span key="a">Maya sends the revised quote by Friday.<span className="hk-cite">12:40</span></span>]} />
-      <div className="hk-row gap-[8px]"><span className="hk-btn hk-btn--sm">Share notes</span><span className="hk-pick">{long ? "Shorter" : "More detail"}<ChevronDown size={13} /></span></div>
+      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Pricing sync</span><span className="hk-s">Tue 14 Oct · 42 min · 5 people</span></span>{updated ? <Tag tone="blue">Updated 2 min ago</Tag> : o.ai && <span className="hk-ai"><Sparkle size={12} strokeWidth={2.5} className="hk-blue" />Summary</span>}</div>
+      {o.tabs && <div className="hk-row gap-[4px]">{["Summary", "Decisions", "Actions", "Transcript"].map((t, i) => <Chip key={t} kind="filter" selected={i === 0}>{t}</Chip>)}</div>}
+      <Bullets items={["The Team plan stays at $12 a seat.", updated ? "Launch moves to March 25, after the billing fix." : "Launch moves to March 18, after the billing fix.", ...(long ? ["Sales gets the new quote template on Monday.", "Churn review moves to every two weeks."] : []), <span key="a">Maya sends the revised quote by Friday.<span className="hk-cite">12:40</span></span>]} />
+      <div className="hk-row gap-[8px]"><Btn size="sm">Share notes</Btn><Pick chevron>{long ? "Shorter" : "More detail"}</Pick></div>
     </div>
   );
 }
@@ -84,6 +86,8 @@ function Summary({ o }: { o: Props }) {
    one record as label and value rows, and JSON when another tool will read it. */
 function Table({ o }: { o: Props }) {
   const f = o.format as string;
+  const editing = o.state === "Editing";
+  const filling = o.state === "Filling";
   if (f === "Cards") return (
     <div className="w-[540px] hk-col gap-[10px]">
       <div className="hk-row justify-between"><span className="hk-h">Pipeline health</span><span className="hk-s">From the CRM · 5 min ago</span></div>
@@ -108,7 +112,7 @@ function Table({ o }: { o: Props }) {
   if (f === "JSON") return (
     <div className="w-[520px] hk-col gap-[8px]">
       <div className="hk-code !p-0">
-        <div className="hk-row justify-between px-[14px] h-[38px] border-b border-[var(--k-edge)]"><span className="hk-row gap-[6px] text-[12.5px] font-semibold"><Braces size={14} />vendors.json</span><span className="hk-ib hk-ib--bare"><Copy size={14} /></span></div>
+        <div className="hk-row justify-between px-[14px] h-[38px] border-b border-[var(--k-edge)]"><span className="hk-row gap-[6px] text-[12.5px] font-semibold"><Braces size={14} />vendors.json</span><IconBtn size="xs" label="Copy JSON" icon={<Copy size={14} />} /></div>
         <div className="p-[14px]">
           {"[\n"}
           {[["Northwind", "1200", "99.9"], ["Contoso", "980", "99.5"], ["Fabrikam", "1450", "99.99"]].map(([v, p, u], i) => (
@@ -117,7 +121,7 @@ function Table({ o }: { o: Props }) {
           {"]"}
         </div>
       </div>
-      <div className="hk-row justify-between"><span className="hk-s">Ready for Sheets, Zapier or your own code</span><span className="hk-btn hk-btn--sm"><Download size={13} />Download</span></div>
+      <div className="hk-row justify-between"><span className="hk-s">Ready for Sheets, Zapier or your own code</span><Btn size="sm" icon={<Download size={13} />}>Download</Btn></div>
     </div>
   );
   const rows = [["Northwind", "$1,200", "99.9%", "30 days"], ["Contoso", "$980", "99.5%", "60 days"], ["Fabrikam", "$1,450", "99.99%", "30 days"]];
@@ -125,21 +129,25 @@ function Table({ o }: { o: Props }) {
     <div className="hk-panel w-[540px] overflow-hidden">
       <div className="hk-row justify-between px-[16px] h-[48px] border-b border-[var(--k-edge)]">
         <span className="hk-t">Vendor comparison</span>
-        <span className="hk-row !gap-[2px]">{o.toolbar && [Download, Maximize2, Copy].map((I, i) => <span key={i} className="hk-ib hk-ib--sm"><I size={15} strokeWidth={1.9} /></span>)}</span>
+        <span className="hk-row !gap-[2px]">{o.toolbar && ([[Download, "Download"], [Maximize2, "Expand"], [Copy, "Copy"]] as const).map(([I, l]) => <IconBtn key={l} size="sm" label={l} icon={<I size={15} strokeWidth={1.9} />} />)}</span>
       </div>
       <div className="grid grid-cols-[1.4fr_1fr_1fr_1fr]">
         {["Vendor", "Per month", "Uptime", "Notice"].map((h) => <span key={h} className="hk-s font-semibold px-[16px] py-[9px] border-b border-[var(--k-edge)] bg-[var(--k-soft)]">{h}</span>)}
         {rows.map((r, i) => r.map((v, j) => (
-          <span key={`${i}${j}`} className={`text-[13.5px] px-[16px] py-[10px] border-b border-[var(--k-edge)] ${j === 0 ? "font-medium" : "hk-mute"} ${o.highlight && i === 1 && j === 1 ? "!text-[color:var(--k-ok)] font-semibold bg-[var(--k-ok-bg)]" : ""}`}>{v}</span>
+          <div key={`${i}${j}`} className={`text-[13.5px] px-[16px] py-[10px] border-b border-[var(--k-edge)] ${j === 0 ? "font-medium" : "hk-mute"} ${o.highlight && i === 1 && j === 1 && !editing ? "!text-[color:var(--k-ok)] font-semibold bg-[var(--k-ok-bg)]" : ""} ${filling && i === 2 ? "hk-faint" : ""}`}>
+            {editing && i === 1 && j === 1 ? <Field dense focus value="$1,020" /> : filling && i === 2 ? (j === 0 ? <Spin s={14} /> : "…") : v}
+          </div>
         )))}
       </div>
-      <div className="hk-row justify-between px-[16px] h-[44px]"><span className="hk-s">From 3 quotes in the shared drive</span>{o.sheet && <span className="hk-btn hk-btn--sm">Open in Sheets</span>}</div>
+      <div className="hk-row justify-between px-[16px] h-[44px]"><span className="hk-s">{editing ? "Contoso per month changed by you. Atlas had $980." : filling ? "Reading quote 3 of 3…" : "From 3 quotes in the shared drive"}</span>{o.sheet && !filling && <Btn size="sm">Open in Sheets</Btn>}</div>
     </div>
   );
 }
 
 /* Chart — ChatGPT data analysis, Julius, Gemini in Sheets, Copilot in Excel. */
 function Chart({ o }: { o: Props }) {
+  const hover = o.state === "Hover";
+  const none = o.state === "No data";
   const h = [31, 35, 33, 39, 42, 55, 63, 70];
   const line = o.type === "Line";
   return (
@@ -150,7 +158,9 @@ function Chart({ o }: { o: Props }) {
       </div>
       <div className="relative h-[150px] border-b border-[var(--k-edge)]">
         {[33, 66].map((y) => <i key={y} className="absolute left-0 right-0 border-t border-dashed border-[var(--k-edge)]" style={{ bottom: `${y}%` }} />)}
-        {line ? (
+        {none ? (
+          <div className="absolute inset-0 hk-col items-center justify-center gap-[2px] text-center"><span className="hk-t">No data for Sep 15 to Sep 28</span><span className="hk-s">The analytics export has no events in that range.</span></div>
+        ) : line ? (
           <svg viewBox="0 0 480 150" preserveAspectRatio="none" className="absolute inset-0 size-full">
             <polyline fill="none" stroke="var(--k-chart)" strokeWidth="2.5" points={h.map((v, i) => `${i * 66 + 9},${150 - v * 2}`).join(" ")} />
             {h.map((v, i) => <circle key={i} cx={i * 66 + 9} cy={150 - v * 2} r={i === 5 ? 5 : 3} fill={i === 5 ? "var(--k-chart)" : "var(--k-panel)"} stroke="var(--k-chart)" strokeWidth="2" />)}
@@ -158,9 +168,10 @@ function Chart({ o }: { o: Props }) {
         ) : (
           <div className="absolute inset-0 flex items-end gap-[12px]">{h.map((v, i) => <i key={i} className="flex-1 rounded-t-[5px]" style={{ height: `${v}%`, background: i >= 5 ? "var(--k-chart)" : "color-mix(in srgb, var(--k-chart) 22%, transparent)" }} />)}</div>
         )}
-        {o.callout && <span className="absolute left-[296px] top-[2px] hk-tag hk-tag--blue !h-[24px]">Launch · Oct 1</span>}
+        {o.callout && !none && <Tag tone="blue" className="absolute left-[296px] top-[2px]">Launch · Oct 1</Tag>}
+        {hover && <span className="hk-pop absolute left-[318px] top-[34px] !p-[8px] hk-col gap-[2px] z-10"><span className="hk-s">Oct 1</span><span className="hk-t !text-[13px]">1,100 teams</span></span>}
       </div>
-      <div className="hk-row justify-between hk-s"><span>Sep 1</span>{o.ask && <span className="hk-pick hk-pick--box !h-[28px]"><Sparkle size={13} />Ask about this chart</span>}<span>Oct 20</span></div>
+      <div className="hk-row justify-between hk-s"><span>Sep 1</span>{o.ask && <Pick variant="box" icon={<Sparkle size={13} />}>Ask about this chart</Pick>}<span>Oct 20</span></div>
     </div>
   );
 }
@@ -179,6 +190,8 @@ const REPLIES: [string, string][] = [
 ];
 
 function Variations({ o }: { o: Props }) {
+  const choosing = o.state === "Choosing";
+  const more = o.state === "More";
   const k = o.kind as string, img = k === "Images", pal = k === "Palettes";
   const opts = ["Ship faster, with fewer hand-offs", "Your team, minus the busywork", "From request to release in a day"];
   const g = ["linear-gradient(160deg,#dfe7ef,#9fb5cb 55%,#6b84a0)", "linear-gradient(160deg,#e9dfd2,#c9a98a 55%,#8f6b52)", "linear-gradient(160deg,#d6e6e0,#8fbcab 55%,#4f8a76)", "linear-gradient(160deg,#e3e0ef,#a9a1cf 55%,#6c62a3)"];
@@ -187,29 +200,29 @@ function Variations({ o }: { o: Props }) {
       <div className="hk-col"><span className="hk-h">Which response do you prefer?</span><span className="hk-s">Your pick becomes the answer. The other one stays a tap away.</span></div>
       <div className="grid grid-cols-2 gap-[10px]">
         {REPLIES.map(([d, t], i) => (
-          <div key={d} className={`hk-panel !shadow-none p-[14px] hk-col gap-[10px] ${i === 0 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
+          <Pressable key={d} selected={!choosing && i === 0} className={`hk-panel !shadow-none p-[14px] hk-col gap-[10px] ${!choosing && i === 0 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
             <div className="hk-row justify-between"><span className="hk-t">Response {i + 1}</span><span className="hk-s">{d}</span></div>
             <p className="text-[13.5px] leading-[20px] hk-grow">{t}</p>
-            {i === 0
-              ? <span className="hk-pick hk-pick--on self-start !h-[28px] !px-[10px]"><Check size={13} strokeWidth={2.5} />Preferred</span>
-              : <span className="hk-btn hk-btn--sm self-start">Prefer this one</span>}
-          </div>
+            {!choosing && i === 0
+              ? <Pick variant="on" icon={<Check size={13} strokeWidth={2.5} />} className="self-start">Preferred</Pick>
+              : <Btn size="sm" className="self-start">Prefer this one</Btn>}
+          </Pressable>
         ))}
       </div>
     </div>
   );
   return (
     <div className="w-[540px] hk-col gap-[12px]">
-      <div className="hk-row justify-between"><span className="hk-h">{img ? "4 images" : pal ? "Brand palette · 3 options" : "Headline · 3 versions"}</span><span className="hk-pick"><RefreshCw size={13} />More like these</span></div>
+      <div className="hk-row justify-between"><span className="hk-h">{img ? "4 images" : pal ? "Brand palette · 3 options" : "Headline · 3 versions"}{more && " · set 2"}</span>{more && <TextLink className="hk-s">Earlier set</TextLink>}<Pick icon={<RefreshCw size={13} />}>More like these</Pick></div>
       {img ? (
-        <div className="grid grid-cols-4 gap-[8px]">{g.map((b, i) => <div key={i} className={`h-[118px] rounded-[var(--hk-r-lg)] relative ${i === 1 ? "ring-2 ring-[var(--k-blue)] ring-offset-2 ring-offset-[var(--surface-page)]" : ""}`} style={{ background: b }}>{i === 1 && <span className="absolute right-[6px] top-[6px] hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>)}</div>
+        <div className="grid grid-cols-4 gap-[8px]">{g.map((b, i) => <Pressable key={i} selected={!choosing && i === 1} label={`Image ${i + 1}`} className={`h-[118px] rounded-[var(--hk-r-lg)] relative ${!choosing && i === 1 ? "ring-2 ring-[var(--k-blue)] ring-offset-2 ring-offset-[var(--surface-page)]" : ""}`} style={{ background: b }}>{!choosing && i === 1 && <span className="absolute right-[6px] top-[6px] hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</Pressable>)}</div>
       ) : pal ? (
         <div className="grid grid-cols-3 gap-[8px]">
           {PALETTES.map(([n, d, c, dark], i) => (
-            <div key={n} className={`hk-panel !shadow-none overflow-hidden ${i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
+            <Pressable key={n} selected={!choosing && i === 1} className={`hk-panel !shadow-none overflow-hidden ${!choosing && i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
               <div className="flex h-[44px]">{c.map((x) => <i key={x} className="flex-1" style={{ background: x }} />)}</div>
               <div className="p-[12px] hk-col gap-[10px]">
-                <div className="hk-row justify-between !items-start"><span className="hk-col"><span className="hk-t">{n}</span><span className="hk-s">{d}</span></span>{i === 1 && <span className="hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>
+                <div className="hk-row justify-between !items-start"><span className="hk-col"><span className="hk-t">{n}</span><span className="hk-s">{d}</span></span>{!choosing && i === 1 && <span className="hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>
                 <div className="grid grid-cols-2 gap-[6px]">
                   {[["Light", "#ffffff", "#293247"], ["Dark", dark, "#ffffff"]].map(([m, bg, fg]) => (
                     <span key={m} className="h-[30px] rounded-[8px] border border-[var(--k-edge)] hk-row !gap-[3px] px-[8px]" style={{ background: bg }}>
@@ -219,20 +232,20 @@ function Variations({ o }: { o: Props }) {
                   ))}
                 </div>
               </div>
-            </div>
+            </Pressable>
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-[8px]">
           {opts.map((t, i) => (
-            <div key={t} className={`hk-panel !shadow-none p-[14px] hk-col gap-[10px] h-[124px] ${i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
-              <div className="hk-row justify-between h-[18px]"><span className="hk-xs">Version {"ABC"[i]}</span>{i === 1 && <span className="hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>
+            <Pressable key={t} selected={!choosing && i === 1} className={`hk-panel !shadow-none p-[14px] hk-col gap-[10px] h-[124px] ${!choosing && i === 1 ? "hk-opt--on !border-[var(--k-blue)]" : ""}`}>
+              <div className="hk-row justify-between h-[18px]"><span className="hk-xs">Version {"ABC"[i]}</span>{!choosing && i === 1 && <span className="hk-check hk-check--on"><Check size={12} strokeWidth={3} /></span>}</div>
               <p className="text-[15px] leading-[20px] font-semibold">{t}</p>
-            </div>
+            </Pressable>
           ))}
         </div>
       )}
-      <div className="hk-row justify-end gap-[8px]">{o.mix && !img && !pal && <span className="hk-btn">Mix A and B</span>}<span className="hk-btn hk-btn--main">{img ? "Upscale" : pal ? "Use Deep Pacific" : "Use B"}</span></div>
+      <div className="hk-row justify-end gap-[8px]">{o.mix && !img && !pal && <Btn>Mix A and B</Btn>}<Btn kind="main" disabled={choosing}>{choosing ? "Choose one" : img ? "Upscale" : pal ? "Use Deep Pacific" : "Use B"}</Btn></div>
     </div>
   );
 }
@@ -243,12 +256,21 @@ const WAVE = Array.from({ length: 76 }, (_, i) => Math.round(28 + 40 * Math.abs(
 
 function Media({ o }: { o: Props }) {
   const t = o.type as string;
+  const playing = o.state === "Playing";
+  const making = o.state === "Making";
+  if (making) return (
+    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
+      <p className="hk-b">Making the launch recap{t === "Audio" ? " as a 2-minute audio briefing" : t === "Slides" ? " as six slides" : " as a 40-second video"}.</p>
+      <div className="hk-well p-[14px] hk-col gap-[10px]"><span className="hk-row gap-[8px] hk-s"><Spin s={14} />{t === "Audio" ? "Recording both hosts" : t === "Slides" ? "Designing slide 3 of 6" : "Rendering scene 2 of 4"}</span><Progress value={40} label="Progress" /></div>
+      <div className="hk-row gap-[8px]"><Btn size="sm">Cancel</Btn></div>
+    </div>
+  );
   return (
     <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
       <p className="hk-b">Here is the launch recap{t === "Audio" ? " as a 2-minute audio briefing" : t === "Slides" ? " as six slides" : " as a 40-second video"}.</p>
       {t === "Audio" && (
         <div className="hk-well p-[12px] hk-row gap-[12px]">
-          <span className="hk-send !size-[40px]">{o.playing ? <Pause size={16} fill="currentColor" strokeWidth={0} /> : <Play size={16} fill="currentColor" strokeWidth={0} />}</span>
+          <IconBtn kind="main" label={playing ? "Pause" : "Play"} icon={playing ? <Pause size={16} fill="currentColor" strokeWidth={0} /> : <Play size={16} fill="currentColor" strokeWidth={0} />} />
           <span className="hk-col hk-grow gap-[4px]">
             <span className="hk-row justify-between"><span className="hk-t">Q3 recap · two hosts</span><span className="hk-s tabular-nums">0:48 / 2:10</span></span>
             <span className="flex items-center justify-between h-[26px]">
@@ -283,27 +305,33 @@ function Media({ o }: { o: Props }) {
           </div>
         </div>
       )}
-      <div className="hk-row gap-[8px]">{o.transcript && <span className="hk-btn hk-btn--sm"><FileText size={13} />Transcript</span>}<span className="hk-btn hk-btn--sm"><Download size={13} />Download</span></div>
+      <div className="hk-row gap-[8px]">{o.transcript && <Btn size="sm" icon={<FileText size={13} />}>Transcript</Btn>}<Btn size="sm" icon={<Download size={13} />}>Download</Btn></div>
     </div>
   );
 }
 
 /* Transcript — Otter, Fireflies, Zoom, Granola: speakers, timestamps, pulled-out actions. */
 function Transcript({ o }: { o: Props }) {
+  const v = o.state as string;
+  const live = v === "Live";
+  const searching = v === "Searching";
+  const showActions = !!o.actions || v === "Finished";
   const lines: [string, string, string, boolean?][] = [["MR", "Maya", "Let's keep the Team plan at twelve dollars.", false], ["JK", "Jon", "Then billing has to ship before March.", true], ["MR", "Maya", "I'll send the revised quote Friday.", true]];
   return (
     <div className="hk-panel w-[540px] p-[16px] hk-col gap-[12px]">
-      <div className="hk-row justify-between"><span className="hk-row gap-[8px]">{o.live && <span className="hk-tag hk-tag--bad"><i className="size-[6px] rounded-full bg-current" />Live</span>}<span className="hk-t">Pricing sync</span></span><span className="hk-s">12:38 – 12:41</span></div>
+      <div className="hk-row justify-between"><span className="hk-row gap-[8px]">{live && <Tag tone="bad"><i className="size-[6px] rounded-full bg-current" />Live</Tag>}<span className="hk-t">Pricing sync</span></span><span className="hk-s">12:38 – 12:41</span></div>
+      {searching && <Field dense value="Friday" icon={<Search size={14} />} />}
       <div className="hk-col gap-[10px]">
         {lines.map(([i, n, t, act], k) => (
-          <div key={k} className="hk-row !items-start gap-[10px]">
+          <div key={k} className={`hk-row !items-start gap-[10px] ${searching && k !== 2 ? "opacity-50" : ""}`}>
             <Me i={i} />
             <span className="hk-col hk-grow"><span className="hk-s"><b className="text-[color:var(--text-primary)] font-semibold">{n}</b> · 12:{38 + k}</span>
-              <span className="hk-b">{o.actions && act ? <span className="hk-hl">{t}</span> : t}</span></span>
+              <span className="hk-b">{(showActions && act) || (searching && k === 2) ? <span className="hk-hl">{t}</span> : t}</span></span>
           </div>
         ))}
       </div>
-      {o.actions && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px]"><Check size={14} strokeWidth={2.5} className="hk-okc" /><span className="hk-s hk-grow"><b className="text-[color:var(--text-primary)]">2 action items</b> found</span><span className="hk-s hk-link">Add to tasks</span></div>}
+      {showActions && !searching && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px]"><Check size={14} strokeWidth={2.5} className="hk-okc" /><span className="hk-s hk-grow"><b className="text-[color:var(--text-primary)]">2 action items</b> found</span><TextLink className="hk-s">Add to tasks</TextLink></div>}
+      {searching && <span className="hk-s">1 match for &quot;Friday&quot;</span>}
     </div>
   );
 }
@@ -311,6 +339,9 @@ function Transcript({ o }: { o: Props }) {
 /* Canvas — ChatGPT Canvas, Claude Artifacts, Gemini Canvas, v0: chat left, the work right. */
 function Canvas({ o }: { o: Props }) {
   const code = o.kind === "Code";
+  const cs = o.state as string;
+  const showA = cs === "Agent editing" || (cs === "Editing together" && !!o.cursors);
+  const showM = cs === "You editing" || (cs === "Editing together" && !!o.cursors);
   // Google Docs style live cursor: a coloured caret with a name flag on top
   const Cur = ({ c, n, side }: { c: string; n: string; side?: boolean }) => { const fg = c.includes("agent") ? "var(--k-on-agent)" : "var(--k-on-blue)"; return side ? (
     <span className="inline-flex items-center align-middle ml-[1px]"><span className="w-[2px] h-[17px]" style={{ background: c }} /><span className="ml-[6px] px-[5px] h-[16px] rounded-[4px] text-[11px] leading-[16px] font-sans font-semibold" style={{ background: c, color: fg }}>{n}</span></span>
@@ -340,47 +371,54 @@ function Canvas({ o }: { o: Props }) {
           <div className="hk-col gap-[6px]">
             <span className="hk-row gap-[6px] hk-s font-medium"><Sparkle size={13} className="hk-blue" />Atlas</span>
             <p className="text-[13px] leading-[19px]">{code ? "Adding a busy state so people can't send twice." : "Rewriting the opening so it sounds like a person, not a press release."}</p>
-            <span className="hk-row gap-[6px] hk-s !text-[12px]"><Spin s={12} />{code ? "Editing lines 4 and 6" : "Editing paragraph 1"}</span>
+            <span className="hk-row gap-[6px] hk-s !text-[12px]">{cs === "You editing" ? "Waiting for you to pause" : cs === "Viewing" || cs === "Versions" ? "Done" : <><Spin s={12} />{code ? "Editing lines 4 and 6" : "Editing paragraph 1"}</>}</span>
           </div>
           <div className="mt-auto hk-row gap-[6px] h-[40px] pl-[14px] pr-[4px] rounded-[999px] border border-[var(--k-edge-2)]">
             <span className="hk-grow text-[13px] hk-faint">Ask for a change</span>
-            <span className="hk-send !w-[30px] !h-[30px] opacity-40"><ArrowUp size={15} strokeWidth={2.25} /></span>
+            <Send state="off" />
           </div>
         </div>
       )}
-      <div className="hk-grow hk-col min-w-0">
+      <div className="hk-grow hk-col min-w-0 relative">
         <div className="hk-row justify-between h-[48px] px-[14px] border-b border-[var(--k-edge)] shrink-0">
           <span className="hk-row gap-[8px] min-w-0">
             {code ? <Code2 size={15} className="hk-faint" /> : <FileText size={15} className="hk-faint" />}
             <span className="hk-t !text-[13.5px] truncate">{code ? "LoginForm.tsx" : "Launch note"}</span>
-            <span className="hk-row gap-[2px] hk-s !text-[12px]">v3<ChevronDown size={12} /></span>
+            <Pick chevron>v3</Pick>
           </span>
           <span className="hk-row gap-[8px] shrink-0">
-            {o.cursors && (
+            {(showA || showM) && (
               <span className="hk-row">
                 <span className="w-[24px] h-[24px] rounded-full grid place-items-center text-white ring-2 ring-[var(--k-panel)]" style={{ background: "var(--k-agent)" }}><Sparkle size={12} strokeWidth={2.5} /></span>
                 <span className="w-[24px] h-[24px] -ml-[6px] rounded-full grid place-items-center text-[11px] font-semibold ring-2 ring-[var(--k-panel)]" style={{ background: "var(--k-blue)", color: "var(--k-on-blue)" }}>MR</span>
               </span>
             )}
-            {code && <span className="hk-btn hk-btn--sm hk-btn--ghost">Preview</span>}
-            <span className="hk-btn hk-btn--sm">Share</span>
+            {code && <Btn size="sm" kind="ghost">Preview</Btn>}
+            <Btn size="sm">Share</Btn>
           </span>
         </div>
+        {cs === "Versions" && (
+          <Menu label="Versions" className="absolute left-[14px] top-[44px] w-[220px] z-10">
+            <MenuItem on title="v3 · now" sub="Atlas, 2 min ago" />
+            <MenuItem title="v2" sub="Maya, yesterday" />
+            <MenuItem title="v1" sub="Atlas, Mon" />
+          </Menu>
+        )}
         {code ? (
           <div className="hk-grow overflow-hidden py-[10px] font-mono text-[12.5px] leading-[21px]">
             {lines.map((l, i) => (
               <div key={i} className={`flex pr-[14px] ${changed.includes(i) ? "bg-[var(--k-blue-soft)]" : ""}`}>
                 <span className="w-[40px] shrink-0 text-right pr-[14px] hk-faint select-none">{i + 1}</span>
-                <span className="whitespace-pre hk-code hk-code--plain !p-0 !rounded-none">{l}{o.cursors && i === 5 && <Cur side c="var(--k-agent)" n="Atlas" />}{o.cursors && i === 8 && <Cur side c="var(--k-blue)" n="Maya" />}</span>
+                <span className="whitespace-pre hk-code hk-code--plain !p-0 !rounded-none">{l}{showA && i === 5 && <Cur side c="var(--k-agent)" n="Atlas" />}{showM && i === 8 && <Cur side c="var(--k-blue)" n="Maya" />}</span>
               </div>
             ))}
           </div>
         ) : (
           <div className="hk-grow overflow-hidden px-[28px] pt-[24px] hk-col gap-[16px]">
             <p className="text-[20px] leading-[26px] font-semibold">Atlas 3 is here</p>
-            <p className="text-[14px] leading-[22px]">{o.cursors && <Cur c="var(--k-agent)" n="Atlas" />}<span className="hk-hl">We made Atlas 3 with the people who use it every day, and it shows.</span> It plans its own work, asks before it acts, and shows you why.</p>
+            <p className="text-[14px] leading-[22px]">{showA && <Cur c="var(--k-agent)" n="Atlas" />}<span className="hk-hl">We made Atlas 3 with the people who use it every day, and it shows.</span> It plans its own work, asks before it acts, and shows you why.</p>
             <p className="text-[14px] leading-[22px] text-[color:var(--text-secondary)]">Start with a goal, not a prompt. Atlas breaks it into steps you can edit, then checks in before anything leaves your workspace.</p>
-            <p className="text-[14px] leading-[22px] text-[color:var(--text-secondary)]">{o.cursors && <Cur c="var(--k-blue)" n="Maya" />}Atlas 3 is rolling out to every team this week.</p>
+            <p className="text-[14px] leading-[22px] text-[color:var(--text-secondary)]">{showM && <Cur c="var(--k-blue)" n="Maya" />}Atlas 3 is rolling out to every team this week.</p>
           </div>
         )}
       </div>
@@ -391,20 +429,23 @@ function Canvas({ o }: { o: Props }) {
 /* Form fill — Chrome autofill with Gemini, Copilot in Edge forms, Notion AI properties:
    every filled field is marked and shows its source. */
 function FormFill({ o }: { o: Props }) {
-  const f: [string, string, string, boolean][] = [["Company", "Northwind Traders", "From the contract", true], ["Billing email", "ap@northwind.com", "From the last invoice", true], ["PO number", "", "", false], ["Seats", "48", "From the CRM", true]];
+  const v = o.state as string;
+  const check = v === "Check this";
+  const edited = v === "Edited";
+  const f: [string, string, string, boolean][] = [["Company", "Northwind Traders", "From the contract", true], ["Billing email", "ap@northwind.com", check ? "Atlas is not sure: two emails found" : "From the last invoice", true], ["PO number", "", "", false], ["Seats", edited ? "52" : "48", edited ? "Edited by you" : "From the CRM", !edited]];
   return (
     <div className="hk-panel w-[500px] p-[18px] hk-col gap-[12px]">
-      <div className="hk-row justify-between"><span className="hk-h">New order</span>{o.banner && <span className="hk-ai"><Sparkle size={12} strokeWidth={2.5} className="hk-blue" />3 fields filled by Atlas</span>}</div>
+      <div className="hk-row justify-between"><span className="hk-h">New order</span>{o.banner && <span className="hk-ai"><Sparkle size={12} strokeWidth={2.5} className="hk-blue" />{edited ? "2 fields filled by Atlas" : "3 fields filled by Atlas"}</span>}</div>
       <div className="grid grid-cols-2 gap-[10px]">
-        {f.map(([l, v, src, ai]) => (
+        {f.map(([l, val, src, ai]) => (
           <label key={l} className="hk-col gap-[4px]">
             <span className="hk-s font-medium text-[color:var(--text-primary)]">{l}</span>
-            <span className={`hk-field ${ai ? "hk-field--ai" : "hk-field--empty"} ${!ai && o.missing ? "!border-[var(--k-warn)]" : ""}`}>{ai && <Sparkle size={13} className="hk-blue" />}{v || "Needed"}</span>
+            <Field ai={ai && !!val} value={val || undefined} placeholder="Needed" invalid={(!val && !!o.missing) || (check && l === "Billing email")} />
             {o.sources && <span className="hk-s !text-[11.5px]">{ai ? src : o.missing ? "Atlas couldn't find this" : ""}</span>}
           </label>
         ))}
       </div>
-      <div className="hk-row justify-end gap-[8px]"><span className="hk-btn hk-btn--ghost">Clear AI fields</span><span className="hk-btn hk-btn--main">Review and submit</span></div>
+      <div className="hk-row justify-end gap-[8px]"><Btn kind="ghost">Clear AI fields</Btn><Btn kind="main">Review and submit</Btn></div>
     </div>
   );
 }
@@ -414,29 +455,32 @@ function FormFill({ o }: { o: Props }) {
 function RefineMenu({ o }: { o: Props }) {
   const items: [typeof Wand2, string][] = [[Wand2, "Improve writing"], [Minimize2, "Make shorter"], [Expand, "Make longer"], [ListTree, "Turn into bullets"], [Languages, "Translate"]];
   const bar = o.style === "Toolbar";
+  const changing = o.state === "Changing";
+  const changed = o.state === "Changed";
   return (
     <div className="w-[520px] hk-col gap-[8px]">
-      <p className="hk-b w-[480px]">The rollout starts in March. <span className="hk-hl">We are going to be launching the new pricing to every single customer at the same time, which might cause some issues.</span> Support will be ready.</p>
+      <p className="hk-b w-[480px]">The rollout starts in March. <span className={`hk-hl ${changing ? "hk-shimmer" : ""}`}>We are going to be launching the new pricing to every single customer at the same time, which might cause some issues.</span> Support will be ready.</p>
       {/* everything opens just under the selection, on top of the page */}
       <div className="hk-col items-start gap-[8px] pl-[40px]">
-        {bar && (
+        {changing && <span className="hk-pop !p-[10px] hk-row gap-[8px] hk-s"><Spin s={14} />Rewriting…</span>}
+        {bar && !changing && !changed && (
           <div className="hk-pop !p-[4px] hk-row !gap-[2px]">
-            <span className="hk-pick hk-pick--on"><Sparkle size={13} />Ask Atlas</span>
-            {(["Improve", "Shorter", "Longer"] as const).map((t, i) => { const I = items[i][0]; return <span key={t} className="hk-pick !text-[color:var(--text-primary)]"><I size={13} />{t}</span>; })}
-            <span className="hk-pick"><ChevronDown size={13} /></span>
+            <Pick variant="on" icon={<Sparkle size={13} />}>Ask Atlas</Pick>
+            {(["Improve", "Shorter", "Longer"] as const).map((t, i) => { const I = items[i][0]; return <Pick key={t} icon={<I size={13} />} className="!text-[color:var(--text-primary)]">{t}</Pick>; })}
+            <Pick chevron />
           </div>
         )}
-        {!bar && !o.result && (
-          <div className="hk-pop w-[250px]">
-            {o.ask && <div className="hk-field !h-[36px] mb-[4px] hk-field--empty"><Sparkle size={14} className="hk-blue" />Ask Atlas to edit…</div>}
-            {items.map(([I, t], i) => <div key={t} className={`hk-mi ${i === 1 ? "hk-mi--on" : ""}`}><I size={15} strokeWidth={1.9} className="hk-faint" /><span className="hk-grow">{t}</span>{t === "Translate" && <ChevronRight size={14} className="hk-faint" />}</div>)}
-          </div>
+        {!bar && !changing && !changed && (
+          <Menu label="Edit selection" className="w-[250px]">
+            {o.ask && <Field dense ai icon={<Sparkle size={14} className="hk-blue" />} placeholder="Ask Atlas to edit…" className="mb-[4px]" />}
+            {items.map(([I, t], i) => <MenuItem key={t} on={i === 1} icon={<I size={15} strokeWidth={1.9} />} title={t} end={t === "Translate" ? <ChevronRight size={14} className="hk-faint" /> : undefined} />)}
+          </Menu>
         )}
-        {o.result && (
+        {changed && (
           <div className="hk-pop !p-[12px] w-[320px] hk-col gap-[8px]">
             <span className="hk-xs">Shorter</span>
             <p className="text-[13.5px] leading-[20px]">New pricing reaches every customer at once, so expect a busy first week.</p>
-            <div className="hk-row justify-end !gap-[4px]"><span className="hk-btn hk-btn--sm hk-btn--ghost">Try again</span><span className="hk-btn hk-btn--sm hk-btn--ghost">Discard</span><span className="hk-btn hk-btn--sm hk-btn--main">Replace</span></div>
+            <div className="hk-row justify-end !gap-[4px]"><Btn size="sm" kind="ghost">Try again</Btn><Btn size="sm" kind="ghost">Discard</Btn><Btn size="sm" kind="main">Replace</Btn></div>
           </div>
         )}
       </div>
@@ -445,14 +489,14 @@ function RefineMenu({ o }: { o: Props }) {
 }
 
 export const ARTIFACTS: Record<string, Entry> = {
-  streaming: { C: Streaming, opts: [sel("state", "State", ["Writing", "Starting", "Stopped", "Done"]), tog("stop", "Stop button"), tog("actions", "Answer actions")], refs: ["ChatGPT", "Claude", "Gemini", "Perplexity"] },
-  summary: { C: Summary, opts: [sel("kind", "Type", ["Meeting", "Answer recap", "Task done"]), sel("length", "Length", ["Short", "Detailed"]), tog("tabs", "Tabs", false), tog("ai", "AI label")], refs: ["Zoom AI Companion", "Teams Copilot recap", "Gemini in Meet", "Otter", "Codex task summary"] },
-  table: { C: Table, opts: [sel("format", "Format", ["Table", "Cards", "Key-value", "JSON"]), tog("toolbar", "Toolbar"), tog("highlight", "Highlight best"), tog("sheet", "Open in Sheets")], refs: ["ChatGPT data tables", "Gemini export to Sheets", "Notion AI autofill", "OpenAI structured outputs"] },
-  chart: { C: Chart, opts: [sel("type", "Type", ["Bar", "Line"]), tog("callout", "Callout"), tog("ask", "Ask about chart", false)], refs: ["ChatGPT data analysis", "Copilot in Excel", "Julius"] },
-  variations: { C: Variations, opts: [sel("kind", "Content", ["Text", "Responses", "Palettes", "Images"]), tog("mix", "Mix versions")], refs: ["ChatGPT preference compare", "Midjourney grid", "Adobe Firefly results", "Jasper", "Coolors palettes"] },
-  media: { C: Media, opts: [sel("type", "Type", ["Audio", "Slides", "Video"]), tog("playing", "Playing", false), tog("transcript", "Transcript")], refs: ["NotebookLM audio overview", "Gamma", "Gemini video", "Synthesia scenes"] },
-  transcript: { C: Transcript, opts: [tog("live", "Live"), tog("actions", "Action items")], refs: ["Otter", "Fireflies", "Granola", "Zoom"] },
-  canvas: { C: Canvas, card: 0.38, opts: [sel("kind", "Content", ["Document", "Code"]), tog("chat", "Chat beside"), tog("cursors", "Who is editing")], refs: ["ChatGPT Canvas", "Claude Artifacts", "Gemini Canvas", "v0"] },
-  "form-fill": { C: FormFill, opts: [tog("banner", "AI label"), tog("sources", "Field sources"), tog("missing", "Missing field")], refs: ["Gemini in Chrome autofill", "Copilot in Edge", "Notion AI properties"] },
-  "refine-menu": { C: RefineMenu, card: 0.48, opts: [sel("style", "Style", ["Menu", "Toolbar"]), tog("ask", "Free-text ask"), tog("result", "Result preview", false)], refs: ["Notion AI", "Google Docs Help me write", "ChatGPT Canvas", "Grammarly"] },
+  streaming: { C: Streaming, opts: [sel("state", "State", ["Writing", "Starting", "Stopped", "Done"]), tog("stop", "Stop button"), tog("actions", "Answer actions")], refs: ["ChatGPT", "Claude", "Gemini", "Perplexity"], states: ["Starting", "Writing", "Stopped", "Done"].map((n) => stt(n, { state: n })) },
+  summary: { C: Summary, opts: [sel("kind", "Type", ["Meeting", "Answer recap", "Task done"]), sel("length", "Length", ["Short", "Detailed", "Updated"]), tog("tabs", "Tabs", false), tog("ai", "AI label")], refs: ["Zoom AI Companion", "Teams Copilot recap", "Gemini in Meet", "Otter", "Codex task summary"], states: [stt("Short", { length: "Short" }), stt("Expanded", { length: "Detailed" }), stt("Updated", { length: "Updated" })] },
+  table: { C: Table, opts: [sel("format", "Format", ["Table", "Cards", "Key-value", "JSON"]), tog("toolbar", "Toolbar"), tog("highlight", "Highlight best"), tog("sheet", "Open in Sheets"), sel("state", "State", ["Ready", "Editing", "Filling"])], refs: ["ChatGPT data tables", "Gemini export to Sheets", "Notion AI autofill", "OpenAI structured outputs"], states: ["Ready", "Editing", "Filling"].map((n) => stt(n, { state: n })) },
+  chart: { C: Chart, opts: [sel("type", "Type", ["Bar", "Line"]), tog("callout", "Callout"), tog("ask", "Ask about chart", false), sel("state", "State", ["Ready", "Hover", "No data"])], refs: ["ChatGPT data analysis", "Copilot in Excel", "Julius"], states: ["Ready", "Hover", "No data"].map((n) => stt(n, { state: n })) },
+  variations: { C: Variations, opts: [sel("kind", "Content", ["Text", "Responses", "Palettes", "Images"]), tog("mix", "Mix versions"), sel("state", "State", ["Picked", "Choosing", "More"])], refs: ["ChatGPT preference compare", "Midjourney grid", "Adobe Firefly results", "Jasper", "Coolors palettes"], states: [stt("Choosing", { state: "Choosing" }), stt("Picked", { state: "Picked" }), stt("More", { state: "More" })] },
+  media: { C: Media, opts: [sel("type", "Type", ["Audio", "Slides", "Video"]), sel("state", "State", ["Ready", "Playing", "Making"]), tog("transcript", "Transcript")], refs: ["NotebookLM audio overview", "Gamma", "Gemini video", "Synthesia scenes"], states: ["Ready", "Playing", "Making"].map((n) => stt(n, { state: n })) },
+  transcript: { C: Transcript, opts: [sel("state", "State", ["Live", "Finished", "Searching"]), tog("actions", "Action items")], refs: ["Otter", "Fireflies", "Granola", "Zoom"], states: ["Live", "Finished", "Searching"].map((n) => stt(n, { state: n })) },
+  canvas: { C: Canvas, card: 0.38, opts: [sel("kind", "Content", ["Document", "Code"]), tog("chat", "Chat beside"), tog("cursors", "Who is editing"), sel("state", "State", ["Editing together", "Viewing", "Agent editing", "You editing", "Versions"])], refs: ["ChatGPT Canvas", "Claude Artifacts", "Gemini Canvas", "v0"], states: ["Viewing", "Agent editing", "You editing", "Versions"].map((n) => stt(n, { state: n })) },
+  "form-fill": { C: FormFill, opts: [tog("banner", "AI label"), tog("sources", "Field sources"), tog("missing", "Missing field"), sel("state", "State", ["Filled", "Check this", "Edited"])], refs: ["Gemini in Chrome autofill", "Copilot in Edge", "Notion AI properties"], states: ["Filled", "Check this", "Edited"].map((n) => stt(n, { state: n })) },
+  "refine-menu": { C: RefineMenu, card: 0.48, opts: [sel("style", "Style", ["Menu", "Toolbar"]), tog("ask", "Free-text ask"), sel("state", "State", ["Selected", "Changing", "Changed"])], refs: ["Notion AI", "Google Docs Help me write", "ChatGPT Canvas", "Grammarly"], states: ["Selected", "Changing", "Changed"].map((n) => stt(n, { state: n })) },
 };

@@ -1,0 +1,9 @@
+/* Source for components/ui/shadcn.css: the shadcn/ui utilities that components/ui and the
+   HAX kit use, built with tailwind.kit.config.ts (every utility scoped to the shadcn stage,
+   [data-ds="shadcn"]). It is a separate Tailwind build so shadcn's colour names never mix
+   with the site's tailwind.config.ts. Rebuild after changing classes in components/ui or the
+   kit: npm run kit:css (or npm run kit:css:watch while working). */
+@tailwind utilities;
+
+/* shadcn's base layer, on the stage only: every border and outline takes the theme colour */
+[data-ds="shadcn"] *, [data-ds="shadcn"] ::before, [data-ds="shadcn"] ::after { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); }

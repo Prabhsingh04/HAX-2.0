@@ -1,9 +1,33 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FAMILIES, COMPS } from "./catalog";
 import { withDS, type DS } from "./kit/ds";
 
-// Library sidebar (Figma 98:20057 / 98:25488). Lists the 45 components by family.
+// Library sidebar (Figma 98:20057 / 98:25488). The switch on top picks the design system the
+// components are drawn in; below it, the components by family.
+const SYSTEMS: [DS, string][] = [["shadcn", "shadcn/ui"], ["m3", "Material 3"]];
+
+// Same page in the other system. Keeps the rest of the address (the component, a Home setup,
+// Customize's options) and the scroll position, so the two can be compared in place.
+function DSSwitch({ ds }: { ds: DS }) {
+  const router = useRouter();
+  const pick = (to: DS) => {
+    if (to === ds) return;
+    const u = new URL(location.href);
+    if (to === "m3") u.searchParams.set("ds", "material"); else u.searchParams.delete("ds");
+    router.push(u.pathname + u.search + u.hash, { scroll: false });
+  };
+  return (
+    <div role="radiogroup" aria-label="Design system" className="hk-seg hk-seg--full">
+      {SYSTEMS.map(([v, label]) => (
+        <button key={v} type="button" role="radio" aria-checked={ds === v} aria-selected={ds === v} onClick={() => pick(v)}
+          className={`hx-tab hk-seg-btn ${ds === v ? "font-semibold" : ""}`}>{label}</button>
+      ))}
+    </div>
+  );
+}
+
 export function Count({ n }: { n: number | string }) {
   return <span className="bg-[var(--surface-tint-hover)] flex h-[20px] items-center px-[6px] rounded-[var(--radius-pill)] font-semibold leading-[16px] text-[12px] tracking-[0.06px]">{n}</span>;
 }
@@ -16,6 +40,7 @@ export function Sidebar({ active, selected, ds = "shadcn" }: { active: string; s
   const toggle = (id: string) => setOpen((o) => (o.includes(id) ? o.filter((x) => x !== id) : [...o, id]));
   return (
       <nav aria-label="Components" className="sticky top-[94px] max-h-[calc(100vh-94px)] overflow-y-auto shrink-0 w-[280px] border-r border-[var(--stroke-subtle)] flex flex-col gap-[2px] items-start pb-[48px] pl-[20px] pr-[16px] pt-[28px] self-stretch">
+        <div className="w-full pb-[24px]"><DSSwitch ds={ds} /></div>
         <div className="flex gap-[8px] items-center pb-[12px] pl-[10px]">
           <p className="font-semibold leading-[20px] text-[14px]">Components</p>
           <Count n={COMPS.length} />

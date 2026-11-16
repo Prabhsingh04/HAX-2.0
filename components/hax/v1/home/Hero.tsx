@@ -37,18 +37,18 @@ export function Hero() {
   return (
     // No breadcrumb: the site is only the HAX initiative. pt 42 = Figma's 24 + the 18px
     // breadcrumb row, so the headline keeps its Figma position.
-    <section className="flex flex-col items-center pb-[128px] pt-[42px] px-[144px] relative w-full overflow-hidden" data-node-id="98:19425" data-hx-hero>
-      <div className="flex flex-col gap-[28px] items-center pt-[88px] relative">
-        <h1 className="hx-rise font-semibold text-[50px] leading-[58px] text-[color:var(--text-primary)] text-center tracking-[-0.6px] whitespace-nowrap">
-          One pattern library for the
-          <br />
+    <section className="flex flex-col items-center pb-[80px] pt-[24px] px-[var(--hx-gutter)] relative w-full overflow-hidden md:pb-[104px] xl:pb-[128px] xl:pt-[42px]" data-node-id="98:19425" data-hx-hero>
+      <div className="flex flex-col gap-[24px] items-center pt-[48px] relative md:gap-[28px] md:pt-[72px] xl:pt-[88px]">
+        <h1 className="hx-rise font-semibold text-[32px] leading-[40px] text-[color:var(--text-primary)] text-center tracking-[-0.4px] md:text-[42px] md:leading-[50px] lg:text-[46px] lg:leading-[54px] lg:whitespace-nowrap xl:text-[50px] xl:leading-[58px] xl:tracking-[-0.6px]">
+          One pattern library for the{" "}
+          <br className="hidden md:block" />
           teams in{" "}
           <RotatingStage />
         </h1>
-        <p className="hx-rise hx-rise--2 font-normal leading-[28px] text-[18px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">
+        <p className="hx-rise hx-rise--2 max-w-[560px] font-normal leading-[26px] text-[16px] text-[color:var(--text-secondary)] text-center [text-wrap:balance] md:leading-[28px] md:text-[18px] lg:max-w-none lg:whitespace-nowrap">
           Give your AI a face people trust. Describe it in a sentence and HAX does the rest.
         </p>
-        <div className="hx-rise hx-rise--3 flex gap-[12px] items-center">
+        <div className="hx-rise hx-rise--3 flex flex-wrap justify-center gap-[12px] items-center">
           <a href="/library" className="hx-btn hx-btn--solid bg-[var(--surface-inverse)] flex gap-[6px] h-[40px] items-center justify-center px-[20px] rounded-[var(--radius-pill)]">
             <span className="font-semibold leading-[20px] text-[14px] text-[color:var(--text-on-inverse)] tracking-[0.07px] whitespace-nowrap">Browse patterns</span>
             <img alt="" src="/hax/v1/icon-arrow-right.svg" className="hx-arrow size-[16px]" />

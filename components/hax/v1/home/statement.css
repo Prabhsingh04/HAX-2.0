@@ -1,0 +1,6 @@
+/* Statement: words start at a quarter of the ink and light up in reading order. */
+.hax-v1 .hx-say__w { color: color-mix(in srgb, var(--text-primary) 22%, transparent); transition: color .6s cubic-bezier(.22, 1, .36, 1); }
+.hax-v1 .hx-say__w.is-lit { color: var(--text-primary); }
+.hax-v1 .hx-say__w--agent.is-lit { color: var(--hx-agent); }
+.hax-v1 .hx-say__w--human.is-lit { color: var(--hx-human); }
+@media (prefers-reduced-motion: reduce) { .hax-v1 .hx-say__w { transition: none; } }

@@ -7,18 +7,18 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 export function Families() {
   return (
-    <section id="patterns" data-hx-blob-o="0.72" className="flex flex-col gap-[28px] items-center px-[114px] py-[96px] relative w-full" data-node-id="98:19721">
-      <h2 className="hx-reveal font-extralight leading-[60px] text-[50px] text-center whitespace-nowrap">
+    <section id="patterns" data-hx-blob-o="0.72" className="flex flex-col gap-[24px] items-center px-[max(20px,calc(var(--hx-gutter)_-_30px))] py-[72px] relative w-full md:gap-[28px] md:py-[96px]" data-node-id="98:19721">
+      <h2 className="hx-reveal font-extralight text-center leading-[42px] text-[34px] [text-wrap:balance] md:leading-[52px] md:text-[42px] xl:leading-[60px] xl:text-[50px] xl:whitespace-nowrap">
         Every component sits in one of eight families
       </h2>
-      <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">
+      <p className="max-w-[640px] leading-[26px] text-[16px] text-[color:var(--text-secondary)] text-center [text-wrap:balance] xl:max-w-none xl:whitespace-nowrap">
         Each family is one job the interface does between a person and an agent, so the right component is always one click away.
       </p>
       <a href="/library" className="hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap">
         <img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="hx-arrow size-[14px]" />
         All {COMPS.length} components
       </a>
-      <div className="hx-reveal grid grid-cols-4 gap-[16px] pt-[20px] w-[1212px]">
+      <div className="hx-reveal grid w-full max-w-[1212px] grid-cols-1 gap-[16px] pt-[20px] sm:grid-cols-2 xl:grid-cols-4">
         {FAMILIES.map((f, i) => (
           <a key={f.id} href={`/library#${f.id}`}
             className="hx-card group bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex flex-col overflow-clip rounded-[var(--radius-xl)]">

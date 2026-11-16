@@ -119,3 +119,6 @@ html.hx-vt::view-transition-new(root) { z-index: 2; }
    Orange on white passes 3:1, so it is for large text and marks, not body copy. */
 .hax-v1 { --hx-human: #0a63c9; --hx-agent: #e4561a; }
 html[data-hax-theme="dark"] .hax-v1 { --hx-human: #3fc6ee; --hx-agent: #ff8a50; }
+
+/* The page's side gutter: 20px on phones, growing with the window to Figma's 144px at 1440px */
+.hax-v1 { --hx-gutter: clamp(20px, 13.3333vw - 48px, 144px); }

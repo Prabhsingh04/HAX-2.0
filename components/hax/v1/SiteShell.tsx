@@ -11,7 +11,9 @@ import { BlobLayer } from "./BlobLayer";
 export function SiteShell({ children, announcement = false, blobs = false }: { children: React.ReactNode; announcement?: boolean; blobs?: boolean }) {
   useSiteMotion();
   return (
-    <div className="hax-v1 min-h-screen w-full">
+    // overflow-x clip (not hidden) keeps the sticky header and steps working, and stops full-width
+    // sections (Four ways in) adding a sideways scroll
+    <div className="hax-v1 min-h-screen w-full overflow-x-clip">
       {blobs && <BlobLayer drive />}
       <Header />
       {/* above the fixed blob layer (z-0) */}

@@ -203,3 +203,7 @@ html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-opt--on { background:
 .hax-v1 [data-ds="shadcn"] .hk-step--done { border-color: var(--primary); background: var(--primary); }
 .hax-v1 [data-ds="shadcn"] .hk-step--now { border: 2px solid var(--primary); }
 .hax-v1 [data-ds="shadcn"] .hk-step--num { color: var(--muted-foreground); }
+
+/* text links: the underline darkens on hover (shadcn's link: underline-offset-4) */
+.hax-v1 [data-ds="shadcn"] a.hk-link { cursor: pointer; text-decoration-color: color-mix(in oklab, currentColor 35%, transparent); transition: text-decoration-color .15s; }
+.hax-v1 [data-ds="shadcn"] a.hk-link:hover { text-decoration-color: currentColor; }

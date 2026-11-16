@@ -61,7 +61,10 @@ const CALLS: [string, string, string, string][] = [
   ["Refund a double charge", "Hands off", "A named person picks it up, with what the agent found passed along.", "hand-off"],
   ["Delete files or send payments", "Never", "It sits on the list of what the agent can use as a hard limit.", "capabilities"],
 ];
-const pill = "hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap";
+// In-page jumps: tertiary buttons, the label and arrow with no border or fill; a soft fill on hover
+// and press (.hx-btn--tertiary in motion.css). The row sits 12px out so the first label lines up
+// with the text above.
+const jump = "hx-btn hx-btn--tertiary flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap text-[color:var(--text-primary)]";
 const th = "px-[20px] py-[12px] text-left align-bottom font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase";
 const h2 = "font-semibold leading-[36px] text-[29px] tracking-[-0.2px] whitespace-nowrap";
 const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[720px]";
@@ -79,9 +82,9 @@ export function DocsPage() {
         <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[760px]">
           HAX ships every pattern in this library as a real, installable React component. One umbrella package, about 50 focused sub-packages, Tailwind-native theming, TypeScript throughout. The same components the Meeting Summariser is built from.
         </p>
-        <div className="hx-rise hx-rise--3 relative flex gap-[8px] pt-[8px]">
-          <a href="#install" className={pill}>For engineers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
-          <a href="#product-managers" className={pill}>For product managers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
+        <div className="hx-rise hx-rise--3 relative flex gap-[4px] pt-[8px] -ml-[12px]">
+          <a href="#install" className={jump}>For engineers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
+          <a href="#product-managers" className={jump}>For product managers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
         </div>
       </section>
       <div className="flex flex-col gap-[56px] items-start pb-[96px] pt-[16px] px-[144px] w-full" data-node-id="101:2681">
