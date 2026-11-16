@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { World } from "./world/World";
+import { DecodeText, RevealH2 } from "./fx";
 
 // Shared v3 pieces, from the type and component styles on the v3 frames. No "use client" here,
 // so server components can import the class strings too; the hooks run in client callers.
@@ -37,12 +38,13 @@ export function Lede({ children, className = "" }: { children: ReactNode; classN
   return <p className={`h3-rise h3-rise--3 font-normal leading-[28px] text-[18px] text-[rgba(255,255,255,.86)] ${className}`}>{children}</p>;
 }
 
-// Section head: mono eyebrow, light 48 heading, 18 lede (105:5878)
+// Section head: mono eyebrow, light 48 heading, 18 lede (105:5878). The eyebrow decodes and the
+// heading's words rise in the first time they scroll into view (fx.tsx, React Bits).
 export function Eyebrow({ children, tone = "cyan" }: { children: ReactNode; tone?: "cyan" | "ice" }) {
-  return <p className={`font-[family-name:var(--font-mono)] font-medium leading-[16px] text-[12px] tracking-[0.96px] uppercase ${tone === "ice" ? "text-[color:var(--ice)]" : "text-[color:var(--cyan)]"}`}>{children}</p>;
+  return <p className={`font-[family-name:var(--font-mono)] font-medium leading-[16px] text-[12px] tracking-[0.96px] uppercase ${tone === "ice" ? "text-[color:var(--ice)]" : "text-[color:var(--cyan)]"}`}>{typeof children === "string" ? <DecodeText text={children} /> : children}</p>;
 }
 export function H2({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <h2 className={`font-light text-[clamp(36px,4vw,48px)] leading-[1] tracking-[-0.02em] text-[color:var(--text)] ${className}`}>{children}</h2>;
+  return <RevealH2 className={`font-light text-[clamp(36px,4vw,48px)] leading-[1] tracking-[-0.02em] text-[color:var(--text)] ${className}`}>{children}</RevealH2>;
 }
 export function Sub({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <p className={`leading-[28px] text-[18px] text-[color:var(--text-2)] ${className}`}>{children}</p>;
@@ -56,7 +58,7 @@ export function Tag({ children, className = "" }: { children: ReactNode; classNa
 // Horizon rule between Home sections (105:5949)
 export function HorizonRule() {
   return (
-    <div aria-hidden className="mx-auto h-px w-full max-w-[1200px]"
+    <div aria-hidden className="h3-reveal h3-rule mx-auto h-px w-full max-w-[1200px]"
       style={{ backgroundImage: "linear-gradient(90deg, rgba(0,188,235,0) 0%, rgba(0,188,235,.55) 30%, rgba(181,233,248,.55) 50%, rgba(255,109,45,.55) 70%, rgba(255,109,45,0) 100%)" }} />
   );
 }

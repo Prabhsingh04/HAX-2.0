@@ -23,17 +23,17 @@ export function BlogPage() {
   const toggle = (t: string) => setOn((o) => (o.includes(t) ? o.filter((x) => x !== t) : [...o, t]));
   return (
     <>
-      <section className="flex flex-col gap-[16px] items-center pb-[40px] pt-[56px] px-[144px] relative w-full overflow-hidden" data-node-id="101:4621">
-        <h1 className="hx-rise relative font-semibold leading-[48px] text-[40px] text-center tracking-[-0.5px] whitespace-nowrap">Insights &amp; Perspectives</h1>
-        <p className="hx-rise hx-rise--2 relative leading-[22px] text-[14px] text-[color:var(--text-secondary)] text-center whitespace-nowrap">Explore our latest thoughts on design, research, and innovation in the world of product development.</p>
-        <div className="relative pb-[8px] pt-[12px] w-[520px]">
+      <section className="flex flex-col gap-[16px] items-center pb-[40px] pt-[56px] px-[var(--hx-gutter)] relative w-full overflow-hidden" data-node-id="101:4621">
+        <h1 className="hx-rise relative font-semibold leading-[40px] text-[32px] text-center tracking-[-0.4px] [text-wrap:balance] md:leading-[48px] md:text-[40px] md:tracking-[-0.5px] md:whitespace-nowrap">Insights &amp; Perspectives</h1>
+        <p className="hx-rise hx-rise--2 relative max-w-[600px] leading-[22px] text-[14px] text-[color:var(--text-secondary)] text-center [text-wrap:balance] lg:max-w-none lg:whitespace-nowrap">Explore our latest thoughts on design, research, and innovation in the world of product development.</p>
+        <div className="relative w-full max-w-[520px] pb-[8px] pt-[12px]">
           <label className="hx-field bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[8px] h-[40px] items-center px-[12px] rounded-[var(--radius-md)] w-full focus-within:border-[var(--text-link)]">
             <img alt="" src="/hax/v1/icon-search.svg" className="size-[16px]" />
             <span className="sr-only">Search articles</span>
             <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search articles..." className="flex-1 min-w-px bg-transparent outline-none leading-[22px] text-[14px] placeholder:text-[color:var(--text-tertiary)]" />
           </label>
         </div>
-        <div role="group" aria-label="Topics" className="relative flex flex-wrap gap-[8px] justify-center w-[720px]">
+        <div role="group" aria-label="Topics" className="relative flex w-full max-w-[720px] flex-wrap gap-[8px] justify-center">
           {TOPICS.map((t) => {
             const sel = on.includes(t);
             return (
@@ -43,11 +43,11 @@ export function BlogPage() {
           })}
         </div>
       </section>
-      <section className="flex flex-col items-start pb-[96px] pt-[24px] px-[144px] w-full" data-node-id="101:4669">
+      <section className="flex flex-col items-start pb-[96px] pt-[24px] px-[var(--hx-gutter)] w-full" data-node-id="101:4669">
         {list.length === 0 && <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)]">No articles match that search. Try another topic or clear the filters.</p>}
         <div className="flex flex-wrap gap-[24px] items-start w-full">
           {list.map((p) => (
-            <a key={p.slug} href={`https://outshift.design/blog/${p.slug}`} target="_blank" rel="noreferrer" className="hx-card group bg-[var(--surface-raised)] border border-[var(--stroke-subtle)] flex flex-col overflow-clip rounded-[var(--radius-xl)] w-[368px]">
+            <a key={p.slug} href={`https://outshift.design/blog/${p.slug}`} target="_blank" rel="noreferrer" className="hx-card group bg-[var(--surface-raised)] border border-[var(--stroke-subtle)] flex flex-col overflow-clip rounded-[var(--radius-xl)] w-full sm:w-[calc((100%_-_24px)/2)] xl:w-[368px]">
               <span className="block h-[206px] w-full overflow-hidden"><img alt="" loading="lazy" src={`/hax/v1/blog/${p.slug}.jpg`} className="block h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" /></span>
               <span className="flex flex-col gap-[10px] pb-[18px] pt-[16px] px-[16px] w-full">
                 <span className="flex gap-[6px]">

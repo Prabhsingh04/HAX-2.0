@@ -55,11 +55,11 @@ export function McpPage() {
   }, []);
   const pick = (id: string) => { setTab(id); try { localStorage.setItem("hax-mcp-platform", id); } catch {} };
   const pl = PLATFORMS.find((p) => p.id === tab)!;
-  const card = "hx-card bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex gap-[14px] items-center px-[22px] py-[20px] rounded-[var(--radius-xl)] w-[380px]";
+  const card = "hx-card bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex gap-[14px] items-center px-[22px] py-[20px] rounded-[var(--radius-xl)] w-full min-w-0 md:flex-1";
   const Row = ({ logo, name }: { logo: string; name: string }) => (
     <>
       <span className="bg-white border border-[var(--stroke-subtle)] flex items-center justify-center rounded-[8px] shrink-0 size-[40px]"><img alt="" src={logo} className="size-[22px]" /></span>
-      <span className="flex flex-1 flex-col gap-[2px] min-w-px whitespace-nowrap">
+      <span className="flex flex-1 flex-col gap-[2px] min-w-0 sm:whitespace-nowrap">
         <span className="font-semibold leading-[20px] text-[14px]">Connect to {name}</span>
         <span className="leading-[18px] text-[12px] text-[color:var(--text-secondary)]">Opens {name} with setup steps in the prompt</span>
       </span>
@@ -68,15 +68,15 @@ export function McpPage() {
   );
   return (
     <>
-      <section className="flex flex-col gap-[16px] items-start pb-[56px] pt-[72px] px-[144px] relative w-full overflow-hidden" data-node-id="101:3128">
-        <h1 className="hx-rise relative font-semibold leading-[58px] text-[50px] tracking-[-0.6px] whitespace-nowrap">MCP Server</h1>
-        <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[760px]">Let your AI assistant search HAX patterns, components and tokens for you, straight from a prompt.</p>
-        <p className="relative flex flex-wrap gap-[4px] items-center w-[760px] leading-[22px] text-[14px] text-[color:var(--text-secondary)]">
+      <section className="flex flex-col gap-[16px] items-start pb-[56px] pt-[72px] px-[var(--hx-gutter)] relative w-full overflow-hidden" data-node-id="101:3128">
+        <h1 className="hx-rise relative font-semibold leading-[44px] text-[36px] tracking-[-0.4px] md:leading-[58px] md:text-[50px] md:tracking-[-0.6px] md:whitespace-nowrap">MCP Server</h1>
+        <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-full max-w-[760px] lg:w-[760px]">Let your AI assistant search HAX patterns, components and tokens for you, straight from a prompt.</p>
+        <p className="relative flex flex-wrap gap-[4px] items-center w-full max-w-[760px] lg:w-[760px] leading-[22px] text-[14px] text-[color:var(--text-secondary)]">
           <span>It works through the HAX MCP server.</span>
           <a href="https://modelcontextprotocol.io/" target="_blank" rel="noreferrer" className="px-[2px] py-px font-medium leading-[20px] text-[color:var(--text-link)]"><span className="hx-link">Model Context Protocol</span></a>
           <span>is an open standard that lets AI assistants connect to tools and data.</span>
         </p>
-        <div className="relative flex gap-[16px] items-start pt-[16px]">
+        <div className="relative flex w-full max-w-[776px] flex-col gap-[12px] pt-[16px] md:flex-row md:items-start md:gap-[16px]">
           <a href={claudeHref} target="_blank" rel="noreferrer" className={card}><Row logo="/hax/v1/logo-claude.svg" name="Claude" /></a>
           <a href="https://chatgpt.com/codex" target="_blank" rel="noreferrer" className={card}
             onClick={() => { navigator.clipboard?.writeText(setupMd()).then(() => { setToast("Setup guide copied — paste it into Codex"); setTimeout(() => setToast(""), 2600); }); }}>
@@ -84,10 +84,10 @@ export function McpPage() {
           </a>
         </div>
       </section>
-      <section className="flex flex-col gap-[20px] items-start pb-[96px] pt-[40px] px-[144px] w-full" data-node-id="101:3191">
+      <section className="flex flex-col gap-[20px] items-start pb-[96px] pt-[40px] px-[var(--hx-gutter)] w-full" data-node-id="101:3191">
         <h2 className="font-semibold leading-[36px] text-[29px] tracking-[-0.2px]">Setup</h2>
         <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)]">Pick where you work. The steps change to match.</p>
-        <div role="tablist" aria-label="Platform" className="bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex gap-[4px] items-center p-[4px] rounded-[var(--radius-pill)]"
+        <div role="tablist" aria-label="Platform" className="bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex max-w-full gap-[4px] items-center overflow-x-auto p-[4px] rounded-[var(--radius-pill)] [scrollbar-width:none]"
           onKeyDown={(e) => {
             const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0; if (!d) return;
             const i = PLATFORMS.findIndex((p) => p.id === tab); const n = PLATFORMS[(i + d + PLATFORMS.length) % PLATFORMS.length];
@@ -97,18 +97,18 @@ export function McpPage() {
             const sel = p.id === tab;
             return (
               <button key={p.id} id={`tab-${p.id}`} role="tab" type="button" aria-selected={sel} tabIndex={sel ? 0 : -1} onClick={() => pick(p.id)}
-                className={`hx-tab flex h-[28px] items-center px-[12px] rounded-[var(--radius-pill)] text-[13px] leading-[18px] whitespace-nowrap ${sel ? "bg-[var(--surface-accent)] font-semibold text-[color:var(--text-on-accent)]" : "font-medium text-[color:var(--text-secondary)]"}`}>{p.name}</button>
+                className={`hx-tab flex h-[28px] shrink-0 items-center px-[12px] rounded-[var(--radius-pill)] text-[13px] leading-[18px] whitespace-nowrap ${sel ? "bg-[var(--surface-accent)] font-semibold text-[color:var(--text-on-accent)]" : "font-medium text-[color:var(--text-secondary)]"}`}>{p.name}</button>
             );
           })}
         </div>
-        <ol key={tab} role="tabpanel" aria-labelledby={`tab-${tab}`} className="hx-swap flex flex-col gap-[24px] items-start pt-[12px]">
+        <ol key={tab} role="tabpanel" aria-labelledby={`tab-${tab}`} className="hx-swap flex max-w-full flex-col gap-[24px] items-start pt-[12px]">
           {pl.steps.map((st, i) => (
-            <li key={st.title} className="flex gap-[16px] items-start">
+            <li key={st.title} className="flex max-w-full gap-[16px] items-start">
               <span className="bg-[var(--surface-accent)] flex items-center justify-center rounded-[var(--radius-pill)] shrink-0 size-[28px] font-semibold leading-[18px] text-[13px] text-[color:var(--text-on-accent)] tracking-[0.07px]">{i + 1}</span>
-              <div className="flex flex-col gap-[6px] items-start">
+              <div className="flex min-w-0 flex-col gap-[6px] items-start">
                 <h3 className="font-semibold leading-[24px] text-[16px]">{st.title}</h3>
-                <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[720px]">{st.text}</p>
-                {st.code && <CodeBlock code={st.code} header={false} className="w-[480px]" />}
+                <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-full max-w-[720px] lg:w-[720px]">{st.text}</p>
+                {st.code && <CodeBlock code={st.code} header={false} className="w-full max-w-[480px] lg:w-[480px]" />}
                 {st.note && <p className="leading-[20px] text-[13px] text-[color:var(--text-secondary)]">{st.note}</p>}
               </div>
             </li>

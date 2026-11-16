@@ -27,8 +27,9 @@ function Col({ title, items, ext }: { title: string; items: string[][]; ext?: bo
 
 export function Footer() {
   return (
-    <footer className="w-full px-[40px] pb-[40px] pt-[64px]" data-node-id="106:8954">
-      <div className="mx-auto flex max-w-[1360px] flex-col gap-[40px] rounded-[24px] border border-[var(--edge)] bg-[var(--panel)] px-[48px] pb-[32px] pt-[48px] shadow-[0_8px_24px_rgba(0,0,0,.4)]">
+    <footer className="w-full px-[16px] pb-[24px] pt-[48px] md:px-[40px] md:pb-[40px] md:pt-[64px]" data-node-id="106:8954">
+      {/* phones: tighter padding and the link groups two by two, so the footer stays short */}
+      <div className="mx-auto flex max-w-[1360px] flex-col gap-[32px] rounded-[24px] border border-[var(--edge)] bg-[var(--panel)] px-[24px] pb-[24px] pt-[32px] shadow-[0_8px_24px_rgba(0,0,0,.4)] md:gap-[40px] md:px-[48px] md:pb-[32px] md:pt-[48px]">
         <div className="flex flex-wrap items-start justify-between gap-[40px]">
           <a href="/v3" aria-label="HAX by Outshift, home" className="flex gap-[16px] items-center">
             <img alt="" src="/hax/v3/logo-hax-weave-dark.svg" className="h-[32px] w-[86.9px]" />
@@ -39,7 +40,7 @@ export function Footer() {
               </span>
             </span>
           </a>
-          <nav aria-label="Footer" className="flex flex-wrap gap-[96px] items-start">
+          <nav aria-label="Footer" className="grid w-full grid-cols-2 items-start gap-x-[24px] gap-y-[32px] sm:flex sm:w-auto sm:flex-wrap sm:gap-[96px]">
             <Col title="HAX" items={HAX} />
             <Col title="Company" items={COMPANY} ext />
             <Col title="Connect" items={CONNECT} ext />
@@ -47,7 +48,7 @@ export function Footer() {
         </div>
         <div className="h-px w-full" style={{ backgroundImage: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.12) 15%, rgba(255,255,255,.12) 85%, rgba(255,255,255,0) 100%)" }} />
         <div className="flex flex-wrap items-start justify-between gap-[16px] leading-[16px] text-[12px] text-[color:var(--text-2)]">
-          <div className="flex flex-wrap gap-[24px]">
+          <div className="flex flex-wrap gap-x-[16px] gap-y-[8px] md:gap-[24px]">
             {LEGAL.map(([l, h]) => <a key={l} href={h} target="_blank" rel="noreferrer" className="h3-link hover:text-[color:var(--text)]">{l}</a>)}
           </div>
           <p>© 2026 Outshift. All rights reserved.</p>

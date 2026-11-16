@@ -19,28 +19,28 @@ const eyebrow = "font-semibold leading-[16px] text-[11px] text-[color:var(--text
 
 export function FourSetups() {
   return (
-    <section id="setups" className="flex w-full flex-col items-center px-[var(--hx-gutter)] py-[72px] md:py-[96px]">
+    <section id="setups" className="flex w-full flex-col items-center px-[var(--hx-gutter)] py-[56px] md:py-[96px]">
       <div className="hx-reveal flex flex-col items-center gap-[16px] text-center">
         <h2 className="font-extralight leading-[42px] text-[34px] [text-wrap:balance] md:leading-[52px] md:text-[42px] xl:leading-[60px] xl:text-[50px] xl:whitespace-nowrap">The same patterns work across four setups</h2>
         <p className="max-w-[640px] leading-[26px] text-[16px] text-[color:var(--text-secondary)] [text-wrap:balance]">
           Choose the simplest setup that fits the exchange. As more agents and people join, make responsibilities and decision rights clear.
         </p>
       </div>
-      <div className="hx-reveal mt-[40px] grid w-full max-w-[1152px] grid-cols-1 rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] md:grid-cols-2 xl:mt-[48px] xl:grid-cols-4">
+      <div className="hx-reveal mt-[28px] grid w-full max-w-[1152px] grid-cols-2 rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] md:mt-[40px] xl:mt-[48px] xl:grid-cols-4">
         {LEVEL_ORDER.map((l, i) => {
           const n = compsIn(l).length;
           return (
             // four bands shared across the columns (subgrid), so titles, counts, lists and links line up
-            <div key={l} className="su-live row-span-4 grid grid-rows-subgrid border-[var(--stroke-subtle)] p-[20px] max-md:[&:not(:first-child)]:border-t md:max-xl:[&:nth-child(even)]:border-l md:max-xl:[&:nth-child(n+3)]:border-t xl:[&:not(:first-child)]:border-l">
+            <div key={l} className="su-live row-span-4 grid grid-rows-subgrid border-[var(--stroke-subtle)] p-[12px] md:p-[20px] max-xl:[&:nth-child(even)]:border-l max-xl:[&:nth-child(n+3)]:border-t xl:[&:not(:first-child)]:border-l">
               <SetupArt level={l} />
-              <div className="flex flex-col gap-[6px] pt-[20px]">
+              <div className="flex flex-col gap-[4px] pt-[10px] md:gap-[6px] md:pt-[20px]">
                 <p className={eyebrow}>{String(i + 1).padStart(2, "0")}</p>
                 <div className="flex flex-col gap-[4px]">
-                  <h3 className="whitespace-nowrap font-semibold leading-[26px] text-[18px]">{LEVEL_LABEL[l]}</h3>
-                  <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)]">{LINE[l]}</p>
+                  <h3 className="font-semibold leading-[19px] text-[14.5px] md:whitespace-nowrap md:leading-[26px] md:text-[18px]">{LEVEL_LABEL[l]}</h3>
+                  <p className="leading-[17px] text-[12px] text-[color:var(--text-secondary)] md:leading-[22px] md:text-[14px]">{LINE[l]}</p>
                 </div>
               </div>
-              <div className="flex flex-col gap-[8px] pt-[20px]">
+              <div className="flex flex-col gap-[8px] pt-[20px] max-md:hidden">
                 <p className="font-semibold leading-[18px] text-[13px]">{n} components apply</p>
                 <ul className="flex flex-col">
                   {FEATURED[l].map((id) => (
@@ -53,7 +53,7 @@ export function FourSetups() {
                   ))}
                 </ul>
               </div>
-              <div className="flex pt-[12px]">
+              <div className="flex pt-[10px] md:pt-[12px]">
                 <a href={`/library?setup=${l}`} className="flex items-center gap-[4px] font-semibold leading-[18px] text-[13px] text-[color:var(--text-link)]">
                   <span className="hx-link">See all {n}</span>
                   <img alt="" src="/hax/v1/icon-arrow-right-link-12.svg" className="hx-arrow size-[12px]" />

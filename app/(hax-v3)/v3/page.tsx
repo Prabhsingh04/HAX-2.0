@@ -3,8 +3,9 @@ import { HorizonRule } from "@/components/hax/v3/ui";
 import { Hero } from "@/components/hax/v3/home/Hero";
 import { HowCompare } from "@/components/hax/v3/home/HowCompare";
 import { HowItWorks } from "@/components/hax/v3/home/HowItWorks";
-import { TwoWaysIn } from "@/components/hax/v3/home/TwoWaysIn";
-import { FourMoments } from "@/components/hax/v3/home/FourMoments";
+import { FourSetups } from "@/components/hax/v3/home/FourSetups";
+import { FourWaysIn } from "@/components/hax/v3/home/FourWaysIn";
+import { Families } from "@/components/hax/v3/home/Families";
 import { McpSection } from "@/components/hax/v3/home/McpSection";
 import { BuiltBy } from "@/components/hax/v3/home/BuiltBy";
 
@@ -17,9 +18,9 @@ export default function Home() {
       <HorizonRule />
       <HowItWorks />
       <HorizonRule />
-      <TwoWaysIn />
-      <HorizonRule />
-      <FourMoments />
+      <FourSetups />
+      <FourWaysIn />
+      <Families />
       <HorizonRule />
       <McpSection />
       <HorizonRule />

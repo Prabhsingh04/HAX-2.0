@@ -73,6 +73,24 @@
 .hax-v3 .h3-reveal.is-in { opacity: 1; transform: none; }
 @keyframes h3-swap { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .hax-v3 .h3-swap { animation: h3-swap .35s var(--ease-out); }
+/* section rules draw out from the middle as they come into view */
+.hax-v3 .h3-reveal.h3-rule { opacity: 1; transform: scaleX(0); transition: transform 1.4s var(--ease-out); }
+.hax-v3 .h3-reveal.h3-rule.is-in { transform: none; }
+/* sequences (.h3-seq): the parent stays put and its .h3-step children arrive one after another,
+   each --i × 120ms later. How it works' rail draws left to right and each step's dot pops as it passes. */
+.hax-v3 .h3-reveal.h3-seq { opacity: 1; transform: none; }
+.hax-v3 .h3-seq > .h3-step { opacity: 0; transform: translateY(32px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); transition-delay: calc(var(--i, 0) * 120ms + 120ms); }
+.hax-v3 .h3-seq.is-in > .h3-step { opacity: 1; transform: none; }
+.hax-v3 .h3-rail { transform: scaleX(0); transform-origin: left; transition: transform 1.6s var(--ease-out) .2s; }
+.hax-v3 .is-in .h3-rail { transform: none; }
+.hax-v3 .h3-pop { transform: scale(0); transition: transform .6s var(--spring); transition-delay: calc(var(--i, 0) * 420ms + 320ms); }
+.hax-v3 .is-in .h3-pop { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hax-v3 .h3-reveal.h3-rule, .hax-v3 .h3-seq > .h3-step, .hax-v3 .h3-rail, .hax-v3 .h3-pop { opacity: 1; transform: none; }
+}
+/* How it works: the active step's line fills over its time (StepTabs sets the duration) */
+@keyframes h3-steprun { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.hax-v3 .h3-steprun { transform-origin: left; animation: h3-steprun linear forwards; }
 
 /* hero stage word: every phrase shares one grid cell, so the line never shifts */
 .hax-v3 .h3-rot { display: inline-grid; vertical-align: bottom; overflow: hidden; text-align: left; padding-bottom: .14em; margin-bottom: -.14em; }
@@ -99,3 +117,21 @@
 .hax-v3 .hx-copy { transition: transform .15s; }
 .hax-v3 .hx-copy:active { transform: scale(.9); }
 .hax-v3 .hx-copy:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+/* Four ways in: each role is one row link. On hover the role brightens and its arrow fills cyan
+   (the swarm draws the role's picture beside it) */
+.hax-v3 .h3-way-title { transition: color .3s var(--ease-out); }
+.hax-v3 .h3-way:hover .h3-way-title { color: #fff; }
+.hax-v3 .h3-way-go { transition: background-color .3s var(--ease-out), border-color .3s var(--ease-out), color .3s var(--ease-out), transform .4s var(--spring); }
+.hax-v3 .h3-way:hover .h3-way-go { background: var(--cyan); border-color: var(--cyan); color: var(--bg); transform: translateX(4px); }
+.hax-v3 .h3-way:active .h3-way-go { background: var(--cyan-press); }
+.hax-v3 .h3-way:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; border-radius: 8px; }
+/* Eight families (MagicBento): on hover a card's edge lights in the Neural Expressive AI gradient,
+   blue to violet to pink, softened (less saturated, partly see-through) for the dark page */
+.hax-v3 .magic-bento__card::after {
+  content: ""; position: absolute; inset: 0; z-index: 5; padding: 1px; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(135deg, #8eb2ea 0%, #a798d8 50%, #dca3bd 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity .3s var(--ease-out);
+}
+.hax-v3 .magic-bento__card:is(:hover, :focus-visible)::after { opacity: .7; }

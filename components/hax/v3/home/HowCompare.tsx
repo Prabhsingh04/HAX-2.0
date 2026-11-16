@@ -1,14 +1,17 @@
-import { HowCompare as PrabhCompare } from "../../v1/home/HowCompare";
+import AnimatedContent from "@/components/reactbits/AnimatedContent";
+import { HowCompare as SharedCompare } from "../../v1/home/HowCompare";
 
-// "See how HAX elevates the AI experience": Prabh's original "With and without HAX"
-// section, the same shared component v1 and v2 render (his markup, script and scoped
-// styles from public/hax/v1/compare/), so any change made there shows here too. v3 is
-// always dark: .hx3-compare maps his colours onto v3's palette (tokens.css), and the
-// section is see-through so it sits on the v3 page colour.
+// "See how HAX elevates the AI experience": the shared "With and without HAX" section that v1 and v2
+// render too (v1/home/HowCompare.tsx, built from the library's own parts), here in its dark theme.
+// The panel rises and settles to full size as it scrolls in (React Bits AnimatedContent).
 export function HowCompare() {
   return (
-    <div className="hx3-compare relative">
-      <PrabhCompare />
+    <div className="px-[32px] py-[24px]">
+      <AnimatedContent distance={64} duration={1.1} ease="power4.out" scale={0.94} initialOpacity={0} threshold={0.12}>
+        <div className="hx3-compare relative overflow-clip rounded-[40px]">
+          <SharedCompare />
+        </div>
+      </AnimatedContent>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { CodeBlock } from "@/components/hax/v1/CodeBlock";
+import { STAGES } from "@/components/hax/v1/library/data";
 import { H1, Lede, SkyTag, WorldHero } from "./ui";
 
 // Figma: HAX v3 · Docs 106:7454 (hero 106:7455, body 106:7566). Code and copy are v1's
@@ -54,7 +55,19 @@ const PACKAGES: [string, string, string[]][] = [
   ["Content & data", "Rich content and structured display.", ["code-block", "table", "accordion", "action-tile", "getting-started-pill", "modular-consent", "related-patterns-grid"]],
   ["Foundations", "Tokens, hooks, and utilities.", ["tokens", "tokens/preset", "tokens/styles.css", "hooks", "utils"]],
 ];
-const SECTIONS = [["install", "Install"], ["theming", "Set up theming"], ["quick-start", "Quick start: an agent chat"], ["packages", "Packages"]];
+// For product managers: v1's words (components/hax/v1/DocsPage.tsx, kept unexported there). Each row
+// links to the entry in this branch's library that carries that component.
+const CALLS: [string, string, string, string][] = [
+  ["Read the CRM and draft a reply", "Acts alone", "Every step lands in the activity log, and people can stop it at any point.", "footprints"],
+  ["Send email outside the team", "Asks first", "An approval card says who gets it, what it costs and how long the undo lasts.", "verification"],
+  ["Use a new tool or read new data", "Asks once", "A permission request shows what will be sent. People allow it once or always.", "consent"],
+  ["Change 240 records at once", "Tries one first", "A sample shows the before and after, then people choose to run it on the rest.", "sample-response"],
+  ["Refund a double charge", "Hands off", "A named person picks it up, with what the agent found passed along.", "task-assignment"],
+  ["Delete files or send payments", "Never", "It sits on the list of what the agent can use as a hard limit.", "connectors"],
+];
+const NAME = new Map(STAGES.flatMap((s) => s.cats.flatMap((c) => c.patterns.map((p) => [p.id, p.name] as const))));
+const th = "px-[20px] py-[12px] text-left align-bottom font-[family-name:var(--font-mono)] font-medium leading-[16px] text-[12px] tracking-[0.96px] uppercase text-[color:var(--text-2)]";
+const SECTIONS = [["install", "Install"], ["theming", "Set up theming"], ["quick-start", "Quick start: an agent chat"], ["packages", "Packages"], ["product-managers", "For product managers"]];
 
 // section side nav: a 3px marker per link; the one you're reading turns cyan (106:7571)
 export function SideNav({ items, active, label = "On this page" }: { items: string[][]; active: string; label?: string }) {
@@ -139,6 +152,35 @@ export function DocsPage() {
                 </div>
               ))}
             </div>
+          </section>
+          <section id="product-managers" className="h3-reveal flex scroll-mt-[96px] flex-col gap-[16px]">
+            <h2 className={h2}>For product managers</h2>
+            <p className={sub}>Before launch, decide where the agent acts alone, where it asks first, and what it never does. Each call shows up in the product as one HAX component, so your team builds exactly what you decided.</p>
+            <div className="overflow-clip rounded-[16px] border border-[var(--edge)] bg-[var(--panel)] shadow-[0_8px_24px_rgba(0,0,0,.4)]">
+              <table className="w-full border-collapse">
+                <caption className="sr-only">What the agent may do on its own, and what people see</caption>
+                <colgroup><col className="w-[32%]" /><col className="w-[17%]" /><col /></colgroup>
+                <thead className="bg-[var(--panel-2)]">
+                  <tr><th scope="col" className={th}>When the agent wants to</th><th scope="col" className={th}>Your call</th><th scope="col" className={th}>What people see</th></tr>
+                </thead>
+                <tbody>
+                  {CALLS.map(([act, call, see, id]) => (
+                    <tr key={id} className="border-t border-[var(--edge)] align-top">
+                      <td className="px-[20px] py-[16px] leading-[24px] text-[15px] text-[color:var(--text)]">{act}</td>
+                      <td className="px-[20px] py-[16px] font-semibold leading-[24px] text-[15px] text-[color:var(--text)] whitespace-nowrap">{call}</td>
+                      <td className="px-[20px] py-[16px]">
+                        <p className="leading-[24px] text-[15px] text-[color:var(--text-2)] [text-wrap:pretty]">{see}</p>
+                        <a href={`/v3/pattern?id=${id}`} className="h3-link mt-[6px] inline-flex items-center gap-[6px] font-semibold leading-[20px] text-[14px] text-[color:var(--cyan)]">
+                          {NAME.get(id)}
+                          <img alt="" src="/hax/v3/icon-right-14-cyan.svg" className="h3-arrow size-[14px]" />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className={sub}>Share this table with your engineers. Every row links to the component, with its states and the data it needs.</p>
           </section>
         </div>
       </div>

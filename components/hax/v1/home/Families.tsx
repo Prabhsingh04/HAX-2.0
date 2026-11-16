@@ -7,7 +7,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 export function Families() {
   return (
-    <section id="patterns" data-hx-blob-o="0.72" className="flex flex-col gap-[24px] items-center px-[max(20px,calc(var(--hx-gutter)_-_30px))] py-[72px] relative w-full md:gap-[28px] md:py-[96px]" data-node-id="98:19721">
+    <section id="patterns" data-hx-blob-o="0.72" className="flex flex-col gap-[24px] items-center px-[max(20px,calc(var(--hx-gutter)_-_30px))] py-[56px] relative w-full md:gap-[28px] md:py-[96px]" data-node-id="98:19721">
       <h2 className="hx-reveal font-extralight text-center leading-[42px] text-[34px] [text-wrap:balance] md:leading-[52px] md:text-[42px] xl:leading-[60px] xl:text-[50px] xl:whitespace-nowrap">
         Every component sits in one of eight families
       </h2>
@@ -18,17 +18,17 @@ export function Families() {
         <img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="hx-arrow size-[14px]" />
         All {COMPS.length} components
       </a>
-      <div className="hx-reveal grid w-full max-w-[1212px] grid-cols-1 gap-[16px] pt-[20px] sm:grid-cols-2 xl:grid-cols-4">
+      <div className="hx-reveal grid w-full max-w-[1212px] grid-cols-2 gap-[10px] pt-[8px] md:gap-[16px] md:pt-[20px] xl:grid-cols-4">
         {FAMILIES.map((f, i) => (
           <a key={f.id} href={`/library#${f.id}`}
             className="hx-card group bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex flex-col overflow-clip rounded-[var(--radius-xl)]">
             <FamilyArt id={f.id} />
-            <div className="flex flex-1 flex-col gap-[8px] items-start px-[20px] pt-[16px] pb-[20px]">
+            <div className="flex flex-1 flex-col gap-[5px] items-start px-[12px] pt-[10px] pb-[12px] md:gap-[8px] md:px-[20px] md:pt-[16px] md:pb-[20px]">
               <p className="font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase">{pad(i + 1)}</p>
-              <h3 className="font-semibold leading-[28px] text-[20px]">{f.name}</h3>
-              <p className="leading-[22px] text-[14px] text-[color:var(--text-secondary)]">{f.job}</p>
+              <h3 className="font-semibold leading-[20px] text-[15px] md:leading-[28px] md:text-[20px]">{f.name}</h3>
+              <p className="leading-[17px] text-[12px] text-[color:var(--text-secondary)] md:leading-[22px] md:text-[14px]">{f.job}</p>
               <span className="mt-auto pt-[6px] flex">
-                <span className="hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap">
+                <span className="hx-btn hx-btn--outline hx-btn--sm bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[6px] h-[28px] items-center px-[10px] rounded-[var(--radius-pill)] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] font-semibold leading-[16px] text-[12px] tracking-[0.07px] whitespace-nowrap md:h-[32px] md:px-[12px] md:leading-[18px] md:text-[13px]">
                   {f.comps.length} components
                   <img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="hx-arrow size-[14px]" />
                 </span>

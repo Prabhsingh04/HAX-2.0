@@ -58,7 +58,7 @@ export function Hero() {
             <span className="text-[color:var(--text-soft)]">Explore mobile patterns</span>
             <img alt="" src="/hax/v3/icon-right-12-white.svg" className="h3-arrow size-[12px]" />
           </SkyTag>
-          <h1 className="h3-rise h3-rise--2 font-light text-[clamp(44px,5vw,72px)] leading-[1] tracking-[-0.03em] text-white whitespace-nowrap">
+          <h1 className="h3-rise h3-rise--2 font-light text-[clamp(44px,5vw,72px)] leading-[1] tracking-[-0.03em] text-white [text-wrap:balance] lg:whitespace-nowrap">
             <span className="block">One pattern library</span>
             <span className="block font-semibold leading-[1.06]">
               <Grad>for the teams in </Grad>
@@ -68,7 +68,7 @@ export function Hero() {
           <Lede className="max-w-[880px]">Give your AI a face people trust. Describe it in a sentence — HAX does the rest.</Lede>
           <div className="h3-rise h3-rise--4 flex flex-wrap justify-center gap-[16px]">
             <a href="/v3/library" className={`${btn} h3-btn--primary`}>
-              Browse patterns
+              Browse components
               <img alt="" src="/hax/v3/icon-right-16-ink.svg" className="h3-arrow size-[16px]" />
             </a>
             <button type="button" onClick={() => copy("npm install @hax/react")} aria-label="Copy install command"
