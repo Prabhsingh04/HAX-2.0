@@ -122,3 +122,8 @@ html[data-hax-theme="dark"] .hax-v1 { --hx-human: #3fc6ee; --hx-agent: #ff8a50; 
 
 /* The page's side gutter: 20px on phones, growing with the window to Figma's 144px at 1440px */
 .hax-v1 { --hx-gutter: clamp(20px, 13.3333vw - 48px, 144px); }
+
+/* "With and without HAX" (home/HowCompare) carries the hax-v1 class itself so v2 and v3 can host
+   it, which gave it the page's opaque background. Inside v1's own page it lets the drifting
+   blob background show through, like every other home section. */
+.hax-v1 .hax-v1#how { background: transparent; }

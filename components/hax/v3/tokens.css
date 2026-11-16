@@ -69,3 +69,7 @@ html :where(.hax-v3) :is(h1, h2, h3, h4) { letter-spacing: 0; }
    as v1 shows it, in its light colours, on a light panel shaped like "How it works"'s band. Like the
    other product mock-ups on v3, the demo stays light. */
 html body .hax-v3 .hx3-compare .hx-vs.landing-light { background: #fff !important; }
+
+/* "Without HAX": on v3's dark card the user's question used the page tint and disappeared into
+   the card; a lighter fill keeps it apart from the assistant's reply. */
+.hax-v3 .hx3-compare .hx-vs-q { background: rgba(255, 255, 255, .1); }

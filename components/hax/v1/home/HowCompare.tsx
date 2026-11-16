@@ -12,6 +12,7 @@ import "../library/kit/kit.css";
 import "../library/kit/ds-shadcn.css";
 import "@/components/ui/shadcn.css";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { ArrowUpRight, Check, ChevronDown, FileText, Search, ShieldCheck, Sparkle, X } from "../library/kit/icons";
 import { Caret, Spin } from "../library/kit/ui";
 import { Btn, Tag } from "../library/kit/parts";
@@ -29,6 +30,11 @@ const PARTS: Record<PartId, { at: number; name: string; page: string }> = {
   label: { at: 7, name: "AI label", page: "ai-label" },
   ask: { at: 8, name: "Permission request", page: "permission-request" },
 };
+// each part links to its component page in the version showing it: /v3/pattern on /v3, /pattern on v1
+function usePatternHref() {
+  const v = usePathname()?.match(/^\/v\d+(?=\/|$)/)?.[0] ?? "";
+  return (page: string) => `${v}/pattern?id=${page}`;
+}
 // when each step starts, in ms; the answer streams word by word from step 5
 const AT = [0, 0, 500, 1150, 1800, 2000, 3300, 3600, 4000];
 const WORD_MS = 62;
@@ -50,12 +56,12 @@ const CHECKS = [
 ];
 
 function Part({ id, step, children }: { id: PartId; step: number; children: ReactNode }) {
-  const p = PARTS[id], on = step >= p.at;
+  const p = PARTS[id], on = step >= p.at, href = usePatternHref();
   return (
     <div className={`relative transition-[opacity,transform] duration-500 ease-out ${on ? "opacity-100" : "translate-y-[6px] opacity-0"}`}>
       {children}
       {/* desktop: the part's name to the left of the card, with a line to the part */}
-      <a href={`/pattern?id=${p.page}`} tabIndex={on ? 0 : -1} aria-hidden={!on}
+      <a href={href(p.page)} tabIndex={on ? 0 : -1} aria-hidden={!on}
         className="hx-link absolute right-[calc(100%+56px)] top-0 hidden items-center gap-[4px] whitespace-nowrap rounded-[var(--radius-pill)] border border-[var(--stroke-default)] bg-[var(--surface-page)] px-[10px] py-[2px] font-medium leading-[16px] text-[12px] text-[color:var(--text-link)] lg:inline-flex after:pointer-events-none after:absolute after:left-[calc(100%+6px)] after:top-1/2 after:h-px after:w-[44px] after:bg-[var(--stroke-default)] before:pointer-events-none before:absolute before:left-[calc(100%+50px)] before:top-1/2 before:size-[5px] before:-translate-y-1/2 before:rounded-full before:bg-[var(--text-link)]">
         {p.name}<ArrowUpRight size={12} />
       </a>
@@ -64,6 +70,7 @@ function Part({ id, step, children }: { id: PartId; step: number; children: Reac
 }
 
 export function HowCompare() {
+  const href = usePatternHref();
   const sec = useRef<HTMLElement>(null);
   const timers = useRef<number[]>([]);
   const [step, setStep] = useState(0);
@@ -111,13 +118,13 @@ export function HowCompare() {
         {tab("without", "Without HAX")}{tab("with", "With HAX")}
       </div>
 
-      <div className="grid w-full max-w-[640px] items-start gap-[40px] lg:max-w-[1152px] lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1fr)] lg:gap-x-[200px]">
+      <div className="grid w-full max-w-[640px] items-start gap-[40px] lg:max-w-[1152px] lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1fr)] lg:items-stretch lg:gap-x-[200px]">
         {/* without: a bare reply */}
-        <div className={`flex flex-col gap-[14px] ${side === "without" ? "" : "max-md:hidden"}`}>
+        <div className={`flex flex-col gap-[14px] lg:row-span-3 lg:grid lg:grid-rows-subgrid ${side === "without" ? "" : "max-md:hidden"}`}>
           <p className={label}><i aria-hidden="true" className="size-[7px] rounded-full bg-[var(--text-tertiary)]" />Without HAX</p>
-          <div role="group" aria-label="A bare AI chat reply" className="flex flex-col gap-[16px] rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] bg-[var(--surface-raised)] p-[20px]">
+          <div role="group" aria-label="A bare AI chat reply" className="flex flex-col gap-[16px] lg:flex-1 rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] bg-[var(--surface-raised)] p-[20px]">
             <p className="flex items-center gap-[10px] border-b border-[var(--stroke-subtle)] pb-[14px] font-semibold leading-[20px] text-[14px]"><AiMark />Assistant</p>
-            <p className={`self-end rounded-[14px] bg-[var(--surface-tint)] px-[14px] py-[9px] leading-[20px] text-[14px] transition-opacity duration-500 ${step >= 1 ? "opacity-100" : "opacity-0"}`}>{Q}</p>
+            <p className={`hx-vs-q max-w-[78%] self-end rounded-[14px] bg-[var(--surface-tint)] px-[14px] py-[9px] leading-[20px] text-[14px] transition-opacity duration-500 ${step >= 1 ? "opacity-100" : "opacity-0"}`}>{Q}</p>
             <p className={`flex gap-[10px] leading-[22px] text-[14px] transition-opacity duration-500 ${step >= 3 ? "opacity-100" : "opacity-0"}`}>
               <span className="mt-[2px]"><AiMark s={18} /></span>
               Yes, you can get a refund. Just contact our support team and they&rsquo;ll process it for you.
@@ -131,7 +138,7 @@ export function HowCompare() {
         </div>
 
         {/* with: the same question, answered with HAX components */}
-        <div className={`flex flex-col gap-[14px] ${side === "with" ? "" : "max-md:hidden"}`}>
+        <div className={`flex flex-col gap-[14px] lg:row-span-3 lg:grid lg:grid-rows-subgrid ${side === "with" ? "" : "max-md:hidden"}`}>
           <div className="flex items-center justify-between">
             <p className={label}><i aria-hidden="true" className="size-[7px] rounded-full bg-[var(--text-link)]" />With HAX</p>
             <button type="button" onClick={play} aria-label="Replay" title="Replay"
@@ -142,11 +149,11 @@ export function HowCompare() {
           {/* below desktop the parts' names sit in a row above the card */}
           <ul aria-label="Components in this reply" className="flex flex-wrap gap-[6px] lg:hidden">
             {Object.values(PARTS).map((p) => (
-              <li key={p.page}><a href={`/pattern?id=${p.page}`} className="hx-chip flex h-[26px] items-center gap-[4px] rounded-[var(--radius-pill)] border border-[var(--stroke-default)] bg-[var(--surface-page)] px-[10px] font-medium leading-[16px] text-[12px] text-[color:var(--text-link)]">{p.name}<ArrowUpRight size={11} /></a></li>
+              <li key={p.page}><a href={href(p.page)} className="hx-chip flex h-[26px] items-center gap-[4px] rounded-[var(--radius-pill)] border border-[var(--stroke-default)] bg-[var(--surface-page)] px-[10px] font-medium leading-[16px] text-[12px] text-[color:var(--text-link)]">{p.name}<ArrowUpRight size={11} /></a></li>
             ))}
           </ul>
           <div role="group" aria-label="The same support chat built with HAX components" data-ds="shadcn"
-            className="hk hk-col gap-[16px] rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] bg-[var(--surface-raised)] p-[20px]">
+            className="hk hk-col gap-[16px] lg:flex-1 rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] bg-[var(--surface-raised)] p-[20px]">
             <DSFonts ds="shadcn" />
             {/* the assistant built with HAX carries the HAX logo */}
             <div className="hk-row gap-[8px] border-b border-[var(--k-edge)] pb-[12px]">
