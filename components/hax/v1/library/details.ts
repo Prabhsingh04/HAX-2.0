@@ -1,0 +1,381 @@
+// What a component page says about each of the 45 components (ids from ./catalog).
+// how:    when it shows up → what people see → what happens next
+// states: the states it has, each with one line
+// needs:  the fields that draw it, as the agent or the app would send them; the values
+//         match the component's preview, so page and picture tell the same story
+export type Detail = { how: [string, string, string]; states: [string, string][]; needs: Record<string, unknown>; dos: string[]; donts: string[] };
+
+export const DETAILS: Record<string, Detail> = {
+  /* Composers */
+  "prompt-input": {
+    how: ["Always there: at the bottom of a chat, or in the middle of an empty page.", "A text box with attach, voice, the agent's mode and the model, plus Send. While the agent works, Send turns into Stop.", "Send hands the request and any files to the agent. The reply appears above and the box clears for the next ask."],
+    states: [["Empty", "Shows the placeholder, with suggestions above it."], ["Typing", "Send lights up; attached files sit as chips above the text."], ["Working", "Send becomes Stop; people can already type the next ask."], ["Listening", "Voice shows a live waveform and the words as they are heard."]],
+    needs: { placeholder: "Ask anything", mode: "Agent", modes: ["Ask", "Agent"], model: "Thorough", models: ["Fast", "Thorough"], attachments: [{ name: "churn-q3.pdf", size: "2.4 MB" }], voice: true },
+    dos: ["Keep Stop exactly where Send was, so a run can always be halted.", "Show attached files as chips above the text, each with a way to remove it."],
+    donts: ["Don't disable Send without saying why.", "Don't bury the mode or model in settings; people change them per ask."],
+  },
+  "source-picker": {
+    how: ["Next to the input, when the agent can look in more than one place.", "A menu of sources with checks (the web, a shared drive, a team wiki), plus Connect apps.", "The next ask only searches the checked sources. The chip in the input shows how many are on."],
+    states: [["Default", "The workspace's usual sources are checked."], ["Custom", "The chip names the count, like 2 sources."], ["Not connected", "A source that needs sign-in shows Connect instead of a check."]],
+    needs: { sources: [{ id: "web", label: "The web", on: true }, { id: "drive", label: "Shared drive", on: true }, { id: "wiki", label: "Team wiki", on: false }], canConnect: true },
+    dos: ["Remember the choice for the conversation, not forever.", "Keep the active count on the chip, so it's visible while typing."],
+    donts: ["Don't search a source the person turned off, even if it would help.", "Don't list sources the person can't open."],
+  },
+  "suggested-prompts": {
+    how: ["On an empty screen, before the first ask.", "Three or four ready-made asks that fit this person and this place in the product.", "Tapping one sends it, or drops it into the input to edit first."],
+    states: [["Shown", "On the empty screen only."], ["Hover", "The row shows an arrow and sends on tap."], ["Gone", "Hidden once the conversation starts."]],
+    needs: { title: "What should we work on?", prompts: ["Draft the launch announcement", "Compare churn in Q2 and Q3", "List the open risks for Atlas"], sendOnTap: true },
+    dos: ["Write each one the way the person would actually type it.", "Pick them from where the person is: the open file, the project, their role."],
+    donts: ["Don't show more than four.", "Don't use them to advertise features."],
+  },
+  suggestions: {
+    how: ["Inside the input, when the agent sees something useful to do with what is open.", "A few short chips with real actions for this project, under a line that says what they're based on.", "Tapping a chip fills the input or starts the action. The chips refresh after each reply."],
+    states: [["Showing", "Up to three chips."], ["After a reply", "The chips switch to next steps for that answer."], ["None", "Nothing useful to suggest: no chips and no empty row."]],
+    needs: { basedOn: "atlas-web", chips: [{ label: "Close 3 stale issues", action: "fill" }, { label: "Review 2 open PRs", action: "fill" }, { label: "Draft release notes", action: "fill" }] },
+    dos: ["Start each chip with a verb, and a real number when there is one.", "Say what the suggestions are based on."],
+    donts: ["Don't keep offering a chip the person has ignored twice.", "Don't run anything from a chip without showing it in the input first."],
+  },
+  "prompt-templates": {
+    how: ["When a task has a good shape people reuse, like a status update or a brief.", "One sentence with blanks; each blank is a short menu or a field.", "Use template sends the finished sentence. People can still edit it in the input first."],
+    states: [["Ready", "Each blank shows its default choice."], ["Editing a blank", "The blank opens a short menu or a text field."], ["Filled", "Every blank has a value and Use template lights up."]],
+    needs: { name: "Status update", sentence: "Write a {length} update for {audience} about {topic}", blanks: { length: ["short", "detailed"], audience: ["the exec team", "my team", "a customer"], topic: { type: "text", value: "launch risks" } } },
+    dos: ["Keep it to one sentence and three blanks at most.", "Let people type their own value into any blank."],
+    donts: ["Don't make people fill every blank before they can send.", "Don't hide the final ask; show exactly what will be sent."],
+  },
+  "example-gallery": {
+    how: ["On an empty screen, for tasks where the result is hard to picture, like charts or plans.", "A few finished examples, each with a picture of the result and a plain name.", "Picking one starts the same kind of task with the person's own data."],
+    states: [["Shown", "Three to six examples."], ["Picked", "The example's ask fills the input, ready to edit."]],
+    needs: { title: "Start from an example", examples: [{ name: "Weekly KPI chart", kind: "chart" }, { name: "Vendor comparison", kind: "table" }, { name: "Launch checklist", kind: "checklist" }] },
+    dos: ["Show real results, not illustrations.", "Switch to the person's own data the moment they pick one."],
+    donts: ["Don't show examples the agent can't actually make.", "Don't keep the gallery on screen once work has started."],
+  },
+
+  /* Artifacts */
+  streaming: {
+    how: ["As soon as the agent starts answering.", "The answer appears word by word, with a caret and a short status like Writing, and Stop beside it.", "When it finishes, the caret goes and the reply's actions appear. Stop keeps whatever was already written."],
+    states: [["Starting", "Three dots while the first words load."], ["Writing", "Text grows with a caret; Stop is shown."], ["Stopped", "The text so far stays, marked as stopped."], ["Done", "The caret goes; copy, feedback and try again appear."]],
+    needs: { status: "writing", text: "Churn rose 4 points in EMEA after the May price change…", words: 86, canStop: true },
+    dos: ["Add tables and cards a whole row at a time, never half-drawn.", "Keep the page still while text grows; don't pull the scroll if the person scrolled up."],
+    donts: ["Don't stream half a number or half a link that could be read wrong.", "Don't hide Stop until the end."],
+  },
+  summary: {
+    how: ["After long material (a meeting, a document, a thread), or at the end of the agent's own work.", "The few points that matter, with decisions and actions as counts. After a task: what the agent did, and the files it changed.", "Tapping a count jumps to those items. Full notes opens the source; View PR opens the change."],
+    states: [["Short", "Three to five points."], ["Expanded", "Every point, grouped into decisions and actions."], ["Updated", "A newer version replaces the old one and says so."]],
+    needs: { title: "Pricing sync · Summary", source: { kind: "meeting", minutes: 42 }, points: ["The Team plan stays at $12 a seat", "Launch moves to March 18", "Maya sends the revised quote by Friday"], decisions: 2, actions: 1 },
+    dos: ["Lead with decisions and owners, not background.", "Link every point back to where it came from."],
+    donts: ["Don't add points that aren't in the source.", "Don't summarise something shorter than the summary."],
+  },
+  table: {
+    how: ["When the answer is many items with the same fields: vendors, accounts, tickets.", "A table with clear headers, the value that answers the question marked, and where the rows came from. A few big numbers become cards, one record becomes label and value rows, and data for another tool comes as JSON.", "People can sort, edit a cell or ask about a row. Their edits stay when the agent updates the table."],
+    states: [["Ready", "Rows, with the key value marked."], ["Editing", "A cell opens; the AI label notes it was changed by a person."], ["Filling", "Rows arrive one at a time as the data comes in."]],
+    needs: { title: "Vendor comparison", columns: ["Vendor", "Per month", "Uptime"], rows: [["Northwind", "$1,200", "99.9%"], ["Contoso", "$980", "99.5%"], ["Fabrikam", "$1,450", "99.99%"]], mark: { row: 1, column: 1, why: "Lowest price" }, source: "3 quotes in the shared drive" },
+    dos: ["Mark the one cell that answers the question.", "Say where the rows came from, under the table."],
+    donts: ["Don't use a table for two or three values; write a sentence.", "Don't let the agent overwrite cells a person edited."],
+  },
+  chart: {
+    how: ["When the answer is a trend or a comparison in numbers.", "A simple chart with the one change that matters called out in words.", "Hovering shows exact values. People can ask about any point or change the range."],
+    states: [["Ready", "The chart with one callout."], ["Hover", "The exact value for that point."], ["No data", "Names the range that has no data, instead of an empty axis."]],
+    needs: { title: "Weekly active teams", kind: "bar", range: "Last 8 weeks", values: [31, 35, 33, 39, 42, 55, 63, 70], markFrom: 5, callout: { at: 5, text: "+18% after launch" } },
+    dos: ["Call out the one change the person should notice.", "Use the simplest chart that fits: bars or a line."],
+    donts: ["Don't start the axis above zero to make a change look bigger.", "Don't use colour alone to mark what matters."],
+  },
+  variations: {
+    how: ["When there is no single right answer: headlines, palettes, images, or two whole replies.", "Three versions side by side, labelled A, B and C, or two full replies, each saying how it differs.", "Picking one uses it. Mix combines two. More makes a new set and keeps the old one."],
+    states: [["Choosing", "Three versions, none picked."], ["Picked", "One version gets a blue edge and a check."], ["More", "A new set arrives; the earlier set stays one tap away."]],
+    needs: { title: "Headline", versions: ["Ship faster, with fewer hand-offs", "Your team, minus the busywork", "Request to release in a day"], picked: 1, canMix: true },
+    dos: ["Make the versions truly different, not three rewordings.", "Keep earlier sets so people can go back."],
+    donts: ["Don't show more than four at once.", "Don't pick for the person."],
+  },
+  media: {
+    how: ["When the answer is better heard or seen: a recap, a demo, slides.", "The reply holds an audio player with a waveform, slides, or a video split into scenes, each with its length.", "Play starts it in place. Each piece can be downloaded or shared on its own."],
+    states: [["Ready", "Play buttons, with lengths."], ["Playing", "The waveform fills as it plays."], ["Making", "A placeholder with progress while the media is generated."]],
+    needs: { text: "Here is the launch recap, as audio and as slides.", items: [{ kind: "audio", length: "2:10" }, { kind: "slides", count: 6, title: "Atlas reached 1,240 teams" }, { kind: "video", length: "1:24", title: "Product demo" }] },
+    dos: ["Give every piece a length or a count.", "Offer a text version of any audio or video."],
+    donts: ["Don't play sound on its own.", "Don't make media the only copy of an answer."],
+  },
+  transcript: {
+    how: ["During or after a call or meeting.", "Who said what and when, with the action items pulled out under the line that created them.", "Tapping a line plays that moment. Action items can be sent straight to a task list."],
+    states: [["Live", "Lines appear as people speak, with a live dot."], ["Finished", "The full transcript, with actions and decisions marked."], ["Searching", "Matching lines are highlighted."]],
+    needs: { meeting: "Pricing sync", live: true, lines: [{ who: "Maya", at: "02:14", text: "Can we move the launch to the 18th?" }, { who: "Jon", at: "02:31", text: "Only if QA can start on the 11th." }], actions: [{ text: "Book QA for March 11", owner: "Jon", from: "02:31" }] },
+    dos: ["Tie every action to the line it came from.", "Let people fix a name or a misheard word."],
+    donts: ["Don't record without a visible sign that it's recording.", "Don't guess who spoke; say Speaker 1 until someone confirms."],
+  },
+  canvas: {
+    how: ["When the work is a document, code or a design that will be edited more than once.", "The work opens beside the chat. The agent's edits are highlighted, with its name on its cursor.", "People edit it directly and the agent sees the change. Asking in the chat edits the canvas, not a new copy."],
+    states: [["Viewing", "The latest version."], ["Agent editing", "Its highlight and cursor move through the text."], ["You editing", "Your cursor; the agent waits until you pause."], ["Versions", "Earlier versions are one tap away."]],
+    needs: { title: "Launch brief", kind: "document", editing: { by: "Agent", sentence: "Atlas turns a request into finished work in a day.", because: "Make the intro shorter" }, cursors: ["Agent", "You"] },
+    dos: ["Show who changed what, by colour and by name.", "Keep versions, so any change can be rolled back."],
+    donts: ["Don't let the agent edit where the person is typing.", "Don't start a new copy for every ask."],
+  },
+  "form-fill": {
+    how: ["When the agent already has what a form needs: renewals, expenses, sign-ups.", "Every field it filled is marked, and anything it's unsure of is flagged.", "People check, change or clear fields. Nothing is submitted until they accept."],
+    states: [["Filled", "Each filled field carries an AI mark."], ["Check this", "A warning on fields the agent is unsure of."], ["Edited", "The mark goes once a person changes the field."]],
+    needs: { form: "New renewal", fields: [{ label: "Company", value: "Northwind Traders", from: "CRM" }, { label: "Value", value: "$48,000 a year", from: "Last contract" }, { label: "Renews on", value: "March 1, 2027", check: "Two dates found; check this one" }] },
+    dos: ["Say where each value came from.", "Flag a field instead of guessing it."],
+    donts: ["Don't submit the form for the person.", "Don't fill passwords, payment details or ID numbers."],
+  },
+  "refine-menu": {
+    how: ["When people select part of a result.", "A small menu over the selection: shorter, longer, bullets, tone and Ask.", "The change applies to the selection only, and the old text is one tap away."],
+    states: [["Selected", "The menu appears over the selection."], ["Changing", "The selection shimmers while it's rewritten."], ["Changed", "The new text, with Undo for a few seconds."]],
+    needs: { selection: "Most people said setup took longer than expected, mainly because of the data import.", actions: ["Shorter", "Longer", "Bullets", "Tone", "Ask"], tones: ["Friendly", "Neutral", "Formal"] },
+    dos: ["Change only what was selected.", "Keep Undo in view right after a change."],
+    donts: ["Don't rewrite the whole answer for a small fix.", "Don't cover the selected text with the menu."],
+  },
+
+  /* Collectors */
+  "clarifying-question": {
+    how: ["When the ask could mean more than one thing and a guess would waste time.", "One question, with the likely answers as numbered options and a last row to type your own.", "The agent carries on with the answer and says what it assumed."],
+    states: [["Asking", "Options shown; Continue waits for a choice."], ["Answered", "The choice folds into the thread."], ["Skipped", "The agent says what it will assume instead."]],
+    needs: { question: "Which region should the report cover?", why: "I found data for three.", options: ["North America", "EMEA", "All regions"], other: true },
+    dos: ["Ask one question at a time.", "Offer the likely answers, so people tap instead of type."],
+    donts: ["Don't ask what the agent could find out itself.", "Don't ask the same thing again after an answer."],
+  },
+  "choice-picker": {
+    how: ["When the agent has a short list of real options and needs the person to pick: times, plans, files.", "The options as tiles with the details that matter, and a button that names the pick.", "The agent books, buys or uses the picked option, then confirms it."],
+    states: [["Choosing", "Tiles, none picked."], ["Picked", "One tile filled; the button names it."], ["Gone", "An option that's no longer available is greyed out."]],
+    needs: { question: "When should I book the review?", why: "All five people are free at these times.", options: [{ day: "Tue 17 Nov", time: "10:00", length: "45 min" }, { day: "Wed 18 Nov", time: "14:30", length: "45 min" }, { day: "Thu 19 Nov", time: "09:00", length: "45 min" }], picked: 1 },
+    dos: ["Name the pick in the button, like Book Wednesday.", "Show only options that still work."],
+    donts: ["Don't show more than five options.", "Don't act before the person picks."],
+  },
+  "form-request": {
+    how: ["When the agent is missing details it can't find itself, like an amount or a receipt.", "A short form in the thread with just those fields.", "Send gives the agent the details and it carries on."],
+    states: [["Empty", "Fields waiting, with hints."], ["Partly filled", "Send stays off until the required fields are done."], ["Sent", "The form folds into a one-line summary."]],
+    needs: { reason: "I need three details to file this expense.", fields: [{ name: "amount", label: "Amount", type: "money" }, { name: "category", label: "Category", type: "select", options: ["Travel", "Meals", "Software"], value: "Travel" }, { name: "receipt", label: "Receipt", type: "file", accept: ["jpg", "pdf"] }] },
+    dos: ["Ask only for what the agent can't find.", "Fill in anything it already knows."],
+    donts: ["Don't ask for more than four things at once.", "Don't ask for passwords or card numbers in the chat."],
+  },
+  feedback: {
+    how: ["Under every answer and every action.", "Thumbs up and down, with copy and try again beside them.", "Thumbs down asks what went wrong in a tap or two. The answer is kept with the reply for review."],
+    states: [["Idle", "Quiet icons under the reply."], ["Rated", "The chosen thumb stays filled."], ["Asking why", "A few reasons, with room to type."]],
+    needs: { reply: "r_1042", rating: "down", reasons: ["Not accurate", "Missed context", "Too long"], picked: "Missed context" },
+    dos: ["Keep it to one tap; the reason is optional.", "Say what the feedback is used for."],
+    donts: ["Don't interrupt people with a survey.", "Don't hide try again behind a thumbs down."],
+  },
+  "team-decision": {
+    how: ["When a choice needs several people, like a price, a launch date or a policy.", "The question, its owner and deadline, the options the agents prepared with what each costs, and who has weighed in.", "The owner decides. The card records the choice and the agents carry on with it."],
+    states: [["Open", "People can weigh in until the deadline."], ["Decided", "Shows the choice and who made it."], ["Reopened", "Back to open, with the earlier choice kept."]],
+    needs: { question: "Which price ships in March?", channel: "#pricing", owner: "Maya Ruiz", due: "Friday", options: [{ label: "Keep $12 a seat", note: "least churn risk, revenue flat", by: "Pricing agent", votes: ["MR", "JK", "AL"] }, { label: "Raise to $14", note: "revenue up 9%, churn up about 2 points", by: "Revenue agent", votes: ["SR"] }] },
+    dos: ["Name one owner who makes the call.", "Let the agents lay out what each option costs."],
+    donts: ["Don't let the agents vote.", "Don't decide by vote count alone."],
+  },
+
+  /* Controllers */
+  "stop-and-pause": {
+    how: ["Whenever the agent is doing something that takes time or changes things.", "What it's doing, how far it got, and Pause and Stop.", "Pause holds after the current step. Stop ends the run and lists what already changed."],
+    states: [["Running", "Progress, with Pause and Stop."], ["Paused", "Resume and Stop; nothing new starts."], ["Stopped", "What was done, and how to undo it."]],
+    needs: { task: "Updating 48 records in the CRM", done: 18, total: 48, timeLeft: "about a minute", last: "Northwind Traders", canPause: true },
+    dos: ["Keep Stop one tap away at all times.", "After Stop, say exactly what already changed."],
+    donts: ["Don't ask \"Are you sure?\" before stopping.", "Don't start the next step after Pause."],
+  },
+  capabilities: {
+    how: ["Before first use, and whenever someone asks what the agent can do.", "Each app the agent can use, what it may do there, and what it can never do.", "A changed level applies from the next action. Ask first sends risky steps to an Approval card."],
+    states: [["Connected", "The app with its level: Read, or Read and post."], ["Ask first", "Every action in that app needs a yes."], ["Off", "Shown but greyed out; the agent won't touch it."]],
+    needs: { agent: "Support agent", apps: [{ app: "Shared drive", level: "read" }, { app: "Team chat", level: "read_and_post" }, { app: "Issue tracker", level: "ask_first" }, { app: "Email", level: "off" }], never: ["Delete files", "Send payments"] },
+    dos: ["Say what the agent can't do as plainly as what it can.", "Start every new app at Ask first."],
+    donts: ["Don't bury these settings in an admin page.", "Don't widen access unless a person chooses to."],
+  },
+  memory: {
+    how: ["Whenever the agent saves something about a person to use later.", "Everything it remembers as plain sentences, each with delete, plus a memory switch and a temporary chat.", "Deleting a memory removes it at once. A temporary chat saves nothing."],
+    states: [["On", "Memories listed, newest first."], ["Just saved", "A note in the thread when something new is remembered."], ["Off", "Nothing is saved or used."]],
+    needs: { on: true, items: ["Prefers answers as short bullet points", "Works on the Growth team", "Sends the weekly report on Fridays"], temporaryChat: false },
+    dos: ["Say in the thread when something is saved.", "Let people delete any memory in one tap."],
+    donts: ["Don't keep sensitive details without asking.", "Don't use memories in a temporary chat."],
+  },
+  checkpoints: {
+    how: ["Before the agent changes things: files, data, settings.", "A marker in the thread with the time and Restore, and arrows to flip between versions of an answer.", "Restore puts everything back to that point. Later work is kept as another branch."],
+    states: [["Saved", "A checkpoint marker with Restore."], ["Restoring", "Shows what will be undone before it runs."], ["Branches", "Arrows show which version this is, like 2 of 3."]],
+    needs: { checkpoint: { at: "10:42", before: "6 file changes" }, branch: { current: 2, of: 3 } },
+    dos: ["Make a checkpoint before every change to data.", "Show what Restore will undo before doing it."],
+    donts: ["Don't throw away newer work when restoring.", "Don't hide branches; show the count."],
+  },
+  "agent-access": {
+    how: ["In settings, wherever several agents share one workflow.", "A grid of agents and the systems they can use, with what each may do there.", "Changing a cell changes what that agent can do from its next step. Rules that keep powers apart stay listed."],
+    states: [["Default", "Each agent has only what its job needs."], ["Rule broken", "A change that would give one agent two powers that must stay apart is refused, with the rule."], ["Waiting", "An agent asked for more access and an admin has to approve it."]],
+    needs: { workflow: "Refunds", agents: [{ name: "Billing agent", access: { stripe: "refund" } }, { name: "Support agent", access: { stripe: "read", zendesk: "reply" } }, { name: "Outreach agent", access: { zendesk: "read", gmail: "send" } }], rules: ["No agent can both refund a payment and email the customer"] },
+    dos: ["Give each agent only what its job needs.", "Keep the rules that split powers in view."],
+    donts: ["Don't let one agent hold every key a task needs.", "Don't show access without saying what it allows."],
+  },
+
+  /* Approvals */
+  "approval-card": {
+    how: ["Before a step that sends, deletes, spends or can't easily be undone.", "What the agent will do, to whom, what it costs and how long undo lasts.", "Approve runs it. Edit changes it first. Reject cancels it, and the agent says what it will do instead."],
+    states: [["Waiting", "The agent is paused until someone decides."], ["Approved", "Shows who approved it, and when."], ["Rejected", "The step is cancelled and the reason kept."], ["Expired", "No answer in time, so nothing was done."]],
+    needs: { title: "Send 3 renewal emails?", action: "send_email", to: ["Acme", "Globex", "Initech"], cost: "About 2 credits", undo: "Up to 5 minutes after sending", answers: ["approve", "edit", "reject"] },
+    dos: ["Put the one thing that matters in the title, as a question.", "Name the button after the action: Approve and send."],
+    donts: ["Don't ask for approval on safe steps that are easy to undo.", "Don't bundle unrelated steps into one approval."],
+  },
+  "permission-request": {
+    how: ["The first time the agent wants to use a tool, or read data it hasn't read before.", "Which tool, what for, and the exact request it will send.", "Allow once lets this request through. Always allow skips the question next time. Deny blocks it."],
+    states: [["Asking", "The request and three choices."], ["Allowed", "It runs and shows up in the activity log."], ["Denied", "The agent carries on without it, or says why it can't."]],
+    needs: { tool: "Code repo", purpose: "Open a pull request", request: { call: "create_pull_request", repo: "atlas/web", title: "Fix token refresh" }, answers: ["allow_once", "always_allow", "deny"] },
+    dos: ["Show the exact request, not a summary of it.", "Make Allow once the main choice."],
+    donts: ["Don't ask for broad access when one request will do.", "Don't treat Always allow as permission for other tools."],
+  },
+  "preview-before-run": {
+    how: ["Before the agent repeats a step many times: tagging, emailing, updating records.", "The result for one real sample, how many it will run on, and Another sample.", "Run on all applies it to everything. Edit prompt changes the instructions and shows a new sample."],
+    states: [["Sample", "One real result."], ["Another", "A different sample to check."], ["Running", "Progress, with Stop."]],
+    needs: { task: "Tag 240 support tickets", total: 240, sample: { ticket: "#4821", from: "Northwind", text: "I can't export invoices to CSV since this morning.", tags: ["Billing", "Bug", "High priority"] } },
+    dos: ["Use a real item from the batch, never a made-up one.", "Show the count on the run button."],
+    donts: ["Don't skip the sample for jobs that are hard to undo.", "Don't run on everything after Edit prompt without a new sample."],
+  },
+  "diff-view": {
+    how: ["When the agent changes a document, code or settings.", "Removed lines in red and added lines in green, with accept and reject on each change.", "Accepted changes apply; rejected ones go back. Nothing applies until a person decides."],
+    states: [["Proposed", "Every change waiting."], ["Partly accepted", "Accepted lines turn solid and the count updates."], ["Applied", "The file is saved, with a link to undo."]],
+    needs: { file: "pricing.md", changes: [{ remove: "$14 per seat, billed monthly", add: "$12 per seat, billed yearly" }, { remove: "Email support", add: "Chat and email support" }] },
+    dos: ["Let people accept or reject each change on its own.", "Show enough of the lines around a change to judge it."],
+    donts: ["Don't apply changes to a shared file before review.", "Don't hide changes the agent thinks are small."],
+  },
+
+  /* Workflows */
+  plan: {
+    how: ["Before a task with several steps, especially ones that change things.", "The steps in order, how long it should take, and which steps will ask first.", "People reorder, add or remove steps, then Run plan. The plan then tracks the progress."],
+    states: [["Draft", "Steps can be dragged, added or removed."], ["Running", "Each step shows done, working or waiting."], ["Waiting on you", "A step that asks first pauses the plan."]],
+    needs: { title: "Plan", time: "About 3 min", steps: [{ text: "Pull 90 days of support tickets" }, { text: "Group them by theme" }, { text: "Draft a summary for review" }, { text: "Post it to #support-leads", asksFirst: true }] },
+    dos: ["Mark the steps that will ask for approval.", "Keep each step to one action people would recognise."],
+    donts: ["Don't start before the person runs the plan.", "Don't slip in new steps quietly; show them as added."],
+  },
+  "task-list": {
+    how: ["After a meeting, a thread or a plan produces work for people.", "Each task with an owner and a due date, and a way to send them all to a tracker.", "Checking a task marks it done. Send to tracker creates them there and links back."],
+    states: [["Suggested", "Tasks the agent wrote, waiting to be sent."], ["Sent", "Each links to its tracker item."], ["Done", "Checked and struck through."]],
+    needs: { from: "Pricing sync", tasks: [{ text: "Send the revised quote", owner: "MK", due: "Fri", done: true }, { text: "Book QA for March 11", owner: "JT", due: "Mon" }, { text: "Update the launch roadmap", owner: "SR", due: "Wed" }], sendTo: "Issue tracker" },
+    dos: ["Give every task an owner and a date.", "Link each task to where it came from."],
+    donts: ["Don't send tasks to a tracker without a person's yes.", "Don't assign tasks to people who weren't there."],
+  },
+  "hand-off": {
+    how: ["When work moves to another agent or to a person.", "The chain of who had it and who has it now, why it moved, and how it's going.", "People can follow along or Take over at any point. Whoever finishes hands back with what they did."],
+    states: [["Passed", "Shows the new owner and the reason."], ["Working", "The current owner is marked live."], ["Back with you", "The work is waiting for a person."]],
+    needs: { from: "Research agent", to: "Billing agent", then: "Finance", reason: "Needs invoice access to finish the refund", status: "working", since: "2 min" },
+    dos: ["Always say why the work moved.", "Show who has it now, at a glance."],
+    donts: ["Don't pass work to a person without telling them.", "Don't drop the context; pass the whole thread along."],
+  },
+  "progress-steps": {
+    how: ["While the agent works through a task that takes more than a few seconds.", "Each step in plain words, with the current one moving and a count where it has one.", "Steps tick off as they finish. A failed step says what went wrong and offers the next move."],
+    states: [["Working", "One step moving, with a count."], ["Done", "All steps ticked, with the time taken."], ["Failed", "The failed step shows the error and a fix."]],
+    needs: { title: "Reviewing renewal contracts", elapsed: "1:12", steps: [{ text: "Read 12 contracts from the shared drive", status: "done" }, { text: "Comparing renewal terms", status: "working", done: 7, of: 12 }, { text: "Draft the summary", status: "waiting" }] },
+    dos: ["Say what's actually happening: Reading 12 contracts, not Processing.", "Show a count whenever there is one."],
+    donts: ["Don't show fake progress.", "Don't list more than five steps; group them."],
+  },
+  "workflow-canvas": {
+    how: ["When people build or check an automation that runs without them.", "Steps as connected boxes (triggers, agent steps, people and actions), with each branch labelled.", "Selecting a step shows its settings and recent runs. The running step is outlined live."],
+    states: [["Editing", "Steps can be added, moved and connected."], ["Running", "The active step and its path light up."], ["Waiting on a person", "The person's step shows who needs to act."]],
+    needs: { steps: [{ id: "ticket", kind: "trigger", name: "New ticket" }, { id: "draft", kind: "agent", name: "Draft reply" }, { id: "review", kind: "person", name: "Review" }, { id: "send", kind: "action", name: "Send reply" }], links: [["ticket", "draft"], ["draft", "send", "Sure"], ["draft", "review", "Not sure"], ["review", "send"]] },
+    dos: ["Mark every step where a person checks the agent's work.", "Label each branch with the rule that picks it."],
+    donts: ["Don't let a branch skip a person without saying when.", "Don't hide the steps that send or spend."],
+  },
+  "shared-status": {
+    how: ["While people and agents work the same problem, like an outage or a launch.", "The goal, what everyone knows with who found it, what is still open with who is on it, and who is working now.", "Anyone can add what they learn. Agents post their findings here instead of in private threads."],
+    states: [["Live", "Updates as people and agents report."], ["Resolved", "The goal is met and the page becomes the record."], ["Quiet", "Nothing new for a while; says when it last changed."]],
+    needs: { goal: "Checkout working again before 14:00", known: [{ by: "Triage agent", fact: "Errors began at 09:12, seven minutes after the deploy" }, { by: "Jon", fact: "Rolling back fixed checkout on staging" }], open: [{ question: "Do we refund the failed orders?", owner: "Billing agent" }, { question: "What do we tell customers?", owner: "Sam" }], working: { agents: 2, people: 2 } },
+    dos: ["Say who found each fact.", "Give every open question an owner."],
+    donts: ["Don't bury it in a chat thread.", "Don't let an agent mark the goal met on its own."],
+  },
+
+  /* Explorers */
+  reasoning: {
+    how: ["While or after the agent works through a hard question.", "A folded line that says how long it thought; opening it shows the steps in plain sentences.", "The answer stays separate, below. People can quote a step to correct it."],
+    states: [["Thinking", "The line counts up while it thinks."], ["Folded", "Shows how long it took."], ["Open", "The steps it took, in order."]],
+    needs: { seconds: 12, steps: ["Churn is up 4 points. Which plans moved?", "EMEA Team plan fell right after the May price change.", "Check Q2 first, so a seasonal dip isn't the cause."], answer: "EMEA drove most of the rise." },
+    dos: ["Keep it folded by default.", "Write the steps as plain sentences, not raw logs."],
+    donts: ["Don't put the answer inside the reasoning.", "Don't show steps that weren't actually used."],
+  },
+  sources: {
+    how: ["Whenever an answer rests on documents, pages or data.", "Numbered markers in the text, and the sources listed below with where each one lives.", "Tapping a marker shows the exact passage. Tapping a source opens it."],
+    states: [["Cited", "Markers in the text, sources below."], ["Hover", "The passage behind a marker."], ["Unsupported", "A claim with no source is marked as such."]],
+    needs: { text: "Churn rose 4 points in EMEA [1], mostly on the Team plan after the May price change [2].", sources: [{ n: 1, title: "Q3 churn report", where: "Shared drive" }, { n: 2, title: "May pricing change", where: "Team wiki" }, { n: 3, title: "SaaS retention benchmark", where: "Web" }] },
+    dos: ["Point to the passage, not just the document.", "Put each marker right after the claim it supports."],
+    donts: ["Don't cite sources the agent didn't read.", "Don't pad the list with loosely related links."],
+  },
+  confidence: {
+    how: ["When some parts of an answer are firmer than others.", "Each claim with a three-step meter, a word for the level, and the reason for it.", "Low claims link to what would make them firmer, like another source."],
+    states: [["High", "Several sources agree."], ["Medium", "One source, not yet confirmed."], ["Low", "A guess, with what it's based on."]],
+    needs: { claims: [{ text: "Churn rose 4 points in EMEA", level: "high", why: "3 sources agree" }, { text: "The May price change caused it", level: "medium", why: "1 source, not yet confirmed" }, { text: "It will recover by Q4", level: "low", why: "A guess from past quarters" }] },
+    dos: ["Give the reason with every level.", "Use words, not percentages nobody can check."],
+    donts: ["Don't mark everything high.", "Don't use colour alone to show the level."],
+  },
+  "activity-log": {
+    how: ["Any time after the agent has acted, with a recap at the end of each session.", "A one-line recap, then every action in order with its time, its app and whether it worked.", "Tapping an action shows its details and, where possible, Undo."],
+    states: [["Recap", "One line at the top of the session."], ["Full log", "Every action, newest first."], ["Filtered", "One app, or one kind of action."]],
+    needs: { recap: "Read 12 files, sent 3 emails, filed 1 issue.", events: [{ at: "10:41", app: "Shared drive", did: "Read 12 files in /contracts", ok: true }, { at: "10:43", app: "Email", did: "Sent 3 renewal emails", ok: true }, { at: "10:44", app: "Issue tracker", did: "Filed issue ENG-412", ok: true }] },
+    dos: ["Log every action that changed something, in plain words.", "Link each entry to the thing it changed."],
+    donts: ["Don't leave out failed or undone actions.", "Don't make people dig for the log; link it from the recap."],
+  },
+  "tool-call": {
+    how: ["Each time the agent uses a tool: a search, a database, another app.", "The tool's name, how long it took and whether it worked; opening it shows what was sent and what came back.", "A failed call shows the error and what the agent did next."],
+    states: [["Running", "A spinner with the tool's name."], ["Done", "A check, the time taken and the result."], ["Failed", "The error and the agent's next move."]],
+    needs: { tool: "tracker.create_issue", status: "done", seconds: 1.2, sent: { title: "Fix token refresh", team: "Platform" }, got: { created: "ENG-412" } },
+    dos: ["Fold the details; show the outcome in one line.", "Link results to the thing they created."],
+    donts: ["Don't show keys or passwords in what was sent.", "Don't hide failed calls."],
+  },
+  rationale: {
+    how: ["Next to any result where the agent made a judgement: allowed, flagged or blocked.", "A verdict, a short reason and how sure the agent is.", "People can open the full reasoning or overrule the verdict, and the overrule is logged."],
+    states: [["Approved", "Allowed, with the reason."], ["Caution", "Allowed after a check, and says what to check."], ["Blocked", "Not allowed, with the rule it broke."], ["For your info", "Nothing to do; context only."]],
+    needs: { verdict: "caution", title: "This change touches production.", reason: "It edits 3 firewall rules on prod-east. A similar change in May caused 4 minutes of downtime.", confidence: "medium" },
+    dos: ["Give one concrete reason, with a number when there is one.", "Let people overrule, and log it."],
+    donts: ["Don't rely on colour alone; always show the verdict word.", "Don't show a verdict without a reason."],
+  },
+  "usage-meter": {
+    how: ["Next to the input, when limits or costs matter.", "A small ring that fills as the context is used; opening it shows the context window, time limits and credits.", "Near a limit, the ring warns and suggests a fix, like starting a new chat."],
+    states: [["Plenty", "The ring is mostly empty."], ["Filling up", "The ring turns amber and says what's left."], ["At the limit", "Says what stopped and when it resets."]],
+    needs: { context: { used: 568000, of: 1000000 }, limits: [{ name: "5-hour limit", used: 0.26, resetsIn: "4h 25m" }], credits: { used: 12.4, currency: "USD" } },
+    dos: ["Show what's left, not just what's used.", "Warn before the limit, not at it."],
+    donts: ["Don't show raw numbers without a plain meaning.", "Don't stop mid-task without saving the work."],
+  },
+  "agent-agreement": {
+    how: ["When several agents answer the same question, or a lead agent asks others for a second view.", "The adopted answer first, then how many agents agree, with each agent's pick and its reason.", "People can open how they decided, or approve the answer. A dissent stays in view until someone checks it."],
+    states: [["Agreed", "Every agent picked the same answer."], ["Split", "Most agree; the dissent and its reason stay in view."], ["Waiting on a person", "The agents can't settle it, so a person picks."]],
+    needs: { question: "Vendor choice", adopted: "Contoso", agents: [{ name: "Pricing agent", pick: "Contoso", reason: "Lowest cost over three years" }, { name: "Risk agent", pick: "Contoso", reason: "Best uptime of the three, 99.5%" }, { name: "Legal agent", pick: "Fabrikam", reason: "The only one that keeps data in the EU" }], dissent: "Contoso stores data in the US." },
+    dos: ["Lead with the adopted answer, then the count.", "Keep a dissent and its reason on the card."],
+    donts: ["Don't hide which agent disagreed.", "Don't treat a vote as proof; show the reasons."],
+  },
+  "agent-disagreement": {
+    how: ["When two agents reach different answers to the same question.", "What each agent could see, what it assumed and what it concluded, side by side, with the difference marked.", "A person picks the right assumption, and both agents carry on from it."],
+    states: [["Differ", "The rows where they differ are marked."], ["Settled", "The chosen assumption is shown and the agents run again."], ["Same inputs", "They saw the same data and still differ; it says so."]],
+    needs: { incident: "INC-2207", agents: [{ name: "Triage agent", saw: "Error logs since 09:00", assumed: "The outage began at 09:40", concluded: "Not caused by a deploy" }, { name: "Release agent", saw: "Error logs and the deploy history", assumed: "The outage began at 09:12", concluded: "Caused by the 09:05 deploy" }], differsOn: "assumed" },
+    dos: ["Name the one thing they differ on.", "Let a person settle it in one click."],
+    donts: ["Don't average two answers into one.", "Don't hide what each agent could not see."],
+  },
+  "decision-trail": {
+    how: ["Whenever someone asks why something was decided, or before an audit.", "The decision, then everything it rests on, newest first: who signed off, what the agents found and the records under that.", "Each step opens its source. The owner of the decision is always named."],
+    states: [["Decided", "Shows who owns the decision."], ["Direct inputs", "Only the steps the decision used directly."], ["Full trail", "Every step, down to the records."]],
+    needs: { decision: "Hold payment on INV-2041", owner: "Maya Ruiz", trail: [{ by: "Maya Ruiz", did: "Approved holding the payment", at: "10:42" }, { by: "Risk agent", did: "Flagged the invoice", detail: "The amount is 3× Acme's usual", at: "10:31" }, { by: "Bank agent", did: "Spotted new bank details", detail: "Changed last Tuesday", at: "10:30" }, { record: "Acme vendor record", source: "ERP", at: "2 Sep" }] },
+    dos: ["Name a person as the owner of every decision.", "Link every step to where it came from."],
+    donts: ["Don't drop the agents' steps from the trail.", "Don't let anyone edit the trail after the fact."],
+  },
+
+  /* Notifiers */
+  "ai-label": {
+    how: ["On anything the agent made: a reply, a draft, a table, an image.", "A small AI generated label, and a short note to check it before use.", "The label travels with the content when it's shared, and changes to Edited by you once a person edits it."],
+    states: [["AI generated", "Made by the agent and not yet checked."], ["Edited", "A person changed it."], ["Checked", "A person confirmed it."]],
+    needs: { label: "AI generated", note: "AI can make mistakes. Check it before sending.", madeBy: "Support agent", editedBy: null },
+    dos: ["Keep the label on content that leaves the product.", "Update it when a person edits the content."],
+    donts: ["Don't label things the agent didn't make.", "Don't make the note so long people stop reading it."],
+  },
+  "agent-avatar": {
+    how: ["Wherever an agent appears: in a thread, a list, a hand-off.", "The agent's mark, its name and its state: working, waiting for you, or idle.", "Tapping it shows what the agent is doing and what it can use."],
+    states: [["Working", "A soft ring pulses around the mark."], ["Waiting for you", "An amber dot, and a button to respond."], ["Idle", "A grey dot."]],
+    needs: { agents: [{ name: "Research agent", state: "working", doing: "Reading 12 files" }, { name: "Billing agent", state: "waiting", doing: "Waiting for your approval" }, { name: "Support agent", state: "idle", since: "9:20" }] },
+    dos: ["Use the same mark for the same agent everywhere.", "Show the state in words, not only as a dot."],
+    donts: ["Don't give agents human faces, or names that pass for a person.", "Don't show Working when nothing is running."],
+  },
+  "proactive-suggestion": {
+    how: ["When the agent notices something worth acting on that nobody asked about.", "A small card with what it noticed and one offer, easy to dismiss.", "Accepting starts the work. Not now dismisses it, and the agent won't raise it again soon."],
+    states: [["Shown", "One card, never more."], ["Accepted", "It turns into the started task."], ["Dismissed", "Gone, and remembered as declined."]],
+    needs: { noticed: "3 invoices are 30+ days late", offer: "Draft polite reminders", action: "draft_reminders", invoices: ["INV-2041", "INV-2038", "INV-2032"] },
+    dos: ["Lead with what the agent noticed, then make one offer.", "Respect Not now; don't ask again the same day."],
+    donts: ["Don't act before the person says yes.", "Don't interrupt focused work for something that can wait."],
+  },
+  "update-notice": {
+    how: ["When the agent, its model or its rules change.", "What changed, in a few plain points, with the version and the date.", "See everything that changed opens the full list. The notice is kept in the activity log."],
+    states: [["New", "Shown once, until dismissed."], ["Read", "Kept in the log."], ["Needs a yes", "A change to what the agent can do waits for confirmation."]],
+    needs: { version: "2.4", date: "today", changes: ["Now reads the team wiki", "Asks before deleting any file", "Uses the faster model by default"] },
+    dos: ["Say what it means for the person, not the release notes.", "Call out any new access the agent has."],
+    donts: ["Don't change what the agent can do without a notice.", "Don't show the same notice twice."],
+  },
+  "error-message": {
+    how: ["When something fails: a connection, a tool, a limit.", "What went wrong, why, what was saved, and the one button that fixes it.", "The fix retries or reconnects, and the agent carries on where it stopped."],
+    states: [["Can fix", "One clear button, like Reconnect."], ["Retrying", "Shows the attempt and the count."], ["Can't fix", "Says who can help and what to tell them."]],
+    needs: { title: "Couldn't reach the CRM", why: "The connection expired 2 hours ago.", saved: "Your request and 3 files are saved", fix: { label: "Reconnect", action: "reconnect" }, canRetry: true },
+    dos: ["Say what was saved, so nobody redoes it.", "Offer one clear fix first."],
+    donts: ["Don't show error codes without plain words.", "Don't blame the person."],
+  },
+};

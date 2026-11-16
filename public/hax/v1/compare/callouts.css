@@ -11,17 +11,17 @@
 
 .hx-vs .vs-co { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
 .hx-vs .vs-co svg { position: absolute; left: 0; top: 0; overflow: visible; }
-.hx-vs .vs-co line { stroke: rgb(139 87 199 / .45); stroke-width: 1; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset .6s cubic-bezier(.22,1,.36,1), stroke .25s ease; }
-.hx-vs .vs-co circle { fill: #8b57c7; opacity: 0; transition: opacity .3s ease .35s; }
+.hx-vs .vs-co line { stroke: rgb(41 50 71 / .28); stroke-width: 1; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset .6s cubic-bezier(.22,1,.36,1), stroke .25s ease; }
+.hx-vs .vs-co circle { fill: #0a6bd6; opacity: 0; transition: opacity .3s ease .35s; }
 .hx-vs .vs-co .is-on line { stroke-dashoffset: 0; }
 .hx-vs .vs-co .is-on circle { opacity: 1; }
-.hx-vs .vs-co .is-hot line { stroke: #8b57c7; }
+.hx-vs .vs-co .is-hot line { stroke: #0a6bd6; }
 .hx-vs .vs-co__lab { position: absolute; pointer-events: auto; white-space: nowrap; padding: 2px 8px; border: 1px solid transparent; border-radius: 999px;
-  background: rgb(139 87 199 / .09); color: #6b3fb0; font: 500 11px/1.5 var(--font-mono); cursor: default;
+  background: #eef4fc; color: #0a4f9e; font: 500 11px/1.5 var(--font-mono); cursor: default;
   opacity: 0; transform: translateY(var(--dy, 0)) scale(.96); transition: opacity .35s ease .3s, transform .45s cubic-bezier(.22,1,.36,1) .3s, border-color .25s ease; }
 .hx-vs .vs-co__lab.is-on { opacity: 1; transform: none; }
-.hx-vs .vs-co__lab:hover, .hx-vs .vs-co__lab.is-hot { border-color: rgb(139 87 199 / .45); }
-.hx-vs .vs-co__lab:focus-visible { outline: 2px solid #8b57c7; outline-offset: 2px; }
+.hx-vs .vs-co__lab:hover, .hx-vs .vs-co__lab.is-hot { border-color: rgb(10 107 214 / .45); }
+.hx-vs .vs-co__lab:focus-visible { outline: 2px solid #0a6bd6; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .hx-vs .vs-co line, .hx-vs .vs-co circle, .hx-vs .vs-co__lab { transition: none !important; } }
 
 /* Dark theme (the site's switch sets :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"])); his section had light colours only.
@@ -35,22 +35,49 @@
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__replay { border-color: rgb(255 255 255 / .16); }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__replay:hover { border-color: rgb(255 255 255 / .32); }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--without .vs__card { background: rgb(255 255 255 / .04); border-color: rgb(255 255 255 / .08); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--with .vs__card { border-color: rgb(255 255 255 / .10); box-shadow: 0 1px 2px rgb(0 0 0 / .3), 0 30px 60px -30px rgb(139 87 199 / .35); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--with .vs__card { border-color: rgb(255 255 255 / .10); box-shadow: 0 1px 2px rgb(0 0 0 / .3), 0 30px 60px -30px rgb(0 0 0 / .5) !important; }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__hd, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__hd, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__disc { border-color: rgb(255 255 255 / .10); }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__hd i, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__bot i { background: rgb(255 255 255 / .18); }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__user { background: #f2f2f4; color: #0c0c0a; }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__dots b { background: rgb(255 255 255 / .4); }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--without .vs__notes svg { color: #f97066; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--with .vs__notes svg, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__disc svg { color: #b69ae6; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__av { background: #2c2442; color: #c9b6f0; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__bubble { background: #252036; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__consent { background: #221d33; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__side--with .vs__notes svg, :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__disc svg { color: #3fc6ee !important; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__av { background: rgb(255 109 45 / .16) !important; color: #ffad85 !important; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__bubble { background: #1b2130 !important; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__consent { background: #171d29 !important; }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__doc { background: #151a24; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__tag { background: #352c52; color: #ddd3f5; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__btn { border-color: #9d88dc; color: #d3c6f5; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__tag { background: rgb(58 165 255 / .16) !important; color: #b9dcff !important; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__btn { border-color: rgb(255 255 255 / .22) !important; color: #e7eaf0 !important; }
 :is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__btn--p { background: #6f5bb8; border-color: #6f5bb8; color: #fff; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__p.is-hl { box-shadow: 0 0 0 2px #151a24, 0 0 0 4px rgb(182 154 230 / .6); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co__lab { background: rgb(182 154 230 / .14); color: #cdb9f3; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co line { stroke: rgb(182 154 230 / .5); }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co circle { fill: #b69ae6; }
-:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co .is-hot line { stroke: #b69ae6; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .hx__p.is-hl { box-shadow: 0 0 0 2px #151a24, 0 0 0 4px rgb(58 165 255 / .6); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co__lab { background: rgb(58 165 255 / .12); color: #9fd2ff; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co line { stroke: rgb(255 255 255 / .28); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co circle { fill: #3fc6ee; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs-co .is-hot line { stroke: #3fc6ee; }
+
+/* Let the site's fixed blob background (BlobLayer) show through the section, as on every other
+   section, in both themes (html + body outrank the dark-theme background rule above). The
+   "Without HAX" card keeps its faint tint, laid over the page colour so it stays opaque: the
+   background gradient never shows on the UI. */
+html body .hax-v1 .hx-vs.landing-light, html body .hax-v1 .hx-vs.landing-dark { background: transparent !important; }
+html .hax-v1 .hx-vs .vs__side--without .vs__card { background: linear-gradient(rgba(12, 12, 10, .035), rgba(12, 12, 10, .035)) var(--surface-page); }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hax-v1 .hx-vs .vs__side--without .vs__card { background: linear-gradient(rgb(255 255 255 / .04), rgb(255 255 255 / .04)) var(--surface-page); }
+
+/* HAX colours on his section (13 Nov): the person is blue, the agent is orange, everything
+   else is neutral. No purple, it isn't a HAX colour, and no gradient words. */
+.hx-vs .ln-h2 em { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: inherit !important; -webkit-text-fill-color: currentColor !important; animation: none !important; font-style: normal; }
+.hx-vs .vs__side--with .vs__label i { background: #0a6bd6 !important; box-shadow: 0 0 0 4px rgb(10 107 214 / .12) !important; }
+.hx-vs .vs__side--with .vs__bot i { background: #ff6d2d !important; }
+.hx-vs .vs__chip.is-on { color: #0a4f9e !important; background: #eef4fc !important; }
+.hx-vs .vs__chip:focus-visible { outline-color: #0a6bd6 !important; }
+.hx-vs .vs__side--with .vs__card { box-shadow: 0 1px 2px rgb(0 0 0 / .04), 0 30px 60px -30px rgb(16 24 40 / .28) !important; }
+.hx-vs .vs__side--with .vs__notes svg, .hx-vs .hx__disc svg, .hx-vs .hx__ck svg, .hx-vs .hx__step svg { color: #0a6bd6 !important; }
+.hx-vs .hx__spin { border-top-color: #0a6bd6 !important; }
+.hx-vs .hx__av { background: #fff0e8 !important; color: #c2410c !important; }
+.hx-vs .hx__user { background: #0a6bd6 !important; color: #fff !important; }
+.hx-vs .hx__bubble { background: #f1f2f4 !important; }
+.hx-vs .hx__consent { background: #f6f7f9 !important; }
+.hx-vs .hx__tag { background: #e7f0fb !important; color: #0a4f9e !important; }
+.hx-vs .hx__btn { color: #293247 !important; border-color: rgb(41 50 71 / .22) !important; }
+.hx-vs .hx__btn--p { background: #0a6bd6 !important; border-color: #0a6bd6 !important; color: #fff !important; }
+:is(html[data-hax-theme="dark"], html[data-hax2-theme="dark"]) .hx-vs .vs__chip.is-on { background: rgb(58 165 255 / .14) !important; color: #9fd2ff !important; }

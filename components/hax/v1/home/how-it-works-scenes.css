@@ -2,6 +2,8 @@
    HowItWorksScene adds .is-in / .is-sent / .is-fab / .is-open as each scene plays,
    and .is-done on [data-hw] for the finished state (reduced motion). */
 .hw-scene { position: relative; height: 454px; font-family: var(--font-sans, InterVariable, Inter, system-ui, sans-serif); text-align: left; }
+.hw-fit { width: 100%; }
+.hw-fit > .hw-scene { width: 620px; zoom: var(--hw-k, 1); }
 .hw-replay { position: absolute; right: 10px; bottom: 10px; z-index: 5; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid rgb(12 12 10 / .12); border-radius: 50%; background: #fff; color: #333; cursor: pointer; box-shadow: 0 2px 6px rgb(0 0 0 / .06); }
 .hw-replay:hover { color: #000; border-color: rgb(12 12 10 / .25); }
 .hw-replay:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
@@ -37,32 +39,32 @@
 /* 02 · map */
 .hw-map { position: relative; display: grid; grid-template-columns: 1fr .85fr 1.55fr; align-items: center; gap: 0 26px; height: 100%; padding: 4px 6px; }
 .hw-map__lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.hw-map__lines path { fill: none; stroke: #8b5cf6; stroke-width: 1.3; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset .55s cubic-bezier(.4,0,.2,1); }
+.hw-map__lines path { fill: none; stroke: #0a6bd6; stroke-width: 1.3; stroke-dasharray: var(--len) var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset .55s cubic-bezier(.4,0,.2,1); }
 .hw-map__lines path.is-in { stroke-dashoffset: 0; }
 .hw-map__lines path.hw-map__l0 { stroke: rgb(12 12 10 / .2); }
-.hw-map__req, .hw-map__hax { position: relative; z-index: 1; background: #fff; border: 1px solid rgb(12 12 10 / .12); border-radius: 12px; }
+.hw-map__req, .hw-map__hax { position: relative; z-index: 1; background: #fff; color: #17181c; border: 1px solid rgb(12 12 10 / .12); border-radius: 12px; }
 .hw-map__req { padding: 12px; font-size: 12px; color: #111; }
 .hw-map__req small { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; color: #444; font-size: 11px; }
 .hw-map__bot { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #f1f1ef; color: #555; }
 .hw-map__bot svg { width: 12px; height: 12px; }
 .hw-map__req p { margin: 0; font-weight: 500; line-height: 1.4; }
-.hw-map__hax { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 16px 8px; box-shadow: 0 0 0 4px rgb(139 92 246 / .14); transition: box-shadow .4s ease; }
+.hw-map__hax { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 16px 8px; box-shadow: 0 0 0 4px rgb(10 107 214 / .12); transition: box-shadow .4s ease; }
 .hw-map__hax b { font-size: 14px; }
 .hw-map__hax small { font: 10px var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: #555; }
 .hw-map__hax i { font-style: normal; font-size: 10px; padding: 2px 8px; border: 1px solid rgb(12 12 10 / .14); border-radius: 999px; }
-.hw-map.is-think .hw-map__hax { box-shadow: 0 0 0 6px rgb(139 92 246 / .26); }
+.hw-map.is-think .hw-map__hax { box-shadow: 0 0 0 6px rgb(10 107 214 / .22); }
 .hw-map__req, .hw-map__hax { opacity: 0; transition: opacity .28s ease, box-shadow .3s ease; }
 .hw-map__req.is-in, .hw-map__hax.is-in, [data-hw].is-done .hw-map__req, [data-hw].is-done .hw-map__hax { opacity: 1; }
 .hw-map__lines path { transition-duration: .28s; }
 .hw-map__picks { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
-.hw-pk { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #a78bfa; border-radius: 10px; background: #fff; opacity: 0; clip-path: inset(0 100% 0 0 round 10px); transition: opacity .22s ease, clip-path .3s cubic-bezier(.22,1,.36,1); }
+.hw-pk { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #8fb8ec; border-radius: 10px; background: #fff; opacity: 0; clip-path: inset(0 100% 0 0 round 10px); transition: opacity .22s ease, clip-path .3s cubic-bezier(.22,1,.36,1); }
 .hw-pk.is-in, [data-hw].is-done .hw-pk { opacity: 1; clip-path: inset(0 0 0 0 round 10px); }
 .hw-pk__ic { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: #f3f3f1; color: #444; flex: 0 0 auto; }
 .hw-pk__t { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
 .hw-pk__t small { font-size: 10.5px; color: #555; }
-.hw-pk__t small em { font-style: normal; color: #7c3aed; }
+.hw-pk__t small em { font-style: normal; color: #0a5fbf; }
 .hw-pk__t b { font: 600 11px var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hw-pk__ok { margin-left: auto; align-self: flex-start; color: #7c3aed; flex: 0 0 auto; opacity: 0; transition: opacity .3s ease .25s; }
+.hw-pk__ok { margin-left: auto; align-self: flex-start; color: #0a6bd6; flex: 0 0 auto; opacity: 0; transition: opacity .3s ease .25s; }
 .hw-pk.is-in .hw-pk__ok, [data-hw].is-done .hw-pk__ok { opacity: 1; }
 
 /* 03 · dashboard */
@@ -110,7 +112,7 @@
 .hw-db__pb { padding: 3px 8px; border: 1px solid rgb(12 12 10 / .14); border-radius: 6px; color: #111; font-weight: 500; }
 .hw-db__pb.is-off { color: #aaa; }
 .hw-db [data-tag]:not(.hw-db__aria):not(.hw-db__fab) { position: relative; }
-.hw-db [data-tag]::after { content: attr(data-tag); position: absolute; left: 0; top: -2px; transform: translateY(-100%) scale(.9); padding: 2px 6px; border-radius: 5px; background: #7c3aed; color: #fff; font: 600 9px/1.3 var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .3s cubic-bezier(.22,1,.36,1); z-index: 3; }
+.hw-db [data-tag]::after { content: attr(data-tag); position: absolute; left: 0; top: -2px; transform: translateY(-100%) scale(.9); padding: 2px 6px; border-radius: 5px; background: #0a6bd6; color: #fff; font: 600 9px/1.3 var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .3s cubic-bezier(.22,1,.36,1); z-index: 3; }
 .hw-db [data-tag].is-tag::after { opacity: 1; transform: translateY(-100%); }
 .hw-db__side[data-tag]::after { left: 4px; top: 30px; }
 .hw-db__cb[data-tag]::after { left: -4px; }

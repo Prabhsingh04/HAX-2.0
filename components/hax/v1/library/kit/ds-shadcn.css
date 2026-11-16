@@ -1,0 +1,209 @@
+/* The kit in shadcn/ui, as it ships: new-york style, v4 theme tokens, neutral base colour,
+   --radius 0.625rem, Geist type, Lucide icons. Each part uses the recipe of the shadcn
+   component it is (Card, Button, Badge, Input, Checkbox, RadioGroup, Switch, Progress,
+   Separator, Avatar, Kbd, DropdownMenu, Popover, InputGroup; Suggestion and PromptInput from
+   AI Elements, which is built on shadcn). Status colours come from the Tailwind palette, the
+   way shadcn blocks add them. */
+.hax-v1 [data-ds="shadcn"] {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0); --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0); --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0); --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0); --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0); --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0); --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0); --input: oklch(0.922 0 0); --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116); --chart-2: oklch(0.6 0.118 184.704); --chart-3: oklch(0.398 0.07 227.392);
+  --success: oklch(0.508 0.118 165.612); --success-soft: oklch(0.979 0.021 166.113);   /* emerald 700 / 50 */
+  --warning: oklch(0.555 0.163 48.998); --warning-soft: oklch(0.987 0.022 95.277);     /* amber 700 / 50 */
+  --orange: oklch(0.646 0.222 41.116);                                                  /* orange 600: the agent's cursor */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / .05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+
+  /* the kit's roles, in shadcn's terms */
+  --k-panel: var(--card); --k-soft: color-mix(in oklab, var(--muted) 50%, var(--background));
+  --k-edge: var(--border); --k-edge-2: var(--input);
+  --k-shadow: var(--shadow-sm); --k-pop: var(--shadow-md);
+  --k-blue: var(--primary); --k-blue-soft: var(--accent); --k-sel: color-mix(in oklab, var(--primary) 9%, transparent);
+  --k-chart: var(--chart-1); --k-track: color-mix(in oklab, var(--primary) 20%, transparent);
+  --k-agent: var(--orange); --k-on-agent: oklch(0.145 0 0); --k-on-blue: var(--primary-foreground);
+  --k-ok: var(--success); --k-ok-bg: var(--success-soft);
+  --k-warn: var(--warning); --k-warn-bg: var(--warning-soft);
+  --k-bad: var(--destructive); --k-bad-bg: color-mix(in oklab, var(--destructive) 10%, var(--background)); --k-bad-solid: var(--destructive);
+  --k-tag-ink: var(--secondary-foreground);
+  /* site tokens the components read, pointed at shadcn's */
+  --text-primary: var(--foreground); --text-secondary: var(--muted-foreground); --text-tertiary: var(--muted-foreground); --text-link: var(--foreground);
+  --surface-page: var(--background); --surface-raised: var(--card); --surface-tint: var(--k-soft); --surface-tint-hover: var(--muted); --surface-tint-pressed: var(--input);
+  --surface-code: var(--k-soft); --text-code: var(--foreground);
+  --focus-ring: color-mix(in oklab, var(--ring) 50%, transparent);
+  --gradient-hax: linear-gradient(90deg, var(--primary), var(--primary));
+  --font-code: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --hk-canvas: var(--background); --hk-dot: oklch(0 0 0 / .07);
+  --hk-r-md: calc(var(--radius) - 2px); --hk-r-lg: var(--radius); --hk-r-xl: calc(var(--radius) + 4px);
+  --hk-send: 32px; --hk-ib-sm: 32px;
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif; color: var(--foreground); letter-spacing: 0;
+}
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] {
+  --background: oklch(0.145 0 0); --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0); --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0); --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0); --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0); --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0); --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0); --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%); --input: oklch(1 0 0 / 15%); --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376); --chart-2: oklch(0.696 0.17 162.48); --chart-3: oklch(0.769 0.188 70.08);
+  --success: oklch(0.765 0.177 163.223); --success-soft: oklch(0.765 0.177 163.223 / 14%);   /* emerald 400 */
+  --warning: oklch(0.828 0.189 84.429); --warning-soft: oklch(0.828 0.189 84.429 / 14%);     /* amber 400 */
+  --orange: oklch(0.705 0.213 47.604);
+  --k-soft: color-mix(in oklab, var(--muted) 50%, var(--background));
+  --k-bad-bg: color-mix(in oklab, var(--destructive) 16%, var(--background));
+  --hk-dot: oklch(1 0 0 / .06);
+}
+
+/* type: Geist at shadcn's sizes (text-sm body, text-xs meta, semibold titles) */
+.hax-v1 [data-ds="shadcn"] :is(.hk-h, .hk-t, .hk-b, .hk-s, .hk-xs) { letter-spacing: 0; }
+.hax-v1 [data-ds="shadcn"] .hk-h { font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -.01em; }
+.hax-v1 [data-ds="shadcn"] .hk-t { font-size: 14px; line-height: 20px; font-weight: 500; }
+.hax-v1 [data-ds="shadcn"] .hk-b { font-size: 14px; line-height: 20px; font-weight: 400; }
+.hax-v1 [data-ds="shadcn"] .hk-s { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--muted-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-xs { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--muted-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-mono { font-family: var(--font-code); font-size: 12px; line-height: 18px; }
+.hax-v1 [data-ds="shadcn"] .hk-link { color: var(--foreground); font-weight: 500; text-decoration: underline; text-underline-offset: 4px; }
+.hax-v1 [data-ds="shadcn"] .font-sans { font-family: inherit; }
+.hax-v1 [data-ds="shadcn"] .font-mono { font-family: var(--font-code); }
+
+/* Card: bg-card rounded-xl border shadow-sm */
+.hax-v1 [data-ds="shadcn"] .hk-panel { background: var(--card); color: var(--card-foreground); border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); box-shadow: var(--shadow-sm); }
+/* PromptInput (AI Elements) / InputGroup: rounded-xl border shadow-xs */
+.hax-v1 [data-ds="shadcn"] .hk-panel--bar { background: var(--background); box-shadow: var(--shadow-xs); }
+/* DropdownMenuContent / PopoverContent: bg-popover rounded-md border p-1 shadow-md */
+.hax-v1 [data-ds="shadcn"] .hk-pop { background: var(--popover); color: var(--popover-foreground); border: 1px solid var(--border); border-radius: calc(var(--radius) - 2px); box-shadow: var(--shadow-md); padding: 4px; }
+/* an inset area: rounded-lg border bg-muted/50 */
+.hax-v1 [data-ds="shadcn"] .hk-well { background: var(--k-soft); border: 1px solid var(--border); border-radius: var(--radius); }
+.hax-v1 [data-ds="shadcn"] .hk-rule { height: 1px; background: var(--border); align-self: stretch; flex-shrink: 0; }
+/* CodeBlock (AI Elements): rounded-md border, github light / dark */
+.hax-v1 [data-ds="shadcn"] .hk-code { background: var(--k-soft); color: var(--foreground); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-family: var(--font-code); font-size: 12px; line-height: 19px; white-space: pre; overflow: hidden; }
+.hax-v1 [data-ds="shadcn"] .hk-code b { color: #0550ae; font-weight: 400; } .hax-v1 [data-ds="shadcn"] .hk-code i { color: #116329; font-style: normal; } .hax-v1 [data-ds="shadcn"] .hk-code em { color: #6e7781; font-style: normal; }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-code b { color: #79c0ff; } html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-code i { color: #7ee787; } html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-code em { color: #8b949e; }
+.hax-v1 [data-ds="shadcn"] .hk-code.hk-code--plain { background: transparent; border: 0; border-radius: 0; padding: 0; }
+
+/* Button: rounded-md text-sm font-medium, h-9 px-4 (h-8 px-3 for sm), svg size-4 */
+.hax-v1 [data-ds="shadcn"] .hk-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border);
+  background: var(--background); color: var(--foreground); box-shadow: var(--shadow-xs); font-size: 14px; line-height: 20px; font-weight: 500; white-space: nowrap; }
+.hax-v1 [data-ds="shadcn"] .hk-btn:has(> svg) { padding: 0 12px; }
+.hax-v1 [data-ds="shadcn"] .hk-btn svg { width: 16px; height: 16px; }
+.hax-v1 [data-ds="shadcn"] .hk-btn--sm { height: 32px; padding: 0 12px; gap: 6px; }
+.hax-v1 [data-ds="shadcn"] .hk-btn--sm:has(> svg) { padding: 0 10px; }
+.hax-v1 [data-ds="shadcn"] .hk-btn--main { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+.hax-v1 [data-ds="shadcn"] .hk-btn--ghost { background: transparent; border-color: transparent; box-shadow: none; }
+.hax-v1 [data-ds="shadcn"] .hk-btn--danger { background: var(--destructive); color: #fff; border-color: transparent; }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-btn:not(.hk-btn--main, .hk-btn--ghost, .hk-btn--danger) { background: color-mix(in oklab, var(--input) 30%, transparent); border-color: var(--input); }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-btn--danger { background: color-mix(in oklab, var(--destructive) 60%, transparent); }
+
+/* icon buttons: Button variant ghost size icon (size-9, size-8 for sm), muted like AI Elements actions */
+.hax-v1 [data-ds="shadcn"] .hk-ib { display: grid; place-items: center; width: 36px; height: 36px; border-radius: calc(var(--radius) - 2px); color: var(--muted-foreground); flex-shrink: 0; border: 1px solid transparent; }
+.hax-v1 [data-ds="shadcn"] .hk-ib svg { width: 16px; height: 16px; }
+.hax-v1 [data-ds="shadcn"] .hk-ib--sm { width: 32px; height: 32px; }
+.hax-v1 [data-ds="shadcn"] .hk-ib--line { border-color: var(--border); background: var(--background); box-shadow: var(--shadow-xs); color: var(--foreground); border-radius: 999px; }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-ib--line { background: color-mix(in oklab, var(--input) 30%, transparent); border-color: var(--input); }
+.hax-v1 [data-ds="shadcn"] .hk-ib--on { background: var(--accent); color: var(--accent-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-ib--bare { width: 28px; height: 28px; margin: -6px; }
+/* submit: Button size icon-sm, rounded-full (the InputGroup chat example) */
+.hax-v1 [data-ds="shadcn"] .hk-send { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; background: var(--primary); color: var(--primary-foreground); box-shadow: var(--shadow-xs); flex-shrink: 0; }
+.hax-v1 [data-ds="shadcn"] .hk-send svg { width: 16px; height: 16px; }
+.hax-v1 [data-ds="shadcn"] .hk-send--off { opacity: .5; }
+
+/* pickers in a composer: ghost sm with muted text (AI Elements model select); boxed = SelectTrigger; on = Toggle on */
+.hax-v1 [data-ds="shadcn"] .hk-pick { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: calc(var(--radius) - 2px); border: 1px solid transparent; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; }
+.hax-v1 [data-ds="shadcn"] .hk-pick svg { width: 16px; height: 16px; }
+.hax-v1 [data-ds="shadcn"] .hk-pick--box { border-color: var(--input); background: transparent; color: var(--foreground); box-shadow: var(--shadow-xs); }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-pick--box { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hax-v1 [data-ds="shadcn"] .hk-pick--on { background: var(--accent); color: var(--accent-foreground); }
+/* Suggestion (AI Elements): Button outline size sm, rounded-full px-4; the chosen one is a default Button */
+.hax-v1 [data-ds="shadcn"] .hk-chip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--background); color: var(--foreground); box-shadow: var(--shadow-xs); font-size: 14px; line-height: 20px; font-weight: 500; white-space: nowrap; }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-chip { background: color-mix(in oklab, var(--input) 30%, transparent); border-color: var(--input); }
+.hax-v1 [data-ds="shadcn"] .hk-chip.hk-chip--sel { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+/* Badge: rounded-md px-2 py-0.5 text-xs font-medium; secondary, default, destructive */
+.hax-v1 [data-ds="shadcn"] .hk-tag { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: calc(var(--radius) - 2px); border: 1px solid transparent; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; background: var(--secondary); color: var(--secondary-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-tag svg { width: 12px; height: 12px; }
+.hax-v1 [data-ds="shadcn"] .hk-tag--blue { background: var(--primary); color: var(--primary-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-tag--ok { background: var(--success-soft); color: var(--success); }
+.hax-v1 [data-ds="shadcn"] .hk-tag--warn { background: var(--warning-soft); color: var(--warning); }
+.hax-v1 [data-ds="shadcn"] .hk-tag--bad { background: var(--destructive); color: #fff; }
+/* Kbd */
+.hax-v1 [data-ds="shadcn"] .hk-kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 4px; border-radius: calc(var(--radius) - 4px); background: var(--muted); color: var(--muted-foreground); font-size: 12px; line-height: 16px; font-weight: 500; }
+
+/* DropdownMenuItem: rounded-sm px-2 py-1.5 text-sm gap-2, icons muted size-4; highlighted = bg-accent */
+.hax-v1 [data-ds="shadcn"] .hk-mi { display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 8px; border-radius: calc(var(--radius) - 4px); font-size: 14px; line-height: 20px; }
+.hax-v1 [data-ds="shadcn"] .hk-mi svg { width: 16px; height: 16px; }
+.hax-v1 [data-ds="shadcn"] .hk-mi--on { background: var(--accent); color: var(--accent-foreground); }
+
+/* Input: h-9 rounded-md border-input px-3 text-sm shadow-xs; focus = border-ring + 3px ring */
+.hax-v1 [data-ds="shadcn"] .hk-field { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--input); background: transparent; box-shadow: var(--shadow-xs); font-size: 14px; line-height: 20px; color: var(--foreground); min-width: 0; }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-field { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hax-v1 [data-ds="shadcn"] .hk-field svg { width: 16px; height: 16px; }
+.hax-v1 [data-ds="shadcn"] .hk-field--empty { color: var(--muted-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-field--focus { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent); }
+.hax-v1 [data-ds="shadcn"] .hk-field--ai { border-color: color-mix(in oklab, var(--primary) 30%, var(--input)); background: color-mix(in oklab, var(--primary) 3%, transparent); }
+
+/* Checkbox: size-4 rounded-[4px] border-input; checked = bg-primary, check size-3.5 */
+.hax-v1 [data-ds="shadcn"] .hk-check { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--input); box-shadow: var(--shadow-xs); color: var(--primary-foreground); flex-shrink: 0; }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-check:not(.hk-check--on) { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hax-v1 [data-ds="shadcn"] .hk-check svg { width: 14px; height: 14px; stroke-width: 2.5; }
+.hax-v1 [data-ds="shadcn"] .hk-check--on { background: var(--primary); border-color: var(--primary); }
+/* RadioGroupItem: size-4 rounded-full border-input; the dot is size-2 fill-primary */
+.hax-v1 [data-ds="shadcn"] .hk-radio { width: 16px; height: 16px; border-radius: 999px; border: 1px solid var(--input); box-shadow: var(--shadow-xs); flex-shrink: 0; }
+.hax-v1 [data-ds="shadcn"] .hk-radio--on { background: radial-gradient(circle, var(--primary) 0 4px, transparent 4.5px); }
+/* Switch: h-[1.15rem] w-8, thumb size-4 */
+.hax-v1 [data-ds="shadcn"] .hk-switch { position: relative; display: inline-block; width: 32px; height: 18.4px; border-radius: 999px; border: 1px solid transparent; background: var(--input); box-shadow: var(--shadow-xs); flex-shrink: 0; }
+.hax-v1 [data-ds="shadcn"] .hk-switch::after { content: ""; position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin-top: -8px; border-radius: 999px; background: var(--background); }
+.hax-v1 [data-ds="shadcn"] .hk-switch--on { background: var(--primary); }
+.hax-v1 [data-ds="shadcn"] .hk-switch--on::after { transform: translateX(14px); }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-switch:not(.hk-switch--on) { background: color-mix(in oklab, var(--input) 80%, transparent); }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-switch:not(.hk-switch--on)::after { background: var(--foreground); }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-switch--on::after { background: var(--primary-foreground); }
+/* a choice card (Field + RadioGroup): rounded-md border; chosen = border-primary bg-primary/5 */
+.hax-v1 [data-ds="shadcn"] .hk-opt { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 8px 12px; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: var(--background); }
+.hax-v1 [data-ds="shadcn"] .hk-opt--on { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 5%, var(--background)); }
+html[data-hax-theme="dark"] .hax-v1 [data-ds="shadcn"] .hk-opt--on { background: color-mix(in oklab, var(--primary) 10%, var(--card)); }
+/* Progress: h-2 rounded-full bg-primary/20, indicator bg-primary */
+.hax-v1 [data-ds="shadcn"] .hk-bar { position: relative; display: block; height: 8px; border-radius: 999px; background: color-mix(in oklab, var(--primary) 20%, transparent); overflow: hidden; }
+.hax-v1 [data-ds="shadcn"] .hk-bar > i { position: absolute; inset: 0 auto 0 0; background: var(--primary); }
+.hax-v1 [data-ds="shadcn"] .hk-bar--warn > i { background: var(--warning); }
+.hax-v1 [data-ds="shadcn"] .hk-bar--bad > i { background: var(--destructive); }
+
+/* attachments, citations, labels */
+.hax-v1 [data-ds="shadcn"] .hk-file { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 12px 0 6px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--k-soft); }
+.hax-v1 [data-ds="shadcn"] .hk-file > span:first-child { display: grid; place-items: center; width: 36px; height: 36px; border-radius: calc(var(--radius) - 2px); color: #fff; }
+.hax-v1 [data-ds="shadcn"] .hk-thumb { width: 48px; height: 48px; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; }
+/* InlineCitation (AI Elements): Badge secondary, rounded-full */
+.hax-v1 [data-ds="shadcn"] .hk-cite { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 3px; border-radius: 999px; vertical-align: 1px; font-size: 11px; line-height: 1; font-weight: 500; background: var(--secondary); color: var(--secondary-foreground); }
+/* Badge outline with an icon */
+.hax-v1 [data-ds="shadcn"] .hk-ai { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: var(--background); color: var(--foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+.hax-v1 [data-ds="shadcn"] .hk-ai svg { width: 12px; height: 12px; }
+
+/* Avatar: rounded-full; the agent on primary, a person on muted initials */
+.hax-v1 [data-ds="shadcn"] .hk-ag { position: relative; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--primary); color: var(--primary-foreground); flex-shrink: 0; }
+.hax-v1 [data-ds="shadcn"] .hk-ag--sm { width: 22px; height: 22px; }
+.hax-v1 [data-ds="shadcn"] .hk-ag--lg { width: 40px; height: 40px; }
+.hax-v1 [data-ds="shadcn"] .hk-ag > b { position: absolute; right: -2px; bottom: -2px; width: 11px; height: 11px; border-radius: 999px; border: 2px solid var(--card); background: var(--muted-foreground); }
+.hax-v1 [data-ds="shadcn"] .hk-me { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--muted); color: var(--foreground); font-size: 12px; font-weight: 500; flex-shrink: 0; }
+/* ItemMedia variant icon: size-8 border rounded-sm bg-muted */
+.hax-v1 [data-ds="shadcn"] .hk-app { display: grid; place-items: center; width: 32px; height: 32px; border-radius: calc(var(--radius) - 4px); border: 1px solid var(--border); background: var(--muted); color: var(--foreground); flex-shrink: 0; }
+.hax-v1 [data-ds="shadcn"] .hk-app svg { width: 16px; height: 16px; }
+/* the person's message: rounded-lg bg-primary text-primary-foreground px-3 py-2 (shadcn chat example) */
+.hax-v1 [data-ds="shadcn"] .hk-bubble { align-self: flex-end; max-width: 78%; padding: 8px 12px; border-radius: var(--radius); background: var(--primary); color: var(--primary-foreground); font-size: 14px; line-height: 20px; }
+.hax-v1 [data-ds="shadcn"] .hk-step { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; border: 1px solid var(--input); flex-shrink: 0; color: var(--primary-foreground); font-size: 12px; font-weight: 500; }
+.hax-v1 [data-ds="shadcn"] .hk-step svg { width: 12px; height: 12px; }
+.hax-v1 [data-ds="shadcn"] .hk-step--done { border-color: var(--primary); background: var(--primary); }
+.hax-v1 [data-ds="shadcn"] .hk-step--now { border: 2px solid var(--primary); }
+.hax-v1 [data-ds="shadcn"] .hk-step--num { color: var(--muted-foreground); }
+
+/* text links: the underline darkens on hover (shadcn's link: underline-offset-4) */
+.hax-v1 [data-ds="shadcn"] a.hk-link { cursor: pointer; text-decoration-color: color-mix(in oklab, currentColor 35%, transparent); transition: text-decoration-color .15s; }
+.hax-v1 [data-ds="shadcn"] a.hk-link:hover { text-decoration-color: currentColor; }

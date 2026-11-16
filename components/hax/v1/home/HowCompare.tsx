@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 // Prabh's "With and without HAX" section (HAX-2.0 index.html #how), run as-is: his markup (vs.html),
 // his script (vs.js) and his styles scoped under .hx-vs (vs.css). callouts.css/js (ours) turn his pattern legend into callouts. Refresh: node scripts/build-hax-compare.mjs <HAX-2.0>
-const V = "4";
+const V = "7";
 
 export function HowCompare() {
   const ref = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export function HowCompare() {
     <>
       <link rel="stylesheet" href={`/hax/v1/compare/vs.css?v=${V}`} />
       <link rel="stylesheet" href={`/hax/v1/compare/callouts.css?v=${V}`} />
-      <div className="hx-vs ln-js landing-dark landing-light">
+      <div className="hx-vs ln-js landing-dark landing-light" data-hx-blob-o="0.52">
         <div ref={ref} className="ln-wrap" />
       </div>
     </>

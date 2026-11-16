@@ -7,6 +7,8 @@
     "dev:clean": "rm -rf .next && next dev",
     "dev:restart": "for port in 3000 3001 3002 3006 3007; do pids=$(lsof -ti:$port 2>/dev/null); [ -n \"$pids\" ] && kill -9 $pids 2>/dev/null; done; pkill -f 'next dev' 2>/dev/null; rm -rf .next && next dev",
     "build": "next build",
+    "kit:css": "tailwindcss -c tailwind.kit.config.ts -i components/ui/shadcn.src.css -o components/ui/shadcn.css --minify",
+    "kit:css:watch": "tailwindcss -c tailwind.kit.config.ts -i components/ui/shadcn.src.css -o components/ui/shadcn.css --watch=always",
     "build:reviewa": "node scripts/build-reviewa.mjs",
     "deploy:reviewa": "node scripts/build-reviewa.mjs && curl -fsSL https://reviewa.work/cli.mjs -o /tmp/reviewa.mjs && node /tmp/reviewa.mjs update epbhm84q out",
     "start": "next start",
@@ -19,13 +21,18 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.117.1",
     "@aws-sdk/client-sesv2": "^3.1147.0",
+    "@material/web": "^2.5.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "better-sqlite3": "^13.0.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "lucide-react": "^1.32.0",
     "next": "^15.1.0",
     "pg": "^8.23.1",
+    "radix-ui": "^1.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwind-merge": "^2.6.1",
     "zod": "^4.5.4"
   },
   "devDependencies": {

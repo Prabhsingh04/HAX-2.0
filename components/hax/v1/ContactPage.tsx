@@ -13,8 +13,6 @@ const field = "hx-field bg-[var(--surface-page)] border border-[var(--stroke-def
 export function ContactPage() {
   return (
     <section className="flex gap-[80px] items-start pb-[96px] pt-[80px] px-[144px] relative w-full overflow-hidden" data-node-id="101:3672">
-      <img alt="" aria-hidden src="/hax/v1/wash-peach-600.svg" className="hx-wash absolute h-[600px] left-0 top-[60px] w-[760px] max-w-none pointer-events-none" />
-      <img alt="" aria-hidden src="/hax/v1/wash-lavender-520.svg" className="hx-wash hx-wash--2 absolute h-[520px] left-[740px] top-[280px] w-[700px] max-w-none pointer-events-none" />
       <div className="relative flex flex-col gap-[20px] items-start shrink-0 w-[520px]">
         <h1 className="hx-rise font-semibold leading-[36px] text-[29px] tracking-[-0.2px] w-[520px]">The fastest way to build better AI products isn’t starting from scratch. It’s building on patterns that already work.</h1>
         <p className="hx-rise hx-rise--2 leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[500px]">HAX helps transform proven AI interaction patterns into production-ready experiences, so you can spend more time solving real problems and less time reinventing common ones.</p>
