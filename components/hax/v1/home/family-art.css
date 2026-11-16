@@ -1,0 +1,15 @@
+/* Home · family illustrations: one stage, theme-aware roles */
+.hax-v1 .fa-stage {
+  --fa-panel: #fff; --fa-edge: rgba(41, 50, 71, .14); --fa-edge2: rgba(41, 50, 71, .26);
+  --fa-ink: #293247; --fa-soft: rgba(41, 50, 71, .1); --fa-shadow: rgba(16, 24, 40, .05);
+  width: 100%; aspect-ratio: 300 / 180; border-bottom: 1px solid var(--stroke-subtle);
+  background: radial-gradient(circle, rgba(41, 50, 71, .08) 1px, transparent 1.25px) 0 0 / 14px 14px, var(--surface-page);
+}
+html[data-hax-theme="dark"] .hax-v1 .fa-stage {
+  --fa-panel: #141924; --fa-edge: rgba(255, 255, 255, .12); --fa-edge2: rgba(255, 255, 255, .26);
+  --fa-ink: #e7eaf0; --fa-soft: rgba(255, 255, 255, .12); --fa-shadow: rgba(0, 0, 0, .35);
+  background: radial-gradient(circle, rgba(255, 255, 255, .06) 1px, transparent 1.25px) 0 0 / 14px 14px, var(--surface-page);
+}
+.hax-v1 .fa-stage svg { display: block; transition: transform .5s var(--ease-out, ease-out); }
+.hax-v1 .hx-card:hover .fa-stage svg { transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .hax-v1 .hx-card:hover .fa-stage svg { transform: none; } }

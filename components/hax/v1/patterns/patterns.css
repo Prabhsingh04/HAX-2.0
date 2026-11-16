@@ -1,0 +1,24 @@
+/* Interaction patterns: the /patterns filter bar. */
+
+/* Filter pills. A native select sits invisibly over each pill, so the list that opens is the
+   system's own (keyboard, screen readers, the dark list in the dark theme) while the pill keeps
+   a short label. A set filter turns its text and edge blue. Pills never change shape. */
+.hax-v1 .hx-pill { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px 0 16px; border: 1px solid var(--stroke-default); border-radius: var(--radius-pill); background: var(--surface-page); color: var(--text-primary); font-size: 13px; line-height: 18px; font-weight: 500; white-space: nowrap; transition: background-color .2s var(--ease-out), border-color .2s var(--ease-out), color .2s var(--ease-out); }
+.hax-v1 .hx-pill:hover { background: var(--surface-hover); border-color: var(--stroke-strong); }
+.hax-v1 .hx-pill:active { background: var(--surface-pressed); }
+.hax-v1 .hx-pill > svg { flex-shrink: 0; color: var(--text-tertiary); }
+.hax-v1 .hx-pill.is-set, .hax-v1 .hx-pill.is-set:hover { color: var(--text-link); border-color: var(--text-link); }
+.hax-v1 .hx-pill.is-set > svg { color: var(--text-link); }
+.hax-v1 .hx-pill select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font: inherit; appearance: none; }
+.hax-v1 .hx-pill:has(select:focus-visible) { outline: 3px solid var(--focus-ring); outline-offset: 0; }
+
+/* search: the same pill with a text field; blue edge once it holds text */
+.hax-v1 .hx-find { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px 0 14px; border: 1px solid var(--stroke-default); border-radius: var(--radius-pill); background: var(--surface-page); color: var(--text-tertiary); transition: border-color .2s var(--ease-out), box-shadow .2s var(--ease-out); }
+.hax-v1 .hx-find:hover { border-color: var(--stroke-strong); }
+.hax-v1 .hx-find.is-set { border-color: var(--text-link); color: var(--text-link); }
+.hax-v1 .hx-find:focus-within { border-color: var(--text-link); box-shadow: 0 0 0 3px var(--focus-ring); }
+.hax-v1 .hx-find input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-size: 13px; line-height: 18px; }
+.hax-v1 .hx-find input::placeholder { color: var(--text-tertiary); }
+.hax-v1 .hx-find input::-webkit-search-cancel-button { display: none; }
+.hax-v1 .hx-find button { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px; color: var(--text-secondary); transition: background-color .2s; }
+.hax-v1 .hx-find button:hover { background: var(--surface-tint-hover); color: var(--text-primary); }

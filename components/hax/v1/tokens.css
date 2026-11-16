@@ -14,9 +14,12 @@
   --surface-raised: #fff;
   --surface-inverse: #293247;
   --surface-accent: #00bceb;
-  --surface-tint: rgba(41, 50, 71, .04);
+  /* opaque: rgba(41, 50, 71, .04) over the page, so the fixed blob background never shows through tinted UI */
+  --surface-tint: #f6f7f8;
+  /* translucent frame around showcase UI (after outshift.design/hax): the page gradient tints it */
+  --surface-frame: rgba(41, 50, 71, .04);
   --surface-tint-pressed: rgba(41, 50, 71, .15);
-  --surface-assistant: #6d6af2;
+  --surface-assistant: #0a6bd6; /* "Talk to the HAX team" reaches people: HAX blue (was indigo #6d6af2) */
   --surface-message-person: #187adc;
   --surface-message-assistant: rgba(41, 50, 71, .04);
   --stroke-subtle: rgba(41, 50, 71, .08);
@@ -83,7 +86,8 @@ html[data-hax-theme="dark"] .hax-v1 {
   --surface-page: #0c1018;
   --surface-raised: #141924;
   --surface-inverse: #313b50;
-  --surface-tint: rgba(255, 255, 255, .04);
+  --surface-tint: #161a21; /* rgba(255, 255, 255, .04) over the dark page, opaque */
+  --surface-frame: rgba(255, 255, 255, .04);
   --surface-tint-hover: rgba(255, 255, 255, .08);
   --surface-tint-pressed: rgba(255, 255, 255, .14);
   --surface-message-assistant: rgba(255, 255, 255, .05);
@@ -110,3 +114,11 @@ html[data-hax-theme="dark"]:has(.hax-v1) { background: #0c1018; color-scheme: da
 html.hx-vt::view-transition-old(root),
 html.hx-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 html.hx-vt::view-transition-new(root) { z-index: 2; }
+
+/* The person and the agent, as text and mark colours: blue is the H, orange is the X.
+   Orange on white passes 3:1, so it is for large text and marks, not body copy. */
+.hax-v1 { --hx-human: #0a63c9; --hx-agent: #e4561a; }
+html[data-hax-theme="dark"] .hax-v1 { --hx-human: #3fc6ee; --hx-agent: #ff8a50; }
+
+/* The page's side gutter: 20px on phones, growing with the window to Figma's 144px at 1440px */
+.hax-v1 { --hx-gutter: clamp(20px, 13.3333vw - 48px, 144px); }

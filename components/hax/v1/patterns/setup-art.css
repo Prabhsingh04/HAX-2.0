@@ -1,0 +1,15 @@
+/* The four setups as diagrams (SetupArt). Theme-aware link colours; the marks match FamilyArt.
+   Messages travel the links, and the lone agent's orbit turns, only while a .su-live
+   ancestor is hovered. */
+.hax-v1 .su-art { --su-edge: rgba(41, 50, 71, .22); --su-orbit: rgba(41, 50, 71, .3); display: block; width: 100%; height: auto; overflow: visible; }
+html[data-hax-theme="dark"] .hax-v1 .su-art { --su-edge: rgba(255, 255, 255, .24); --su-orbit: rgba(255, 255, 255, .32); }
+.hax-v1 .su-art--muted { opacity: .3; filter: grayscale(1); }
+.hax-v1 .su-msgs { opacity: 0; transition: opacity .3s; }
+.hax-v1 .su-live:hover .su-msgs { opacity: 1; }
+.hax-v1 .su-orbit { transform-box: view-box; transform-origin: 120px 66px; }
+.hax-v1 .su-live:hover .su-orbit { animation: su-spin 7s linear infinite; }
+@keyframes su-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hax-v1 .su-msgs { display: none; }
+  .hax-v1 .su-live:hover .su-orbit { animation: none; }
+}

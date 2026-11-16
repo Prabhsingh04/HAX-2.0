@@ -69,8 +69,6 @@ export function McpPage() {
   return (
     <>
       <section className="flex flex-col gap-[16px] items-start pb-[56px] pt-[72px] px-[144px] relative w-full overflow-hidden" data-node-id="101:3128">
-        <img alt="" aria-hidden src="/hax/v1/wash-lavender-406.svg" className="hx-wash absolute h-[406px] left-0 top-0 w-[760px] max-w-none pointer-events-none" />
-        <img alt="" aria-hidden src="/hax/v1/wash-sky-406.svg" className="hx-wash hx-wash--2 absolute h-[406px] left-[740px] top-0 w-[700px] max-w-none pointer-events-none" />
         <h1 className="hx-rise relative font-semibold leading-[58px] text-[50px] tracking-[-0.6px] whitespace-nowrap">MCP Server</h1>
         <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[760px]">Let your AI assistant search HAX patterns, components and tokens for you, straight from a prompt.</p>
         <p className="relative flex flex-wrap gap-[4px] items-center w-[760px] leading-[22px] text-[14px] text-[color:var(--text-secondary)]">

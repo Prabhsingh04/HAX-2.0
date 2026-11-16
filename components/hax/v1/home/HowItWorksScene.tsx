@@ -176,7 +176,7 @@ function dashboardScene(t: HTMLElement): Scene {
 
 const BUILD: Record<SceneKind, (t: HTMLElement) => Scene> = { chat: chatScene, map: mapScene, ui: dashboardScene };
 
-export function HowItWorksScene({ kind }: { kind: SceneKind }) {
+export function HowItWorksScene({ kind, fit = false }: { kind: SceneKind; fit?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const replay = useRef<HTMLButtonElement>(null);
@@ -235,6 +235,17 @@ export function HowItWorksScene({ kind }: { kind: SceneKind }) {
     };
   }, [kind]);
 
+  // fit: the scene is drawn for a 620px-wide frame, and a narrower frame shrinks it as a whole
+  // (zoom), so nothing in it reflows or wraps (v1's home; v2 and v3 scale their own stage)
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = box.current;
+    if (!fit || !el) return;
+    const ro = new ResizeObserver(() => el.style.setProperty("--hw-k", String(Math.min(1, el.clientWidth / 620))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [fit]);
+
   const onReplay = () => {
     const rp = replay.current;
     if (rp) {
@@ -245,7 +256,7 @@ export function HowItWorksScene({ kind }: { kind: SceneKind }) {
     playRef.current();
   };
 
-  return (
+  const scene = (
     <div ref={root} data-hw={kind} className="hw-scene">
       <div ref={stage} role="img" aria-label={LABEL[kind]} className="h-full">
         <div aria-hidden className="h-full" dangerouslySetInnerHTML={{ __html: HTML[kind] }} />
@@ -257,4 +268,5 @@ export function HowItWorksScene({ kind }: { kind: SceneKind }) {
       </button>
     </div>
   );
+  return fit ? <div ref={box} className="hw-fit">{scene}</div> : scene;
 }

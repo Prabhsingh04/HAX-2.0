@@ -1,12 +1,14 @@
 "use client";
 import { useEffect } from "react";
 import { STAGES } from "@/components/hax/v1/library/data";
-import { TOTAL, CATS } from "@/components/hax/v1/library/Library";
 import { H1, Lede, SkyTag, Tag, WorldHero } from "../ui";
 
 // Figma: HAX v3 · Components 114:9032 (hero 114:9033, stage index 114:9074, stages 114:9118…).
-// Patterns, stages and categories are v1's data, imported read-only.
+// Patterns, stages and categories are v1's data, imported read-only. The two totals are worked out
+// here, the way v1's old Library.tsx did, since v1's new library no longer exports them.
 const count = (s: (typeof STAGES)[number]) => s.cats.reduce((n, c) => n + c.patterns.length, 0);
+const TOTAL = STAGES.reduce((n, s) => n + count(s), 0);
+const CATS = STAGES.reduce((n, s) => n + s.cats.length, 0);
 
 export function Library() {
   useEffect(() => {
