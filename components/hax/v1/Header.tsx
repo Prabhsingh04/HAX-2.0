@@ -7,18 +7,9 @@ import { Menu, X } from "lucide-react";
 // Figma: Header 94:18574 (instance 98:19358 on 🌐 Website v1)
 type Menu = { label: string; items: { label: string; href: string; ext?: boolean; sub?: boolean }[] };
 
-// No Initiatives menu: this site is only the HAX initiative (the logo links home).
-const MENUS: Record<string, Menu> = {
-  Research: {
-    label: "Research",
-    items: [
-      { label: "Foundational Principles", href: "https://outshift.design/research/foundational-principles" },
-      { label: "Cognitive Frameworks", href: "https://outshift.design/research/cognitive-frameworks" },
-      { label: "Societal Impact", href: "https://outshift.design/research/societal-impact" },
-      { label: "Security & Privacy", href: "https://outshift.design/research/security-privacy" },
-    ],
-  },
-};
+// No Research menu and no Blog: those live on the HAX website (Srishti, 14 Nov). NavItem keeps
+// dropdown support for any menu added here later.
+const MENUS: Record<string, Menu> = {};
 
 // The nav item for the section you're in shows the current state (see .hx-nav[aria-current]).
 // Patterns comes first: the Components rule also matches "/patterns".
@@ -27,7 +18,6 @@ const SECTIONS: [string, RegExp][] = [
   ["Components", /^\/(library|pattern|material-)/],
   ["Docs", /^\/hax-docs/],
   ["MCP", /^\/mcp/],
-  ["Blog", /^\/blog/],
 ];
 
 function NavItem({ label, href, dropdown, current }: { label: string; href?: string; dropdown?: boolean; current?: boolean }) {
@@ -117,7 +107,7 @@ function ThemeSwitch() {
 
 // Below 1024px the links move into a menu under the header. The button opens it; Escape, a click
 // outside it or following a link closes it (Escape returns focus to the button).
-const LINKS: [string, string][] = [["Components", "/library"], ["Docs", "/hax-docs"], ["MCP", "/mcp"], ["Blog", "/blog"]];
+const LINKS: [string, string][] = [["Components", "/library"], ["Docs", "/hax-docs"], ["MCP", "/mcp"]];
 function MobileNav({ section }: { section?: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -145,12 +135,6 @@ function MobileNav({ section }: { section?: string }) {
             <li key={l}><a href={h} aria-current={section === l ? "page" : undefined} onClick={() => setOpen(false)} className={`${item}${section === l ? " font-semibold" : ""}`}>{l}</a></li>
           ))}
         </ul>
-        <p className="mt-[12px] px-[12px] pb-[4px] font-semibold leading-[16px] text-[11px] tracking-[1.2px] uppercase text-[color:var(--text-secondary)]">Research</p>
-        <ul className="flex flex-col">
-          {MENUS.Research.items.map((it) => (
-            <li key={it.label}><a href={it.href} onClick={() => setOpen(false)} className={item}>{it.label}</a></li>
-          ))}
-        </ul>
       </nav>
     </div>
   );
@@ -162,26 +146,29 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 bg-[var(--surface-page)] border-[var(--stroke-subtle)] border-b border-solid" data-node-id="94:18574">
       <div className="relative flex h-[64px] items-center justify-between px-[var(--hx-gutter)] max-w-[1440px] mx-auto lg:h-[94px]">
-        <a href="/" className="flex gap-[14px] items-center shrink-0 [zoom:0.72] sm:[zoom:0.86] lg:[zoom:0.92] xl:[zoom:1]" aria-label="HAX by Outshift Design">
-          <img alt="" src="/hax/v1/logo-hax-weave.svg" className="h-[32px] w-[86.9px] shrink-0" />
-          <span className="bg-[var(--stroke-default)] h-[28px] w-px shrink-0" />
-          <span className="relative h-[49.909px] w-[122px] overflow-clip shrink-0">
-            <span
-              className="absolute inset-[0_0.58%_0_0] block"
-              style={{ maskImage: 'url("/hax/v1/outshift-mask.svg")', maskSize: "121.289px 49.909px", maskRepeat: "no-repeat" }}
-            >
-              <img alt="" src="/hax/v1/outshift-logo.svg" className="hx-light-only absolute inset-0 block size-full max-w-none" />
-              <img alt="" src="/hax/v1/outshift-logo-dark.svg" className="hx-dark-only absolute inset-0 block size-full max-w-none" />
+        {/* Outshift design first, linked to outshift.design; then HAX, linked to this site's home */}
+        <div className="flex gap-[14px] items-center shrink-0 [zoom:0.72] sm:[zoom:0.86] lg:[zoom:0.92] xl:[zoom:1]">
+          <a href="https://outshift.design" className="flex gap-[14px] items-center shrink-0" aria-label="Outshift Design">
+            <span className="relative h-[49.909px] w-[122px] overflow-clip shrink-0">
+              <span
+                className="absolute inset-[0_0.58%_0_0] block"
+                style={{ maskImage: 'url("/hax/v1/outshift-mask.svg")', maskSize: "121.289px 49.909px", maskRepeat: "no-repeat" }}
+              >
+                <img alt="" src="/hax/v1/outshift-logo.svg" className="hx-light-only absolute inset-0 block size-full max-w-none" />
+                <img alt="" src="/hax/v1/outshift-logo-dark.svg" className="hx-dark-only absolute inset-0 block size-full max-w-none" />
+              </span>
             </span>
-          </span>
-          <span className="font-light leading-[32px] text-[26px] text-[color:var(--text-primary)] tracking-[-0.2px] whitespace-nowrap">design</span>
-        </a>
+            <span className="font-light leading-[32px] text-[26px] text-[color:var(--text-primary)] tracking-[-0.2px] whitespace-nowrap">design</span>
+          </a>
+          <span className="bg-[var(--stroke-default)] h-[28px] w-px shrink-0" />
+          <a href="/" className="flex items-center shrink-0" aria-label="HAX home">
+            <img alt="" data-hx-logo src="/hax/v1/logo-hax-weave.svg" className="h-[32px] w-[86.9px] shrink-0" />
+          </a>
+        </div>
         <nav className="hidden lg:flex gap-[8px] items-center shrink-0 xl:gap-[20px]" aria-label="Primary">
-          <NavItem label="Research" dropdown />
           <NavItem label="Components" href="/library" current={section === "Components"} />
           <NavItem label="Docs" href="/hax-docs" current={section === "Docs"} />
           <NavItem label="MCP" href="/mcp" current={section === "MCP"} />
-          <NavItem label="Blog" href="/blog" current={section === "Blog"} />
           <ThemeSwitch />
         </nav>
         <MobileNav section={section} />
@@ -198,10 +185,10 @@ export function AnnouncementBar() {
     <div className="hx-announce">
     <div className="flex h-[40px] items-center justify-center gap-[10px] px-[20px]" style={{ backgroundImage: "var(--gradient-announce)" }} data-node-id="94:18699">
       <p className="font-normal leading-[20px] text-[13px] text-[color:var(--text-primary)] whitespace-nowrap">
-        HAX for iPhone Duo.<span className="hidden md:inline"> The same agentic patterns. Now adapted for mobile.</span>
+        Multi-agent patterns.<span className="hidden md:inline"> How agents coordinate, disagree and hand off work to each other.</span>
       </p>
-      <a href="/material-pattern?id=disclosure&device=mobile" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
-        <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore mobile patterns</span>
+      <a href="/patterns?setup=L2" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
+        <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore multi-agent patterns</span>
         <img alt="" src="/hax/v1/icon-arrow-up-right.svg" className="hx-arrow size-[12px]" />
       </a>
     </div>

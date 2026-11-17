@@ -36,7 +36,7 @@ export function FourWaysInField({ ways }: { ways: Way[] }) {
         <div className="hx-reveal flex max-w-[720px] flex-col items-center gap-[16px] text-center">
           <h2 id="hx-ways-h" className="font-semibold leading-[42px] text-[34px] tracking-[-0.4px] [text-wrap:balance] md:leading-[50px] md:text-[42px] xl:leading-[58px] xl:text-[50px] xl:tracking-[-0.6px]">One library. Four ways in</h2>
           <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] [text-wrap:balance]">
-            Find the view that fits your work, whether you are designing an interaction, setting agent permissions, building an integration, or using patterns in an agent workflow.
+            The same patterns guide design, product decisions, implementation, and agent behavior.
           </p>
         </div>
         <div className="mt-[32px] grid w-full grid-cols-1 md:grid-cols-2 xl:grid-cols-4">

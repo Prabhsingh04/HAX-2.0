@@ -11,11 +11,11 @@ export type SceneKind = "chat" | "map" | "ui";
 
 const HTML: Record<SceneKind, string> = { chat: CHAT_HTML, map: MAP_HTML, ui: DASHBOARD_HTML };
 const LABEL: Record<SceneKind, string> = {
-  chat: "A chat with Claude, the HAX MCP connected. The request “Build a dashboard for my projects.” is typed into the prompt composer and sent. Claude answers “I’ll find the right HAX patterns.” and shows “Finding patterns…”.",
-  map: "The request travels to HAX (@hax/react, shadcn), which picks six matches: App shell → Sidebar, Metric cards → CardContainer, Project table → Table, Selection & actions → Checkbox and Button, and two agentic patterns, AI assistant → AgentAvatar and Ask Aria → OpenInput.",
+  chat: "A chat with your agent, the HAX MCP connected. The request “Find HAX patterns for an agent that proposes a service restart and asks an operator to decide.” is typed into the prompt composer and sent. The agent answers “I’ll find the right HAX patterns.” and shows “Finding patterns…”.",
+  map: "The request “Review a proposed service restart” travels to HAX (patterns and guidance), which picks four matches: two patterns, Pre-Action Handshake and Inline Rationale, and two interface parts, a context card and decision actions.",
   ui: "A project dashboard assembles: an icon sidebar, a header with Export and New project buttons, three metric cards, and a project table with search, row checkboxes, status badges, progress and row actions. Then the AI assistant Aria appears at the bottom right and opens a panel with a greeting, suggested prompts and a prompt composer.",
 };
-const REQ = "Build a dashboard for my projects.";
+const REQ = "Find HAX patterns for an agent that proposes a service restart and asks an operator to decide.";
 
 type At = (ms: number, fn: () => void) => void;
 type Scene = { reset(): void; play(at: At, track: (id: number) => void): void; final?(): void; dispose?(): void };

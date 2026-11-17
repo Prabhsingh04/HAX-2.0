@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Intro } from "../intro/Intro";
 
 // Hero stage word rotates like the old v1 headline (Figma shows "Scale Stage"): every 4 s
 // the phrase rises out the top and the next rises in from below. The box keeps the width
@@ -28,6 +29,11 @@ function RotatingStage() {
 // Figma: Hero 98:19425
 export function Hero() {
   const [copied, setCopied] = useState(false);
+  // the intro plays when INTRO_SCRIPT (app/(hax)/page.tsx) marked <html> before paint; when it ends,
+  // the hero copy remounts so its rise animation plays as the intro fades
+  const [intro, setIntro] = useState(false);
+  const [rise, setRise] = useState(0);
+  useEffect(() => { if (document.documentElement.dataset.haxIntro === "on") setIntro(true); }, []);
   const copy = () => {
     navigator.clipboard?.writeText("npm install @hax/react").then(() => {
       setCopied(true);
@@ -38,7 +44,8 @@ export function Hero() {
     // No breadcrumb: the site is only the HAX initiative. pt 42 = Figma's 24 + the 18px
     // breadcrumb row, so the headline keeps its Figma position.
     <section className="flex flex-col items-center pb-[80px] pt-[24px] px-[var(--hx-gutter)] relative w-full overflow-hidden md:pb-[104px] xl:pb-[128px] xl:pt-[42px]" data-node-id="98:19425" data-hx-hero>
-      <div className="flex flex-col gap-[24px] items-center pt-[48px] relative md:gap-[28px] md:pt-[72px] xl:pt-[88px]">
+      {intro && <Intro onFade={() => setRise((r) => r + 1)} onDone={() => setIntro(false)} />}
+      <div key={rise} className="flex flex-col gap-[24px] items-center pt-[48px] relative md:gap-[28px] md:pt-[72px] xl:pt-[88px]">
         <h1 className="hx-rise font-semibold text-[32px] leading-[40px] text-[color:var(--text-primary)] text-center tracking-[-0.4px] md:text-[42px] md:leading-[50px] lg:text-[46px] lg:leading-[54px] lg:whitespace-nowrap xl:text-[50px] xl:leading-[58px] xl:tracking-[-0.6px]">
           One pattern library for the{" "}
           <br className="hidden md:block" />

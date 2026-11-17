@@ -139,3 +139,11 @@ html[data-hax-theme="dark"] .hax-v1 :is(img[src$="/icon-copy-tertiary.svg"], img
 html[data-hax-theme="dark"] .hax-v1 :is(img[src$="/icon-arrow-right-link-12.svg"], img[src$="/icon-arrow-up-right.svg"], img[src$="/icon-check.svg"], img[src$="/icon-external-link-12.svg"]) { filter: brightness(1.3); }
 html[data-hax-theme="dark"] .hax-v1 .hx-wash { opacity: .4; }
 html[data-hax-theme="dark"] .hax-v1 .bg-clip-text { filter: brightness(1.18); }
+
+/* Home intro (intro/Intro.tsx): INTRO_SCRIPT marks <html> before first paint, so the page stays hidden
+   on the intro's dark ground until the intro fades (the intro itself sets visibility: visible). If the
+   intro never starts (script error), the guard shows the page after 10s anyway. */
+html[data-hax-intro="on"] body { background: #0f1117; animation: hx-intro-guard-bg 0s 10s forwards; }
+html[data-hax-intro="on"] .hax-v1 { visibility: hidden; animation: hx-intro-guard 0s 10s forwards; }
+@keyframes hx-intro-guard { to { visibility: visible; } }
+@keyframes hx-intro-guard-bg { to { background: transparent; } }
