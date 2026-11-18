@@ -1,0 +1,153 @@
+/* HAX v2 · "Wave" (🌐 Website v2). Geist + Geist Mono, ink #111, grey #666, lines #DDD, fill #F5F5F5,
+   the HAX master weave behind the page. Scoped to .hax-v2 so v1 and v3 never see it. */
+.hax-v2 {
+  --font-ui: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --ink: #111111;
+  --grey: #666666;
+  --line: #dddddd;
+  --fill: #f5f5f5;
+  --nav-ink: #293247;
+  --nav-muted: #667794;
+  --nav-line: #e2e8f0;
+  --orange: #ff6d2d;
+  --page: #ffffff;
+  --card: #ffffff;
+  --fill-2: #ebebeb;
+  --fill-3: #e2e2e2;
+  --line-strong: #c8c8c8;
+  --nav-bg: rgba(255, 255, 255, .78);
+  --btn: #111111;
+  --btn-ink: #ffffff;
+  --btn-hover: #2a2a2a;
+  --weave: #dddddd;
+  --mcp: #111111;
+  --h1-a: #111111;
+  --h1-b: #666666;
+  --shadow: rgba(17, 17, 17, .08);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  /* v1's CodeBlock is reused unchanged (same inner UI in every version); these are the names it reads */
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+  --surface-code: #0f1117;
+  --text-code: #e0e4ec;
+  --text-tertiary: #8a93a3;
+  --radius-xl: 12px;
+  --focus-ring: rgba(0, 188, 235, .35);
+  font-family: var(--font-ui);
+  color: var(--ink);
+  background: var(--page);
+  -webkit-font-smoothing: antialiased;
+}
+.hax-v2 p { margin: 0; }
+/* app/globals.css gives h1–h3 navy (--color-text) and -0.02em tracking; v2 headings take the section's ink */
+html :where(.hax-v2) :is(h1, h2, h3) { letter-spacing: 0; color: inherit; }
+.hax-v2 :is(a, button, input, textarea, .hx-copy):focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; border-radius: 8px; }
+/* the H1 gradient (#111 → #666, left to right) */
+.hax-v2 .hx2-h1 { background: linear-gradient(90deg, var(--h1-a), var(--h1-b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* links: underline draws in on hover */
+.hax-v2 .hx2-link { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .3s var(--ease-out); }
+.hax-v2 .hx2-link:hover { background-size: 100% 1px; }
+/* buttons never change shape; colour and lift only */
+.hax-v2 .hx2-btn { transition: background-color .3s var(--ease-out), transform .2s var(--ease-out), box-shadow .3s var(--ease-out); }
+.hax-v2 .hx2-btn:hover { transform: translateY(-1px); }
+.hax-v2 .hx2-btn:active { transform: translateY(0) scale(.98); }
+.hax-v2 :is(.hx2-btn--dark, .hx2-inv) { color: var(--btn-ink); }
+.hax-v2 .hx2-btn--dark:hover { background-color: var(--btn-hover); }
+.hax-v2 .hx2-btn--dark:active { background-color: var(--btn); }
+/* entrance + scroll reveals */
+@keyframes hx2-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.hax-v2 .hx2-rise { animation: hx2-rise .8s var(--ease-out) both; }
+.hax-v2 .hx2-rise--2 { animation-delay: .1s; }
+.hax-v2 .hx2-rise--3 { animation-delay: .2s; }
+.hax-v2 .hx2-reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.hax-v2 .hx2-reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hax-v2 .hx2-rise { animation: none; }
+  .hax-v2 .hx2-reveal { opacity: 1; transform: none; transition: none; }
+}
+/* ---- Home ---- */
+/* the demo UI inside a page (chat, approval card) is the same in every version: v1's Inter and colours */
+.hax-v2 .hx2-ui { font-family: "InterVariable", "Inter", system-ui, sans-serif; font-optical-sizing: none; font-feature-settings: "calt", "liga"; color: #293247; }
+/* the hero's stage word rises out and the next rises in; each word carries its own gradient width */
+.hax-v2 .hx2-rot { display: inline-grid; vertical-align: bottom; overflow: hidden; padding-bottom: .14em; margin-bottom: -.14em; }
+.hax-v2 .hx2-rot__item { grid-area: 1 / 1; justify-self: start; padding-bottom: .1em; margin-bottom: -.1em; transform: translateY(110%); opacity: 0; transition: transform .9s var(--ease-out), opacity .9s var(--ease-out); }
+.hax-v2 .hx2-rot__item.is-in { transform: none; opacity: 1; }
+.hax-v2 .hx2-rot__item.is-out { transform: translateY(-110%); }
+/* with and without HAX: hovering a callout brings its part forward */
+.hax-v2 .hx2-part { transition: opacity .35s var(--ease-out); }
+.hax-v2 .hx2-parts[data-active] .hx2-part:not(.is-hl) { opacity: .38; }
+@keyframes hx2-swap { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.hax-v2 .hx2-swap { animation: hx2-swap .35s var(--ease-out); }
+/* cards that are links: lift the edge, zoom the picture a touch */
+.hax-v2 .hx2-card { transition: box-shadow .3s var(--ease-out), border-color .3s var(--ease-out); }
+.hax-v2 .hx2-card:hover { box-shadow: 0 12px 32px var(--shadow); border-color: var(--line-strong); }
+.hax-v2 .hx2-card .hx2-zoom { transition: transform .7s var(--ease-out); }
+.hax-v2 .hx2-card:hover .hx2-zoom { transform: scale(1.03); }
+.hax-v2 .hx2-arrow { transition: transform .3s var(--ease-out); }
+.hax-v2 :is(a, button):hover > .hx2-arrow, .hax-v2 .hx2-card:hover .hx2-arrow { transform: translateX(3px); }
+.hax-v2 .hx2-tab { transition: background-color .25s var(--ease-out), color .2s; }
+@media (prefers-reduced-motion: reduce) {
+  .hax-v2 .hx2-rot__item, .hax-v2 .hx2-card .hx2-zoom, .hax-v2 .hx2-arrow { transition: none; }
+}
+
+/* ---- Dark theme: the nav switch sets data-hax2-theme="dark" on <html> ("hax-v2-theme" in localStorage);
+   app/(hax-v2)/v2/layout.tsx applies it before first paint. Only v2 reads it. ---- */
+html[data-hax2-theme="dark"] { color-scheme: dark; background: #0a0a0b; }
+html[data-hax2-theme="dark"] .hax-v2 {
+  --ink: #ededed;
+  --grey: #a1a1a1;
+  --line: #2a2a2d;
+  --fill: #141416;
+  --fill-2: #1d1d20;
+  --fill-3: #252529;
+  --line-strong: #3d3d42;
+  --page: #0a0a0b;
+  --card: #111113;
+  --nav-ink: #e6e9ef;
+  --nav-muted: #8d97a8;
+  --nav-line: #26282d;
+  --nav-bg: rgba(17, 17, 19, .78);
+  --btn: #ededed;
+  --btn-ink: #0a0a0b;
+  --btn-hover: #ffffff;
+  --weave: #5c616b;
+  --mcp: #0a0a0b; /* = --page: in dark the band is no block (a near-black edge read as a seam); light keeps the hard block */
+  --h1-a: #fafafa;
+  --h1-b: #8f8f8f;
+  --shadow: rgba(0, 0, 0, .5);
+}
+html[data-hax2-theme="dark"] .hax-v2 .hx2-dark-invert { filter: invert(.9) hue-rotate(180deg); }
+/* Prabh's with/without section (v1's shared component) on the dark page: his own dark scale */
+html[data-hax2-theme="dark"] .hax-v2 .hx-vs.landing-light {
+  --bg: #0a0a0b; --surface: #111113;
+  --border: rgba(255,255,255,0.10); --border-strong: rgba(255,255,255,0.20);
+  --fg: #f4f3f8; --fg-alt: #d8d6e4; --fg-mid: #a6a3ba; --fg-muted: #75728b;
+  color: var(--fg);
+}
+/* theme switch: a circle grows out of the switch (View Transitions); no overlap fade */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+/* Prabh's section sits on the v2 page: its own background goes, so the hero weave can fade over its top */
+.hax-v2 .hx2-compare .hx-vs.landing-light { background: transparent !important; }
+.hax-v2 .hx2-dark-only { display: none; }
+html[data-hax2-theme="dark"] .hax-v2 .hx2-dark-only { display: block; }
+html[data-hax2-theme="dark"] .hax-v2 .hx2-light-only { display: none; }
+/* dark: the MCP band has the page colour, so its weave fades out at the band's edges instead of
+   stopping on a straight line (light keeps the hard dark block) */
+html[data-hax2-theme="dark"] .hax-v2 #developers > canvas {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 160px, #000 calc(100% - 160px), transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 160px, #000 calc(100% - 160px), transparent 100%) !important;
+}
+
+/* ---- Dark bands (light theme): How it works, MCP and the footer are solid #111 blocks with hard
+   edges, so the page alternates light / dark instead of having one stray dark section. Inside a
+   band every token flips to its dark value; in the dark theme --mcp equals the page, so they merge. */
+.hax-v2 .hx2-band {
+  --ink: #ededed; --grey: #a1a1a1; --line: #2a2a2d; --line-strong: #3d3d42;
+  --fill: #18181b; --fill-2: #1f1f23; --fill-3: #27272b; --card: #18181b;
+  --btn: #ededed; --btn-ink: #0a0a0b; --btn-hover: #ffffff;
+  --nav-ink: #e6e9ef; --nav-muted: #8d97a8; --nav-line: #26282d;
+  --weave: #2a3446; --shadow: rgba(0, 0, 0, .5);
+  color: var(--ink);
+}
+.hax-v2 .hx2-band .hx2-dark-only { display: block; }
+.hax-v2 .hx2-band .hx2-light-only { display: none; }
