@@ -90,3 +90,7 @@ export function middleware(request: NextRequest) {
     headers: { "WWW-Authenticate": 'Basic realm="HAX 2.0 demo"' },
   });
 }
+
+// Run on Node.js rather than the Edge runtime: on Vercel the Edge invocation failed
+// (MIDDLEWARE_INVOCATION_FAILED) and took every page down. Same checks, same behaviour.
+export const config = { runtime: "nodejs" };
