@@ -1,6 +1,8 @@
 "use client";
 import type { CSSProperties, JSX } from "react";
 import {
+  AlignLeft as LAlignLeft,
+  SquarePen as LSquarePen,
   ArrowRight as LArrowRight,
   ArrowUp as LArrowUp,
   ArrowUpRight as LArrowUpRight,
@@ -109,6 +111,8 @@ export const LoaderCircle: LucideIcon = ({ slot, "data-md": _md, ...p }: IconPro
 };
 LoaderCircle.icon = { lucide: "LoaderCircle", symbol: "progress_activity" };
 
+export const AlignLeft = icon("AlignLeft", LAlignLeft);
+export const SquarePen = icon("SquarePen", LSquarePen);
 export const ArrowRight = icon("ArrowRight", LArrowRight);
 export const ArrowUp = icon("ArrowUp", LArrowUp);
 export const ArrowUpRight = icon("ArrowUpRight", LArrowUpRight);

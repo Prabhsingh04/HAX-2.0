@@ -24,7 +24,7 @@ export const SYM = {
   Globe: "language", GripVertical: "drag_indicator", Hand: "back_hand", HardDrive: "hard_drive", History: "history",
   Image: "image", Info: "info", Languages: "translate", Laptop: "laptop", ListChecks: "checklist", ListTree: "format_list_bulleted",
   Lock: "lock", Mail: "mail", Maximize2: "fullscreen", MessageCircle: "chat_bubble", MessageSquare: "chat", Mic: "mic",
-  Minimize2: "close_fullscreen", Palette: "palette", Paperclip: "attach_file", Pause: "pause", Pencil: "edit", Play: "play_arrow",
+  Minimize2: "close_fullscreen", Palette: "palette", Paperclip: "attach_file", Pause: "pause", Pencil: "edit", AlignLeft: "menu", SquarePen: "edit_square", Play: "play_arrow",
   Plus: "add", Ratio: "aspect_ratio", RefreshCw: "refresh", RotateCcw: "restore", Search: "search", Share2: "share",
   ShieldCheck: "verified_user", SlidersHorizontal: "tune", Sparkle: "auto_awesome", Square: "stop", Telescope: "travel_explore",
   Terminal: "terminal", ThumbsDown: "thumb_down", ThumbsUp: "thumb_up", Ticket: "confirmation_number", Trash2: "delete",

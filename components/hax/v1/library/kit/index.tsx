@@ -5,7 +5,7 @@ import "./ds-m3.css";
 import "@/components/ui/shadcn.css";
 import { createPortal } from "react-dom";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Check, Code2, Copy, Eye, RotateCcw, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { Check, Code2, Copy, Eye, Monitor, RotateCcw, SlidersHorizontal, Smartphone, Sparkles, X } from "lucide-react";
 import { BY_COMP } from "../catalog";
 import { DETAILS } from "../details";
 import { componentCode, signature } from "./code";
@@ -51,6 +51,10 @@ export function KitPlayground({ id }: { id: string }) {
   const [panel, setPanel] = useState(false);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [copied, setCopied] = useState<"" | "ai" | "code">("");
+  // Desktop / Mobile: how the component adapts on a phone. Only components drawn for a phone
+  // offer it (for now, the Composers, Artifacts, Collectors, Controllers and Approvals).
+  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
+  const phone = PHONE_READY.has(id);
   // ?o.effort=false&o.surface=Image opens the page on that version, so a version can be linked
   useEffect(() => {
     if (!e) return;
@@ -73,7 +77,13 @@ export function KitPlayground({ id }: { id: string }) {
     return () => window.removeEventListener("keydown", k);
   }, [panel]);
   const code = useMemo(() => (e && view === "code" ? componentCode(e.C, o, ds, comp?.name ?? id) : ""), [e, o, ds, view, comp, id]);
-  const plan = useMemo(() => (e && panel ? planFor(e, o, ds, d?.states ?? []) : null), [e, o, ds, panel, d]);
+  const plan = useMemo(() => {
+    if (!e || !panel) return null;
+    const p = planFor(e, o, ds, d?.states ?? []);
+    // a phone has no hover, so the Mobile view doesn't offer hover-only states and options
+    if (!(phone && device === "mobile")) return p;
+    return { ...p, states: p.states.filter((r) => r.name !== "Hover"), props: p.props.filter((x) => x.opt.key !== "hover") };
+  }, [e, o, ds, panel, d, phone, device]);
   if (!e) return null;
   const flash = (k: typeof copied) => { setCopied(k); setTimeout(() => setCopied(""), 1600); };
   const copyAI = () => { navigator.clipboard?.writeText(aiBrief(id, e, o, ds, planFor(e, o, ds, d?.states ?? []))); flash("ai"); };
@@ -91,6 +101,16 @@ export function KitPlayground({ id }: { id: string }) {
           </div>
           <span className="hk-bar-ds">{dsName}</span>
           <div className="ml-auto flex items-center gap-[8px]">
+            {phone && (
+              <div className="hk-seg hk-seg--icons" role="radiogroup" aria-label="Device">
+                {(["desktop", "mobile"] as const).map((d) => (
+                  <button key={d} type="button" role="radio" aria-checked={device === d} aria-label={d === "desktop" ? "Desktop" : "Mobile"} title={d === "desktop" ? "Desktop" : "Mobile"}
+                    onClick={() => { setDevice(d); setView("preview"); }} className="hk-seg-btn hk-dev-btn">
+                    {d === "desktop" ? <Monitor size={15} strokeWidth={2} /> : <Smartphone size={15} strokeWidth={2} />}
+                  </button>
+                ))}
+              </div>
+            )}
             <button type="button" onClick={copyAI} className="hx-btn hx-btn--outline hk-bar-btn" aria-live="polite">
               {copied === "ai" ? <Check size={14} strokeWidth={2.4} /> : <Sparkles size={14} strokeWidth={2} />}{copied === "ai" ? "Copied" : "Copy for AI"}
             </button>
@@ -100,7 +120,11 @@ export function KitPlayground({ id }: { id: string }) {
           </div>
         </div>
         {view === "preview" ? (
-          <div className="hk-stage hk-page" data-ds={ds}><DSFonts ds={ds} /><Fit><e.C o={o} /></Fit></div>
+          phone && device === "mobile" ? (
+            <div className="hk-stage hk-page hk-page--phone" data-ds={ds}><DSFonts ds={ds} /><Fit><Phone><e.C o={{ ...o, device: "mobile" }} /></Phone></Fit></div>
+          ) : (
+            <div className="hk-stage hk-page" data-ds={ds}><DSFonts ds={ds} /><Fit><e.C o={o} /></Fit></div>
+          )
         ) : (
           <div className="hk-codeview">
             <div className="hk-codehead">
@@ -118,6 +142,31 @@ export function KitPlayground({ id }: { id: string }) {
         <Customize e={e} o={o} setO={setO} plan={plan} name={comp?.name ?? id} dsName={dsName} onClose={() => setPanel(false)} />,
         slot,
       )}
+    </div>
+  );
+}
+
+// components with a phone layout (they read o.device === "mobile")
+const PHONE_READY = new Set(["prompt-input", "source-picker", "suggested-prompts", "suggestions", "prompt-templates", "example-gallery",
+  "streaming", "summary", "table", "chart", "variations", "media", "transcript", "canvas", "form-fill", "refine-menu",
+  "clarifying-question", "choice-picker", "form-request", "feedback", "team-decision",
+  "stop-and-pause", "capabilities", "memory", "checkpoints", "agent-access",
+  "approval-card", "permission-request", "preview-before-run", "diff-view"]);
+
+// A phone (340 × 680) with its status bar and home
+// indicator (black bezel, side button, battery); the component sits in the middle of the screen.
+function Phone({ children }: { children: ReactNode }) {
+  return (
+    <div className="hk-phone">
+      <div className="hk-phone-screen">
+        <div className="hk-phone-status" aria-hidden="true">
+          <span>9:41</span>
+          <span className="hk-phone-island" />
+          <span className="hk-phone-battery"><b>80</b><i /></span>
+        </div>
+        <div className="hk-phone-app">{children}</div>
+        <span className="hk-phone-home" aria-hidden="true" />
+      </div>
     </div>
   );
 }

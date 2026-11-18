@@ -3,22 +3,28 @@ import { Bot, Brain, ChevronDown, ChevronLeft, ChevronRight, GitBranch, GitFork,
 import { Ag, Spin, sel, st as stt, tog, type Entry, type Props } from "./ui";
 import { Btn, IconBtn, Kbd, Pick, Progress, Switch, Tag, TextLink } from "./parts";
 
+// width on a phone: the screen's width, with touch-sized controls (the component page's Mobile view
+// sets o.device); on desktop, the component's own width
+const W = (o: Props, w: string) => (o.device === "mobile" ? "hk-touch w-full" : w);
+
 /* Stop and pause — ChatGPT Agent "Take over" + pause, Claude Code Esc to interrupt,
    Operator / Manus live view, Codex cloud task stop. */
+// phone: no "Press Esc" hint (a phone has no Esc key; Stop does that); the buttons share the
+// width in one row; the live step truncates.
 function StopAndPause({ o }: { o: Props }) {
-  const st = o.state as string;
+  const st = o.state as string, m = o.device === "mobile";
   return (
-    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
+    <div className={`hk-panel ${W(o, "w-[520px]")} ${m ? "p-[14px]" : "p-[16px]"} hk-col gap-[12px]`}>
       <div className="hk-row gap-[10px]">
         <Ag dot={st === "Running" ? "var(--k-ok)" : st === "Paused" ? "var(--k-warn)" : "var(--text-tertiary)"} />
         <span className="hk-col hk-grow"><span className="hk-t">Updating 48 customer records</span><span className="hk-s">{st === "Running" ? "Step 3 of 5 · 2 min left" : st === "Paused" ? "Paused by you at step 3" : "Stopped · 21 of 48 updated"}</span></span>
         {st === "Running" && <Spin />}
       </div>
       <Progress value={st === "Stopped" ? 44 : 56} tone={st === "Paused" ? "warn" : undefined} label="Records updated" />
-      {o.live && st !== "Stopped" && <div className="hk-well px-[12px] py-[8px] hk-s hk-row gap-[8px]"><span className="hk-mono">crm.update</span>Northwind Traders · plan → Team</div>}
-      <div className="hk-row justify-between">
-        <span className="hk-s">{st === "Stopped" ? "Nothing after record 21 was changed." : <>Press <Kbd>Esc</Kbd> to stop</>}</span>
-        <span className="hk-row gap-[8px]">
+      {o.live && st !== "Stopped" && <div className="hk-well px-[12px] py-[8px] hk-s hk-row gap-[8px]"><span className="hk-mono shrink-0">crm.update</span><span className="hk-trunc">Northwind Traders · plan → Team</span></div>}
+      <div className={m ? "hk-col gap-[8px]" : "hk-row justify-between"}>
+        {(!m || st === "Stopped") && <span className="hk-s">{st === "Stopped" ? "Nothing after record 21 was changed." : <>Press <Kbd>Esc</Kbd> to stop</>}</span>}
+        <span className={`hk-row gap-[8px] ${m ? "[&>*]:flex-1" : ""}`}>
           {st === "Running" && <><Btn size="sm" icon={<Pause size={12} fill="currentColor" strokeWidth={0} />}>Pause</Btn>{o.takeover && <Btn size="sm">Take over</Btn>}<Btn size="sm" icon={<Square size={10} fill="currentColor" strokeWidth={0} />}>Stop</Btn></>}
           {st === "Paused" && <><Btn size="sm">Stop</Btn><Btn size="sm" kind="main" icon={<Play size={12} fill="currentColor" strokeWidth={0} />}>Resume</Btn></>}
           {st === "Stopped" && <><Btn size="sm">Undo 21 changes</Btn><Btn size="sm" kind="main">Continue</Btn></>}
@@ -35,12 +41,12 @@ function Capabilities({ o }: { o: Props }) {
   const all: [typeof Mail, string, string][] = [[HardDrive, "Google Drive", "Read"], [MessageSquare, "Slack", "Read and post"], [Ticket, "Linear", "Ask first"], [Mail, "Gmail", "Off"]];
   const rows = all.filter(([, , a]) => f === "Connected" ? a === "Read" || a === "Read and post" : f === "Ask first" ? a === "Ask first" : f === "Off" ? a === "Off" : true);
   return (
-    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[10px]">
-      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">What Atlas can use</span><span className="hk-s">Applies to every chat in this workspace</span></span><Btn size="sm" icon={<Plus size={13} />}>Connect</Btn></div>
+    <div className={`hk-panel ${W(o, "w-[520px]")} p-[16px] hk-col gap-[10px]`}>
+      <div className="hk-row justify-between !items-start gap-[8px]"><span className="hk-col"><span className="hk-h">What Atlas can use</span><span className="hk-s">Applies to every chat in this workspace</span></span><Btn size="sm" icon={<Plus size={13} />}>Connect</Btn></div>
       <div className="hk-col">
         {rows.map(([I, t, a]) => (
           <div key={t} className={`hk-row gap-[10px] py-[8px] border-t border-[var(--k-edge)] ${a === "Off" ? "opacity-60" : ""}`}>
-            <span className="hk-app"><I size={16} /></span><span className="hk-t hk-grow">{t}</span>
+            <span className="hk-app"><I size={16} /></span><span className="hk-t hk-grow hk-trunc">{t}</span>
             {o.style === "Switches" ? <Switch on={a !== "Off"} label={`${t} access`} /> : (
               <Pick variant="box" chevron className={a === "Ask first" ? "!text-[color:var(--k-warn)]" : a === "Off" ? "!text-[color:var(--text-tertiary)]" : ""}>{a}</Pick>
             )}
@@ -59,19 +65,19 @@ function Memory({ o }: { o: Props }) {
   const off = v === "Off";
   if (v === "Just saved")
     return (
-      <div className="w-[480px] hk-col gap-[10px]">
+      <div className={`${W(o, "w-[480px]")} hk-col gap-[10px]`}>
         <p className="hk-b">Got it. I&apos;ll keep reports to one page from now on.</p>
-        <div className="hk-row gap-[8px] hk-s"><Brain size={15} className="hk-blue" /><span className="font-medium text-[color:var(--text-primary)]">Memory updated</span>· Prefers one-page reports<TextLink className="ml-[4px]">Manage</TextLink></div>
+        <div className="hk-row flex-wrap gap-[8px] hk-s"><Brain size={15} className="hk-blue" /><span className="font-medium text-[color:var(--text-primary)]">Memory updated</span>· Prefers one-page reports<TextLink className="ml-[4px]">Manage</TextLink></div>
       </div>
     );
   const mem = ["Leads the growth team at Northwind", "Prefers one-page reports", "Writes in British English", "Weekly review is on Mondays"];
   return (
-    <div className="hk-panel w-[500px] p-[16px] hk-col gap-[10px]">
+    <div className={`hk-panel ${W(o, "w-[500px]")} p-[16px] hk-col gap-[10px]`}>
       <div className="hk-row justify-between"><span className="hk-h">Memory</span><span className="hk-row gap-[8px] hk-s">Use memory<Switch on={!off} label="Use memory" /></span></div>
       <span className="hk-s">Atlas remembers these across chats. Edit or delete any of them.</span>
       <div className="hk-col">
         {mem.map((m, i) => (
-          <div key={m} className={`hk-row gap-[10px] py-[8px] border-t border-[var(--k-edge)] ${off ? "opacity-50" : ""}`}>
+          <div key={m} className={`hk-row ${o.device === "mobile" ? "!gap-[4px] py-[4px]" : "gap-[10px] py-[8px]"} border-t border-[var(--k-edge)] ${off ? "opacity-50" : ""}`}>
             <span className="hk-b hk-grow">{m}</span>{i === 1 && !off && <Tag tone="blue">New</Tag>}
             <IconBtn size="xs" label="Edit memory" icon={<Pencil size={14} />} /><IconBtn size="xs" label="Delete memory" icon={<Trash2 size={14} />} />
           </div>
@@ -84,12 +90,15 @@ function Memory({ o }: { o: Props }) {
 
 /* Checkpoints and branches — Cursor restore checkpoint, Claude Code /rewind, ChatGPT
    edit-and-branch with ‹ 2 / 3 ›, Replit / Lovable version history. */
+// phone: there is no hover, so Restore and Branch sit on their own line under the checkpoint they
+// act on; the restore confirmation's actions stack.
 function Checkpoints({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const restoring = o.state === "Restoring";
   const branches = o.state === "Branches";
   const pts: [string, string, boolean?][] = [["Added the pricing table", "2 files · 4 min ago"], ["Rewrote the intro", "1 file · 9 min ago", true], ["Started from the brief", "12 min ago"]];
   return (
-    <div className="w-[520px] hk-col gap-[12px]">
+    <div className={`${W(o, "w-[520px]")} hk-col gap-[12px]`}>
       {(o.branch || branches) && (
         <div className="hk-col gap-[6px] items-end">
           <span className="hk-bubble">Make the pricing table compare three plans</span>
@@ -101,15 +110,17 @@ function Checkpoints({ o }: { o: Props }) {
           {branches ? <Pick chevron icon={<GitBranch size={13} />}>pricing-v2</Pick> : <span className="hk-s hk-row gap-[4px]"><GitBranch size={13} />main</span>}
         </div>
         {(branches ? [["Compared three plans", "On pricing-v2 · just now"] as [string, string, boolean?], ...pts.slice(1)] : pts).map(([t, s, hov], i) => (
-          <div key={t} className={`hk-mi ${hov ? "hk-mi--on" : ""}`}>
+          <div key={t} className={`hk-mi ${hov ? "hk-mi--on" : ""} ${m ? "flex-wrap" : ""}`}>
             <span className={`hk-step ${i === 0 ? "hk-step--now" : "hk-step--num"}`} />
             <span className="hk-col hk-grow"><span className="font-medium">{t}</span><span className="hk-s">{s}</span></span>
-            {hov && <><Btn size="sm" icon={<RotateCcw size={13} />}>Restore</Btn>{o.fork && <Btn size="sm" icon={<GitFork size={13} />}>Branch</Btn>}</>}
+            {hov && (m
+              ? <span className="hk-row gap-[8px] basis-full pl-[30px] [&>*]:flex-1"><Btn size="sm" icon={<RotateCcw size={13} />}>Restore</Btn>{o.fork && <Btn size="sm" icon={<GitFork size={13} />}>Branch</Btn>}</span>
+              : <><Btn size="sm" icon={<RotateCcw size={13} />}>Restore</Btn>{o.fork && <Btn size="sm" icon={<GitFork size={13} />}>Branch</Btn>}</>)}
             {i === 0 && <Tag>Now</Tag>}
           </div>
         ))}
         {branches && <div className="hk-row gap-[6px] px-[8px] pt-[6px] pb-[4px] hk-s"><GitFork size={13} />Branched from &quot;Rewrote the intro&quot;. main keeps the original.</div>}
-        {restoring && <div className="hk-well mx-[8px] mb-[4px] mt-[4px] px-[12px] py-[10px] hk-col gap-[8px]"><span className="hk-s">Restoring &quot;Rewrote the intro&quot; undoes the pricing table and 2 changed files.</span><span className="hk-row justify-end gap-[8px]"><Btn size="sm" kind="ghost">Cancel</Btn><Btn size="sm" kind="main">Restore</Btn></span></div>}
+        {restoring && <div className="hk-well mx-[8px] mb-[4px] mt-[4px] px-[12px] py-[10px] hk-col gap-[8px]"><span className="hk-s">Restoring &quot;Rewrote the intro&quot; undoes the pricing table and 2 changed files.</span>{m ? <span className="hk-col gap-[6px] [&>*]:w-full"><Btn size="sm" kind="main">Restore</Btn><Btn size="sm" kind="ghost">Cancel</Btn></span> : <span className="hk-row justify-end gap-[8px]"><Btn size="sm" kind="ghost">Cancel</Btn><Btn size="sm" kind="main">Restore</Btn></span>}</div>}
       </div>
     </div>
   );
@@ -118,14 +129,31 @@ function Checkpoints({ o }: { o: Props }) {
 /* Access per agent — which agent may use which system, so no single agent holds all the
    access a task needs (Okta app assignments, GitHub fine-grained tokens, AWS IAM roles,
    Copilot Studio agent permissions). */
+// phone: the agent-by-app grid is too tight for three columns, so each agent becomes a block with
+// its three apps labelled under it; the approval's actions sit under the request.
 function AgentAccess({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const apps = ["Stripe", "Zendesk", "Gmail"];
   const broken = o.state === "Rule broken";
   const waiting = o.state === "Waiting";
   const rows: [string, string[]][] = [["Billing agent", ["Refund", "", broken ? "Send" : ""]], ["Support agent", ["Read", "Reply", ""]], ["Outreach agent", ["", "Read", "Send"]]];
   return (
-    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[10px]">
-      <div className="hk-row justify-between"><span className="hk-col"><span className="hk-h">Who can use what</span><span className="hk-s">Refunds workflow · 3 agents</span></span>{o.edit && <Btn size="sm">Edit access</Btn>}</div>
+    <div className={`hk-panel ${W(o, "w-[520px]")} p-[16px] hk-col gap-[10px]`}>
+      <div className="hk-row justify-between !items-start gap-[8px]"><span className="hk-col"><span className="hk-h">Who can use what</span><span className="hk-s">Refunds workflow · 3 agents</span></span>{o.edit && <Btn size="sm">Edit access</Btn>}</div>
+      {m ? (
+        <div className="hk-col">
+          {rows.map(([n, cells]) => (
+            <div key={n} className="py-[10px] border-t border-[var(--k-edge)] hk-col gap-[8px]">
+              <span className="hk-row gap-[8px]"><Ag size="sm" icon={Bot} /><span className="hk-t !text-[13.5px]">{n}</span></span>
+              <div className="grid grid-cols-3 gap-[8px] pl-[30px]">
+                {cells.map((c, i) => (
+                  <span key={i} className="hk-col !items-start gap-[3px]"><span className="hk-s">{apps[i]}</span>{c ? <Tag tone={broken && n === "Billing agent" && c === "Send" ? "bad" : "neutral"}>{c}</Tag> : <span className="hk-faint text-[13px] leading-[22px]">None</span>}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="grid grid-cols-[1.6fr_1fr_1fr_1fr] items-stretch">
         <span className="hk-s pb-[6px]">Agent</span>
         {apps.map((a) => <span key={a} className="hk-s font-medium pb-[6px] px-[8px]">{a}</span>)}
@@ -136,8 +164,11 @@ function AgentAccess({ o }: { o: Props }) {
           </Fragment>
         ))}
       </div>
+      )}
       {broken && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px] hk-s"><Lock size={14} className="shrink-0 hk-badc" />Not saved. Billing agent would hold Refund and Send. No agent can both refund a payment and email the customer.</div>}
-      {waiting && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px] hk-s"><Ag size="sm" icon={Bot} /><span className="hk-grow">Support agent asked for Gmail · Send. An admin has to approve it.</span><Btn size="sm" kind="ghost">Deny</Btn><Btn size="sm" kind="main">Approve</Btn></div>}
+      {waiting && (m
+        ? <div className="hk-well px-[12px] py-[10px] hk-col gap-[10px] hk-s"><span className="hk-row !items-start gap-[8px]"><Ag size="sm" icon={Bot} /><span className="hk-grow">Support agent asked for Gmail · Send. An admin has to approve it.</span></span><span className="hk-row gap-[8px] [&>*]:flex-1"><Btn size="sm" kind="ghost">Deny</Btn><Btn size="sm" kind="main">Approve</Btn></span></div>
+        : <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px] hk-s"><Ag size="sm" icon={Bot} /><span className="hk-grow">Support agent asked for Gmail · Send. An admin has to approve it.</span><Btn size="sm" kind="ghost">Deny</Btn><Btn size="sm" kind="main">Approve</Btn></div>)}
       {!broken && !waiting && o.rule && <div className="hk-well px-[12px] py-[8px] hk-row gap-[8px] hk-s"><Lock size={14} className="shrink-0" />No agent can both refund a payment and email the customer.</div>}
     </div>
   );

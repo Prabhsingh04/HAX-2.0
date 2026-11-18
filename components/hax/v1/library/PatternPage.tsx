@@ -76,9 +76,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
           <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[640px]">{c.line}</p>
         </header>
 
-        <section id="preview" className="scroll-mt-[110px] flex flex-col gap-[14px] items-start w-full">
-          <h2 className={h2}>Preview</h2>
-          <p className={sub}>The component at real size, and live: hover it, click it. Customize switches its states and options; Code shows the code for this version.</p>
+        <section id="preview" aria-label="Preview" className="scroll-mt-[110px] flex flex-col gap-[14px] items-start w-full">
           <PreviewLarge id={c.id} />
         </section>
 

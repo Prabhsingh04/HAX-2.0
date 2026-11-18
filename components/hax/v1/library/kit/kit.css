@@ -76,6 +76,58 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, .05); font-size: 13px; line-height: 18px; font-weight: 600; letter-spacing: .07px; white-space: nowrap; color: var(--text-primary); cursor: pointer; }
 .hax-v1 .hk-bar-btn:active { background-color: var(--surface-pressed); }
 .hax-v1 .hk-bar-btn--on { background: var(--surface-tint); border-color: var(--stroke-strong); }
+/* Desktop / Mobile switch: two icon buttons in the bar, the chosen one raised */
+.hax-v1 .hk-seg--icons .hk-dev-btn { width: 32px; padding: 0; justify-content: center; }
+.hax-v1 .hk-seg--icons .hk-dev-btn:hover { color: var(--text-primary); }
+.hax-v1 .hk-seg--icons .hk-dev-btn[aria-checked="true"] { background: var(--surface-page); color: var(--text-primary); box-shadow: 0 1px 2px rgba(16, 24, 40, .1), 0 0 0 1px var(--stroke-subtle); }
+/* Mobile: the component in the middle of a phone's screen (black bezel, side button) */
+.hax-v1 .hk-page--phone { padding: 40px 24px; }
+.hax-v1 .hk-phone { position: relative; width: 340px; height: 680px; padding: 5px; border-radius: 58px; background: #0b0b0c;
+  box-shadow: 0 0 0 1.5px #3a3b3f, 0 0 0 2.5px #0b0b0c, 0 40px 70px -30px rgba(16, 24, 40, .4), 0 14px 28px -16px rgba(16, 24, 40, .22); }
+.hax-v1 .hk-phone::after { content: ""; position: absolute; right: -4.5px; top: 176px; width: 2.5px; height: 64px; border-radius: 0 2px 2px 0; background: #3a3b3f; }
+.hax-v1 .hk-phone-screen { position: relative; display: flex; flex-direction: column; height: 100%; overflow: hidden; border-radius: 53px; background: var(--hk-canvas); }
+.hax-v1 .hk-phone-status { position: relative; display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 4px 28px 0 36px; font-size: 15px; font-weight: 600; letter-spacing: -.2px; flex-shrink: 0; }
+.hax-v1 .hk-phone-island { position: absolute; left: 50%; top: 10px; width: 104px; height: 31px; border-radius: 999px; background: #0a0a0a; transform: translateX(-50%); }
+.hax-v1 .hk-phone-battery { display: flex; align-items: center; gap: 1px; }
+.hax-v1 .hk-phone-battery b { display: grid; place-items: center; min-width: 27px; height: 14px; padding: 0 3px; border-radius: 4.5px; background: var(--text-primary); color: var(--hk-canvas); font-size: 11px; line-height: 1; font-weight: 700; }
+.hax-v1 .hk-phone-battery i { width: 2px; height: 5px; border-radius: 0 2px 2px 0; background: currentColor; opacity: .45; }
+.hax-v1 .hk-phone-app { display: flex; flex: 1; flex-direction: column; justify-content: center; min-height: 0; padding: 12px 12px; }
+.hax-v1 .hk-phone-home { position: relative; z-index: 30; align-self: center; flex-shrink: 0; width: 120px; height: 4.5px; margin: 6px 0 8px; border-radius: 999px; background: currentColor; }
+/* a component's app bar on the phone (Prompt input's model picker), under the status bar */
+.hax-v1 .hk-phone-top { position: absolute; left: 0; right: 0; top: 52px; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 10px; }
+/* touch targets on a phone: 40 px controls (with the 8 px gaps around them, a 44 pt+ hit area) */
+.hax-v1 [data-ds="shadcn"] .hk-touch :is(button, [data-slot="button"]):not(.hk-thumb > button, [role="switch"], [role="checkbox"], [role="radio"]) { height: 40px; min-width: 40px; }
+/* switches, checkboxes and radios keep their own shape; a 44 px tap area sits around them */
+.hax-v1 .hk-touch :is([role="switch"], [role="checkbox"], [role="radio"]):not(md-switch) { position: relative; }
+.hax-v1 .hk-touch :is([role="switch"], [role="checkbox"], [role="radio"]):not(md-switch)::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: 44px; transform: translate(-50%, -50%); }
+.hax-v1 [data-ds="m3"] .hk-touch .hk-mdi {
+  --md-icon-button-state-layer-height: 40px; --md-icon-button-state-layer-width: 40px; --md-icon-button-icon-size: 22px;
+  --md-filled-icon-button-container-height: 40px; --md-filled-icon-button-container-width: 40px;
+  --md-filled-tonal-icon-button-container-height: 40px; --md-filled-tonal-icon-button-container-width: 40px;
+  --md-outlined-icon-button-container-height: 40px; --md-outlined-icon-button-container-width: 40px; }
+.hax-v1 [data-ds="m3"] .hk-touch .hk-mdb--sm { --md-text-button-container-height: 40px; --md-outlined-button-container-height: 40px; --md-filled-tonal-button-container-height: 40px; --md-filled-button-container-height: 40px; }
+/* menu rows in a phone sheet: 48 px, Material's and Apple's list-row height */
+.hax-v1 [data-ds="shadcn"] .hk-sheet [role="menuitem"] { min-height: 48px; }
+/* phone: what people type is 16 px, so iOS Safari doesn't zoom the page when the field is tapped */
+.hax-v1 [data-ds] .hk-touch .hk-typed { font-size: 16px; line-height: 22px; }
+/* phone: small links and buttons get a 44 px tap area around them without changing how they look */
+.hax-v1 .hk-touch :is(.hk-link, .hk-tap) { position: relative; }
+.hax-v1 .hk-touch :is(.hk-link, .hk-tap)::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: 44px; transform: translate(-50%, -50%); }
+/* phone: the search field in a sheet is 40 px, like the other controls */
+.hax-v1 [data-ds="shadcn"] .hk-touch [data-slot="input-group"] { height: 40px; }
+.hax-v1 [data-ds="shadcn"] .hk-touch :is(input, textarea) { font-size: 16px; }
+/* dark: the phone's edge and its sheets stay visible on a near-black page */
+html[data-hax-theme="dark"] .hax-v1 .hk-phone { box-shadow: 0 0 0 1.5px #5b5e66, 0 0 0 2.5px #0b0b0c, 0 40px 70px -30px rgba(0, 0, 0, .7); }
+html[data-hax-theme="dark"] .hax-v1 .hk-phone::after { background: #5b5e66; }
+html[data-hax-theme="dark"] .hax-v1 .hk-sheet-scrim { background: rgba(0, 0, 0, .6); }
+html[data-hax-theme="dark"] .hax-v1 .hk-pop.hk-sheet { background: color-mix(in srgb, #fff 8%, var(--hk-canvas)); border-top: 1px solid rgba(255, 255, 255, .16); box-shadow: 0 -12px 32px rgba(0, 0, 0, .5); }
+/* phone: diff lines wrap under their own line number instead of running off the screen */
+.hax-v1 .hk-diff--wrap .hk-dl { height: auto; min-height: 24px; align-items: flex-start; padding-top: 3px; padding-bottom: 3px; line-height: 18px; }
+.hax-v1 .hk-diff--wrap .hk-dl > span:last-child { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* an open menu on a phone: a bottom sheet over a dimmed screen */
+.hax-v1 .hk-sheet-scrim { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end; background: rgba(0, 0, 0, .32); border-radius: inherit; }
+.hax-v1 .hk-pop.hk-sheet { display: flex; flex-direction: column; width: 100%; padding: 8px 10px 30px; border-width: 1px 0 0; border-radius: 22px 22px 0 0; }
+.hax-v1 .hk-sheet-grab { align-self: center; width: 36px; height: 5px; margin: 0 0 8px; border-radius: 999px; background: currentColor; opacity: .18; }
 /* the stage keeps the component whole: wider than the stage, it is scaled down to fit */
 .hax-v1 .hk-fit { justify-self: stretch; width: 100%; display: flex; justify-content: center; }
 .hax-v1 .hk-fit-in { width: max-content; flex-shrink: 0; transform-origin: top center; }
