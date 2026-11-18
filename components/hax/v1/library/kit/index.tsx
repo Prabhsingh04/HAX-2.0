@@ -52,7 +52,7 @@ export function KitPlayground({ id }: { id: string }) {
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [copied, setCopied] = useState<"" | "ai" | "code">("");
   // Desktop / Mobile: how the component adapts on a phone. Only components drawn for a phone
-  // offer it (for now, the Composers, Artifacts, Collectors, Controllers and Approvals).
+  // offer it (for now, the Composers, Artifacts, Collectors, Controllers, Approvals, Workflows and Explorers).
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const phone = PHONE_READY.has(id);
   // ?o.effort=false&o.surface=Image opens the page on that version, so a version can be linked
@@ -80,10 +80,11 @@ export function KitPlayground({ id }: { id: string }) {
   const plan = useMemo(() => {
     if (!e || !panel) return null;
     const p = planFor(e, o, ds, d?.states ?? []);
-    // a phone has no hover, so the Mobile view doesn't offer hover-only states and options
-    if (!(phone && device === "mobile")) return p;
+    // a phone has no hover, so the Mobile view doesn't offer hover-only states and options; where a
+    // tap shows the same thing (a citation's source, a bar's value) the state stays
+    if (!(phone && device === "mobile") || TAP_SHOWS_HOVER.has(id)) return p;
     return { ...p, states: p.states.filter((r) => r.name !== "Hover"), props: p.props.filter((x) => x.opt.key !== "hover") };
-  }, [e, o, ds, panel, d, phone, device]);
+  }, [e, o, ds, panel, d, phone, device, id]);
   if (!e) return null;
   const flash = (k: typeof copied) => { setCopied(k); setTimeout(() => setCopied(""), 1600); };
   const copyAI = () => { navigator.clipboard?.writeText(aiBrief(id, e, o, ds, planFor(e, o, ds, d?.states ?? []))); flash("ai"); };
@@ -146,12 +147,17 @@ export function KitPlayground({ id }: { id: string }) {
   );
 }
 
+// components whose Hover state is also what a tap shows on a phone
+const TAP_SHOWS_HOVER = new Set(["sources", "chart"]);
 // components with a phone layout (they read o.device === "mobile")
 const PHONE_READY = new Set(["prompt-input", "source-picker", "suggested-prompts", "suggestions", "prompt-templates", "example-gallery",
   "streaming", "summary", "table", "chart", "variations", "media", "transcript", "canvas", "form-fill", "refine-menu",
   "clarifying-question", "choice-picker", "form-request", "feedback", "team-decision",
   "stop-and-pause", "capabilities", "memory", "checkpoints", "agent-access",
-  "approval-card", "permission-request", "preview-before-run", "diff-view"]);
+  "approval-card", "permission-request", "preview-before-run", "diff-view",
+  "plan", "task-list", "hand-off", "progress-steps", "workflow-canvas", "shared-status",
+  "reasoning", "sources", "confidence", "activity-log", "tool-call", "rationale", "usage-meter", "agent-agreement", "agent-disagreement", "decision-trail",
+  "ai-label", "agent-avatar", "proactive-suggestion", "update-notice", "error-message"]);
 
 // A phone (340 × 680) with its status bar and home
 // indicator (black bezel, side button, battery); the component sits in the middle of the screen.

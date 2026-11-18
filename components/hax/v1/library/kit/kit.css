@@ -98,8 +98,8 @@
 /* touch targets on a phone: 40 px controls (with the 8 px gaps around them, a 44 pt+ hit area) */
 .hax-v1 [data-ds="shadcn"] .hk-touch :is(button, [data-slot="button"]):not(.hk-thumb > button, [role="switch"], [role="checkbox"], [role="radio"]) { height: 40px; min-width: 40px; }
 /* switches, checkboxes and radios keep their own shape; a 44 px tap area sits around them */
-.hax-v1 .hk-touch :is([role="switch"], [role="checkbox"], [role="radio"]):not(md-switch) { position: relative; }
-.hax-v1 .hk-touch :is([role="switch"], [role="checkbox"], [role="radio"]):not(md-switch)::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: 44px; transform: translate(-50%, -50%); }
+.hax-v1 .hk-touch :is([role="switch"], [role="checkbox"], [role="radio"], md-checkbox, md-radio):not(md-switch) { position: relative; }
+.hax-v1 .hk-touch :is([role="switch"], [role="checkbox"], [role="radio"], md-checkbox, md-radio):not(md-switch)::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: 44px; transform: translate(-50%, -50%); }
 .hax-v1 [data-ds="m3"] .hk-touch .hk-mdi {
   --md-icon-button-state-layer-height: 40px; --md-icon-button-state-layer-width: 40px; --md-icon-button-icon-size: 22px;
   --md-filled-icon-button-container-height: 40px; --md-filled-icon-button-container-width: 40px;
@@ -126,7 +126,7 @@ html[data-hax-theme="dark"] .hax-v1 .hk-pop.hk-sheet { background: color-mix(in 
 .hax-v1 .hk-diff--wrap .hk-dl > span:last-child { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 /* an open menu on a phone: a bottom sheet over a dimmed screen */
 .hax-v1 .hk-sheet-scrim { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end; background: rgba(0, 0, 0, .32); border-radius: inherit; }
-.hax-v1 .hk-pop.hk-sheet { display: flex; flex-direction: column; width: 100%; padding: 8px 10px 30px; border-width: 1px 0 0; border-radius: 22px 22px 0 0; }
+.hax-v1 [data-ds] .hk-pop.hk-sheet { display: flex; flex-direction: column; width: 100%; padding: 8px 10px 30px; border-width: 1px 0 0; border-radius: 22px 22px 0 0; }
 .hax-v1 .hk-sheet-grab { align-self: center; width: 36px; height: 5px; margin: 0 0 8px; border-radius: 999px; background: currentColor; opacity: .18; }
 /* the stage keeps the component whole: wider than the stage, it is scaled down to fit */
 .hax-v1 .hk-fit { justify-self: stretch; width: 100%; display: flex; justify-content: center; }
