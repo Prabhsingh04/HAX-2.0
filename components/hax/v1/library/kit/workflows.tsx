@@ -3,15 +3,22 @@ import { ArrowRight, Bot, Calendar, Check, ChevronDown, GripVertical, X, Hand, M
 import { Ag, Chk, Me, Spin, sel, st, tog, type Entry, type Props } from "./ui";
 import { Btn, IconBtn, Tag, TextLink } from "./parts";
 
+// width on a phone: the screen's width, with touch-sized controls (the component page's Mobile view
+// sets o.device); on desktop, the component's own width
+const W = (o: Props, w: string) => (o.device === "mobile" ? "hk-touch w-full" : w);
+
 /* Plan — Claude Code / Codex plan mode, Cursor plan, Manus todo, Copilot Workspace
    spec: editable numbered steps, approved before work starts. */
+// phone: the header wraps; Start spans the width with "Keep planning" under it, and "Add a step"
+// sits above them. The drag handles stay: dragging works on touch.
 function Plan({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const steps = ["Read the churn report and Q2 baseline", "Split churn by region and plan size", "Draft three next steps with owners", "Write the one-page summary"];
   const wait = o.state === "Waiting on you";
   const run = o.state === "Running" || wait;
   return (
-    <div className="hk-panel w-[500px] p-[16px] hk-col gap-[12px]">
-      <div className="hk-row justify-between"><span className="hk-h">Plan · 4 steps</span><span className="hk-s">{wait ? "Step 2 of 4 · waiting on you" : run ? "Step 2 of 4" : "About 6 min"}</span></div>
+    <div className={`hk-panel ${W(o, "w-[500px]")} ${m ? "p-[14px]" : "p-[16px]"} hk-col gap-[12px]`}>
+      <div className="hk-row flex-wrap justify-between gap-y-[2px]"><span className="hk-h">Plan · 4 steps</span><span className="hk-s">{wait ? "Step 2 of 4 · waiting on you" : run ? "Step 2 of 4" : "About 6 min"}</span></div>
       <div className="hk-col gap-[2px]">
         {steps.map((s, i) => (
           <div key={s} className={`hk-mi !px-[6px] ${!run && i === 2 && o.editable ? "hk-mi--on" : ""}`}>
@@ -23,21 +30,34 @@ function Plan({ o }: { o: Props }) {
           </div>
         ))}
       </div>
-      {!run && <div className="hk-row justify-between"><TextLink className="hk-s hk-row gap-[4px]"><Plus size={14} />Add a step</TextLink><span className="hk-row gap-[8px]"><Btn kind="ghost">Keep planning</Btn><Btn kind="main" icon={<Play size={12} fill="currentColor" strokeWidth={0} />}>Start</Btn></span></div>}
+      {!run && (m
+        ? <div className="hk-col gap-[8px]"><TextLink className="hk-s hk-row gap-[4px] self-start"><Plus size={14} />Add a step</TextLink><Btn kind="main" className="w-full" icon={<Play size={12} fill="currentColor" strokeWidth={0} />}>Start</Btn><Btn kind="ghost" className="w-full">Keep planning</Btn></div>
+        : <div className="hk-row justify-between"><TextLink className="hk-s hk-row gap-[4px]"><Plus size={14} />Add a step</TextLink><span className="hk-row gap-[8px]"><Btn kind="ghost">Keep planning</Btn><Btn kind="main" icon={<Play size={12} fill="currentColor" strokeWidth={0} />}>Start</Btn></span></div>)}
     </div>
   );
 }
 
 /* Task list — Copilot in Teams / Loop tasks, Notion AI action items, Linear Asks,
    Granola action items with "Send to …". */
+// phone: each task keeps its checkbox and name on the first line; owner, due date and ticket move
+// to a small line under it; the main action spans the width.
 function TaskList({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const all = o.state === "Done";
   const sent = o.state === "Sent";
   const t: [string, string, string, boolean, string][] = [["Send the revised quote", "MR", "Fri", all, "LIN-212"], ["Fix the billing retry", "JK", "Mon", all, "LIN-213"], ["Book customer interviews", "AL", "Next week", true, "LIN-214"]];
   return (
-    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[8px]">
-      <div className="hk-row justify-between pb-[4px]"><span className="hk-h">3 tasks from the pricing sync</span>{o.ai && <span className="hk-ai"><Sparkle size={12} className="hk-blue" />Found by Atlas</span>}</div>
-      {t.map(([n, who, due, done, tid]) => (
+    <div className={`hk-panel ${W(o, "w-[520px]")} ${m ? "p-[14px]" : "p-[16px]"} hk-col gap-[8px]`}>
+      <div className="hk-row flex-wrap justify-between gap-y-[6px] pb-[4px]"><span className="hk-h">3 tasks from the pricing sync</span>{o.ai && <span className="hk-ai"><Sparkle size={12} className="hk-blue" />Found by Atlas</span>}</div>
+      {t.map(([n, who, due, done, tid]) => m ? (
+        <div key={n} className="hk-row !items-start gap-[10px] py-[10px] border-t border-[var(--k-edge)]">
+          <span className="mt-[1px]"><Chk on={done} label={n} /></span>
+          <span className="hk-col hk-grow gap-[4px]">
+            <span className={`hk-b ${done ? "hk-mute line-through" : ""}`}>{n}</span>
+            <span className="hk-row flex-wrap gap-[8px] hk-s">{o.owners && <Me i={who} />}<span className="hk-row gap-[4px]"><Calendar size={13} />{due}</span>{sent && <Tag tone="blue">{tid}</Tag>}</span>
+          </span>
+        </div>
+      ) : (
         <div key={n} className="hk-row gap-[10px] py-[8px] border-t border-[var(--k-edge)]">
           <Chk on={done} label={n} />
           <span className={`hk-b hk-grow ${done ? "hk-mute line-through" : ""}`}>{n}</span>
@@ -45,26 +65,30 @@ function TaskList({ o }: { o: Props }) {
           <span className="hk-s hk-row gap-[4px] w-[86px]"><Calendar size={13} />{due}</span>{sent && <Tag tone="blue">{tid}</Tag>}
         </div>
       ))}
-      {!sent && !all && <div className="hk-row justify-end gap-[8px] pt-[4px]"><Btn kind="ghost">Edit</Btn><Btn kind="main" icon={<Ticket size={13} />}>Send to Linear</Btn></div>}
+      {!sent && !all && (m
+        ? <div className="hk-col gap-[6px] pt-[4px] [&>*]:w-full"><Btn kind="main" icon={<Ticket size={13} />}>Send to Linear</Btn><Btn kind="ghost">Edit</Btn></div>
+        : <div className="hk-row justify-end gap-[8px] pt-[4px]"><Btn kind="ghost">Edit</Btn><Btn kind="main" icon={<Ticket size={13} />}>Send to Linear</Btn></div>)}
     </div>
   );
 }
 
 /* Hand-off — Intercom Fin to human, Salesforce Agentforce escalation, multi-agent
    (Copilot Studio, CrewAI): who has it now, with context passed along. */
+// phone: the status line sits above a full-width action.
 function HandOff({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const toAgent = o.to === "Another agent";
   const back = o.state === "Back with you";
   const working = o.state === "Working";
   return (
-    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[14px]">
+    <div className={`hk-panel ${W(o, "w-[520px]")} ${m ? "p-[14px]" : "p-[16px]"} hk-col gap-[14px]`}>
       <div className="hk-row gap-[12px]">
         <span className="hk-col items-center gap-[4px]"><Ag size="lg" /><span className="hk-s">Atlas</span></span>
-        <span className="hk-grow hk-col items-center gap-[4px]"><span className="hk-s">{o.state === "Waiting" ? "Waiting to be picked up" : working ? "Working on it · 2 min" : back ? "Sent back 1 min ago" : "Picked up 2 min ago"}</span><span className="h-[2px] w-full rounded-full" style={o.state === "Waiting" ? { background: "repeating-linear-gradient(90deg, var(--k-edge-2) 0 6px, transparent 6px 11px)" } : toAgent ? { background: "var(--k-agent)" } : { background: "var(--gradient-hax)", transform: "scaleX(-1)" }} /><ArrowRight size={14} className={`hk-faint -mt-[9px] ${back ? "self-start rotate-180" : "self-end"}`} /></span>
+        <span className="hk-grow hk-col items-center gap-[4px]"><span className="hk-s text-center">{o.state === "Waiting" ? "Waiting to be picked up" : working ? "Working on it · 2 min" : back ? "Sent back 1 min ago" : "Picked up 2 min ago"}</span><span className="h-[2px] w-full rounded-full" style={o.state === "Waiting" ? { background: "repeating-linear-gradient(90deg, var(--k-edge-2) 0 6px, transparent 6px 11px)" } : toAgent ? { background: "var(--k-agent)" } : { background: "var(--gradient-hax)", transform: "scaleX(-1)" }} /><ArrowRight size={14} className={`hk-faint -mt-[9px] ${back ? "self-start rotate-180" : "self-end"}`} /></span>
         <span className="hk-col items-center gap-[4px]">{toAgent ? <Ag size="lg" icon={Bot} /> : <span className="hk-me !size-[40px] !text-[13px]">SR</span>}<span className="hk-s">{toAgent ? "Billing agent" : "Sam · Support"}</span></span>
       </div>
       {o.context && <div className="hk-well p-[12px] hk-col gap-[4px]"><span className="hk-xs">Passed along</span><span className="text-[13px] leading-[19px]">Customer was double-charged on 1 Nov. Refund of $480 needs approval. Order #44120.</span></div>}
-      <div className="hk-row justify-between"><span className="hk-s">{back ? "Sam needs your approval for the refund." : "You'll get a reply here when it's done."}</span><Btn size="sm" kind={back ? "main" : "outline"}>{o.state === "Waiting" ? "Cancel hand-off" : back ? "Review refund" : "Open ticket"}</Btn></div>
+      <div className={m ? "hk-col gap-[8px] [&>button]:w-full [&>*:last-child]:w-full" : "hk-row justify-between"}><span className="hk-s">{back ? "Sam needs your approval for the refund." : "You'll get a reply here when it's done."}</span><Btn size="sm" kind={back ? "main" : "outline"}>{o.state === "Waiting" ? "Cancel hand-off" : back ? "Review refund" : "Open ticket"}</Btn></div>
     </div>
   );
 }
@@ -78,8 +102,8 @@ function ProgressSteps({ o }: { o: Props }) {
   const failed = o.state === "Failed";
   const steps = s.map(([t, d, k], i): [string, string, "done" | "now" | "todo" | "fail"] => done ? [t, d, "done"] : failed && i === 2 ? ["Comparing plans", "Couldn't open contoso.com", "fail"] : [t, d, k]);
   return (
-    <div className="w-[500px] hk-col gap-[10px]">
-      <div className="hk-row gap-[8px]">{done ? <Check size={16} strokeWidth={2.5} className="hk-okc" /> : failed ? <X size={16} strokeWidth={2.5} className="hk-badc" /> : <Spin />}<span className={`hk-t ${done || failed ? "" : "hk-shimmer"}`}>{done ? "Done" : failed ? "Stopped at comparing plans" : "Comparing plans"}</span><span className="hk-s">· {done ? "2 min 5 s" : "1 min 12 s"}</span><ChevronDown size={15} className={`hk-faint ${collapsed ? "" : "rotate-180"}`} /></div>
+    <div className={`${W(o, "w-[500px]")} hk-col gap-[10px]`}>
+      <div className="hk-row flex-wrap gap-[8px]">{done ? <Check size={16} strokeWidth={2.5} className="hk-okc" /> : failed ? <X size={16} strokeWidth={2.5} className="hk-badc" /> : <Spin />}<span className={`hk-t ${done || failed ? "" : "hk-shimmer"}`}>{done ? "Done" : failed ? "Stopped at comparing plans" : "Comparing plans"}</span><span className="hk-s">· {done ? "2 min 5 s" : "1 min 12 s"}</span><ChevronDown size={15} className={`hk-faint ${collapsed ? "" : "rotate-180"}`} /></div>
       {!collapsed && (
         <div className="hk-col gap-[2px] pl-[8px] border-l-2 border-[var(--k-edge)] ml-[7px]">
           {steps.map(([t, d, st]) => (
@@ -97,7 +121,11 @@ function ProgressSteps({ o }: { o: Props }) {
 /* Workflow canvas — n8n, Zapier canvas, Make, Copilot Studio, OpenAI Agent Builder:
    steps read left to right with arrows; the human check branches off the agent and
    rejoins before the action, so it is clear where a person steps in. */
+// phone: the flow reads top to bottom (n8n and Zapier on mobile) instead of left to right, so
+// nothing scrolls sideways: Trigger, Agent, then two lanes (Sure / Not sure, with the person's
+// review on the Not sure lane) that meet again at the Action.
 function WorkflowCanvas({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const running = o.state === "Running" || o.state === "Waiting on a person";
   const human = o.state !== "Running";
   const waiting = o.state === "Waiting on a person";
@@ -107,6 +135,40 @@ function WorkflowCanvas({ o }: { o: Props }) {
     </div>
   );
   const edge = { fill: "none", stroke: "var(--k-edge-2)", strokeWidth: 2, markerEnd: "url(#hk-wf-arrow)" };
+  if (m) {
+    const Box = ({ ic, k, t, on, human: h }: { ic: ReactNode; k: string; t: string; on?: boolean; human?: boolean }) => (
+      <div className="hk-panel !rounded-[var(--hk-r-lg)] hk-row gap-[10px] w-full h-[56px] px-[10px]" style={{ ...(on ? { borderColor: "var(--k-blue)", boxShadow: "0 0 0 3px var(--focus-ring), var(--k-shadow)" } : {}), ...(h ? { borderStyle: "dashed", borderColor: "var(--k-warn)" } : {}) }}>
+        <span className="hk-app !size-[30px]">{ic}</span><span className="hk-col min-w-0"><span className="hk-xs">{k}</span><span className="hk-t !text-[13px] hk-trunc">{t}</span></span>
+      </div>
+    );
+    // a short arrow pointing down, with an optional label beside it
+    const Down = ({ label, grow }: { label?: ReactNode; grow?: boolean }) => (
+      <span className={`hk-col items-center ${grow ? "flex-1" : ""}`}>
+        {label && <span className="pb-[4px]">{label}</span>}
+        <span className={`w-[2px] bg-[var(--k-edge-2)] ${grow ? "flex-1 min-h-[16px]" : "h-[16px]"}`} />
+        <svg width="10" height="7" viewBox="0 0 10 7" aria-hidden="true"><path d="M0 0 L5 7 L10 0 z" style={{ fill: "var(--k-edge-2)" }} /></svg>
+      </span>
+    );
+    return (
+      <div className="hk-touch w-full hk-col gap-[12px]">
+        {running && <span className="hk-s hk-row gap-[6px]"><Spin s={13} />{waiting ? "Paused on 3 emails · Sam needs to review" : "Running on 3 emails · step 2 of 3"}</span>}
+        <div className="hk-col items-stretch">
+          <Box ic={<Mail size={15} />} k="Trigger" t="Support email" />
+          <Down />
+          <Box ic={<Zap size={15} className="hk-agentc" />} k="Agent" t="Draft a reply" on={running && !waiting} />
+          <div className="grid grid-cols-2 gap-[10px]">
+            <div className="hk-col items-center"><Down grow label={<span className="hk-s">Sure</span>} /></div>
+            <div className="hk-col items-stretch">
+              <Down label={human ? <Tag tone="warn">Below 80% sure</Tag> : <span className="hk-s">Not sure</span>} />
+              <Box ic={<Hand size={15} className="hk-warnc" />} k="Person" t="Review draft" human={human} on={waiting} />
+              <Down label={<span className="hk-s">Approved</span>} />
+            </div>
+          </div>
+          <Box ic={<Check size={15} />} k="Action" t="Send the reply" />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-[540px] hk-col gap-[12px]">
       {running && <span className="hk-s hk-row gap-[6px]"><Spin s={13} />{waiting ? "Paused on 3 emails · Sam needs to review" : "Running on 3 emails · step 2 of 3"}</span>}
@@ -133,7 +195,9 @@ function WorkflowCanvas({ o }: { o: Props }) {
 /* Shared status — one live view of the goal, what is known, what is still open and who is on
    it, for the people and the agents working the same problem (incident.io and PagerDuty
    incident pages, Linear project updates, Slack canvases). */
+// phone: the status tag sits under the goal; "Open the incident" gets its own line.
 function SharedStatus({ o }: { o: Props }) {
+  const m = o.device === "mobile";
   const resolved = o.state === "Resolved";
   const quiet = o.state === "Quiet";
   const known: [ReactNode, string][] = [
@@ -142,8 +206,8 @@ function SharedStatus({ o }: { o: Props }) {
   ];
   const open: [string, string][] = [["Do we refund the failed orders?", "Billing agent"], ["What do we tell customers?", "Sam"]];
   return (
-    <div className="hk-panel w-[520px] p-[16px] hk-col gap-[12px]">
-      <div className="hk-row justify-between !items-start">
+    <div className={`hk-panel ${W(o, "w-[520px]")} ${m ? "p-[14px]" : "p-[16px]"} hk-col gap-[12px]`}>
+      <div className={m ? "hk-col !items-start gap-[8px]" : "hk-row justify-between !items-start"}>
         <span className="hk-col gap-[2px]"><span className="hk-xs">Goal · checkout outage</span><span className="hk-h">{resolved ? "Checkout working again at 13:41" : "Checkout working again before 14:00"}</span></span>
         <Tag tone={resolved ? "ok" : quiet ? "neutral" : "bad"}>{resolved ? "Resolved" : quiet ? "Quiet · last change 3 h ago" : <><i className="size-[6px] rounded-full bg-current" />Live</>}</Tag>
       </div>
@@ -158,10 +222,10 @@ function SharedStatus({ o }: { o: Props }) {
         </div>
       )}
       {o.who && (
-        <div className="hk-row gap-[10px] pt-[10px] border-t border-[var(--k-edge)]">
+        <div className={`hk-row gap-[10px] pt-[10px] border-t border-[var(--k-edge)] ${m ? "flex-wrap" : ""}`}>
           <span className="hk-row !gap-[4px]"><Ag size="sm" icon={Bot} /><Ag size="sm" icon={Bot} /><Me i="JK" /><Me i="SR" /></span>
           <span className="hk-s hk-grow">{resolved ? "Closed by Sam at 13:41" : "2 agents and 2 people on it"}</span>
-          <TextLink className="hk-s">Open the incident</TextLink>
+          <TextLink className={`hk-s ${m ? "basis-full" : ""}`}>Open the incident</TextLink>
         </div>
       )}
     </div>
