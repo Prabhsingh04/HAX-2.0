@@ -61,7 +61,9 @@ export function KitPlayground({ id }: { id: string }) {
     const q = new URLSearchParams(location.search), next: Props = {};
     e.opts.forEach((x) => { const v = q.get(`o.${x.key}`); if (v !== null) next[x.key] = x.kind === "toggle" ? v === "true" : v; });
     if (Object.keys(next).length) setO((p) => ({ ...p, ...next }));
-  }, [e]);
+    // ?device=mobile opens the page on the phone preview (the home banner links here)
+    if (phone && q.get("device") === "mobile") setDevice("mobile");
+  }, [e, phone]);
   // keep the address in step with the options, so the link is always this version
   useEffect(() => {
     if (!e) return;
