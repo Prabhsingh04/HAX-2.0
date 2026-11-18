@@ -5,16 +5,12 @@ export const metadata: Metadata = {
   description: "A pattern language for agentic products. By Outshift.",
 };
 
-// Applies a saved dark theme before the page paints, so it never flashes light first.
-// The header's theme switch writes "hax-theme"; light needs no attribute.
-const THEME_SCRIPT = `try{if(localStorage.getItem("hax-theme")==="dark")document.documentElement.dataset.haxTheme="dark"}catch(e){}`;
-
+// The v3 branch has no theme switch, so no saved theme is applied: these pages stay light.
 export default function HaxLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" />
-      <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       {children}
     </>
   );

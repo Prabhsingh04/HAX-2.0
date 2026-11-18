@@ -366,22 +366,24 @@ export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => vo
   let w0 = W, h0 = H;
   const ro = new ResizeObserver(() => { if (sec.clientWidth === w0 && sec.clientHeight === h0) return; w0 = sec.clientWidth; h0 = sec.clientHeight; build(); });
   ro.observe(sec);
-  let side = -1;
+  // the columns showing their pictures now
+  let shown = new Set<number>();
   // only keyboard focus holds a picture; a mouse click on a button must not pin it
   const held = (m: Col) => !!m.col.querySelector(":focus-visible");
-  const pick = (next: number) => {
-    if (next === side) return;
-    side = next;
+  const show = (next: Set<number>) => {
+    if (next.size === shown.size && [...next].every((i) => shown.has(i))) return;
+    shown = next;
     // let go first, so the dots on their way back stay with their own picture
-    cols.forEach((m, i) => { if (i !== side && !held(m)) go(m, 0); });
-    cols.forEach((m, i) => { if (i === side || held(m)) go(m, 1); });
+    cols.forEach((m, i) => { if (!next.has(i) && !held(m)) go(m, 0); });
+    cols.forEach((m, i) => { if (next.has(i) || held(m)) go(m, 1); });
   };
+  const pick = (i: number) => show(new Set(i < 0 ? [] : [i]));
   const offs: (() => void)[] = [];
   const on = (el: EventTarget, ev: string, fn: any) => { el.addEventListener(ev, fn); offs.push(() => el.removeEventListener(ev, fn)); };
   if (!still) {
     cols.forEach((m) => {
       on(m.col, "focusin", (e: FocusEvent) => { if ((e.target as Element).matches(":focus-visible")) go(m, 1); });
-      on(m.col, "focusout", (e: FocusEvent) => { if (!m.col.contains(e.relatedTarget as Node) && side !== cols.indexOf(m)) go(m, 0); });
+      on(m.col, "focusout", (e: FocusEvent) => { if (!m.col.contains(e.relatedTarget as Node) && !shown.has(cols.indexOf(m))) go(m, 0); });
     });
     on(sec, "pointermove", (e: PointerEvent) => {
       if (e.pointerType === "touch" || touchMode.matches) return;
@@ -398,13 +400,22 @@ export function mountDotField(sec: HTMLElement, cv: HTMLCanvasElement): () => vo
   const vis = new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; run(); });
   vis.observe(sec);
   on(document, "visibilitychange", run);
-  // on phones and tablets the picture forms while its column sits in the middle of the screen
-  const mid = new IntersectionObserver((es) => es.forEach((e) => {
-    const m = cols.find((c) => c.art === e.target); if (m && touchMode.matches && !still) go(m, e.isIntersecting ? 1 : 0);
-  }), { rootMargin: "-30% 0px -30% 0px" });
-  cols.forEach((m) => mid.observe(m.art));
+  // on phones and tablets the row of columns nearest the middle of the screen shows its pictures
+  // (one column on phones, the pair side by side on tablets), so a neighbour's never shows too
+  let tick = 0;
+  const centre = () => {
+    tick = 0;
+    if (!touchMode.matches || still) return;
+    const mid = innerHeight / 2;
+    const ds = cols.map((m) => { const c = m.col.getBoundingClientRect(); return { d: Math.abs(c.top + c.height / 2 - mid), h: c.height }; });
+    const best = Math.min(...ds.map((x) => x.d));
+    show(new Set(ds.flatMap((x, i) => (x.d <= best + 8 && x.d < x.h * 0.6 ? [i] : []))));
+  };
+  const onScroll = () => { if (!tick) tick = requestAnimationFrame(centre); };
+  on(window, "scroll", onScroll); on(window, "resize", onScroll);
+  onScroll();
   // the theme switch changes the ink: repaint now if the field is at rest
   const theme = new MutationObserver(() => { readInk(); if (!raf) frame(performance.now()); });
   theme.observe(document.documentElement, { attributes: true, attributeFilter: ["data-hax-theme"] });
-  return () => { cancelAnimationFrame(raf); ro.disconnect(); vis.disconnect(); mid.disconnect(); theme.disconnect(); offs.forEach((f) => f()); };
+  return () => { cancelAnimationFrame(raf); cancelAnimationFrame(tick); ro.disconnect(); vis.disconnect(); theme.disconnect(); offs.forEach((f) => f()); };
 }

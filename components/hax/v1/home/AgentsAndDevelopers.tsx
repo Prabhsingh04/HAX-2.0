@@ -29,7 +29,7 @@ export function AgentsAndDevelopers() {
   };
   const keys = Object.keys(TABS) as K[];
   return (
-    <section id="developers" className="flex flex-col gap-[24px] items-center px-[var(--hx-gutter)] py-[72px] relative w-full overflow-hidden md:gap-[28px] md:py-[96px]" data-node-id="98:19846">
+    <section id="developers" className="flex flex-col gap-[24px] items-center px-[var(--hx-gutter)] py-[56px] relative w-full overflow-hidden md:gap-[28px] md:py-[96px]" data-node-id="98:19846">
       <h2 className="hx-reveal relative font-extralight text-center leading-[42px] text-[34px] [text-wrap:balance] md:leading-[52px] md:text-[42px] xl:leading-[60px] xl:text-[50px] xl:whitespace-nowrap">
         Your AI agent already knows how to use it
       </h2>
@@ -38,7 +38,12 @@ export function AgentsAndDevelopers() {
         <br className="hidden lg:block" />{" "}
         and build them for you. Prefer to write the code? It’s one package.
       </p>
-      <div role="tablist" aria-label="Ways to use HAX" onKeyDown={onTabKeys(keys, tab, setTab)} className="relative bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex gap-[4px] items-center p-[4px] rounded-[var(--radius-pill)]">
+      {/* phones: the prompt and the terminal command are for desktop coding agents, so a link to the setup instead */}
+      <a href="/mcp" className="relative flex items-center gap-[4px] font-semibold leading-[18px] text-[13px] text-[color:var(--text-link)] md:hidden">
+        <span className="hx-link">Set up MCP</span>
+        <img alt="" src="/hax/v1/icon-arrow-right-link-12.svg" className="hx-arrow size-[12px]" />
+      </a>
+      <div role="tablist" aria-label="Ways to use HAX" onKeyDown={onTabKeys(keys, tab, setTab)} className="relative max-md:hidden bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex gap-[4px] items-center p-[4px] rounded-[var(--radius-pill)]">
         {keys.map((k) => {
           const sel = tab === k;
           return (
@@ -49,7 +54,7 @@ export function AgentsAndDevelopers() {
           );
         })}
       </div>
-      <div role="tabpanel" id="hx-use-panel" aria-labelledby={`hx-use-${tab}`} className="relative bg-[var(--surface-code)] flex w-full max-w-[800px] flex-col gap-[12px] items-start pb-[22px] pt-[18px] px-[20px] rounded-[var(--radius-xl)] md:px-[24px]">
+      <div role="tabpanel" id="hx-use-panel" aria-labelledby={`hx-use-${tab}`} className="relative bg-[var(--surface-code)] max-md:hidden flex w-full max-w-[800px] flex-col gap-[12px] items-start pb-[22px] pt-[18px] px-[20px] rounded-[var(--radius-xl)] md:px-[24px]">
         <div className="flex items-center justify-between w-full">
           <p className="font-semibold leading-[16px] text-[11px] text-[color:var(--text-tertiary)] tracking-[1.2px] uppercase">{cur.head}</p>
           <button type="button" onClick={copy} aria-label={copied ? "Copied" : "Copy code"} className="relative size-[14px] hx-copy">
@@ -59,7 +64,7 @@ export function AgentsAndDevelopers() {
         </div>
         <pre key={tab} className="hx-swap m-0 font-[family-name:var(--font-code)] leading-[22px] text-[13px] text-[color:var(--text-code)] tracking-[0.2px] w-full whitespace-pre-wrap break-words md:whitespace-pre">{cur.code}</pre>
       </div>
-      <div className="relative flex flex-wrap items-center justify-center gap-x-[6px] gap-y-[8px] text-center">
+      <div className="relative flex flex-wrap items-center justify-center gap-x-[6px] gap-y-[8px] text-center max-md:hidden">
         <p className="leading-[20px] text-[13px] text-[color:var(--text-secondary)] whitespace-nowrap">Using Claude Code? Add the server first:</p>
         <code className="bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] px-[6px] py-[2px] rounded-[6px] font-[family-name:var(--font-code)] leading-[18px] text-[12px] tracking-[0.2px] whitespace-normal md:whitespace-nowrap">claude mcp add --transport http hax https://nucleux.in/mcp</code>
         <p className="leading-[20px] text-[13px] text-[color:var(--text-secondary)] whitespace-nowrap">Cursor, Codex, VS Code and others:</p>

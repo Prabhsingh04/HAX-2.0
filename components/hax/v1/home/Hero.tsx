@@ -37,7 +37,7 @@ export function Hero() {
   return (
     // No breadcrumb: the site is only the HAX initiative. pt 42 = Figma's 24 + the 18px
     // breadcrumb row, so the headline keeps its Figma position.
-    <section className="flex flex-col items-center pb-[80px] pt-[24px] px-[var(--hx-gutter)] relative w-full overflow-hidden md:pb-[104px] xl:pb-[128px] xl:pt-[42px]" data-node-id="98:19425" data-hx-hero>
+    <section className="flex flex-col items-center pb-[56px] pt-[24px] px-[var(--hx-gutter)] relative w-full overflow-hidden md:pb-[104px] xl:pb-[128px] xl:pt-[42px]" data-node-id="98:19425" data-hx-hero>
       <div className="flex flex-col gap-[24px] items-center pt-[48px] relative md:gap-[28px] md:pt-[72px] xl:pt-[88px]">
         <h1 className="hx-rise font-semibold text-[32px] leading-[40px] text-[color:var(--text-primary)] text-center tracking-[-0.4px] md:text-[42px] md:leading-[50px] lg:text-[46px] lg:leading-[54px] lg:whitespace-nowrap xl:text-[50px] xl:leading-[58px] xl:tracking-[-0.6px]">
           One pattern library for the{" "}
@@ -54,7 +54,7 @@ export function Hero() {
             <img alt="" src="/hax/v1/icon-arrow-right.svg" className="hx-arrow size-[16px]" />
           </a>
           <button type="button" onClick={copy} aria-label="Copy install command"
-            className="hx-snippet bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[10px] items-center pl-[18px] pr-[14px] py-[9px] rounded-[var(--radius-pill)]">
+            className="hx-snippet bg-[var(--surface-page)] border border-[var(--stroke-default)] flex gap-[10px] items-center pl-[18px] pr-[14px] py-[9px] rounded-[var(--radius-pill)] max-md:hidden">
             <span className="font-[family-name:var(--font-code)] leading-[22px] text-[13px] text-[color:var(--text-primary)] tracking-[0.2px] whitespace-nowrap">$ npm install @hax/react</span>
             <span className="relative size-[14px]">
               <img alt="" src="/hax/v1/icon-copy.svg" className={`absolute inset-0 size-[14px] transition-all duration-200 ${copied ? "opacity-0 scale-50" : ""}`} />

@@ -66,20 +66,20 @@ const CALLS: [string, string, string, string][] = [
 // with the text above.
 const jump = "hx-btn hx-btn--tertiary flex gap-[6px] h-[32px] items-center px-[12px] rounded-[var(--radius-pill)] font-semibold leading-[18px] text-[13px] tracking-[0.07px] whitespace-nowrap text-[color:var(--text-primary)]";
 const th = "px-[20px] py-[12px] text-left align-bottom font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase";
-const h2 = "font-semibold leading-[36px] text-[29px] tracking-[-0.2px] whitespace-nowrap";
-const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[720px]";
+const h2 = "font-semibold leading-[30px] text-[23px] tracking-[-0.2px] md:leading-[36px] md:text-[29px] md:whitespace-nowrap";
+const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-full max-w-[720px] lg:w-[720px]";
 
 export function DocsPage() {
   return (
     <>
-      <section className="flex flex-col gap-[16px] items-start pb-[56px] pt-[72px] px-[144px] relative w-full overflow-hidden" data-node-id="101:2669">
+      <section className="flex flex-col gap-[16px] items-start pb-[40px] pt-[40px] px-[var(--hx-gutter)] relative w-full overflow-hidden md:pb-[56px] md:pt-[72px]" data-node-id="101:2669">
         <nav aria-label="Breadcrumb" className="relative flex gap-[8px] leading-[18px] text-[12px]">
           <a href="/hax-docs" className="hx-link text-[color:var(--text-link)]">Docs</a>
           <span className="text-[color:var(--text-tertiary)]">/</span>
           <span>React</span>
         </nav>
-        <h1 className="hx-rise relative font-semibold leading-[58px] text-[50px] tracking-[-0.6px] whitespace-nowrap">The agentic UI library for React.</h1>
-        <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[760px]">
+        <h1 className="hx-rise relative font-semibold leading-[40px] text-[32px] tracking-[-0.4px] [text-wrap:balance] md:leading-[50px] md:text-[42px] lg:leading-[58px] lg:text-[50px] lg:tracking-[-0.6px] lg:whitespace-nowrap">The agentic UI library for React.</h1>
+        <p className="hx-rise hx-rise--2 relative leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-full max-w-[760px] lg:w-[760px]">
           HAX ships every pattern in this library as a real, installable React component. One umbrella package, about 50 focused sub-packages, Tailwind-native theming, TypeScript throughout. The same components the Meeting Summariser is built from.
         </p>
         <div className="hx-rise hx-rise--3 relative flex gap-[4px] pt-[8px] -ml-[12px]">
@@ -87,30 +87,30 @@ export function DocsPage() {
           <a href="#product-managers" className={jump}>For product managers<img alt="" src="/hax/v1/icon-arrow-right-14.svg" className="size-[14px] rotate-90" /></a>
         </div>
       </section>
-      <div className="flex flex-col gap-[56px] items-start pb-[96px] pt-[16px] px-[144px] w-full" data-node-id="101:2681">
+      <div className="flex flex-col gap-[40px] items-start pb-[72px] pt-[16px] px-[var(--hx-gutter)] w-full md:gap-[56px] md:pb-[96px]" data-node-id="101:2681">
         <section id="install" className="scroll-mt-[110px] hx-reveal flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Install</h2>
           <p className={sub}>The umbrella package re-exports every component; you can also install any sub-package on its own.</p>
-          <CodeBlock code={INSTALL} className="w-[880px]" />
+          <CodeBlock code={INSTALL} className="w-full max-w-[880px] lg:w-[880px]" />
         </section>
         <section id="theming" className="hx-reveal flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Set up theming</h2>
           <p className={sub}>Components are styled with Tailwind utilities bound to design tokens in @hax/tokens. Add the preset, scan the compiled components, and import the token stylesheet.</p>
-          <CodeBlock code={TW} label="tailwind.config.js" className="w-[880px]" />
-          <CodeBlock code={CSS} label="index.css" className="w-[880px]" />
+          <CodeBlock code={TW} label="tailwind.config.js" className="w-full max-w-[880px] lg:w-[880px]" />
+          <CodeBlock code={CSS} label="index.css" className="w-full max-w-[880px] lg:w-[880px]" />
           <p className={sub}>Toggle dark mode with a .dark class on a parent element. Tokens cover colour, radius, and the keyframes for caret blink, typing dots and fade in.</p>
         </section>
         <section id="quick-start" className="hx-reveal flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Quick start: an agent chat</h2>
           <p className={sub}>A scrolling transcript with auto-pin, streamed assistant messages, and a composer that submits on Enter.</p>
-          <CodeBlock code={CHAT} label="Chat.jsx" className="w-[880px]" />
+          <CodeBlock code={CHAT} label="Chat.jsx" className="w-full max-w-[880px] lg:w-[880px]" />
         </section>
         <section id="packages" className="hx-reveal flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Packages</h2>
           <p className={sub}>About 50 sub-packages under the @hax/* scope. Import from the umbrella (@hax/react) or per package. Every export is typed.</p>
           <div className="flex flex-wrap gap-[16px] items-start w-full">
             {PACKAGES.map(([t, d, pk]) => (
-              <div key={t} className="bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex flex-col gap-[10px] items-start px-[22px] py-[20px] rounded-[var(--radius-xl)] w-[368px]">
+              <div key={t} className="bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] flex flex-col gap-[10px] items-start px-[22px] py-[20px] rounded-[var(--radius-xl)] w-full sm:w-[calc((100%_-_16px)/2)] xl:w-[368px]">
                 <h3 className="font-semibold leading-[24px] text-[16px]">{t}</h3>
                 <p className="leading-[20px] text-[13px] text-[color:var(--text-secondary)]">{d}</p>
                 <div className="flex flex-wrap gap-[6px]">
@@ -125,8 +125,8 @@ export function DocsPage() {
         <section id="product-managers" className="scroll-mt-[110px] hx-reveal flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>For product managers</h2>
           <p className={sub}>Before launch, decide where the agent acts alone, where it asks first, and what it never does. Each call shows up in the product as one HAX component, so your team builds exactly what you decided.</p>
-          <div className="w-[1040px] max-w-full overflow-hidden rounded-[var(--radius-xl)] border border-[var(--stroke-subtle)]">
-            <table className="w-full border-collapse">
+          <div className="w-[1040px] max-w-full overflow-x-auto rounded-[var(--radius-xl)] border border-[var(--stroke-subtle)] lg:overflow-hidden">
+            <table className="w-full min-w-[640px] border-collapse lg:min-w-0">
               <caption className="sr-only">What the agent may do on its own, and what people see</caption>
               <colgroup><col className="w-[32%]" /><col className="w-[17%]" /><col /></colgroup>
               <thead className="bg-[var(--surface-tint)]">

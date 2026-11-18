@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { flushSync } from "react-dom";
 import { Menu, X } from "lucide-react";
 
 // Figma: Header 94:18574 (instance 98:19358 on 🌐 Website v1)
@@ -80,41 +79,7 @@ function NavItem({ label, href, dropdown, current }: { label: string; href?: str
   );
 }
 
-// Light is the default. The switch saves the choice and app/(hax)/layout.tsx applies it
-// before first paint; the moon shows in light, the sun in dark (motion.css).
-function ThemeSwitch() {
-  const [dark, setDark] = useState(false);
-  useEffect(() => setDark(document.documentElement.dataset.haxTheme === "dark"), []);
-  const flip = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // read the page, not this switch: the header has a second switch for small screens
-    const next = document.documentElement.dataset.haxTheme !== "dark";
-    try { localStorage.setItem("hax-theme", next ? "dark" : "light"); } catch {}
-    const apply = () => { document.documentElement.dataset.haxTheme = next ? "dark" : "light"; setDark(next); };
-    // the new theme spreads out from the switch as a growing circle (view transitions); instant where
-    // the browser lacks them or the reader prefers reduced motion
-    type VT = { ready: Promise<void>; finished: Promise<void> };
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => VT };
-    if (!doc.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) { apply(); return; }
-    const b = e.currentTarget.getBoundingClientRect();
-    const x = b.left + b.width / 2, y = b.top + b.height / 2;
-    const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    const root = document.documentElement;
-    root.classList.add("hx-vt");
-    const vt = doc.startViewTransition(() => flushSync(apply));
-    vt.ready.then(() => {
-      root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
-        { duration: 600, easing: "cubic-bezier(.22,1,.36,1)", pseudoElement: "::view-transition-new(root)" });
-    }).catch(() => {});
-    vt.finished.finally(() => root.classList.remove("hx-vt"));
-  };
-  return (
-    <button type="button" aria-label="Dark mode" aria-pressed={dark} onClick={flip} className="hx-iconbtn flex items-center justify-center rounded-[var(--radius-pill)] size-[36px] shrink-0">
-      <img alt="" src="/hax/v1/icon-theme.svg" className="hx-light-only size-[16px]" />
-      <img alt="" src="/hax/v1/icon-sun.svg" className="hx-dark-only size-[16px]" />
-    </button>
-  );
-}
-
+// No theme switch on the v3 branch: it isn't part of this version.
 // Below 1024px the links move into a menu under the header. The button opens it; Escape, a click
 // outside it or following a link closes it (Escape returns focus to the button).
 const LINKS: [string, string][] = [["Components", "/library"], ["Docs", "/hax-docs"], ["MCP", "/mcp"], ["Blog", "/blog"]];
@@ -133,7 +98,6 @@ function MobileNav({ section }: { section?: string }) {
   const item = "hx-menuitem flex items-center gap-[6px] rounded-[8px] px-[12px] py-[10px] text-[16px] leading-[24px] text-[color:var(--text-primary)] hover:bg-[var(--surface-tint)]";
   return (
     <div ref={ref} className="flex items-center gap-[4px] lg:hidden">
-      <ThemeSwitch />
       <button ref={btn} type="button" aria-expanded={open} aria-controls="hx-mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}
         className="hx-iconbtn flex size-[40px] shrink-0 items-center justify-center rounded-[var(--radius-pill)] text-[color:var(--text-primary)]">
         {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
@@ -182,7 +146,6 @@ export function Header() {
           <NavItem label="Docs" href="/hax-docs" current={section === "Docs"} />
           <NavItem label="MCP" href="/mcp" current={section === "MCP"} />
           <NavItem label="Blog" href="/blog" current={section === "Blog"} />
-          <ThemeSwitch />
         </nav>
         <MobileNav section={section} />
       </div>

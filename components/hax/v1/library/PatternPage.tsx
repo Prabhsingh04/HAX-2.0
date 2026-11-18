@@ -24,8 +24,8 @@ const pretty = (v: unknown) => JSON.stringify(v, null, 2).replace(/\[\n\s+([^[\]
   return line.length <= 64 ? line : whole;
 });
 
-const h2 = "font-semibold leading-[36px] text-[29px] tracking-[-0.2px] whitespace-nowrap";
-const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-[640px]";
+const h2 = "font-semibold leading-[30px] text-[23px] tracking-[-0.2px] md:leading-[36px] md:text-[29px] md:whitespace-nowrap";
+const sub = "leading-[22px] text-[14px] text-[color:var(--text-secondary)] w-full max-w-[640px] xl:w-[640px]";
 const eyebrow = "font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase";
 const tile = "bg-[var(--surface-tint)] border border-[var(--stroke-subtle)] rounded-[var(--radius-xl)]";
 
@@ -63,17 +63,17 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
 
   return (
     <DSContext.Provider value={ds}>
-    <div className="flex w-full items-start" data-node-id="98:25487">
+    <div className="flex w-full flex-col items-stretch lg:flex-row lg:items-start" data-node-id="98:25487">
       <Sidebar active={f.id} selected={c.id} ds={ds} />
-      <article key={c.id} className="hx-swap flex-1 min-w-0 flex flex-col gap-[56px] items-start pb-[96px] pl-[64px] pr-[48px] pt-[40px]" data-node-id="98:25539">
+      <article key={c.id} className="hx-swap flex-1 min-w-0 flex flex-col gap-[40px] items-start pb-[72px] px-[var(--hx-gutter)] pt-[20px] md:gap-[56px] lg:pb-[96px] lg:pl-[48px] lg:pr-[32px] lg:pt-[40px] xl:pl-[64px] xl:pr-[48px]" data-node-id="98:25539">
         <header className="flex flex-col gap-[14px] items-start w-full">
-          <nav aria-label="Breadcrumb" className="flex gap-[8px] leading-[18px] text-[12px] whitespace-nowrap">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap gap-[8px] leading-[18px] text-[12px] whitespace-nowrap">
             <a href={lib} className="hx-link text-[color:var(--text-link)]">Components</a><span className="text-[color:var(--text-tertiary)]">/</span>
             <a href={withDS(`/library#${f.id}`, ds)} className="hx-link text-[color:var(--text-link)]">{f.name}</a><span className="text-[color:var(--text-tertiary)]">/</span>
             <span>{c.name}</span>
           </nav>
-          <h1 className="font-semibold leading-[58px] text-[50px] tracking-[-0.6px]">{c.name}</h1>
-          <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[640px]">{c.line}</p>
+          <h1 className="font-semibold leading-[40px] text-[34px] tracking-[-0.4px] md:leading-[58px] md:text-[50px] md:tracking-[-0.6px]">{c.name}</h1>
+          <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-full max-w-[640px] xl:w-[640px]">{c.line}</p>
         </header>
 
         <section id="preview" aria-label="Preview" className="scroll-mt-[110px] flex flex-col gap-[14px] items-start w-full">
@@ -83,7 +83,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
         <section id="how" className="scroll-mt-[110px] flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>How it works</h2>
           <p className={sub}>What sets it off, what people see, and what happens when they act on it.</p>
-          <ol className="grid grid-cols-3 gap-[16px] w-full">
+          <ol className="grid grid-cols-1 gap-[12px] w-full md:grid-cols-3 md:gap-[16px]">
             {d.how.map((t, k) => (
               <li key={k} className={`${tile} flex flex-col gap-[10px] px-[22px] py-[20px]`}>
                 <span className="flex gap-[10px] items-center">
@@ -101,7 +101,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
           <p className={sub}>Every state it can be in. Each one needs its own design.</p>
           <dl className="w-full border-b border-[var(--stroke-subtle)]">
             {d.states.map(([name, line]) => (
-              <div key={name} className="grid grid-cols-[200px_1fr] gap-[24px] border-t border-[var(--stroke-subtle)] py-[14px]">
+              <div key={name} className="grid grid-cols-1 gap-[6px] border-t border-[var(--stroke-subtle)] py-[14px] md:grid-cols-[200px_1fr] md:gap-[24px]">
                 <dt className="font-semibold leading-[22px] text-[14px]">{name}</dt>
                 <dd className="leading-[22px] text-[14px] text-[color:var(--text-secondary)]">{line}</dd>
               </div>
@@ -117,7 +117,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
 
         <section id="rules" className="scroll-mt-[110px] flex flex-col gap-[14px] items-start w-full">
           <h2 className={h2}>Do and don&apos;t</h2>
-          <div className="grid grid-cols-2 gap-[16px] w-full">
+          <div className="grid grid-cols-1 gap-[12px] w-full md:grid-cols-2 md:gap-[16px]">
             {([["Do", d.dos, true], ["Don't", d.donts, false]] as const).map(([t, items, ok]) => (
               <div key={t} className={`${tile} flex flex-col gap-[12px] px-[22px] py-[20px]`}>
                 <p className={eyebrow}>{t}</p>
@@ -139,7 +139,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
           {covered.length ? (
             <>
               <p className={sub}>{covered.length === 1 ? "This entry from the earlier library now lives here." : `These ${covered.length} entries from the earlier library now live here, as parts and variants of ${c.name}.`}</p>
-              <div className="grid grid-cols-2 gap-[16px] w-full">
+              <div className="grid grid-cols-1 gap-[12px] w-full md:grid-cols-2 md:gap-[16px]">
                 {covered.map((p) => (
                   <div key={p.id} className={`${tile} flex flex-col gap-[6px] px-[22px] py-[18px]`}>
                     <h3 className="font-semibold leading-[24px] text-[16px]">{p.name}</h3>
