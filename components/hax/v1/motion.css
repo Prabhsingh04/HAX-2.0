@@ -143,7 +143,8 @@ html[data-hax-theme="dark"] .hax-v1 .bg-clip-text { filter: brightness(1.18); }
 /* Home intro (intro/Intro.tsx): INTRO_SCRIPT marks <html> before first paint, so the page stays hidden
    on the intro's dark ground until the intro fades (the intro itself sets visibility: visible). If the
    intro never starts (script error), the guard shows the page after 10s anyway. */
-html[data-hax-intro="on"] body { background: #0f1117; animation: hx-intro-guard-bg 0s 10s forwards; }
+html[data-hax-intro="on"] body { background: #fff; animation: hx-intro-guard-bg 0s 10s forwards; }
 html[data-hax-intro="on"] .hax-v1 { visibility: hidden; animation: hx-intro-guard 0s 10s forwards; }
+html[data-hax-intro="on"][data-hax-theme="dark"] body { background: #0f1117; }
 @keyframes hx-intro-guard { to { visibility: visible; } }
 @keyframes hx-intro-guard-bg { to { background: transparent; } }

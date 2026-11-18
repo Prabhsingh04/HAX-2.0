@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { drawIntro, END } from "./introScene";
+import { drawIntro, END, type IntroOpts } from "./introScene";
 import { layout } from "./scene";
 import { INTRO_SEEN } from "./script";
 
@@ -14,10 +14,19 @@ const FADE_AT = 6.2; // seconds: the floor has finished tipping (introScene T_TI
 const FADE_MS = 900;
 const HERO_H = 860;
 
+// Light on v1's default light theme, v3's night in dark theme; ?intro=nosun shows the version
+// without the sun and horizon (Srishti asked to see one, 17 Nov).
+function introOpts(): IntroOpts {
+  const light = document.documentElement.dataset.haxTheme !== "dark";
+  const sun = new URLSearchParams(location.search).get("intro") !== "nosun";
+  return { light, sun };
+}
+
 export function Intro({ onFade, onDone }: { onFade?: () => void; onDone: () => void }) {
   const cv = useRef<HTMLCanvasElement>(null);
   const t0 = useRef(0);
   const [fading, setFading] = useState(false);
+  const [light, setLight] = useState(false);
   const done = useRef(onDone);
   done.current = onDone;
   const fade = useRef(onFade);
@@ -27,6 +36,8 @@ export function Intro({ onFade, onDone }: { onFade?: () => void; onDone: () => v
     const c = cv.current, x = c?.getContext("2d");
     if (!c || !x) return;
     let W = 0, H = 0, raf = 0, faded = false, timer = 0;
+    const opts = introOpts();
+    setLight(!!opts.light);
     const size = () => {
       const d = Math.min(2, window.devicePixelRatio || 1);
       W = window.innerWidth; H = window.innerHeight;
@@ -41,7 +52,7 @@ export function Intro({ onFade, onDone }: { onFade?: () => void; onDone: () => v
     const release = () => { root.style.overflow = prev; delete root.dataset.haxIntro; };
     const tick = (now: number) => {
       const t = Math.min(END, (now - t0.current) / 1000);
-      if (!document.hidden) drawIntro(x, W, H, t, geo());
+      if (!document.hidden) drawIntro(x, W, H, t, geo(), opts);
       if (t >= FADE_AT && !faded) {
         faded = true;
         try { sessionStorage.setItem(INTRO_SEEN, "1"); } catch {}
@@ -67,7 +78,7 @@ export function Intro({ onFade, onDone }: { onFade?: () => void; onDone: () => v
       <canvas ref={cv} role="img" aria-label="HAX intro: the weave lights up HAX like neon, then tips into a floor that comes toward you" className="block h-screen w-screen" />
       {!fading && (
         <button type="button" onClick={() => { t0.current = Math.min(t0.current, performance.now() - FADE_AT * 1000); }}
-          className="absolute bottom-[28px] right-[32px] rounded-[999px] border border-[rgba(255,255,255,.18)] px-[14px] py-[8px] font-[family-name:var(--font-code)] font-medium leading-[16px] text-[12px] tracking-[0.1em] text-[rgba(255,255,255,.7)] uppercase transition-colors hover:border-[rgba(255,255,255,.4)] hover:text-white">
+          className={`absolute bottom-[28px] right-[32px] rounded-[999px] border px-[14px] py-[8px] font-[family-name:var(--font-code)] font-medium leading-[16px] text-[12px] tracking-[0.1em] uppercase transition-colors ${light ? "border-[rgba(41,50,71,.18)] text-[rgba(41,50,71,.7)] hover:border-[rgba(41,50,71,.4)] hover:text-[#293247]" : "border-[rgba(255,255,255,.18)] text-[rgba(255,255,255,.7)] hover:border-[rgba(255,255,255,.4)] hover:text-white"}`}>
           Skip intro
         </button>
       )}

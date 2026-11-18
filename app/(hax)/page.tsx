@@ -2,6 +2,7 @@ import { SiteShell } from "@/components/hax/v1/SiteShell";
 import { Hero } from "@/components/hax/v1/home/Hero";
 import { HowCompare } from "@/components/hax/v1/home/HowCompare";
 import { HowItWorks } from "@/components/hax/v1/home/HowItWorks";
+import { Principles } from "@/components/hax/v1/home/Principles";
 import { FourSetups } from "@/components/hax/v1/home/FourSetups";
 import { FourWaysIn } from "@/components/hax/v1/home/FourWaysIn";
 import { FeaturedPatterns } from "@/components/hax/v1/home/FeaturedPatterns";
@@ -20,6 +21,7 @@ export default function Home() {
     <SiteShell announcement blobs>
       <Hero />
       <HowCompare />
+      <Principles />
       <HowItWorks />
       <FourSetups />
       <FourWaysIn />

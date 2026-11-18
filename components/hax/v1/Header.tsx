@@ -107,7 +107,8 @@ function ThemeSwitch() {
 
 // Below 1024px the links move into a menu under the header. The button opens it; Escape, a click
 // outside it or following a link closes it (Escape returns focus to the button).
-const LINKS: [string, string][] = [["Components", "/library"], ["Docs", "/hax-docs"], ["MCP", "/mcp"]];
+// HAX is patterns first (Srishti, 17 Nov): the nav says Patterns; components stay in the footer
+const LINKS: [string, string][] = [["Patterns", "/patterns"], ["Docs", "/hax-docs"], ["MCP", "/mcp"]];
 function MobileNav({ section }: { section?: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -166,7 +167,7 @@ export function Header() {
           </a>
         </div>
         <nav className="hidden lg:flex gap-[8px] items-center shrink-0 xl:gap-[20px]" aria-label="Primary">
-          <NavItem label="Components" href="/library" current={section === "Components"} />
+          <NavItem label="Patterns" href="/patterns" current={section === "Patterns"} />
           <NavItem label="Docs" href="/hax-docs" current={section === "Docs"} />
           <NavItem label="MCP" href="/mcp" current={section === "MCP"} />
           <ThemeSwitch />

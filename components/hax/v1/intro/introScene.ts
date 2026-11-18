@@ -52,9 +52,16 @@ const LIT = (() => {
 
 // g: where the Home hero's world puts its horizon and sun, and where the nav logo sits
 export type IntroGeo = { horizon: number; sunR: number; logoX: number; logoY: number; logoW: number };
+// v1 (light home) options, 18 Nov: light = drawn on the page's white instead of v3's night (neon
+// colours kept, additive light swapped for plain blending, which white would wash out); sun = false
+// drops the sun, portal and horizon line, and the floor fades into the sky instead.
+export type IntroOpts = { light?: boolean; sun?: boolean };
 
-export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: number, g: IntroGeo) {
-  x.globalAlpha = 1; x.fillStyle = "#0F1117"; x.fillRect(0, 0, W, H);
+export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: number, g: IntroGeo, o: IntroOpts = {}) {
+  const light = !!o.light, sun = o.sun !== false;
+  const PAGE = light ? [255, 255, 255] : [15, 17, 23], bgA = (a: number) => rgba(PAGE, a);
+  const ADD: GlobalCompositeOperation = light ? "source-over" : "lighter";
+  x.globalAlpha = 1; x.fillStyle = bgA(1); x.fillRect(0, 0, W, H);
   const cell = Math.max(32, Math.min(48, W / 30)), cx = W / 2, cy = H / 2, horizonY = g.horizon;
   const field = sine(seg(t, T_IN[0], T_IN[1]));
   if (field <= 0) return;
@@ -68,18 +75,25 @@ export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: 
   // ---- sky and sun come up with the tilt ----
   const sky = sine(seg(t, 3.6, 5.8));
   if (sky > 0) {
-    x.save(); x.beginPath(); x.rect(0, 0, W, vl); x.clip(); x.globalAlpha = sky;
+    x.save(); x.beginPath(); x.rect(0, 0, W, vl); x.clip(); x.globalAlpha = sky * (light ? .3 : 1);
     const sx = W / 1440, sy = horizonY / 580;
     blob(x, 160 * sx, 120 * sy, 620 * sx, 420 * sy, [[0, "#0051AF", .95], [1, "#0051AF", 0]]);
     blob(x, 420 * sx, 420 * sy, 520 * sx, 300 * sy, [[0, "#00BCEB", .75], [1, "#00BCEB", 0]]);
     blob(x, 1240 * sx, 200 * sy, 620 * sx, 420 * sy, [[0, "#9345E1", .85], [1, "#9345E1", 0]]);
     blob(x, 1180 * sx, 520 * sy, 420 * sx, 260 * sy, [[0, "#74BF4B", .5], [1, "#74BF4B", 0]]);
+    x.globalAlpha = sky;
+    if (sun) {
     const rise = sine(seg(t, 4.0, 6.2)), sunR = g.sunR, sunY = horizonY + sunR * (1.15 - .95 * rise), s = sunR / 150;
     x.globalAlpha = sky * rise; blob(x, cx, horizonY, 560 * s, 260 * s, [[0, "#FF8A50", .8], [.5, "#FF6D2D", .3], [1, "#9345E1", 0]]);
     const sg = x.createLinearGradient(0, sunY - sunR, 0, sunY + sunR); sg.addColorStop(0, "#FFCDB6"); sg.addColorStop(.45, "#FF8A50"); sg.addColorStop(1, "#FF6D2D");
     x.fillStyle = sg; x.beginPath(); x.arc(cx, sunY, sunR, 0, Math.PI * 2); x.fill(); x.globalAlpha = 1;
     const pr = sine(seg(t, 5.2, 6.8));
     if (pr > 0) drawPortal(x, cx, horizonY + sunR * .2, sunR, pr);
+    } else {
+      // no sun: the sky thins out toward the floor, so there is no seam where they meet
+      const thin = x.createLinearGradient(0, vl - 220, 0, vl); thin.addColorStop(0, bgA(0)); thin.addColorStop(1, bgA(1));
+      x.fillStyle = thin; x.globalAlpha = 1; x.fillRect(0, vl - 220, W, 220);
+    }
     x.restore();
   }
 
@@ -101,7 +115,7 @@ export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: 
     prev = flat ? 1e9 : zmax; if (!any) return;
     const a = field * (flat ? 1 : BA[band]);
     // quiet white face-on (14%), warming into the neon floor as the camera tips
-    x.globalAlpha = a * (1 - tilt) * .14; x.strokeStyle = "#FFFFFF"; x.lineWidth = 1.5; x.stroke();
+    x.globalAlpha = a * (1 - tilt) * (light ? .1 : .14); x.strokeStyle = light ? "#293247" : "#FFFFFF"; x.lineWidth = 1.5; x.stroke();
     if (tilt > 0) {
       x.strokeStyle = neon; x.globalAlpha = a * tilt; x.lineWidth = 1.5 + tilt * (BW[band] - 1.5); x.stroke();
       x.globalAlpha = a * tilt * .16; x.lineWidth = BG[band] * tilt; x.stroke();
@@ -115,10 +129,10 @@ export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: 
     const lum = [0, 1, 2].map((i) => neonAt(t - (T_LIT + i * .35)));
     // the light the tubes throw onto the weave around them (fades as the floor tips away from the camera)
     const spill = (lum[0] + lum[1] + lum[2]) / 3 * (1 - tilt);
-    if (spill > 0) { x.save(); x.globalCompositeOperation = "lighter"; blob(x, cx, cy, cell * 10, cell * 4, [[0, "#3FC6EE", .16 * spill], [.6, "#FF8A50", .06 * spill], [1, "#FF8A50", 0]]); x.restore(); }
+    if (spill > 0) { x.save(); x.globalCompositeOperation = ADD; blob(x, cx, cy, cell * 10, cell * 4, [[0, "#3FC6EE", .16 * spill], [.6, "#FF8A50", .06 * spill], [1, "#FF8A50", 0]]); x.restore(); }
     // each letter is ONE path (one stroke per layer), so its round ends never overlap themselves and
     // there are no bright dots at the joins; colour runs across the word like the logo
-    x.save(); x.globalCompositeOperation = "lighter"; x.lineCap = "round"; x.lineJoin = "round";
+    x.save(); x.globalCompositeOperation = ADD; x.lineCap = "round"; x.lineJoin = "round";
     const groups: [number, number, number][][] = [[], [], []]; // per letter: [q, r, cornerIndex]
     const KS: Corner[] = ["TL", "TR", "BR", "BL"];
     for (const [key, tpos] of LIT) { const [q, r, K] = key.split(","); groups[letter(tpos)].push([+q, +r, KS.indexOf(K as Corner)]); }
@@ -137,7 +151,7 @@ export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: 
       x.globalAlpha = .1 * a; x.lineWidth = w * 7; x.stroke();   // outer bloom
       x.globalAlpha = .28 * a; x.lineWidth = w * 3; x.stroke();  // tube glow
       x.globalAlpha = a; x.lineWidth = w; x.stroke();            // the tube
-      x.strokeStyle = "#FFFFFF"; x.globalAlpha = .55 * a; x.lineWidth = Math.max(.8, w * .35); x.stroke(); // hot core
+      x.strokeStyle = "#FFFFFF"; x.globalAlpha = (light ? .35 : .55) * a; x.lineWidth = Math.max(.8, w * .35); x.stroke(); // hot core
       x.globalAlpha = 1;
     });
     x.restore();
@@ -145,18 +159,23 @@ export function drawIntro(x: CanvasRenderingContext2D, W: number, H: number, t: 
 
   // ---- horizon: a glow where sky meets floor (no dark strip), the neon line, and soft edges ----
   if (tilt > 0) {
-    const s = g.sunR / 150, glow = sky;
+    const s = g.sunR / 150, glow = sun ? sky : 0;
     if (glow > 0) {
-      x.save(); x.globalAlpha = glow; x.globalCompositeOperation = "lighter";
+      x.save(); x.globalAlpha = glow * (light ? .45 : 1); x.globalCompositeOperation = ADD;
       blob(x, cx, vl, 760 * s, 46 * s, [[0, "#FF8A50", .55], [.5, "#9345E1", .22], [1, "#9345E1", 0]]);
       blob(x, cx, vl, W * .55, 22 * s, [[0, "#3FC6EE", .25], [1, "#3FC6EE", 0]]);
       x.restore();
     }
     const hl = x.createLinearGradient(0, 0, W, 0);
     ([[0, "#00BCEB", 0], [.12, "#00BCEB", 1], [.35, "#3FC6EE", 1], [.5, "#9345E1", 1], [.68, "#FF6D2D", 1], [.88, "#FF8A50", 1], [1, "#FF8A50", 0]] as [number, string, number][]).forEach(([o, c, a]) => hl.addColorStop(o, rgba(hx(c), a)));
-    const grow = sine(seg(t, 4.0, 5.8)); x.fillStyle = hl; x.globalAlpha = tilt * grow; x.fillRect(cx - W / 2 * grow, vl - .75, W * grow, 1.5); x.globalAlpha = 1;
-    const bf = x.createLinearGradient(0, H - 160, 0, H); bf.addColorStop(0, "rgba(15,17,23,0)"); bf.addColorStop(1, "rgba(15,17,23,1)"); x.fillStyle = bf; x.globalAlpha = tilt; x.fillRect(0, H - 160, W, 160);
-    const sf = x.createLinearGradient(0, 0, W, 0); sf.addColorStop(0, "rgba(15,17,23,1)"); sf.addColorStop(.07, "rgba(15,17,23,0)"); sf.addColorStop(.93, "rgba(15,17,23,0)"); sf.addColorStop(1, "rgba(15,17,23,1)");
+    // no sun: no horizon line; the far floor fades into the sky instead of meeting it
+    if (!sun) {
+      const fog = x.createLinearGradient(0, vl - 2, 0, vl + 150); fog.addColorStop(0, bgA(1)); fog.addColorStop(1, bgA(0));
+      x.fillStyle = fog; x.globalAlpha = tilt; x.fillRect(0, vl - 2, W, 152); x.globalAlpha = 1;
+    }
+    const grow = sun ? sine(seg(t, 4.0, 5.8)) : 0; x.fillStyle = hl; x.globalAlpha = tilt * grow; x.fillRect(cx - W / 2 * grow, vl - .75, W * grow, 1.5); x.globalAlpha = 1;
+    const bf = x.createLinearGradient(0, H - 160, 0, H); bf.addColorStop(0, bgA(0)); bf.addColorStop(1, bgA(1)); x.fillStyle = bf; x.globalAlpha = tilt; x.fillRect(0, H - 160, W, 160);
+    const sf = x.createLinearGradient(0, 0, W, 0); sf.addColorStop(0, bgA(1)); sf.addColorStop(.07, bgA(0)); sf.addColorStop(.93, bgA(0)); sf.addColorStop(1, bgA(1));
     x.fillStyle = sf; x.fillRect(0, vl + 1, W, H - vl); x.globalAlpha = 1;
   }
 }

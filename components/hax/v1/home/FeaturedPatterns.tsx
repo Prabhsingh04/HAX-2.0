@@ -1,4 +1,3 @@
-import { PATTERNS } from "../patterns/model";
 import { patternHref } from "../patterns/href";
 
 // "The pattern library": four featured patterns, then the full list (Srishti, 14 Nov: "just 4-5
@@ -96,7 +95,7 @@ export function FeaturedPatterns() {
         ))}
       </div>
       <a href="/patterns" className="hx-btn hx-btn--solid mt-[8px] bg-[var(--surface-inverse)] flex gap-[6px] h-[40px] items-center justify-center px-[20px] rounded-[var(--radius-pill)]">
-        <span className="font-semibold leading-[20px] text-[14px] text-[color:var(--text-on-inverse)] tracking-[0.07px] whitespace-nowrap">Browse all {PATTERNS.length} patterns</span>
+        <span className="font-semibold leading-[20px] text-[14px] text-[color:var(--text-on-inverse)] tracking-[0.07px] whitespace-nowrap">Browse all patterns</span>
         <img alt="" src="/hax/v1/icon-arrow-right.svg" className="hx-arrow size-[16px]" />
       </a>
     </section>
