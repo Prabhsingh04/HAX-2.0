@@ -1,4 +1,5 @@
 import { patternHref } from "../patterns/href";
+import { LIBRARY } from "../library112/library";
 
 // "The pattern library": four featured patterns, then the full list (Srishti, 14 Nov: "just 4-5
 // featured ones like in my version, and then it will go to the full patterns page"). The picks,
@@ -10,7 +11,7 @@ const chip = "rounded-[6px] border border-[var(--stroke-default)] px-[7px] py-[3
 
 const FEATURED: { id: string; name: string; summary: string; preview: React.ReactNode }[] = [
   {
-    id: "disclosure-gradient", name: "Disclosure",
+    id: "nx-disclosure", name: "Disclosure",
     summary: "Make it clear when a person is interacting with AI and what that means for the result.",
     preview: (
       <div className={mock}>
@@ -53,7 +54,7 @@ const FEATURED: { id: string; name: string; summary: string; preview: React.Reac
     ),
   },
   {
-    id: "memory-commitment-review", name: "Memory",
+    id: "agent-memory", name: "Memory",
     summary: "Let a person see and change what the agent carries into future work.",
     preview: (
       <div className={mock}>
@@ -95,7 +96,7 @@ export function FeaturedPatterns() {
         ))}
       </div>
       <a href="/patterns" className="hx-btn hx-btn--solid mt-[8px] bg-[var(--surface-inverse)] flex gap-[6px] h-[40px] items-center justify-center px-[20px] rounded-[var(--radius-pill)]">
-        <span className="font-semibold leading-[20px] text-[14px] text-[color:var(--text-on-inverse)] tracking-[0.07px] whitespace-nowrap">Browse all patterns</span>
+        <span className="font-semibold leading-[20px] text-[14px] text-[color:var(--text-on-inverse)] tracking-[0.07px] whitespace-nowrap">Browse all {LIBRARY.length} patterns</span>
         <img alt="" src="/hax/v1/icon-arrow-right.svg" className="hx-arrow size-[16px]" />
       </a>
     </section>

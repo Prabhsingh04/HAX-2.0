@@ -1,8 +1,9 @@
-import { PRINCIPLES, PRINCIPLE_LABEL, type PrincipleId } from "../patterns/model";
+import { PRINCIPLE_LABEL, type PrincipleId } from "../patterns/model";
+import { LIBRARY } from "../library112/library";
 
 // "Five principles guide HAX" from Srishti's Studio v3 home (lib/v2/principles.ts, word for word),
 // added on her call of 17 Nov ("we missed the principles"). The count is how many patterns name the
-// principle as primary or also-supports (patterns/model.ts PRINCIPLES), so it follows the library.
+// principle as primary or also-supports (library112), so it follows the library.
 const ORDER: [PrincipleId, string][] = [
   ["control", "People set an agent's boundaries, preferences, and goals; the agent adapts its autonomy to that direction."],
   ["clarity", "Agents make their reasoning, context, and confidence visible so people can assess decisions."],
@@ -11,7 +12,7 @@ const ORDER: [PrincipleId, string][] = [
   ["traceability", "Agent decisions and actions stay visible, searchable, and open to review."],
 ];
 const related = (id: PrincipleId) =>
-  Object.values(PRINCIPLES).filter((p) => p.primary[0] === id || p.also?.[0] === id).length;
+  LIBRARY.filter((p) => p.kind === "agentic" && p.principles.some((x) => x.id === id)).length;
 
 export function Principles() {
   return (

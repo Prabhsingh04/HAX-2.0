@@ -1,30 +1,18 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/hax/v1/SiteShell";
-import { PatternsIndex, type IndexRow } from "@/components/hax/v1/patterns/PatternsIndex";
-import { PATTERNS, repliesOf, setupsOf } from "@/components/hax/v1/patterns/model";
-import { parseFilters } from "@/components/hax/v1/patterns/filters";
+import { PatternBrowser } from "@/components/hax/v1/library112/PatternBrowser";
 
-// The 23 interaction patterns from HAX Studio v2 (lib/v2/catalog.ts), with their filters in the
-// URL. Each pattern's own page is at /interaction-patterns/<id> (see patterns/href.ts).
+// The full library (112 patterns) with Srishti's filters: who is involved and eleven categories
+// (components/hax/v1/library112). Filters are read from and written to the URL by the browser.
 export const metadata: Metadata = {
-  title: "Interaction patterns · HAX",
-  description: "How agents signal, explain, ask and agree, with people, and with each other.",
+  title: "The pattern library · HAX",
+  description: "Find the right pattern: browse by who is involved, one agent, agent teams and the people working with them, or by category.",
 };
 
-const ROWS: IndexRow[] = PATTERNS.map((p) => ({
-  id: p.id, name: p.name, summary: p.summary, triggers: p.triggers,
-  mode: p.mode.primary, level: p.level.primary, setups: setupsOf(p), channels: p.channels, replies: repliesOf(p),
-}));
-
-export default async function Page({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const sp = await searchParams;
-  const initial = parseFilters((k) => {
-    const v = sp[k];
-    return Array.isArray(v) ? v[0] : v;
-  });
+export default function Page() {
   return (
     <SiteShell>
-      <PatternsIndex rows={ROWS} initial={initial} />
+      <PatternBrowser />
     </SiteShell>
   );
 }

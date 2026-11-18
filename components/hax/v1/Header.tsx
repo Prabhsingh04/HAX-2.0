@@ -188,7 +188,7 @@ export function AnnouncementBar() {
       <p className="font-normal leading-[20px] text-[13px] text-[color:var(--text-primary)] whitespace-nowrap">
         Multi-agent patterns.<span className="hidden md:inline"> How agents coordinate, disagree and hand off work to each other.</span>
       </p>
-      <a href="/patterns?setup=L2" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
+      <a href="/patterns?dimension=L2" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
         <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore multi-agent patterns</span>
         <img alt="" src="/hax/v1/icon-arrow-up-right.svg" className="hx-arrow size-[12px]" />
       </a>
