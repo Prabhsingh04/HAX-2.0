@@ -161,10 +161,10 @@ export function AnnouncementBar() {
     <div className="hx-announce">
     <div className="flex h-[40px] items-center justify-center gap-[10px] px-[20px]" style={{ backgroundImage: "var(--gradient-announce)" }} data-node-id="94:18699">
       <p className="font-normal leading-[20px] text-[13px] text-[color:var(--text-primary)] whitespace-nowrap">
-        HAX for iPhone Duo.<span className="hidden md:inline"> The same agentic patterns. Now adapted for mobile.</span>
+        HAX for mobile devices.<span className="hidden md:inline"> The same agentic components. Now adapted for smaller screens.</span>
       </p>
-      <a href="/material-pattern?id=disclosure&device=mobile" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
-        <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore mobile patterns</span>
+      <a href="/pattern?id=prompt-input&device=mobile" className="hx-link flex gap-[4px] items-center px-[2px] py-px rounded-[4px]">
+        <span className="font-medium leading-[18px] text-[13px] text-[color:var(--text-link)] whitespace-nowrap">Explore components</span>
         <img alt="" src="/hax/v1/icon-arrow-up-right.svg" className="hx-arrow size-[12px]" />
       </a>
     </div>
