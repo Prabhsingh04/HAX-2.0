@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { Menu as MenuIcon, X } from "lucide-react";
 
 // v3's nav (Figma Nav 106:8169) on white, with v1's latest items (v5, Srishti 14 and 17 Nov):
-// Outshift design first, linked to outshift.design, then the HAX logo, linked home; Patterns, Docs
+// Outshift design first, then the HAX logo, both linked home; Patterns, Docs
 // and MCP. No Research menu and no Blog (they live on the HAX website); components are in the footer.
 const SECTIONS: [string, RegExp][] = [
   ["Patterns", /^\/v6\/(patterns|interaction-patterns)(\/|$)/],
@@ -19,7 +19,8 @@ const label = "relative font-medium leading-[20px] text-[14px] whitespace-nowrap
 function Brand() {
   return (
     <div className="flex shrink-0 items-center gap-[14px] [zoom:0.8] sm:[zoom:1]">
-      <a href="https://outshift.design" className="flex items-center" aria-label="Outshift Design">
+      {/* both logos lead home; no external link here (19 Nov) */}
+      <a href="/v4" className="flex items-center" aria-label="Outshift design, HAX home">
         <span className="relative h-[40px] w-[97.6px] overflow-clip">
           <span className="absolute inset-[0_0.58%_0_0] block" style={{ maskImage: 'url("/hax/v1/outshift-mask.svg")', maskSize: "97.03px 39.93px", maskRepeat: "no-repeat" }}>
             <img alt="" src="/hax/v1/outshift-logo.svg" className="absolute inset-0 block size-full max-w-none" />

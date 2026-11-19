@@ -37,7 +37,7 @@ export function Footer() {
       <div className="mx-auto flex max-w-[1440px] flex-col gap-[32px] px-[24px] pb-[28px] pt-[56px] md:gap-[48px] xl:px-[40px] md:pb-[40px] md:pt-[80px]">
         <div className="flex flex-wrap items-start justify-between gap-[40px]">
           <div className="flex items-center gap-[14px]">
-            <a href="https://outshift.design" aria-label="Outshift Design" className="flex items-center">
+            <a href="/v4" aria-label="Outshift design, HAX home" className="flex items-center">
               <span className="relative h-[40px] w-[97.6px] overflow-clip">
                 <span className="absolute inset-[0_0.58%_0_0] block" style={{ maskImage: 'url("/hax/v1/outshift-mask.svg")', maskSize: "97.03px 39.93px", maskRepeat: "no-repeat" }}>
                   <img alt="" src="/hax/v1/outshift-logo.svg" className="absolute inset-0 block size-full max-w-none" />
