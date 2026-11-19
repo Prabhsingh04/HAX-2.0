@@ -35,10 +35,7 @@ export function Hero() {
             One pattern library for <span className="font-semibold text-[color:var(--human)]">people</span> and <span className="font-semibold text-[color:var(--agent)]">agents</span>
             <span className="block font-semibold">working together at scale.</span>
           </h1>
-          <p className="h6-rise h6-rise--3 max-w-[680px] leading-[28px] text-[18px] text-[color:var(--text-2)] [text-wrap:balance] max-md:text-[16px] max-md:leading-[26px]">
-            Explore patterns for what agents do and how people experience it, from first interaction to decisions, handoffs, and ongoing work.
-          </p>
-          <div className="h6-rise h6-rise--4 flex flex-wrap justify-center gap-[12px] md:gap-[16px]">
+          <div className="h6-rise h6-rise--3 flex flex-wrap justify-center gap-[12px] md:gap-[16px]">
             <a href="/v6/patterns" className={`${btn} h6-btn--primary`}>
               Browse patterns
               <svg viewBox="0 0 16 16" aria-hidden className="h6-arrow size-[16px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>

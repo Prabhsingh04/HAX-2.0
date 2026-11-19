@@ -189,15 +189,15 @@ export function PatternPage({ id }: { id: string }) {
         {related.length > 0 && (
           <section id="related" className={section}>
             <h2 className={h2}>Related patterns</h2>
-            <ul className="grid grid-cols-1 gap-[16px] md:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid grid-cols-2 gap-[10px] md:gap-[16px] lg:grid-cols-3">
               {related.map((r) => (
                 <li key={r.id} className="flex">
-                  <a href={patternHref(r.id)} className="h6-card flex w-full flex-col gap-[8px] rounded-[16px] border border-[var(--edge-2)] bg-white p-[20px]">
-                    <span className="flex items-center gap-[6px] text-[16px] font-semibold leading-[24px] text-[color:var(--link)]">
+                  <a href={patternHref(r.id)} className="h6-card flex w-full flex-col gap-[6px] rounded-[14px] border border-[var(--edge-2)] bg-white p-[14px] md:gap-[8px] md:rounded-[16px] md:p-[20px]">
+                    <span className="flex items-center gap-[6px] break-words text-[14px] max-md:min-h-[40px] max-md:items-start font-semibold leading-[20px] text-[color:var(--link)] md:text-[16px] md:leading-[24px]">
                       <span className="h6-link">{r.name}</span>
                       <svg viewBox="0 0 16 16" aria-hidden className="h6-arrow h6-arrow--up size-[14px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 11 11 5M6 5h5v5" /></svg>
                     </span>
-                    {r.summary && <p className="text-[14px] leading-[22px] text-[color:var(--text-2)]">{r.summary}</p>}
+                    {r.summary && <p className="text-[13px] leading-[19px] text-[color:var(--text-2)] max-md:line-clamp-3 md:text-[14px] md:leading-[22px]">{r.summary}</p>}
                   </a>
                 </li>
               ))}

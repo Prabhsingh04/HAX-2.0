@@ -78,6 +78,8 @@ html :where(.hax-v6) :is(h1, h2, h3, h4) { letter-spacing: 0; }
 /* the comparison band keeps to the home page's one content column: 24px gutters, 1200 wide from lg */
 html body .hax-v6 .hx6-compare #how { background: var(--panel) !important; --hx-compare-pad: 24px; }
 @media (min-width: 1024px) { html body .hax-v6 .hx6-compare #how > div.grid { max-width: 1200px; } }
+/* no helper line under the heading (19 Nov: no helper texts in any home section) */
+html body .hax-v6 .hx6-compare #how > header > p { display: none; }
 
 /* The intro (world/Intro.tsx): INTRO_SCRIPT marks <html> before the first paint, so the page stays
    hidden on white until the intro has played (the intro sets visibility: visible on itself). If the

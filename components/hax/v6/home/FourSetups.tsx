@@ -6,7 +6,7 @@ import type { Level } from "@/lib/v2/types";
 import { LIBRARY } from "../../v1/library112/library";
 import { SetupArt, SetupKey } from "../../v1/patterns/SetupArt";
 import { FibersBackdrop } from "../fx";
-import { Eyebrow, H2, Sub, btn } from "../ui";
+import { Eyebrow, H2, btn } from "../ui";
 
 // HAX Studio v2's four setups with v1's data (lib/v2/levels.ts, v1's diagrams), kept minimal (19 Nov:
 // the four boxed columns felt heavy): four steps in a row, from one agent to people and teams, each
@@ -33,7 +33,6 @@ export function FourSetups() {
         <div className="h6-reveal flex flex-col gap-[16px]">
           <Eyebrow>Four setups</Eyebrow>
           <H2>The same patterns work<br />across four setups</H2>
-          <Sub className="max-w-[640px]">Choose the simplest setup that fits the exchange. As more agents and people join, make responsibilities and decision rights clear.</Sub>
         </div>
         <ol className="h6-reveal h6-seq grid grid-cols-2 gap-x-[20px] gap-y-[48px] lg:grid-cols-4 lg:gap-x-[48px]">
           {LEVEL_ORDER.map((l, i) => {

@@ -4,7 +4,7 @@ import { AGENT_PROMPT } from "@/components/hax/v1/home/AgentsAndDevelopers";
 import { CodeBlock } from "@/components/hax/v1/CodeBlock";
 import { onTabKeys } from "@/components/hax/v1/tabKeys";
 import TextType from "@/components/reactbits/TextType";
-import { Eyebrow, H2, MoreLink, Sub } from "../ui";
+import { Eyebrow, H2, MoreLink } from "../ui";
 
 // v1's "Your AI agent already knows how to use it" (Figma 98:19846; same words and prompt) in v3's
 // look (Figma MCP 106:7270). The Claude Code command types itself out with a block cursor once it
@@ -41,7 +41,6 @@ export function McpSection() {
       <div className="h6-reveal flex max-w-[720px] flex-col items-center gap-[16px] text-center">
         <Eyebrow>MCP server</Eyebrow>
         <H2>Your AI agent already<br />knows how to use it</H2>
-        <Sub>HAX runs an MCP server, so Claude, Cursor, Codex and VS Code can ask it which patterns to use and build them for you. Prefer to write the code? It’s one package.</Sub>
       </div>
       <div className="flex w-full flex-col items-center gap-[32px] max-md:hidden">
         <Tabs keys={KEYS} cur={tab} pick={setTab} labels={{ agent: TABS.agent.label, react: TABS.react.label }} idPrefix="h6-use" ariaLabel="Ways to use HAX" />

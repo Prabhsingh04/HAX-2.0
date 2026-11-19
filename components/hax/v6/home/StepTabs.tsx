@@ -53,12 +53,12 @@ export function StepTabs() {
 
   if (!wide) {
     return (
-      <ol className="flex flex-col gap-[20px]">
+      <ol className="grid grid-cols-2 gap-x-[16px] gap-y-[24px]">
         {STEPS.map((s, i) => (
-          <li key={s.tint} className="flex flex-col gap-[6px] border-l border-[var(--edge-3)] pl-[16px]">
+          <li key={s.tint} className="flex min-w-0 flex-col gap-[6px] border-t border-[var(--edge-3)] pt-[12px]">
             <p className={mono}>{pad(i + 1)} / {pad(STEPS.length)}</p>
-            <h3 className="font-semibold leading-[24px] text-[18px] text-[color:var(--text)]">{s.title}</h3>
-            <p className="leading-[20px] text-[14px] text-[color:var(--text-2)]">{s.body}</p>
+            <h3 className="font-semibold leading-[22px] text-[16px] text-[color:var(--text)]">{s.title}</h3>
+            <p className="leading-[19px] text-[13px] text-[color:var(--text-2)]">{s.body}</p>
           </li>
         ))}
       </ol>

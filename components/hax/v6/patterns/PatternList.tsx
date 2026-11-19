@@ -48,7 +48,9 @@ function Switcher({ label, value, options, count, onPick }: { label: string; val
 // The pattern list: Srishti's layout (v3 patterns.html: a title block, a sidebar to browse by who is
 // involved and by category, a two-column grid of pattern cards) in v6's type, colour and states.
 // Filters live in the URL (?dimension=L2&category=review-approve; ?setup= is read too, the home's).
-// On phones the two filter groups become swipe rows above the cards.
+// On phones the two filter groups become swipe rows above the cards. The cards are two to a row at every
+// size (19 Nov, the user's two-grid system); on phones they keep the category, the name and a three-line
+// summary, and the whole card is the link.
 type ListCopy = { eyebrow: string; title: string; intro: string; labels: string[]; dims: [string, string][]; cats: [string, string][] };
 
 const mono = "font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase leading-[16px] tracking-[0.96px] text-[color:var(--text-3)]";
@@ -142,14 +144,14 @@ export function PatternList({ items, list }: { items: ListItem[]; list: ListCopy
               {filtered && <button type="button" onClick={clear} className="text-[13px] font-semibold text-[color:var(--link)]"><span className="h6-link">Clear filters</span></button>}
             </div>
             {shown.length ? (
-              <ul className="grid grid-cols-1 gap-[16px] md:grid-cols-2">
+              <ul className="grid grid-cols-2 gap-[10px] md:gap-[16px]">
                 {shown.map((p) => (
                   <li key={p.id} className="flex">
-                    <a href={`/v6/interaction-patterns/${p.id}`} className="h6-card group flex w-full flex-col gap-[10px] rounded-[16px] border border-[var(--edge-2)] bg-white p-[24px]">
-                      <span className={mono}>{p.category}</span>
-                      <h2 className="text-[20px] font-semibold leading-[28px] tracking-[-0.01em]">{p.name}</h2>
-                      <p className="text-[15px] leading-[24px] text-[color:var(--text-2)]">{p.summary}</p>
-                      <span className="mt-auto flex items-center justify-between gap-[12px] pt-[10px]">
+                    <a href={`/v6/interaction-patterns/${p.id}`} className="h6-card group flex w-full flex-col gap-[6px] rounded-[14px] border border-[var(--edge-2)] bg-white p-[14px] md:gap-[10px] md:rounded-[16px] md:p-[24px]">
+                      <span className={`${mono} max-md:truncate`}>{p.category}</span>
+                      <h2 className="break-words text-[15px] max-md:line-clamp-2 max-md:min-h-[40px] font-semibold leading-[20px] tracking-[-0.01em] md:text-[20px] md:leading-[28px]">{p.name}</h2>
+                      <p className="text-[13px] leading-[19px] text-[color:var(--text-2)] max-md:line-clamp-3 md:text-[15px] md:leading-[24px]">{p.summary}</p>
+                      <span className="mt-auto flex items-center justify-between gap-[12px] pt-[10px] max-md:hidden">
                         <span className="text-[13px] leading-[18px] text-[color:var(--text-3)]">{p.meta}</span>
                         <span className="flex shrink-0 items-center gap-[6px] text-[14px] font-semibold leading-[20px] text-[color:var(--link)]">
                           <span className="h6-link">{p.link || "Open pattern"}</span>

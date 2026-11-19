@@ -12,8 +12,8 @@ import { Eyebrow, H2 } from "../ui";
 // stays still under reduced motion, and its particles stir under the pointer on desktops. Without
 // WebGL2 a light CSS orb stands in. Desktops show all five in a row that fills the home page's one
 // content column (1200 wide, the same left edge as every other section): five equal columns, each ball
-// centred in its column with room around it. Phones and tablets swipe through them. The heading is one
-// line (it wraps only on phones). The five arrive one after another (motion.css .h6-seq).
+// centred in its column with room around it. Phones show two to a row with smaller balls (the user's
+// two-grid system), tablets three. The heading is one line (it wraps only on phones). The five arrive one after another (motion.css .h6-seq).
 type Principle = { id: PrincipleId; line: string; color: string };
 const PRINCIPLES: Principle[] = [
   { id: "control", line: "People set an agent's boundaries, preferences, and goals; the agent adapts its autonomy to that direction.", color: "#0a63c9" },
@@ -51,12 +51,11 @@ export function PrinciplesBall() {
           <Eyebrow>Principles</Eyebrow>
           <H2 className="[text-wrap:balance]">Five principles guide HAX</H2>
         </div>
-        {/* below lg a swipe row that runs to the screen's edges (one and a half on phones); from lg, five
-            equal columns across the content column */}
-        <ol aria-label="Principles" className="h6-reveal h6-seq -mx-[24px] flex snap-x snap-mandatory scroll-px-[24px] gap-[24px] overflow-x-auto px-[24px] pb-[8px] [scrollbar-width:none] lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-[32px] lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+        {/* two columns on phones, three on tablets, five on desktops */}
+        <ol aria-label="Principles" className="h6-reveal h6-seq grid grid-cols-2 gap-x-[16px] gap-y-[32px] md:grid-cols-3 md:gap-x-[24px] md:gap-y-[48px] lg:grid-cols-5 lg:gap-x-[32px]">
           {PRINCIPLES.map((p, k) => (
-            <li key={p.id} className="h6-step flex w-[68%] shrink-0 snap-start flex-col sm:w-[38%] lg:w-auto" style={{ "--i": k } as CSSProperties}>
-              <div aria-hidden className="relative mx-auto aspect-square w-[76%] max-w-[220px]">
+            <li key={p.id} className="h6-step flex min-w-0 flex-col" style={{ "--i": k } as CSSProperties}>
+              <div aria-hidden className="relative mx-auto aspect-square w-[72%] max-w-[120px] md:max-w-[160px] lg:w-[76%] lg:max-w-[220px]">
                 {webgl2 ? (
                   <CrystalizedBall color={p.color} theme="light" size={0.82} speed={0.8} particleShape="round" particleCount={3200} interactive={hover} />
                 ) : (
@@ -65,9 +64,9 @@ export function PrinciplesBall() {
                   </div>
                 )}
               </div>
-              <p className="mt-[16px] font-[family-name:var(--font-mono)] text-[12px] font-medium leading-[16px] tracking-[0.96px] text-[color:var(--text-3)]">{num(k)} / {num(N - 1)}</p>
-              <h3 className="mt-[8px] font-light text-[clamp(24px,2.3vw,34px)] leading-[1.15] tracking-[-0.025em]" style={{ color: p.color }}>{PRINCIPLE_LABEL[p.id]}</h3>
-              <p className="mt-[10px] text-[15px] leading-[24px] text-[color:var(--text-2)]">{p.line}</p>
+              <p className="mt-[12px] font-[family-name:var(--font-mono)] text-[12px] md:mt-[16px] font-medium leading-[16px] tracking-[0.96px] text-[color:var(--text-3)]">{num(k)} / {num(N - 1)}</p>
+              <h3 className="mt-[8px] font-light text-[22px] leading-[1.15] md:text-[clamp(24px,2.3vw,34px)] tracking-[-0.025em]" style={{ color: p.color }}>{PRINCIPLE_LABEL[p.id]}</h3>
+              <p className="mt-[8px] text-[13px] leading-[19px] text-[color:var(--text-2)] md:mt-[10px] md:text-[15px] md:leading-[24px]">{p.line}</p>
             </li>
           ))}
         </ol>

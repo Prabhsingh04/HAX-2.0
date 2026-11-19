@@ -2,7 +2,7 @@
 import { ArrowRight } from "lucide-react";
 import SwarmCursor from "@/components/reactbits/SwarmCursor";
 import { CATEGORIES, LIBRARY } from "../../v1/library112/library";
-import { Eyebrow, H2, Sub } from "../ui";
+import { Eyebrow, H2 } from "../ui";
 import { useMedia } from "../fx";
 
 // v3's Four ways in (Figma Two ways in 105:6092, now four) with v1's latest words (v5: each line is
@@ -73,7 +73,6 @@ export function FourWaysIn() {
           <div className="h6-reveal flex max-w-[720px] flex-col gap-[16px]">
             <Eyebrow>Four ways in</Eyebrow>
             <H2>One library.<br />Four ways in</H2>
-            <Sub>The same patterns guide design, product decisions, implementation, and agent behavior.</Sub>
           </div>
           <ul className="border-t border-[var(--edge-2)]">
             {WAYS.map((w, i) => (

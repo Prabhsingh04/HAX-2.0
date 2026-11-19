@@ -16,7 +16,6 @@ export function HowItWorks() {
         <div className="h6-reveal flex max-w-[720px] flex-col gap-[16px]">
           <Eyebrow>How it works</Eyebrow>
           <H2>From a prompt to behavior<br />in your product</H2>
-          <p className="leading-[28px] text-[18px] text-[color:var(--text-2)] max-md:text-[16px] max-md:leading-[24px]">Describe what you need. HAX helps your agent find the right building blocks, shape an editable behavior, and show it in your workflow.</p>
         </div>
         <StepTabs />
       </div>

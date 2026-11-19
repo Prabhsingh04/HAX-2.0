@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import ScrollReveal from "@/components/reactbits/ScrollReveal";
-import { Sub, btn } from "../ui";
+import { btn } from "../ui";
 import { AcidBackdrop, Spark } from "../fx";
 
 // v3's closing panel (Figma Built by 106:7304) with v1's latest words (v5). The heading's words light
@@ -22,7 +22,6 @@ export function BuiltBy() {
             textClassName="mx-auto max-w-[16ch] !font-light !text-[clamp(34px,5vw,60px)] !leading-[1.05] tracking-[-0.02em] text-white [text-wrap:balance]">
             Built by people who design products with AI agents
           </ScrollReveal>
-          <Sub className="max-w-[680px] !text-[rgba(255,255,255,.9)]">Outshift Design works with teams building software where people and AI agents work together. HAX is the public part of that practice. It is free to use and adapt, and it changes as the practice does.</Sub>
           <div className="flex flex-wrap justify-center gap-[12px]">
             <Spark>
               <a href="/v6/patterns" className={`${btn} h6-btn--primary`}>
