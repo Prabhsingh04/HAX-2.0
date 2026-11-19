@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>HAX pattern preview</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      html, body { min-height: 0; margin: 0; overflow-x: hidden; background: transparent; }
+      .detail-shell { display: block; min-height: 0; }
+      .detail { width: 100%; max-width: none; margin: 0; padding: 0; }
+      .sidebar, .toc, .bread, .detail__hero, .detail__nav,
+      #sec-code, #sec-questions { display: none !important; }
+      .section-block { padding: 0; border: 0; }
+      .section-block__head { display: none; }
+      #sec-example .example { min-height: 300px; border-radius: 14px; }
+      #sec-placements .incx { padding: 2px 0 4px; }
+      html[data-template]:not([data-template=""]) .incx__controls { display: none !important; }
+      html[data-view="live"] #sec-placements,
+      html[data-view="context"] #sec-example { display: none !important; }
+      @media (max-width: 680px) {
+        #sec-example .example { min-height: 250px; overflow-x: auto; padding: 1.25rem; }
+        .incx__stage { overflow-x: auto; touch-action: pan-x; }
+        .incx__stage-inner { min-width: 560px; height: 350px; }
+      }
+    </style>
+    <script>
+      document.documentElement.dataset.view =
+        new URLSearchParams(location.search).get("view") === "context" ? "context" : "live";
+      document.documentElement.dataset.template =
+        new URLSearchParams(location.search).get("template") || "";
+    </script>
+  </head>
+  <body>
+    <div class="detail-shell">
+      <aside class="sidebar" id="sidebar" aria-hidden="true"></aside>
+      <main class="detail" id="detail"></main>
+      <aside class="toc" id="toc" aria-hidden="true"></aside>
+    </div>
+    <script src="patterns.js"></script>
+    <script src="pattern.js"></script>
+    <script>
+      (function () {
+        var detail = document.getElementById("detail");
+        function reportHeight() {
+          if (!detail || !parent || parent === window) return;
+          parent.postMessage({
+            type: "hax-pattern-preview-height",
+            view: document.documentElement.dataset.view,
+            height: Math.ceil(detail.getBoundingClientRect().height) + 4
+          }, location.origin);
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+          if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(detail);
+          reportHeight();
+          setTimeout(reportHeight, 300);
+        });
+      })();
+    </script>
+  
+
+</body>
+</html>
