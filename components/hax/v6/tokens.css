@@ -1,0 +1,86 @@
+/* HAX v6 · v3's look on white (19 Nov). The same type, layout, motion and React Bits pieces as v3
+   (Figma 🌐 Website v3, 103:5524), on a white page with ink text, because the reviewers liked v3's
+   intro but not its dark theme. Blue is the person, orange the agent. One colour moment per page:
+   the hero floor, where waves of light run through the weave. */
+.hax-v6 {
+  --bg: #ffffff;
+  --panel: #f5f7fa;
+  --panel-2: #edf0f5;
+  --text: #0f1117;
+  --text-2: #4a5160;
+  --text-3: #687080;
+  --text-soft: rgba(15, 17, 23, .7);
+  --edge: rgba(15, 17, 23, .08);
+  --edge-2: rgba(15, 17, 23, .14);
+  --edge-3: rgba(15, 17, 23, .28);
+  /* cyan stays the fill colour (the main button, dots, the person's side of the floor); on white, text in the
+     person's colour is the deeper blue, and the agent's orange is deepened the same way (v1's
+     light --hx-human and --hx-agent) */
+  --cyan: #3fc6ee;
+  --cyan-hover: #6ad3f2;
+  --cyan-press: #2fb2dc;
+  --link: #0a63c9;
+  --human: #0a63c9;
+  --agent: #e4561a;
+  --ice: #0a63c9;
+  --grad-text: linear-gradient(90deg, #0a63c9 0%, #7a4fd6 50%, #e4561a 100%);
+  --grad-line: linear-gradient(90deg, #00bceb 0%, #3fc6ee 35%, #9345e1 50%, #ff6d2d 68%, #ff8a50 100%);
+  /* How it works' band: v3's blue-to-purple band, paled for the white page */
+  --grad-band: linear-gradient(149deg, #e2f2fb 0%, #e6edfd 36%, #efe8fb 70%, #fbede4 100%);
+  --font-ui: "Manrope", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --radius-pill: 999px;
+  --focus-ring: rgba(10, 99, 201, .4);
+
+  /* names v1's CodeBlock (imported read-only) reads; code stays on a dark panel, as on v1 */
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+  --surface-code: #0f1117;
+  --text-code: #e0e4ec;
+  --text-tertiary: #8a93a3;
+  --radius-xl: 12px;
+
+  font-family: var(--font-ui);
+  font-optical-sizing: none;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+.hax-v6 p { margin: 0; }
+/* app/globals.css tracks h1–h3 at -0.02em; v6 sets its own tracking per style, as v3 does */
+html :where(.hax-v6) :is(h1, h2, h3, h4) { letter-spacing: 0; }
+
+/* The chat and pattern mock-ups use v1's light tokens, like the product UI they show. */
+.hax-v6 .h6-light {
+  --font-ui: "InterVariable", "Inter", system-ui, sans-serif;
+  --text-primary: #293247;
+  --text-secondary: #67707f;
+  --text-link: #187adc;
+  --text-on-accent: #fff;
+  --text-on-inverse: #fff;
+  --surface-page: #fff;
+  --surface-raised: #fff;
+  --surface-inverse: #293247;
+  --surface-tint: rgba(41, 50, 71, .04);
+  --surface-tint-pressed: rgba(41, 50, 71, .15);
+  --surface-assistant: #6d6af2;
+  --surface-message-person: #187adc;
+  --surface-message-assistant: rgba(41, 50, 71, .04);
+  --stroke-subtle: rgba(41, 50, 71, .08);
+  --stroke-default: rgba(41, 50, 71, .15);
+  --status-warning: #c47f00;
+  --status-warning-subtle: rgba(245, 165, 36, .12);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+}
+
+/* "With and without HAX" (v1's shared section, components/hax/v1/home/HowCompare), exactly as v1
+   shows it, on a pale panel shaped like How it works' band, so its white cards stand off the page */
+/* the comparison band keeps to the home page's one content column: 24px gutters, 1200 wide from lg */
+html body .hax-v6 .hx6-compare #how { background: var(--panel) !important; --hx-compare-pad: 24px; }
+@media (min-width: 1024px) { html body .hax-v6 .hx6-compare #how > div.grid { max-width: 1200px; } }
+
+/* The intro (world/Intro.tsx): INTRO_SCRIPT marks <html> before the first paint, so the page stays
+   hidden on white until the intro has played (the intro sets visibility: visible on itself). If the
+   intro never starts, the guard shows the page after 10 s anyway. */
+html[data-hax6-intro="on"] .hax-v6 { visibility: hidden; animation: h6-intro-guard 0s 10s forwards; }
+@keyframes h6-intro-guard { to { visibility: visible; } }

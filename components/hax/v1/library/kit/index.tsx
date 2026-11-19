@@ -76,7 +76,7 @@ export function KitPlayground({ id }: { id: string }) {
   const plan = useMemo(() => (e && panel ? planFor(e, o, ds, d?.states ?? []) : null), [e, o, ds, panel, d]);
   if (!e) return null;
   const flash = (k: typeof copied) => { setCopied(k); setTimeout(() => setCopied(""), 1600); };
-  const copyAI = () => { navigator.clipboard?.writeText(aiBrief(id, e, o, ds, planFor(e, o, ds, d?.states ?? []))); flash("ai"); };
+  const copyAI = () => { navigator.clipboard?.writeText(aiBrief(id, e, o, ds, planFor(e, o, ds, d?.states ?? []))).catch(() => {}); flash("ai"); };
   const dsName = ds === "m3" ? "Material 3" : "shadcn/ui";
   return (
     <div className="hk flex flex-col gap-[12px] w-full">
@@ -105,7 +105,7 @@ export function KitPlayground({ id }: { id: string }) {
           <div className="hk-codeview">
             <div className="hk-codehead">
               <span>{`${id}.tsx`}<span className="hk-codehead-ds"> · React · {dsName}</span></span>
-              <button type="button" className="hx-btn hx-btn--outline hk-bar-btn" onClick={() => { navigator.clipboard?.writeText(code); flash("code"); }}>
+              <button type="button" className="hx-btn hx-btn--outline hk-bar-btn" onClick={() => { navigator.clipboard?.writeText(code).catch(() => {}); flash("code"); }}>
                 {copied === "code" ? <Check size={14} strokeWidth={2.4} /> : <Copy size={14} strokeWidth={2} />}{copied === "code" ? "Copied" : "Copy code"}
               </button>
             </div>

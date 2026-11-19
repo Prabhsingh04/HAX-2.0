@@ -1,0 +1,122 @@
+/* HAX v6 · states and motion: v3's, on white. Buttons keep their shape in every state: hover and
+   press only change fill and edge. Keyboard focus gets a 3px blue ring. */
+.hax-v6 { --ease-out: cubic-bezier(.22, 1, .36, 1); --spring: cubic-bezier(.34, 1.56, .64, 1); }
+
+.hax-v6 :is(.h6-btn, .h6-chip, .h6-tab, .h6-card, .h6-nav, .h6-icon, .h6-side, .h6-field) {
+  transition: background-color .2s var(--ease-out), border-color .2s var(--ease-out), color .2s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+/* primary: solid cyan with ink words (v3's main button) */
+.hax-v6 .h6-btn--primary { background: var(--cyan); color: var(--text); }
+.hax-v6 .h6-btn--primary:hover { background: var(--cyan-hover); }
+.hax-v6 .h6-btn--primary:active { background: var(--cyan-press); }
+/* secondary: a raised pale panel */
+.hax-v6 .h6-btn--secondary { background: #fff; border: 1px solid var(--edge-2); color: var(--text); box-shadow: 0 1px 2px rgba(15, 17, 23, .05); }
+.hax-v6 .h6-btn--secondary:hover { background: var(--panel); border-color: var(--edge-3); }
+.hax-v6 .h6-btn--secondary:active { background: var(--panel-2); }
+/* glass: over the hero sky, frosted white */
+.hax-v6 .h6-btn--glass { background: rgba(255, 255, 255, .72); border: 1px solid var(--edge-2); color: var(--text); backdrop-filter: blur(8px); }
+.hax-v6 .h6-btn--glass:hover { background: #fff; border-color: var(--edge-3); }
+.hax-v6 .h6-btn--glass:active { background: var(--panel); }
+/* ink: the contact form's submit (v3's light button, inverted for the white page) */
+.hax-v6 .h6-btn--light { background: var(--text); color: #fff; }
+.hax-v6 .h6-btn--light:hover { background: #262b34; }
+.hax-v6 .h6-btn--light:active { background: #000; }
+
+.hax-v6 :is(.h6-btn, .h6-chip, .h6-tab, .h6-card, .h6-nav, .h6-icon, .h6-side, .h6-link, .h6-copy):focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.hax-v6 .h6-arrow { transition: transform .3s var(--spring); }
+.hax-v6 :is(a, button):hover > .h6-arrow, .hax-v6 a.h6-card:hover .h6-arrow, .hax-v6 a:hover .h6-arrow { transform: translateX(3px); }
+.hax-v6 :is(a, button):hover > .h6-arrow--up { transform: translate(2px, -2px); }
+.hax-v6 :is(a, button):hover > .h6-arrow--down { transform: translateY(3px); }
+
+/* text links: underline draws in */
+.hax-v6 .h6-link { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .3s var(--ease-out), color .2s; }
+.hax-v6 :is(.h6-link:hover, a:hover > .h6-link) { background-size: 100% 1px; }
+
+/* nav: label darkens; the current section carries a short neon underline */
+.hax-v6 .h6-nav { color: var(--text-soft); }
+.hax-v6 .h6-nav:hover, .hax-v6 .h6-nav[aria-expanded="true"] { color: var(--text); }
+.hax-v6 .h6-nav[aria-current] { color: var(--text); font-weight: 600; }
+.hax-v6 .h6-nav[aria-current]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--grad-line); }
+.hax-v6 .h6-icon:hover { background: rgba(15, 17, 23, .06); }
+.hax-v6 .h6-icon:active { background: rgba(15, 17, 23, .1); }
+.hax-v6 .h6-menuitem { transition: background-color .15s, padding-left .25s var(--ease-out); }
+.hax-v6 .h6-menuitem:hover { background: rgba(15, 17, 23, .05); padding-left: 16px; }
+
+/* cards: the edge firms up; no lift */
+.hax-v6 .h6-card:hover { border-color: var(--edge-3); }
+.hax-v6 .h6-card:active { background-color: var(--panel-2); }
+
+/* chips and tabs */
+.hax-v6 .h6-chip:hover:not([aria-pressed="true"]) { background: rgba(15, 17, 23, .06); border-color: var(--edge-3); }
+.hax-v6 .h6-chip:active { background: rgba(15, 17, 23, .1); }
+.hax-v6 .h6-tab:not([aria-selected="true"]):hover { background: rgba(15, 17, 23, .05); color: var(--text); }
+.hax-v6 .h6-tab:not([aria-selected="true"]):active { background: rgba(15, 17, 23, .08); }
+.hax-v6 .h6-side:hover { color: var(--text); }
+
+/* fields */
+.hax-v6 .h6-field:hover { border-color: var(--edge-3); }
+.hax-v6 .h6-field:focus, .hax-v6 .h6-field:focus-within { border-color: var(--link); box-shadow: 0 0 0 3px rgba(10, 99, 201, .14); outline: none; }
+.hax-v6 .h6-check { display: grid; place-content: center; transition: background-color .15s, border-color .15s; }
+.hax-v6 .h6-check:checked { background: var(--link); border-color: var(--link); }
+.hax-v6 .h6-check:checked::after { content: ""; width: 9px; height: 5px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.hax-v6 .h6-check:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.hax-v6 .h6-copy:active { transform: scale(.9); }
+
+/* hero entrance and scroll reveal */
+@keyframes h6-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.hax-v6 .h6-rise { animation: h6-rise .9s var(--ease-out) both; }
+.hax-v6 .h6-rise--2 { animation-delay: .12s; }
+.hax-v6 .h6-rise--3 { animation-delay: .24s; }
+.hax-v6 .h6-rise--4 { animation-delay: .36s; }
+.hax-v6 .h6-reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.hax-v6 .h6-reveal.is-in { opacity: 1; transform: none; }
+@keyframes h6-swap { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.hax-v6 .h6-swap { animation: h6-swap .35s var(--ease-out); }
+/* sequences (.h6-seq): the parent stays put and its .h6-step children arrive one after another,
+   each --i × 120ms later. Rails draw left to right and dots pop as they pass. */
+.hax-v6 .h6-reveal.h6-seq { opacity: 1; transform: none; }
+.hax-v6 .h6-seq > .h6-step { opacity: 0; transform: translateY(32px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); transition-delay: calc(var(--i, 0) * 120ms + 120ms); }
+.hax-v6 .h6-seq.is-in > .h6-step { opacity: 1; transform: none; }
+.hax-v6 .h6-rail { transform: scaleX(0); transform-origin: left; transition: transform 1.6s var(--ease-out) .2s; }
+.hax-v6 .is-in .h6-rail { transform: none; }
+.hax-v6 .h6-pop { transform: scale(0); transition: transform .6s var(--spring); transition-delay: calc(var(--i, 0) * 420ms + 320ms); }
+.hax-v6 .is-in .h6-pop { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hax-v6 .h6-seq > .h6-step, .hax-v6 .h6-rail, .hax-v6 .h6-pop { opacity: 1; transform: none; }
+}
+/* How it works: the active step's line fills over its time (StepTabs sets the duration) */
+@keyframes h6-steprun { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.hax-v6 .h6-steprun { transform-origin: left; animation: h6-steprun linear forwards; }
+
+/* gradient-edged panel (featured code block, contact form): a 1.5px neon edge; wrap it in .h6-glow
+   for a soft glow under it (fainter than v3's: on white a glow reads as a coloured shadow) */
+.hax-v6 .h6-neon { position: relative; border: 1.5px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, var(--grad-line) border-box; }
+.hax-v6 .h6-glow { position: relative; isolation: isolate; }
+.hax-v6 .h6-glow::before { content: ""; position: absolute; inset: 35% 3% -22px; z-index: -1; border-radius: 32px; background: var(--grad-line); filter: blur(30px); opacity: .16; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hax-v6 *, .hax-v6 *::before, .hax-v6 *::after { animation: none !important; transition: none !important; }
+  .hax-v6 .h6-reveal { opacity: 1; transform: none; }
+}
+
+/* v1's CodeBlock copy button (imported read-only) */
+.hax-v6 .hx-copy { transition: transform .15s; }
+.hax-v6 .hx-copy:active { transform: scale(.9); }
+.hax-v6 .hx-copy:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+/* Four ways in: each role is one row link. On hover the role turns blue and its arrow fills cyan
+   (the swarm draws the role's picture beside it) */
+.hax-v6 .h6-way-title { transition: color .3s var(--ease-out); }
+.hax-v6 .h6-way:hover .h6-way-title { color: var(--link); }
+.hax-v6 .h6-way-go { transition: background-color .3s var(--ease-out), border-color .3s var(--ease-out), color .3s var(--ease-out), transform .4s var(--spring); }
+.hax-v6 .h6-way:hover .h6-way-go { background: var(--cyan); border-color: var(--cyan); color: var(--text); transform: translateX(4px); }
+.hax-v6 .h6-way:active .h6-way-go { background: var(--cyan-press); }
+.hax-v6 .h6-way:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; border-radius: 8px; }
+/* Featured patterns (MagicBento): on hover a card's edge lights in the person-to-agent gradient */
+.hax-v6 .magic-bento__card::after {
+  content: ""; position: absolute; inset: 0; z-index: 5; padding: 1px; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(135deg, #3fc6ee 0%, #9b7ce8 50%, #ff8a50 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity .3s var(--ease-out);
+}
+.hax-v6 .magic-bento__card:is(:hover, :focus-visible)::after { opacity: .9; }

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { patternHref } from "../patterns/href";
-import { appearsIn, CATEGORIES, CATEGORY_LABEL, DIM_LABEL, DIMS, LIBRARY, previewSrc, type CategoryId, type Dim, type Pattern } from "./library";
+import { appearsIn, CATEGORIES, CATEGORY_LABEL, DIM_LABEL, DIMS, LIBRARY, previewSrc, previewSrcSet, type CategoryId, type Dim, type Pattern } from "./library";
 
 // The patterns page from Srishti's v3 draft (/v3/patterns.html): browse by who is involved
 // (one agent, agent teams, people) and by eleven categories, with live counts; search is v1's own.
@@ -122,7 +122,7 @@ const OpenLink = () => (
 function SidebarView({ f }: { f: F }) {
   return (
     <div className="mt-[40px] flex flex-col gap-[32px] lg:flex-row lg:items-start lg:gap-[48px]">
-      <aside aria-label="Pattern filters" className="flex flex-col gap-[28px] lg:sticky lg:top-[118px] lg:w-[272px] lg:shrink-0">
+      <aside aria-label="Pattern filters" className="flex flex-col gap-[28px] lg:sticky lg:top-[calc(var(--hx-sticky-lg,94px)_+_24px)] lg:w-[272px] lg:shrink-0">
         <label className="flex flex-col gap-[8px]">
           <span className={label}>Search</span>
           <input type="search" value={f.q} onChange={(e) => f.setQ(e.target.value)} placeholder="Name or summary" className={input} />
@@ -180,7 +180,8 @@ function SidebarView({ f }: { f: F }) {
 function GalleryView({ f }: { f: F }) {
   return (
     <div className="mt-[36px] flex flex-col gap-[20px]">
-      <div className="sticky top-[64px] z-10 -mx-[var(--hx-gutter)] flex flex-col gap-[12px] border-b border-[var(--stroke-subtle)] bg-[var(--surface-page)] px-[var(--hx-gutter)] py-[14px] lg:top-[94px]">
+      {/* pinned from md up; on phones the three rows (165px) would hold over a quarter of the screen */}
+      <div className="z-10 -mx-[var(--hx-gutter)] md:sticky md:top-[var(--hx-sticky,64px)] flex flex-col gap-[12px] border-b border-[var(--stroke-subtle)] bg-[var(--surface-page)] px-[var(--hx-gutter)] py-[14px] lg:top-[var(--hx-sticky-lg,94px)]">
         <div className="flex flex-col gap-[12px] md:flex-row md:items-center">
           <div role="radiogroup" aria-label="Who is involved?" className="flex gap-[6px] overflow-x-auto pb-[2px]">
             {(["all", ...DIMS] as DimF[]).map((d) => (
@@ -207,7 +208,7 @@ function GalleryView({ f }: { f: F }) {
               <a href={patternHref(p.id)} className="hx-card group flex w-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--stroke-subtle)] bg-[var(--surface-raised)]">
                 <div className="flex aspect-[16/10] w-full items-center justify-center overflow-hidden border-b border-[var(--stroke-subtle)] bg-[var(--surface-tint)] p-[12px]">
                   {/* the whole preview, scaled to fit (a crop would cut it at random places) */}
-                  <img src={previewSrc(p.id)} alt="" loading="lazy" className="block max-h-full max-w-full rounded-[8px] bg-white object-contain shadow-[0_2px_10px_rgba(41,50,71,.08)] transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <img src={previewSrc(p.id)} srcSet={previewSrcSet(p.id)} sizes="(min-width: 1280px) 400px, (min-width: 640px) 46vw, 92vw" alt="" loading="lazy" decoding="async" className="block max-h-full max-w-full rounded-[8px] bg-white object-contain shadow-[0_2px_10px_rgba(41,50,71,.08)] transition-transform duration-500 group-hover:scale-[1.03]" />
                 </div>
                 <div className="flex flex-1 flex-col gap-[8px] p-[18px]">
                   <Meta p={p} />
@@ -247,7 +248,7 @@ function IndexView({ f }: { f: F }) {
       </div>
       {groups.length ? groups.map((g) => (
         <section key={g.id} aria-labelledby={`hx-g-${g.id}`} className="flex flex-col">
-          <h2 id={`hx-g-${g.id}`} className="sticky top-[64px] z-[5] flex items-baseline gap-[10px] border-b border-[var(--stroke-default)] bg-[var(--surface-page)] px-[12px] py-[10px] font-semibold text-[15px] lg:top-[94px]">
+          <h2 id={`hx-g-${g.id}`} className="sticky top-[var(--hx-sticky,64px)] z-[5] flex items-baseline gap-[10px] border-b border-[var(--stroke-default)] bg-[var(--surface-page)] px-[12px] py-[10px] font-semibold text-[15px] lg:top-[var(--hx-sticky-lg,94px)]">
             {g.label}<span className={count}>{g.items.length}</span>
           </h2>
           <ul>

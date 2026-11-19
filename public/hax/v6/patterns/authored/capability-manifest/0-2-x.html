@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" class="__variable_30a8c4 __variable_d8ebd1"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../app.css">
+<style>
+html,body{margin:0;padding:0;background:transparent;min-height:0;overflow:hidden}
+:has(.v2-preview){margin:0!important;padding:0!important;max-width:none!important;width:auto!important;min-height:0!important;height:auto!important;border:0!important;background:none!important;box-shadow:none!important;display:block!important;position:static!important;transform:none!important;overflow:visible!important;opacity:1!important}
+.v2-preview{margin:0!important}
+</style>
+<script>addEventListener("DOMContentLoaded",function(){var r=function(){parent!==window&&parent.postMessage({type:"hax-pattern-preview-height",height:Math.ceil(document.body.getBoundingClientRect().height)},location.origin)};new ResizeObserver(r).observe(document.body);r();setTimeout(r,300)})</script>
+</head><body class="flex min-h-screen flex-col bg-bg font-body text-ink antialiased"><div class="v3"><div class="v2 v3-v2-detail"><main><div class="osh-container v2-pattern-page"><section class="v2-pattern-preview v2-pattern-preview--lead" data-scroll-reveal="entered"><div class="v2-pattern-preview__body"><div class="v3-authored-preview" data-theme="shadcn"><div><div class="v2-preview mt-4 v2-preview--manifest"><pre class="v2-code"><code>{
+  "type": "capability-manifest",
+  "agent": {
+    "name": "Data Analyst",
+    "role": "Agent",
+    "tags": [
+      "v2.1"
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "sql",
+      "name": "SQL Query Execution",
+      "status": "enabled",
+      "description": "Database read-only access"
+    },
+    {
+      "id": "visualization",
+      "name": "Data Visualization",
+      "status": "enabled",
+      "description": "Charts &amp; graphs"
+    },
+    {
+      "id": "export",
+      "name": "File Export",
+      "status": "enabled",
+      "description": "CSV, JSON, PDF"
+    },
+    {
+      "id": "schema",
+      "name": "Schema Modification",
+      "status": "pending",
+      "description": "Approval required"
+    },
+    {
+      "id": "write",
+      "name": "Direct DB Write",
+      "status": "disabled",
+      "description": "Restricted"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "rate-limit",
+      "title": "Rate Limit Active",
+      "description": "API requests limited to 100/min during peak hours",
+      "variant": "warning"
+    }
+  ],
+  "connection": {
+    "status": "connected",
+    "sessionId": "HAX-2024-001"
+  }
+}</code></pre><aside class="v2-preview-guide" aria-label="Preview notes"><h3>Preview notes</h3><p class="v2-preview-guide__description">These notes explain the example. They sit outside the pattern interface shown above.</p><ol class="v2-preview-notes"><li><span class="v2-preview-notes__number" aria-hidden="true">1</span><div><strong>Agent-readable</strong><p>A peer agent receives structured capability and status fields.</p></div></li><li><span class="v2-preview-notes__number" aria-hidden="true">2</span><div><strong>Same boundaries</strong><p>The signal preserves enabled, pending, and restricted states.</p></div></li><li><span class="v2-preview-notes__number" aria-hidden="true">3</span><div><strong>Changes over time</strong><p>Alerts and connection status can update as conditions change.</p></div></li></ol></aside></div></div></div></div></section></div></main></div></div></body></html>

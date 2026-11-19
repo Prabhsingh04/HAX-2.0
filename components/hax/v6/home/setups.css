@@ -1,0 +1,17 @@
+/* The four setups (FourSetups.tsx) draw with v1's diagrams (v1/patterns/SetupArt.tsx), whose own
+   styles only reach .hax-v1. These are the same rules in v6's scope, with v1's light greys:
+   messages and the lone agent's orbit move only while a setup is hovered. */
+.hax-v6 #setups { --text-secondary: var(--text-2); --text-primary: var(--text); }
+.hax-v6 .su-art { --su-edge: rgba(41, 50, 71, .22); --su-orbit: rgba(41, 50, 71, .3); display: block; width: 100%; height: auto; overflow: visible; }
+/* the messages fade in with a keyframe animation, not a transition: the fibres behind restyle the
+   section every frame, which kept restarting a transition so the messages never showed (v3) */
+.hax-v6 .su-msgs { opacity: 0; }
+.hax-v6 .su-live:hover .su-msgs { animation: h6-su-in .3s ease-out forwards; }
+@keyframes h6-su-in { from { opacity: 0; } to { opacity: 1; } }
+.hax-v6 .su-orbit { transform-box: view-box; transform-origin: 120px 66px; }
+.hax-v6 .su-live:hover .su-orbit { animation: h6-su-spin 7s linear infinite; }
+@keyframes h6-su-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hax-v6 .su-msgs { display: none; }
+  .hax-v6 .su-live:hover .su-orbit { animation: none; }
+}

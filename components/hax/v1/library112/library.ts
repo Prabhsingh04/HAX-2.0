@@ -1,4 +1,5 @@
 import raw from "./patterns.json";
+import previewSizes from "./previewSizes.json";
 
 // The full HAX pattern library (112 patterns: 30 agentic, 82 general), taken on 19 Nov 2026 from
 // Srishti's v3 pattern draft (https://01kxisn2.reviewa.work/v3/patterns.html), which she shared as
@@ -84,3 +85,9 @@ export function appearsIn(p: Pattern): string[] {
   return [...new Set((p.placements ?? []).map((x) => TEMPLATE_LABEL[x.template] ?? x.template))];
 }
 export const previewSrc = (id: string) => `/hax/v1/p/${id}.webp`;
+// 19 Nov (v6): the stills were re-captured from her live previews at 2x of the 1200px layout her
+// pattern pages use (2400px wide), so they stay sharp at the pattern page's full width on retina,
+// without the review site's widget; an 800px copy (<id>-800.webp) serves the gallery cards.
+// PREVIEW_SIZE holds each still's pixel size, so pages can reserve its space before it loads.
+export const previewSrcSet = (id: string) => `/hax/v1/p/${id}-800.webp 800w, /hax/v1/p/${id}.webp 2400w`;
+export const PREVIEW_SIZE: Record<string, number[]> = previewSizes;

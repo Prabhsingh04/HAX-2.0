@@ -2,7 +2,7 @@ import { CodeBlock } from "../CodeBlock";
 import { patternHref } from "../patterns/href";
 import { MODE_LABEL } from "@/lib/v2/modes";
 import type { Mode } from "@/lib/v2/types";
-import { appearsIn, BY_ID, CATEGORY_LABEL, DIMS, PRINCIPLE_NAME, SETUP_LABEL, TEMPLATE_LABEL, previewSrc, type Pattern } from "./library";
+import { appearsIn, BY_ID, CATEGORY_LABEL, DIMS, PRINCIPLE_NAME, PREVIEW_SIZE, SETUP_LABEL, TEMPLATE_LABEL, previewSrc, previewSrcSet, type Pattern } from "./library";
 
 // One structure for every pattern (Srishti, 17 Nov: "make sure the structure of a pattern page is
 // the same"), in the order of her v3 draft: preview, what it solves, how the interaction works, then
@@ -11,7 +11,9 @@ import { appearsIn, BY_ID, CATEGORY_LABEL, DIMS, PRINCIPLE_NAME, SETUP_LABEL, TE
 const eyebrow = "font-semibold leading-[16px] text-[11px] text-[color:var(--text-secondary)] tracking-[1.2px] uppercase";
 const h2 = "font-semibold leading-[34px] text-[26px] tracking-[-0.2px] md:leading-[36px] md:text-[29px]";
 const body = "max-w-[720px] leading-[26px] text-[16px] text-[color:var(--text-secondary)]";
-const section = "scroll-mt-[150px] flex w-full flex-col gap-[16px]";
+// Sticky offsets follow the header the page sits under: v1's own (64px, 94px from lg) unless a host
+// sets --hx-sticky / --hx-sticky-lg (v6's V1Embed: its 72px nav). Anchors land below header + bar.
+const section = "scroll-mt-[calc(var(--hx-sticky-lg,94px)_+_56px)] flex w-full flex-col gap-[16px]";
 const chip = "rounded-full border border-[var(--stroke-default)] px-[10px] py-[3px] text-[12.5px] leading-[18px] text-[color:var(--text-primary)]";
 
 function sections(p: Pattern): [string, string][] {
@@ -45,7 +47,7 @@ export function PatternPage({ id }: { id: string }) {
         <p className="max-w-[720px] leading-[26px] text-[16px] text-[color:var(--text-secondary)] md:text-[18px] md:leading-[28px]">{p.summary}</p>
       </header>
 
-      <nav aria-label="On this page" className="sticky top-[64px] z-10 border-y border-[var(--stroke-subtle)] bg-[var(--surface-page)] lg:top-[94px]">
+      <nav aria-label="On this page" className="sticky top-[var(--hx-sticky,64px)] z-10 border-y border-[var(--stroke-subtle)] bg-[var(--surface-page)] lg:top-[var(--hx-sticky-lg,94px)]">
         <ul className="flex gap-[20px] overflow-x-auto whitespace-nowrap px-[var(--hx-gutter)] py-[12px] text-[13px] leading-[18px]">
           <li className="font-semibold text-[color:var(--text-secondary)]">On this page</li>
           {toc.map(([k, l]) => <li key={k}><a href={`#${k}`} className="hx-link text-[color:var(--text-primary)]">{l}</a></li>)}
@@ -62,7 +64,10 @@ export function PatternPage({ id }: { id: string }) {
             </p>
           )}
           <figure className="w-full overflow-hidden rounded-[var(--radius-2xl)] border border-[var(--stroke-subtle)] bg-white">
-            <img src={previewSrc(p.id)} alt={`${p.name}: example of the pattern in use`} loading="lazy" className="block h-auto w-full" />
+            {/* the first thing on the page: load it now, at the size the screen needs, with its space held */}
+            <img src={previewSrc(p.id)} srcSet={previewSrcSet(p.id)} sizes="(min-width: 1440px) 1152px, (min-width: 1280px) calc(100vw - 288px), 92vw"
+              width={PREVIEW_SIZE[p.id]?.[0]} height={PREVIEW_SIZE[p.id]?.[1]} decoding="async"
+              alt={`${p.name}: example of the pattern in use`} className="block h-auto w-full" />
           </figure>
           {p.kind === "general" && p.placements && p.placements.length > 0 && (
             <ul className="grid w-full grid-cols-1 gap-[12px] md:grid-cols-2">

@@ -4,7 +4,7 @@ import { Check, X } from "lucide-react";
 import { STAGES } from "./data";
 import { BY_COMP, COMPS, FROM_OLD, ORIGIN } from "./catalog";
 import { DETAILS } from "./details";
-import { Sidebar } from "./Sidebar";
+import { MobileBar, Sidebar } from "./Sidebar";
 import { PreviewLarge } from "./Previews";
 import { CodeBlock } from "../CodeBlock";
 import { DSContext, withDS, type DS } from "./kit/ds";
@@ -65,14 +65,15 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
     <DSContext.Provider value={ds}>
     <div className="flex w-full items-start" data-node-id="98:25487">
       <Sidebar active={f.id} selected={c.id} ds={ds} />
-      <article key={c.id} className="hx-swap flex-1 min-w-0 flex flex-col gap-[56px] items-start pb-[96px] pl-[64px] pr-[48px] pt-[40px]" data-node-id="98:25539">
+      <article key={c.id} className="hx-swap flex-1 min-w-0 flex flex-col gap-[56px] items-start pb-[96px] px-[var(--hx-gutter,20px)] pt-[32px] lg:pl-[64px] lg:pr-[48px] lg:pt-[40px]" data-node-id="98:25539">
         <header className="flex flex-col gap-[14px] items-start w-full">
-          <nav aria-label="Breadcrumb" className="flex gap-[8px] leading-[18px] text-[12px] whitespace-nowrap">
+          <MobileBar ds={ds} active={f.id} />
+          <nav aria-label="Breadcrumb" className="flex flex-wrap gap-[8px] leading-[18px] text-[12px]">
             <a href={lib} className="hx-link text-[color:var(--text-link)]">Components</a><span className="text-[color:var(--text-tertiary)]">/</span>
             <a href={withDS(`/library#${f.id}`, ds)} className="hx-link text-[color:var(--text-link)]">{f.name}</a><span className="text-[color:var(--text-tertiary)]">/</span>
             <span>{c.name}</span>
           </nav>
-          <h1 className="font-semibold leading-[58px] text-[50px] tracking-[-0.6px]">{c.name}</h1>
+          <h1 className="font-semibold leading-[44px] text-[36px] tracking-[-0.5px] md:leading-[58px] md:text-[50px] md:tracking-[-0.6px]">{c.name}</h1>
           <p className="leading-[26px] text-[16px] text-[color:var(--text-secondary)] w-[640px]">{c.line}</p>
         </header>
 
@@ -179,7 +180,7 @@ export function PatternPage({ ds = "shadcn" }: { ds?: DS }) {
           </a>
         </nav>
       </article>
-      <aside className="hk-side sticky top-[94px] shrink-0 w-[240px] flex flex-col gap-[4px] items-start pr-[32px] pt-[48px]" data-node-id="98:25540">
+      <aside className="hk-side sticky top-[var(--hx-sticky-lg,94px)] shrink-0 w-[240px] flex flex-col gap-[4px] items-start pr-[32px] pt-[48px]" data-node-id="98:25540">
         {/* the Customize panel opens here, in place of the page index */}
         <div id="hk-custom-slot" className="contents" />
         <div className="hk-side-toc flex flex-col gap-[4px] items-start">
