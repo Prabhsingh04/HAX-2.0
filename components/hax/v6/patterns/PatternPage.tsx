@@ -1,5 +1,5 @@
 import { CodeBlock } from "@/components/hax/v1/CodeBlock";
-import { BY_ID, patternHref, type Page, type Slot } from "./data";
+import { BY_ID, patternHref, type Page } from "./data";
 import { JumpNav } from "./JumpNav";
 import { PatternPreview } from "./PatternPreview";
 import { Grad } from "../ui";
@@ -12,11 +12,6 @@ const h2 = "font-light text-[clamp(28px,3.2vw,38px)] leading-[1.1] tracking-[-0.
 const body = "max-w-[720px] text-[18px] leading-[30px] text-[color:var(--text-2)] max-md:text-[16px] max-md:leading-[26px]";
 const section = "mx-auto flex w-full max-w-[1200px] scroll-mt-[128px] flex-col gap-[24px] px-[24px]";
 const mono = "font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase leading-[16px] tracking-[0.96px] text-[color:var(--text-3)]";
-// the behavior spec's parts (her six slots), each a soft gradient in its own colour that flows toward
-// the next part's colour, so the sentence has no hard stops; the legend names them
-const SLOT: Record<Slot, [string, string]> = { trigger: ["#e4561a", "#ff8a50"], mode: ["#0a63c9", "#3fc6ee"], audience: ["#7a4fd6", "#b98cf0"], level: ["#b45309", "#e39a3b"], channel: ["#0f766e", "#2fb2a0"], responses: ["#15803d", "#5fbf7a"] };
-const slotGrad = (s: Slot, next?: Slot) => `linear-gradient(90deg, ${SLOT[s][0]} 0%, ${SLOT[s][1]} 68%, ${next ? SLOT[next][0] : SLOT[s][1]} 100%)`;
-const gradText = "bg-clip-text font-semibold text-transparent [-webkit-background-clip:text]";
 
 const SECTIONS: [string, string, (p: Page) => boolean][] = [
   ["preview", "Live preview", () => true],
@@ -121,11 +116,8 @@ export function PatternPage({ id }: { id: string }) {
           <section id="spec" className={section}>
             <h2 className={h2}>Behavior spec</h2>
             <p className="max-w-[820px] text-[18px] leading-[30px] max-md:text-[16px] max-md:leading-[26px]">
-              {p.spec.map((s, i) => {
-                if (!s.slot) return <span key={i}>{s.t}</span>;
-                const next = p.spec!.slice(i + 1).find((x) => x.slot)?.slot ?? undefined;
-                return <span key={i} className={gradText} style={{ backgroundImage: slotGrad(s.slot, next) }}>{s.t}</span>;
-              })}
+              {/* one plain sentence: no colour gradients or bold parts (19 Nov) */}
+              {p.spec.map((s) => s.t).join("")}
             </p>
             {p.specMore && (
               <details open={p.specMore.open || undefined} className="group max-w-[900px]">
@@ -135,8 +127,8 @@ export function PatternPage({ id }: { id: string }) {
                     <ul className="grid grid-cols-2 gap-[12px] md:grid-cols-3 lg:grid-cols-6">
                       {p.specMore.legend.map((l) => (
                         <li key={l.slot} className="flex flex-col gap-[4px] pt-[10px]">
-                          <span aria-hidden className="-mt-[10px] mb-[6px] h-[2px] w-full rounded-full" style={{ backgroundImage: slotGrad(l.slot) }} />
-                          <strong className={`${gradText} w-fit text-[13px] leading-[18px]`} style={{ backgroundImage: slotGrad(l.slot) }}>{l.label}</strong>
+                          <span aria-hidden className="-mt-[10px] mb-[6px] h-[2px] w-full rounded-full bg-[var(--edge-2)]" />
+                          <strong className="w-fit text-[13px] font-semibold leading-[18px] text-[color:var(--text)]">{l.label}</strong>
                           <span className="text-[12.5px] leading-[18px] text-[color:var(--text-3)]">{l.text}</span>
                         </li>
                       ))}
