@@ -24,18 +24,18 @@ export function Hero() {
       {(intro || played) && <Intro key={replay} onDone={finish} />}
       {intro === false && !played && <World className="absolute inset-0" />}
       {intro === false && (
-        <div className="relative mx-auto flex max-w-[1200px] flex-col items-center gap-[24px] px-[24px] pt-[128px] text-center md:pt-[136px]">
+        <div className="relative mx-auto flex max-w-[1200px] flex-col items-center gap-[32px] px-[24px] pt-[128px] text-center md:gap-[36px] md:pt-[136px]">
           <SkyTag href="/v6/patterns?dimension=L2">
             Multi-agent patterns
             <span className="h-[12px] w-px bg-[var(--edge-3)] max-sm:hidden" />
             <span className="text-[color:var(--link)] max-sm:hidden">Explore</span>
             <svg viewBox="0 0 12 12" aria-hidden className="h6-arrow size-[12px] text-[color:var(--link)]" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6h7M6.5 3l3 3-3 3" /></svg>
           </SkyTag>
-          <h1 className="h6-rise h6-rise--2 max-w-[1080px] font-light text-[clamp(40px,5.2vw,72px)] leading-[1.04] tracking-[-0.03em] text-[color:var(--text)] [text-wrap:balance]">
+          <h1 className="h6-rise h6-rise--2 max-w-[1080px] font-light text-[clamp(40px,5.2vw,72px)] leading-[1.16] tracking-[-0.022em] text-[color:var(--text)] [text-wrap:balance]">
             One pattern library for <span className="font-semibold text-[color:var(--human)]">people</span> and <span className="font-semibold text-[color:var(--agent)]">agents</span>
             <span className="block font-semibold">working together at scale.</span>
           </h1>
-          <div className="h6-rise h6-rise--3 flex flex-wrap justify-center gap-[12px] md:gap-[16px]">
+          <div className="h6-rise h6-rise--3 mt-[4px] flex flex-wrap justify-center gap-[12px] md:mt-[12px] md:gap-[16px]">
             <a href="/v6/patterns" className={`${btn} h6-btn--primary`}>
               Browse patterns
               <svg viewBox="0 0 16 16" aria-hidden className="h6-arrow size-[16px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>

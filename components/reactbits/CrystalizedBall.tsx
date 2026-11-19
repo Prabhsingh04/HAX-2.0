@@ -1,4 +1,7 @@
-// React Bits (reactbits.dev, CrystalizedBall, TS + Tailwind), copied in unchanged. MIT + Commons Clause. Needs ogl.
+// React Bits (reactbits.dev, CrystalizedBall, TS + Tailwind). MIT + Commons Clause. Needs ogl.
+// HAX addition (v6 principles): `shape` + `formed`. Give it points (x, y in -1..1, e.g. from
+// shapePoints() below) and set `formed`, and the dust flows out of the sphere into that shape, then
+// back when `formed` goes false. Everything else is React Bits' original.
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
@@ -38,6 +41,10 @@ export interface CrystalizedBallProps extends Partial<PresetValues> {
   hoverStrength?: number;
   intro?: boolean;
   paused?: boolean;
+  /** HAX: points (x0, y0, x1, y1, ...) in -1..1 that the dust forms while `formed` is true */
+  shape?: Float32Array | null;
+  /** HAX: true to gather the dust into `shape` */
+  formed?: boolean;
   className?: string;
   style?: CSSProperties;
 }
@@ -63,6 +70,8 @@ interface Settings extends Omit<PresetValues, 'color'> {
   hoverStrength: number;
   intro: boolean;
   paused: boolean;
+  shape: Float32Array | null;
+  formed: boolean;
 }
 
 interface StrandData {
@@ -87,8 +96,11 @@ interface Arc {
 interface DustLayer {
   requested: number;
   rows: number;
+  count: number;
   home: Texture;
   seed: Texture;
+  icon: Texture | null;
+  iconFor: Float32Array | null;
   mesh: Mesh;
   read: RenderTarget | null;
   write: RenderTarget | null;
@@ -450,6 +462,65 @@ const buildDust = (count: number) => {
   return { home, seed, count: k, rows };
 };
 
+// HAX: one target per particle. About 40% of the dust forms the shape (w = 1), spread evenly over its
+// points with a fine jitter and drawn a little lighter, so the line stays thin and light; the rest stays as haze and fades while it's formed.
+const buildIcon = (shape: Float32Array, count: number, rows: number) => {
+  const random = seeded(4242);
+  const out = new Float32Array(STATE_WIDTH * rows * 4);
+  const n = shape.length / 2;
+  if (!n) return out;
+  let j = 0;
+  for (let k = 0; k < count; k++) {
+    const use = random() < 0.4;
+    const q = use ? j++ % n : Math.floor(random() * n);
+    out[k * 4] = shape[q * 2] + (random() - 0.5) * 0.008;
+    out[k * 4 + 1] = shape[q * 2 + 1] + (random() - 0.5) * 0.008;
+    out[k * 4 + 2] = (random() * 2 - 1) * 0.12;
+    out[k * 4 + 3] = use ? 1 : 0;
+  }
+  return out;
+};
+
+/** HAX: samples an icon drawn on a 24 x 24 grid (SVG path strings and circles, stroked like a
+ * Lucide icon) into points in -1..1, scaled to `extent` of the ball's radius. */
+export const shapePoints = (
+  paths: string[],
+  circles: [number, number, number][] = [],
+  extent = 0.58,
+  stroke = 1.45,
+  step = 2
+): Float32Array => {
+  const S = 240;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = S;
+  const ctx = cv.getContext('2d');
+  if (!ctx) return new Float32Array(0);
+  ctx.scale(S / 24, S / 24);
+  ctx.lineWidth = stroke;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#000';
+  paths.forEach(d => ctx.stroke(new Path2D(d)));
+  circles.forEach(([cx, cy, r]) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+  const px = ctx.getImageData(0, 0, S, S).data;
+  const pts: number[] = [];
+  for (let y = 0; y < S; y += step)
+    for (let x = 0; x < S; x += step)
+      if (px[(y * S + x) * 4 + 3] > 128) pts.push(((x / S) * 2 - 1) * extent, (1 - (y / S) * 2) * extent);
+  // shuffle so any slice of the points still covers the whole icon
+  const random = seeded(77);
+  for (let i = pts.length / 2 - 1; i > 0; i--) {
+    const k = Math.floor(random() * (i + 1));
+    [pts[i * 2], pts[k * 2]] = [pts[k * 2], pts[i * 2]];
+    [pts[i * 2 + 1], pts[k * 2 + 1]] = [pts[k * 2 + 1], pts[i * 2 + 1]];
+  }
+  return new Float32Array(pts);
+};
+
 const passVertex = `#version 300 es
 in vec2 position;
 in vec2 uv;
@@ -708,6 +779,8 @@ in float aIndex;
 uniform sampler2D tHome;
 uniform sampler2D tSeed;
 uniform sampler2D tOffset;
+uniform sampler2D tIcon;
+uniform float uMorph;
 uniform float uStirred;
 uniform vec2 uCenter;
 uniform vec2 uViewport;
@@ -733,7 +806,16 @@ void main() {
   float life;
   float spread;
   vec3 p = drift(home, seed, id, life, spread);
-  if (uStirred > 0.5) p += texelFetch(tOffset, cell, 0).xyz;
+  // HAX: gather into the shape, each particle a little after the last, with a faint shimmer
+  vec4 icon = texelFetch(tIcon, cell, 0);
+  float lag = random(id * 7u + 17u) * 0.45;
+  float m = smoothstep(lag, lag + 0.55, uMorph) * icon.w;
+  vec3 spot = icon.xyz + 0.006 * vec3(sin(uDustTime * 2.1 + seed.y * 40.0), cos(uDustTime * 1.7 + seed.z * 30.0), 0.0);
+  p = mix(p, spot, m);
+  float haze = uMorph * (1.0 - icon.w);
+  life = mix(life, 0.85, m);
+  spread = mix(spread, 1.0, m);
+  if (uStirred > 0.5) p += texelFetch(tOffset, cell, 0).xyz * (1.0 - 0.5 * m);
   float len = length(p);
   float inside = 1.0 - smoothstep(0.955, 0.985, length(p.xy));
   if (len > 0.975) p *= 0.975 / len;
@@ -742,13 +824,13 @@ void main() {
   float depthSize = mix(1.0, 0.7 + 0.6 * front, uDepth);
   float depthLight = mix(1.0, 0.35 + 0.8 * front, uDepth);
   float blink = sin(uDustTime * (2.0 + 6.0 * random(id * 7u + 5u)) + random(id * 7u + 6u) * 6.2831853);
-  float twinkle = mix(1.0, smoothstep(-0.9, -0.6, blink), uTwinkle);
+  float twinkle = mix(1.0, smoothstep(-0.9, -0.6, blink), uTwinkle * (1.0 - m));
   float fade = smoothstep(0.04, 0.12, life);
   float order = (home.y + 1.0) * 0.5 * 0.55 + random(id * 7u + 8u) * 0.25;
   float reveal = smoothstep(order, order + 0.2, uReveal * 1.0);
   float alpha = random(id * 7u + 9u) < 0.5 || home.w > 3.5 ? 1.0 : 0.6;
 
-  float size = seed.x * uPointScale * (0.35 + 0.95 * life) * depthSize * mix(0.5, 1.0, reveal);
+  float size = seed.x * uPointScale * (0.35 + 0.95 * life) * depthSize * mix(0.5, 1.0, reveal) * mix(1.0, 0.8, m);
   vec2 screen = uCenter + p.xy * uRadius;
   gl_Position = vec4(screen / uViewport * 2.0 - 1.0, 0.0, 1.0);
   float px = size * uDpr;
@@ -758,7 +840,7 @@ void main() {
   int tone = int(home.w + 0.5);
   float rimLit = smoothstep(0.8, 0.97, length(p.xy));
   vec3 color = uTones[tone] + uRimTone * rimLit * rimLit * 0.12;
-  vColor = color * alpha * fade * twinkle * depthLight * reveal * inside * sqrt(spread) * uEncode;
+  vColor = color * mix(alpha, 1.0, m) * fade * twinkle * mix(depthLight, 1.0, m) * reveal * inside * sqrt(spread) * uEncode * (1.0 - 0.82 * haze) * mix(1.0, 0.9, m);
 }
 `;
 
@@ -923,6 +1005,8 @@ const CrystalizedBall = ({
   hoverStrength = 0.7,
   intro = true,
   paused = false,
+  shape = null,
+  formed = false,
   className = '',
   style
 }: CrystalizedBallProps) => {
@@ -962,7 +1046,9 @@ const CrystalizedBall = ({
       interactive,
       hoverStrength,
       intro,
-      paused
+      paused,
+      shape,
+      formed
     };
     wakeRef.current?.();
   });
@@ -1053,6 +1139,8 @@ const CrystalizedBall = ({
     const dustUniforms = {
       ...dustShared,
       tOffset: { value: blank },
+      tIcon: { value: blank },
+      uMorph: { value: 0 },
       uStirred: { value: 0 },
       uCenter: fieldUniforms.uCenter,
       uViewport: { value: [1, 1] },
@@ -1176,6 +1264,7 @@ const CrystalizedBall = ({
       dust.mesh.geometry.remove();
       gl.deleteTexture(dust.home.texture);
       gl.deleteTexture(dust.seed.texture);
+      if (dust.icon) gl.deleteTexture(dust.icon.texture);
       disposeTarget(dust.read);
       disposeTarget(dust.write);
       dust = null;
@@ -1206,8 +1295,11 @@ const CrystalizedBall = ({
       dust = {
         requested: total,
         rows: data.rows,
+        count: data.count,
         home: dataTexture(data.home, data.rows),
         seed: dataTexture(data.seed, data.rows),
+        icon: null,
+        iconFor: null,
         mesh: new Mesh(gl, { mode: gl.POINTS, geometry: points, program: dustProgram }),
         read: stirMesh ? stateTarget(data.rows) : null,
         write: stirMesh ? stateTarget(data.rows) : null
@@ -1234,6 +1326,7 @@ const CrystalizedBall = ({
     let surge = 0;
     let stirring = 0;
     let stirEnergy = 0;
+    let morph = 0;
     let kick: { x: number; y: number; strength: number } | null = null;
     let nextArc = 0.3;
     const arcs: Arc[] = [];
@@ -1365,6 +1458,17 @@ const CrystalizedBall = ({
       }
 
       rebuildDust(s.particleCount);
+      // HAX: the shape's targets follow the dust (rebuilt when either changes)
+      if (dust && s.shape && dust.iconFor !== s.shape) {
+        if (dust.icon) gl.deleteTexture(dust.icon.texture);
+        dust.icon = dataTexture(buildIcon(s.shape, dust.count, dust.rows), dust.rows);
+        dust.iconFor = s.shape;
+      }
+      const morphTarget = s.formed && s.shape ? 1 : 0;
+      morph = reducedMotion ? morphTarget : morph + (morphTarget - morph) * (1 - Math.exp(-dt / (morphTarget > morph ? 0.32 : 0.45)));
+      if (Math.abs(morphTarget - morph) < 0.001) morph = morphTarget;
+      dustUniforms.uMorph.value = dust && dust.icon ? morph : 0;
+      dustUniforms.tIcon.value = dust && dust.icon ? dust.icon : blank;
       const palette = s.palette;
 
       fieldUniforms.uCenter.value = [width / 2, height / 2];
@@ -1453,6 +1557,7 @@ const CrystalizedBall = ({
         Math.abs(target - heat.power) > 0.002 ||
         surge > 0.002 ||
         stirring > 0 ||
+        morph !== (s.formed && s.shape ? 1 : 0) ||
         Math.abs(heat.velocity) > 0.01 ||
         Math.hypot(look.vx, look.vy, look.x - lookX, look.y - lookY) > 0.001;
       if (visible && (moving || introClock < 1 || settling)) raf = requestAnimationFrame(frame);

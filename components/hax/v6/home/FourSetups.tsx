@@ -28,7 +28,7 @@ const inSetup = (l: Level) => LIBRARY.filter((p) => p.kind === "agentic" && p.di
 export function FourSetups() {
   return (
     <section id="setups" className="relative overflow-hidden px-[24px] py-[72px] md:py-[112px]">
-      <FibersBackdrop />
+      <FibersBackdrop subtle />
       <div className="relative mx-auto flex max-w-[1200px] flex-col gap-[44px] md:gap-[64px]">
         <div className="h6-reveal flex flex-col gap-[16px]">
           <Eyebrow>Four setups</Eyebrow>

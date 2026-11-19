@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type CSSProperties } from "react";
 import { HowItWorksScene } from "../../v1/home/HowItWorksScene";
 import { BehaviorDraft, INITIAL_BEHAVIOR, WorkspaceView, type Behavior } from "../../v1/home/HowItWorksBehavior";
 import { HowItWorksStage, type Tint } from "./HowItWorksStage";
@@ -97,7 +97,9 @@ export function StepTabs() {
       </div>
       <div id="h6-how-stage" role="tabpanel" aria-labelledby={`h6-how-${cur}`} className="flex flex-col gap-[10px]">
         <p className="font-[family-name:var(--font-mono)] font-medium leading-[16px] text-[11px] tracking-[0.96px] text-[color:var(--text-3)] uppercase">Interaction example: {s.ex}</p>
-        <Spot className="!rounded-[20px] border border-[var(--edge-2)] shadow-[0_28px_70px_-30px_rgba(30,40,90,.4)]">
+        {/* glass, no grey stroke (19 Nov): a bright rim and top highlight instead of a border, blurred backdrop */}
+        <Spot className="!rounded-[20px] backdrop-blur-[18px] backdrop-saturate-[1.6] shadow-[0_28px_70px_-30px_rgba(30,40,90,.35),inset_0_1px_0_rgba(255,255,255,.9),inset_0_0_0_1px_rgba(255,255,255,.35)]"
+          style={{ "--spotlight-card-border": "linear-gradient(160deg, rgba(255,255,255,.95), rgba(255,255,255,.35) 45%, rgba(255,255,255,.7))" } as CSSProperties}>
           <div key={cur} className="h6-swap">
             <HowItWorksStage tint={s.tint}>
               {s.tint === "draft" ? <BehaviorDraft value={behavior} onChange={edit} />

@@ -94,12 +94,17 @@ export function Spark({ children }: { children: ReactNode }) {
 // Ghost fibres drifting behind a section (GhostFibers, tablets and up), drawn as ink on the white
 // page (its light mode): the person's blue running into the agent's orange. Their focus follows the
 // cursor anywhere over the section, so the hover lives in the background, not on the cards.
-export function FibersBackdrop() {
+// `subtle` (Four setups, 19 Nov: "the background is overwhelming the content"): the same fibres, fainter,
+// dimmer and slower, under a soft white veil that is clearest where the content sits.
+export function FibersBackdrop({ subtle = false }: { subtle?: boolean }) {
   const on = useCanvas();
   if (!on) return null;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0">
-      <GhostFibers lightMode glowColor="#3fc6ee" lineColor="#5a8de8" secondaryColor="#ff8a50" speed={0.4} vignette={0.5} brightness={0.9} pulseOnClick={false} className="size-full" />
+      <div className={`size-full ${subtle ? "opacity-[0.5]" : ""}`}>
+        <GhostFibers lightMode glowColor="#3fc6ee" lineColor="#5a8de8" secondaryColor="#ff8a50" speed={subtle ? 0.25 : 0.4} vignette={subtle ? 0.75 : 0.5} brightness={subtle ? 0.7 : 0.9} pulseOnClick={false} className="size-full" />
+      </div>
+      {subtle && <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,255,255,.6), rgba(255,255,255,.2) 70%, rgba(255,255,255,0))" }} />}
     </div>
   );
 }

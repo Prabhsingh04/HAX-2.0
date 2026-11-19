@@ -31,7 +31,9 @@ export function HowItWorksStage({ tint, children }: { tint: Tint; children: Reac
 
   return (
     <div ref={box} className="relative w-full overflow-hidden rounded-[16px]"
-      style={{ aspectRatio: `${W} / ${H}`, background: `linear-gradient(rgb(255 255 255 / .5), rgb(255 255 255 / .5)), ${TINT[tint]}` }}>
+      style={{ aspectRatio: `${W} / ${H}`, background: "linear-gradient(180deg, rgb(255 255 255 / .55), rgb(255 255 255 / .28))" }}>
+      {/* glass: the step's tint shows faintly through a translucent white, over the blurred page behind */}
+      <div aria-hidden className="absolute inset-0 opacity-40" style={{ background: TINT[tint] }} />
       {/* the scenes are light UI with their own ink; the behavior frames fill the stage's height */}
       <div ref={inner} className="absolute left-0 top-0 origin-top-left" style={{ width: W, height: H, padding: PAD, color: "#111" }}>
         <div className="h-full [&_.hw-scene]:h-full [&>div]:!h-full [&>div]:!min-h-0">{children}</div>
