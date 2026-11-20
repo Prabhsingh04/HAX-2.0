@@ -25,7 +25,8 @@ export function Hero() {
       {intro === false && !played && <World className="absolute inset-0" />}
       {intro === false && (
         <div className="relative mx-auto flex max-w-[1200px] flex-col items-center gap-[32px] px-[24px] pt-[128px] text-center md:gap-[36px] md:pt-[136px]">
-          <SkyTag href="/v6/patterns?dimension=L2">
+          {/* every pattern with an agent team (30); it opened "Agent team only" (8) until the 20 Nov audit */}
+          <SkyTag href="/v6/patterns?dimension=multi-agent">
             Multi-agent patterns
             <span className="h-[12px] w-px bg-[var(--edge-3)] max-sm:hidden" />
             <span className="text-[color:var(--link)] max-sm:hidden">Explore</span>

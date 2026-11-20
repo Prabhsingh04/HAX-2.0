@@ -225,6 +225,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
       }
       render();
 
+      let enterObserver: IntersectionObserver | null = null;
       if (mode === 'enter') {
         let played = false;
         const play = () => {
@@ -233,27 +234,30 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
           gsap.to(state, { p: 1, duration: total(), ease: 'none', onUpdate: render });
           if (baseRotation) gsap.to(el, { rotate: 0, duration: Math.min(total(), 1.4), ease: 'power3.out' });
         };
-        const startAt = () => {
-          const view = viewportHeight();
-          const top =
-            el.getBoundingClientRect().top -
-            (scroller instanceof HTMLElement
-              ? scroller.getBoundingClientRect().top + scroller.clientTop - scroller.scrollTop
-              : -window.scrollY);
-          const raw = top - view + 0.2 * Math.min(el.offsetHeight, view);
-          return Math.min(raw, ScrollTrigger.maxScroll(scroller) - 1);
-        };
         if (baseRotation) gsap.set(el, { transformOrigin: '0% 50%', rotate: baseRotation });
-        ScrollTrigger.create({
-          trigger: el,
-          scroller,
-          start: startAt,
-          onEnter: play,
-          onLeave: play,
-          onRefresh: (self: ScrollTrigger) => {
-            if (self.progress > 0) play();
+        // HAX (20 Nov): "enter" needs one signal, "the text is in view, or already above it", so an
+        // IntersectionObserver gives it instead of a ScrollTrigger. A ScrollTrigger made while the page
+        // loads already scrolled down refreshes the earlier triggers in a loop; the page's once-only
+        // triggers (SplitText) kill themselves inside it, GSAP then reads `.end` of a missing trigger
+        // (ScrollTrigger.js `curTrigger = _triggers[i]`) and throws, and the words stay faint. Same
+        // moment as before: when the top passes 20% of the text's height (at most 20% of the window)
+        // above the bottom.
+        const view = viewportHeight();
+        enterObserver = new IntersectionObserver(
+          entries => {
+            const entry = entries[entries.length - 1];
+            if (!entry) return;
+            if (entry.isIntersecting || entry.boundingClientRect.bottom < (entry.rootBounds?.top ?? 0)) {
+              play();
+              enterObserver?.disconnect();
+            }
+          },
+          {
+            root: scroller instanceof HTMLElement ? scroller : null,
+            rootMargin: `0px 0px -${Math.round(0.2 * Math.min(el.offsetHeight, view))}px 0px`
           }
-        });
+        );
+        enterObserver.observe(el);
       } else {
         if (baseRotation) {
           gsap.fromTo(
@@ -298,6 +302,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
       return () => {
         resizeObserver?.disconnect();
+        enterObserver?.disconnect();
         pieces.forEach(piece => {
           piece.style.opacity = '';
           piece.style.transform = '';
