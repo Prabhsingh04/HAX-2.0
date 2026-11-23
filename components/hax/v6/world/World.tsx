@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { drawWorld, WALK } from "./scene";
+import { drawWorld, heroLift, WALK } from "@/components/hax/v6/world/scene";
 
 // Canvas that fills its parent with the hero world. The floor walks slowly toward you and waves of
 // neon liquid flows through its lines toward the horizon; it pauses when off screen and stands still (no light) for reduced motion.
@@ -21,7 +21,7 @@ export function World({ className = "" }: { className?: string }) {
       c.width = Math.round(W * d); c.height = Math.round(H * d);
       x.setTransform(d, 0, 0, d, 0, 0);
     };
-    const paint = (now: number) => { const t = (now - t0) / 1000; drawWorld(x, W, H, still ? 1.4 : t, still ? 0 : t * WALK, !still); };
+    const paint = (now: number) => { const t = (now - t0) / 1000; drawWorld(x, W, H, still ? 1.4 : t, still ? 0 : t * WALK, !still, still ? 0 : heroLift()); };
     const loop = (now: number) => { paint(now); raf = visible && !still ? requestAnimationFrame(loop) : 0; };
     size(); paint(performance.now());
     const ro = new ResizeObserver(() => { size(); paint(performance.now()); });

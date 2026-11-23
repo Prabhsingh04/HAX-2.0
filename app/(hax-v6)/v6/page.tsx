@@ -10,6 +10,7 @@ import { FourWaysIn } from "@/components/hax/v6/home/FourWaysIn";
 import { FeaturedPatterns } from "@/components/hax/v6/home/FeaturedPatterns";
 import { McpSection } from "@/components/hax/v6/home/McpSection";
 import { BuiltBy } from "@/components/hax/v6/home/BuiltBy";
+import { Parallax } from "@/components/hax/v6/Parallax";
 
 // HAX v6 · Home: v3's design and motion (Figma 🌐 Website v3, Home 105:5876) on white, with v1's
 // latest content in v1's latest order (v5, Srishti and Marc's review, 14 and 17 Nov): the intro
@@ -30,6 +31,7 @@ export default function Home() {
         <McpSection />
         <BuiltBy />
       </SiteShell>
+      <Parallax />
     </>
   );
 }

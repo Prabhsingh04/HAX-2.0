@@ -1,6 +1,6 @@
-import { Eyebrow, H2 } from "../ui";
-import { GrainBackdrop } from "../fx";
-import { StepTabs } from "./StepTabs";
+import { Eyebrow, H2 } from "@/components/hax/v6/ui";
+import { GrainBackdrop } from "@/components/hax/v6/fx";
+import { StepTabs } from "@/components/hax/v6/home/StepTabs";
 
 // v3's How it works (Figma 105:5951): a band the full width of the window, alive with a slow grainy
 // gradient (React Bits Grainient, tablets and up), now in pale blue to lilac to peach for the white
@@ -10,7 +10,9 @@ import { StepTabs } from "./StepTabs";
 export function HowItWorks() {
   return (
     <section id="how-works" className="relative w-full overflow-hidden" style={{ backgroundImage: "var(--grad-band)" }} data-node-id="105:5951">
-      <GrainBackdrop />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-[15%] -bottom-[15%]" data-parallax="16">
+        <GrainBackdrop />
+      </div>
       {/* the home page's one content column: 1200 wide, 24px from the window's edges on smaller screens */}
       <div className="relative mx-auto flex max-w-[1248px] flex-col gap-[32px] px-[24px] py-[56px] md:gap-[56px] md:py-[96px]">
         <div className="h6-reveal flex max-w-[720px] flex-col gap-[16px]">

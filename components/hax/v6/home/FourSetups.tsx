@@ -1,12 +1,12 @@
-import "./setups.css";
+import "@/components/hax/v6/home/setups.css";
 import type { CSSProperties } from "react";
 import { ArrowRight } from "lucide-react";
 import { LEVEL_LABEL, LEVEL_ORDER } from "@/lib/v2/levels";
 import type { Level } from "@/lib/v2/types";
-import { LIBRARY } from "../../v1/library112/library";
-import { SetupArt, SetupKey } from "../../v1/patterns/SetupArt";
-import { FibersBackdrop } from "../fx";
-import { Eyebrow, H2, btn } from "../ui";
+import { LIBRARY } from "@/components/hax/v1/library112/library";
+import { SetupArt, SetupKey } from "@/components/hax/v1/patterns/SetupArt";
+import { FibersBackdrop } from "@/components/hax/v6/fx";
+import { Eyebrow, H2, btn } from "@/components/hax/v6/ui";
 
 // HAX Studio v2's four setups with v1's data (lib/v2/levels.ts, v1's diagrams), kept minimal (19 Nov:
 // the four boxed columns felt heavy): four steps in a row, from one agent to people and teams, each
@@ -28,7 +28,9 @@ const inSetup = (l: Level) => LIBRARY.filter((p) => p.kind === "agentic" && p.di
 export function FourSetups() {
   return (
     <section id="setups" className="relative overflow-hidden px-[24px] py-[72px] md:py-[112px]">
-      <FibersBackdrop subtle />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-[15%] -bottom-[15%]" data-parallax="16">
+        <FibersBackdrop subtle />
+      </div>
       <div className="relative mx-auto flex max-w-[1200px] flex-col gap-[44px] md:gap-[64px]">
         <div className="h6-reveal flex flex-col gap-[16px]">
           <Eyebrow>Four setups</Eyebrow>
