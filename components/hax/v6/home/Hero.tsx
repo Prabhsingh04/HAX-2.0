@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { World } from "@/components/hax/v6/world/World";
-import { Intro } from "@/components/hax/v6/world/Intro";
-import { SkyTag, btn } from "@/components/hax/v6/ui";
-import { CopyIcon, useCopy } from "@/components/hax/v6/copy";
+import { World } from "../world/World";
+import { Intro } from "../world/Intro";
+import { SkyTag, btn } from "../ui";
+import { CopyIcon, useCopy } from "../copy";
 
 // v3's hero (Figma Hero 106:8114) on white, with v1's latest words (v5: Srishti's v3 hero copy, her
 // call of 17 Nov) and v1's announcement as the tag. The intro plays over it once a session (Replay
@@ -21,11 +21,15 @@ export function Hero() {
 
   return (
     <section className="relative h-[max(860px,100vh)] w-full overflow-hidden bg-[var(--bg)] max-md:h-[max(760px,100svh)]" data-node-id="106:8114">
-      {(intro || played) && <Intro key={replay} onDone={finish} />}
-      {intro === false && !played && <World className="absolute inset-0" />}
+      {/* the floor tilts up toward you as the page scrolls (scene.ts heroLift); the words rise away (Parallax.tsx) */}
+      <div className="absolute inset-0">
+        {(intro || played) && <Intro key={replay} onDone={finish} />}
+        {intro === false && !played && <World className="absolute inset-0" />}
+      </div>
       {intro === false && (
-        <div className="relative mx-auto flex max-w-[1200px] flex-col items-center gap-[32px] px-[24px] pt-[128px] text-center md:gap-[36px] md:pt-[136px]">
-          <SkyTag href="/v4/patterns?dimension=L2">
+        <div data-parallax="-22" data-parallax-from="top" className="relative mx-auto flex max-w-[1200px] flex-col items-center gap-[32px] px-[24px] pt-[128px] text-center md:gap-[36px] md:pt-[136px]">
+          {/* every pattern with an agent team (30); it opened "Agent team only" (8) until the 20 Nov audit */}
+          <SkyTag href="/v4/patterns?dimension=multi-agent">
             Multi-agent patterns
             <span className="h-[12px] w-px bg-[var(--edge-3)] max-sm:hidden" />
             <span className="text-[color:var(--link)] max-sm:hidden">Explore</span>

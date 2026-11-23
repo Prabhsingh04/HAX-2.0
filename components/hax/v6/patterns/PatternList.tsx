@@ -1,13 +1,28 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ListItem } from "@/components/hax/v6/patterns/data";
-import { Eyebrow, Grad } from "@/components/hax/v6/ui";
+import type { ListItem } from "./data";
+import { Eyebrow, Grad } from "../ui";
 
-// The results line says what is shown ("Showing 112 patterns for all categories and all involvements")
+// The results line says what is shown ("Showing 112 patterns for all involvements and all categories")
 // and both parts are switchers: a menu with the same options and counts as the sidebar, so the two
 // filters read as one structure (19 Nov, the user: "All patterns" above one chosen category was confusing).
+// Same order as the sidebar (20 Nov, the user): its upper group, Who is involved, is the left switcher;
+// its lower group, Categories, the right one.
 const INVOLVEMENTS = "All involvements"; // her draft says "All patterns"; it reads as the other group's "All categories"
 const showLabel = (k: string, l: string) => (k === "all" ? l.toLowerCase() : l);
+// "Any agent team" (20 Nov, for the home hero's "Multi-agent patterns" tag): her three "Agent team…"
+// options each hold only part of the agent patterns (8, 28, 15), so this one holds every pattern with
+// an agent team in any of them (30). It sits right before them.
+const TEAM: [string, string] = ["multi-agent", "Any agent team"];
+const TEAMS = ["L2", "L3", "L4"];
+function involvements(dims: [string, string][]): [string, string][] {
+  const out = dims.map(([k, l]): [string, string] => [k, k === "all" ? INVOLVEMENTS : l]);
+  const at = out.findIndex(([k]) => TEAMS.includes(k));
+  if (at >= 0) out.splice(at, 0, TEAM);
+  return out;
+}
+const inDim = (p: ListItem, d: string) =>
+  d === "all" || (d === TEAM[0] ? TEAMS.some((k) => p.dims.includes(k)) : p.dims.includes(d));
 
 function Switcher({ label, value, options, count, onPick }: { label: string; value: string; options: [string, string][]; count: (k: string) => number; onPick: (k: string) => void }) {
   const [open, setOpen] = useState(false);
@@ -47,7 +62,8 @@ function Switcher({ label, value, options, count, onPick }: { label: string; val
 
 // The pattern list: Srishti's layout (v3 patterns.html: a title block, a sidebar to browse by who is
 // involved and by category, a two-column grid of pattern cards) in v6's type, colour and states.
-// Filters live in the URL (?dimension=L2&category=review-approve; ?setup= is read too, the home's).
+// Filters live in the URL (?dimension=L2&category=review-approve; ?setup= is read too, the home's;
+// ?dimension=multi-agent is the hero tag's "Any agent team").
 // On phones the two filter groups become swipe rows above the cards. The cards are two to a row at every
 // size (19 Nov, the user's two-grid system); on phones they keep the category, the name and a three-line
 // summary, and the whole card is the link.
@@ -66,12 +82,13 @@ const group = "-mx-[24px] flex gap-[8px] overflow-x-auto px-[24px] pb-[2px] [scr
 export function PatternList({ items, list }: { items: ListItem[]; list: ListCopy }) {
   const [dim, setDim] = useState("all");
   const [cat, setCat] = useState("all");
+  const dims = useMemo(() => involvements(list.dims), [list]);
   useEffect(() => {
     const s = new URLSearchParams(location.search);
     const d = s.get("dimension") ?? s.get("setup"), c = s.get("category");
-    if (d && list.dims.some(([k]) => k === d)) setDim(d);
+    if (d && dims.some(([k]) => k === d)) setDim(d);
     if (c && list.cats.some(([k]) => k === c)) setCat(c);
-  }, [list]);
+  }, [dims, list]);
   useEffect(() => {
     const s = new URLSearchParams();
     if (dim !== "all") s.set("dimension", dim);
@@ -80,12 +97,10 @@ export function PatternList({ items, list }: { items: ListItem[]; list: ListCopy
     history.replaceState(null, "", location.pathname + (qs ? `?${qs}` : ""));
   }, [dim, cat]);
 
-  const inDim = (p: ListItem, d: string) => d === "all" || p.dims.includes(d);
   const byDim = useMemo(() => items.filter((p) => inDim(p, dim)), [items, dim]);
   const shown = useMemo(() => byDim.filter((p) => cat === "all" || p.categoryId === cat), [byDim, cat]);
   const words = list.title.split(" "), last = words.pop();
   const [browse, who, categories] = list.labels;
-  const dims: [string, string][] = list.dims.map(([k, l]) => [k, k === "all" ? INVOLVEMENTS : l]);
   const dimCount = (k: string) => items.filter((p) => inDim(p, k)).length;
   const catCount = (k: string) => (k === "all" ? byDim.length : byDim.filter((p) => p.categoryId === k).length);
   const filtered = dim !== "all" || cat !== "all";
@@ -136,10 +151,10 @@ export function PatternList({ items, list }: { items: ListItem[]; list: ListCopy
             <div className="flex flex-wrap items-center justify-between gap-x-[16px] gap-y-[8px]">
               {/* a div, not a p: the switchers hold lists */}
               <div role="status" aria-live="polite" className="flex flex-wrap items-center gap-x-[6px] gap-y-[8px] text-[15px] leading-[28px] text-[color:var(--text-2)]">
-                Showing <strong className="font-semibold text-[color:var(--text)]">{shown.length}</strong> patterns for
-                <Switcher label={categories} value={cat} options={list.cats} count={catCount} onPick={setCat} />
-                and
+                Showing <strong className="font-semibold text-[color:var(--text)]">{shown.length}</strong> {shown.length === 1 ? "pattern" : "patterns"} for
                 <Switcher label={who} value={dim} options={dims} count={dimCount} onPick={setDim} />
+                and
+                <Switcher label={categories} value={cat} options={list.cats} count={catCount} onPick={setCat} />
               </div>
               {filtered && <button type="button" onClick={clear} className="text-[13px] font-semibold text-[color:var(--link)]"><span className="h6-link">Clear filters</span></button>}
             </div>

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import ScrollReveal from "@/components/reactbits/ScrollReveal";
+import ScrollReveal from "@/components/hax/v6/vendor/components/reactbits/ScrollReveal";
 import { btn } from "@/components/hax/v6/ui";
 import { AcidBackdrop, Spark } from "@/components/hax/v6/fx";
 
@@ -12,7 +12,9 @@ export function BuiltBy() {
   return (
     <section className="px-[24px] py-[64px] md:py-[96px]" data-node-id="106:7304">
       <div className="h6-reveal relative mx-auto max-w-[1200px] overflow-hidden rounded-[28px] border border-[var(--edge)] bg-[var(--panel)] md:rounded-[32px]" style={{ "--focus-ring": "rgba(255, 255, 255, .9)" } as CSSProperties}>
-        <AcidBackdrop />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-[15%] -bottom-[15%]" data-parallax="16">
+          <AcidBackdrop />
+        </div>
         {/* the dark layer: over the squares, under the words */}
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/50" />
         <div className="relative flex flex-col items-center gap-[24px] px-[24px] py-[64px] text-center md:px-[96px] md:py-[96px]">

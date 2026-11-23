@@ -8,6 +8,12 @@ import { drawFlow, routeFlip } from "@/components/hax/v6/world/light";
 // fades at both sides, into the sky at the back and into the page at the bottom.
 export const FRAME = { w: 1440, h: 860, horizon: 580 };
 
+// As the page scrolls through the hero, the floor tilts up toward you (23 Nov): the horizon rises by up
+// to LIFT of its height and the floor's perspective deepens with it, as if the camera pitches down.
+// heroLift() is how far through the hero the page has scrolled, 0 at the top to 1 a screen later.
+export const LIFT = .45;
+export const heroLift = () => typeof window === "undefined" ? 0 : Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * .9)));
+
 export function layout(W: number, H: number) {
   const horizon = Math.round(H * FRAME.horizon / FRAME.h);
   const sx = W / FRAME.w, sy = horizon / FRAME.horizon;
@@ -27,8 +33,9 @@ const BANDS: [number, number, number][] = [[5, 2.4, .55], [6.5, 2, .5], [9, 1.6,
 
 // t = seconds since the world started (moves the light); walk = tiles walked along the floor;
 // light = false for reduced motion (a still floor)
-export function drawWorld(x: CanvasRenderingContext2D, W: number, H: number, t: number, walk: number, light = true) {
-  const { horizon, s, F } = layout(W, H), cx = W / 2;
+export function drawWorld(x: CanvasRenderingContext2D, W: number, H: number, t: number, walk: number, light = true, lift = 0) {
+  const L = layout(W, H), cx = W / 2, s = L.s;
+  const horizon = Math.round(L.horizon * (1 - LIFT * lift)), F = (H - horizon) * 4;
   x.clearRect(0, 0, W, H);
 
   // ---- floor: the weave, walking in ----

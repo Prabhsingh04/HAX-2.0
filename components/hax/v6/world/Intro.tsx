@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { drawIntro, END } from "@/components/hax/v6/world/introScene";
-import { layout } from "@/components/hax/v6/world/scene";
+import { layout, heroLift, LIFT } from "@/components/hax/v6/world/scene";
 import { INTRO_SEEN } from "@/components/hax/v6/world/script";
 
 // The Home hero's background when the intro plays (v3's way): one canvas, one clock, forever. It
@@ -32,7 +32,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
       const t = (now - t0.current) / 1000;
       // once it is the hero background, skip frames while the hero is scrolled away
       const shown = !ended || c.getBoundingClientRect().bottom > 0;
-      if (!document.hidden && shown) drawIntro(x, W, H, t, { horizon: layout(W, Math.max(860, H)).horizon });
+      if (!document.hidden && shown) drawIntro(x, W, H, t, { horizon: layout(W, Math.max(860, H)).horizon * (1 - LIFT * (ended ? heroLift() : 0)) });
       if (t >= END && !ended) {
         ended = true;
         try { sessionStorage.setItem(INTRO_SEEN, "1"); } catch {}
